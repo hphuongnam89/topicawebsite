@@ -1,0 +1,14 @@
+.next
+node_modules
+coverage
+out
+build
+package-lock.json
+components/Footer.tsx
+components/HeroSection.tsx
+components/Navbar.tsx
+design.md
+docs/architecture
+docs/audit
+docs/design-system
+public

@@ -1,26 +1,190 @@
 @import "tailwindcss";
+@import "../tokens.css";
+@import "./theme.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  html,
+  body {
+    overflow-x: clip;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    min-width: 320px;
+    background: var(--color-canvas);
+    color-scheme: light;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--color-canvas);
+    color: var(--color-ink-800);
+    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    letter-spacing: 0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    min-width: 0;
+    color: var(--color-ink-950);
+    font-family: var(--font-lora), Georgia, serif;
+    font-style: normal;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  h4,
+  h5,
+  h6 {
+    min-width: 0;
+    color: var(--color-ink-950);
+    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    font-style: normal;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: 0;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-ink-950);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@supports selector(body:has(.program-page)) {
+  body:has(.program-page) :focus-visible {
+    outline-color: var(--color-academic-focus);
+  }
+
+  body:has(.program-page) [data-floating-actions] {
+    display: none;
+    bottom: calc(var(--academic-sticky-height) + 1rem);
+  }
+
+  body:has(.program-page) footer {
+    margin-bottom: var(--academic-sticky-height);
+  }
+
+  @media (min-width: 1024px) {
+    body:has(.program-page) [data-floating-actions] {
+      display: flex;
+    }
+  }
+}
+
+@layer components {
+  .article-content {
+    color: var(--color-ink-800);
+    font-size: var(--text-body);
+    line-height: 1.75;
+  }
+
+  .article-content > * + * {
+    margin-top: 1rem;
+  }
+
+  .article-content h2,
+  .article-content h3,
+  .article-content h4 {
+    margin-top: 2rem;
+    color: var(--color-ink-950);
+  }
+
+  .article-content ul,
+  .article-content ol {
+    padding-left: 1.5rem;
+  }
+
+  .article-content ul {
+    list-style: disc;
+  }
+
+  .article-content ol {
+    list-style: decimal;
+  }
+
+  .article-content img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .article-content a {
+    color: var(--color-brand-700);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .article-content table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+
+  .article-content th,
+  .article-content td {
+    border: 1px solid var(--color-line-200);
+    padding: 0.75rem;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

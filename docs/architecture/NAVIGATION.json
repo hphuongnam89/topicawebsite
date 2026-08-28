@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "locale": "vi-VN",
+  "primary": [
+    {
+      "id": "about",
+      "label": "Giới thiệu",
+      "href": "/gioi-thieu/",
+      "columns": [
+        {
+          "heading": "Về Viện Topica",
+          "items": [
+            {
+              "label": "Tổng quan",
+              "href": "/gioi-thieu/"
+            },
+            {
+              "label": "Tập đoàn Giáo dục EQuest",
+              "href": "/gioi-thieu/tap-doan-giao-duc-equest/"
+            },
+            {
+              "label": "Lịch sử hình thành",
+              "href": "/gioi-thieu/lich-su-hinh-thanh/"
+            },
+            {
+              "label": "Tầm nhìn, Sứ mạng",
+              "href": "/gioi-thieu/tam-nhin-su-mang/"
+            }
+          ]
+        },
+        {
+          "heading": "Tổ chức",
+          "items": [
+            {
+              "label": "Giá trị cốt lõi & triết lý giáo dục",
+              "href": "/gioi-thieu/gia-tri-cot-loi-triet-ly-giao-duc/"
+            },
+            {
+              "label": "Cơ cấu tổ chức",
+              "href": "/gioi-thieu/co-cau-to-chuc/"
+            },
+            {
+              "label": "Cơ sở vật chất",
+              "href": "/gioi-thieu/co-so-vat-chat/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "programs",
+      "label": "Ngành đào tạo",
+      "href": "/nganh-dao-tao/",
+      "columns": [
+        {
+          "heading": "Kinh doanh & Dịch vụ",
+          "items": [
+            {
+              "label": "Quản trị Kinh doanh - Marketing",
+              "href": "/quan-tri-kinh-doanh-marketing/"
+            },
+            {
+              "label": "Quản trị Dịch vụ Du lịch và Lữ hành",
+              "href": "/quan-tri-dich-vu-du-lich-va-lu-hanh/"
+            }
+          ]
+        },
+        {
+          "heading": "Công nghệ & Sáng tạo",
+          "items": [
+            {
+              "label": "Công nghệ thông tin",
+              "href": "/cong-nghe-thong-tin/"
+            }
+          ]
+        },
+        {
+          "heading": "Ngôn ngữ",
+          "items": [
+            {
+              "label": "Ngôn ngữ Anh",
+              "href": "/ngon-ngu-anh/"
+            },
+            {
+              "label": "Ngôn ngữ Trung Quốc",
+              "href": "/ngon-ngu-trung-quoc/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "admissions",
+      "label": "Tuyển sinh",
+      "href": "/tuyen-sinh/",
+      "columns": [
+        {
+          "heading": "Thông tin tuyển sinh",
+          "items": [
+            {
+              "label": "Thông tin tuyển sinh",
+              "href": "/thong-tin-tuyen-sinh-nam-2026/"
+            },
+            {
+              "label": "Thông báo tuyển sinh",
+              "href": "/thong-bao-tuyen-sinh/"
+            },
+            {
+              "label": "Đề án tuyển sinh",
+              "href": "/tuyen-sinh/de-an-tuyen-sinh/"
+            },
+            {
+              "label": "Quy chế tuyển sinh",
+              "href": "/tuyen-sinh/quy-che-tuyen-sinh/"
+            }
+          ]
+        },
+        {
+          "heading": "Học và đăng ký",
+          "items": [
+            {
+              "label": "Học phí & Học bổng",
+              "href": "/tuyen-sinh/hoc-phi-hoc-bong/"
+            },
+            {
+              "label": "Thời gian đào tạo",
+              "href": "/thoi-gian-dao-tao/"
+            },
+            {
+              "label": "Văn bằng hai",
+              "href": "/van-bang-hai/"
+            },
+            {
+              "label": "Câu hỏi thường gặp",
+              "href": "/nhung-cau-hoi-thuong-gap/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study",
+      "label": "Học tập",
+      "href": "/chuong-trinh/",
+      "columns": [
+        {
+          "heading": "Chương trình",
+          "items": [
+            {
+              "label": "Đào tạo từ xa",
+              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/"
+            },
+            {
+              "label": "Khung chương trình",
+              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/khung-chuong-trinh/"
+            },
+            {
+              "label": "Mục tiêu & Chuẩn đầu ra",
+              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/muc-tieu-va-chuan-dau-ra/"
+            },
+            {
+              "label": "Đào tạo ngắn hạn",
+              "href": "/chuong-trinh/chuong-trinh-dao-tao-ngan-han/"
+            }
+          ]
+        },
+        {
+          "heading": "Kế hoạch đào tạo",
+          "items": [
+            {
+              "label": "Quy chế đào tạo",
+              "href": "/dao-tao/quy-che-dao-tao/"
+            },
+            {
+              "label": "Kế hoạch năm học",
+              "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-nam-hoc/"
+            },
+            {
+              "label": "Kế hoạch toàn khóa",
+              "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-toan-khoa/"
+            },
+            {
+              "label": "Kế hoạch học kỳ",
+              "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-hoc-ky/"
+            }
+          ]
+        },
+        {
+          "heading": "Dành cho sinh viên",
+          "items": [
+            {
+              "label": "Thời khóa biểu",
+              "href": "/dao-tao/thoi-khoa-bieu/"
+            },
+            {
+              "label": "Lịch thi",
+              "href": "/dao-tao/lich-thi/"
+            },
+            {
+              "label": "Quy định",
+              "href": "/quy-dinh/"
+            },
+            {
+              "label": "Hệ thống học tập",
+              "href": "/he-thong/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "news",
+      "label": "Tin tức",
+      "href": "/tin-tuc/",
+      "columns": [
+        {
+          "heading": "Chuyên mục",
+          "items": [
+            {
+              "label": "Tin tuyển sinh",
+              "href": "/tin-tuc?category=tin-tuc-tuyen-sinh"
+            },
+            {
+              "label": "Thông báo tuyển sinh",
+              "href": "/tin-tuc?category=thong-bao-tuyen-sinh"
+            },
+            {
+              "label": "Sự kiện",
+              "href": "/tin-tuc?category=su-kien"
+            },
+            {
+              "label": "Giáo dục",
+              "href": "/tin-tuc?category=giao-duc"
+            },
+            {
+              "label": "Sinh viên",
+              "href": "/tin-tuc?category=hoat-dong-sinh-vien"
+            },
+            {
+              "label": "Tuyển dụng",
+              "href": "/tin-tuc?category=tuyen-dung"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "label": "Đảm bảo chất lượng",
+      "href": "/dam-bao-chat-luong/",
+      "columns": [
+        {
+          "heading": "Công khai & Báo cáo",
+          "items": [
+            {
+              "label": "Công khai",
+              "href": "/cong-khai/"
+            },
+            {
+              "label": "Báo cáo thường niên",
+              "href": "/bao-cao-thuong-nien/"
+            },
+            {
+              "label": "Công khai văn bằng chứng chỉ",
+              "href": "/cong-khai-van-bang-chung-chi/"
+            },
+            {
+              "label": "Khảo thí & ĐBCL",
+              "href": "/khao-thi-dbcl/"
+            }
+          ]
+        },
+        {
+          "heading": "Quy trình & Biểu mẫu",
+          "items": [
+            {
+              "label": "Bộ quy trình",
+              "href": "/bo-quy-trinh/"
+            },
+            {
+              "label": "Bộ biểu mẫu",
+              "href": "/bo-bieu-mau/"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "utility": [
+    {
+      "id": "systems",
+      "label": "Hệ thống học tập",
+      "href": "/he-thong/"
+    },
+    {
+      "id": "contact",
+      "label": "Liên hệ",
+      "href": "/lien-he/"
+    },
+    {
+      "id": "search",
+      "label": "Tìm kiếm",
+      "action": "open-search"
+    }
+  ],
+  "actions": [
+    {
+      "id": "apply",
+      "label": "Đăng ký xét tuyển",
+      "href": "https://www.tuyensinh.topicauni.edu.vn/",
+      "external": true,
+      "variant": "primary"
+    },
+    {
+      "id": "consult",
+      "label": "Nhận tư vấn",
+      "action": "open-consultation-form",
+      "variant": "secondary",
+      "mobileOnly": true
+    }
+  ]
+}

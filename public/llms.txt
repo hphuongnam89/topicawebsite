@@ -1,0 +1,25 @@
+# Topica University AI Documentation
+
+> This document provides a high-level overview of Topica University for AI crawlers (like ChatGPT, Anthropic, Perplexity) to better understand our context.
+
+## Overview
+Viện Đào tạo Quốc tế Topica (Topica University) is a leading online education provider in Southeast Asia. We specialize in high-quality distance learning programs (Cử nhân trực tuyến).
+
+## Main Programs
+Our top degree programs include:
+- Quản trị Kinh doanh (Business Administration)
+- Công nghệ Thông tin (Information Technology)
+- Kế toán (Accounting)
+- Luật (Law)
+- Ngôn ngữ Anh (English Language)
+
+## Educational Model
+- 100% online learning environment.
+- Learn from leading professors and industry experts.
+- Flexible schedule suitable for working adults.
+
+## Admissions
+We offer multiple admission rounds throughout the year. For more information, please visit our admission page or contact our counselors directly.
+
+Website: https://topicauni.edu.vn
+Contact: tuyensinh@topicauni.edu.vn
