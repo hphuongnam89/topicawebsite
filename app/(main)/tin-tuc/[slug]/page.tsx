@@ -1,26 +1,37 @@
 import { cms } from "@/lib/cms";
-import { Container } from "@/components/ui/Container";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import { format } from "date-fns";
-import Link from "next/link";
-import { JsonLd } from "@/components/seo/JsonLd";
-import { env } from "@/lib/env";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Metadata } from "next";
-import { WordPressContent } from "@/components/cms/WordPressContent";
+import { env } from "@/lib/env";
+
+// Article imports
+import { JsonLd } from "@/components/seo/JsonLd";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { ArticleLayout } from "@/components/article/ArticleLayout";
+import { ArticleHeader } from "@/components/article/ArticleHeader";
+import { ArticleHero } from "@/components/article/ArticleHero";
+import { ArticleTOC } from "@/components/article/ArticleTOC";
+import { ArticleInlineCTA } from "@/components/article/ArticleInlineCTA";
+import { ArticleShare } from "@/components/article/ArticleShare";
+import { RelatedContent } from "@/components/article/RelatedContent";
+import { Prose } from "@/components/ui/Prose";
+
+// Category imports
+import { PageHeader } from "@/components/layout/PageHeader";
+import { Container } from "@/components/ui/Container";
 import { ArticleCard } from "@/components/news/ArticleCard";
 
 type Props = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
-  try {
-    const article = await cms.getArticleBySlug(resolvedParams.slug);
-    if (!article) return {};
+  const slug = resolvedParams.slug;
 
+  // Try Article first
+  const article = await cms.getArticleBySlug(slug).catch(() => null);
+  if (article) {
     return {
       title: article.seo?.title || article.title,
       description: article.seo?.description || article.excerpt,
@@ -32,22 +43,99 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         images: article.featuredImage ? [article.featuredImage.url] : [],
       },
       alternates: {
-        canonical: article.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${article.slug}`,
+        canonical:
+          article.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${article.slug}`,
       },
     };
-  } catch {
-    return {};
   }
+
+  // Try Category
+  const category = await cms.getCategoryBySlug(slug).catch(() => null);
+  if (category) {
+    return {
+      title: category.title,
+      description: category.description || `Tin tức và sự kiện thuộc chuyên mục ${category.title}`,
+      alternates: {
+        canonical: `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${category.slug}`,
+      },
+    };
+  }
+
+  return {};
 }
 
-export default async function ArticlePage({ params }: Props) {
-  const resolvedParams = await params;
-  const article = await cms.getArticleBySlug(resolvedParams.slug).catch(() => null);
+// ----------------- Helper ----------------- //
 
-  if (!article) {
-    notFound();
+function processContentHtml(html: string) {
+  const headings: { id: string; text: string; level: number }[] = [];
+
+  const processedHtml = html.replace(
+    /<h([23])([^>]*)>(.*?)<\/h\1>/gi,
+    (match, level, attrs, textContent) => {
+      const cleanText = textContent.replace(/<[^>]*>?/gm, "").trim();
+      if (!cleanText) return match;
+
+      let id = "";
+      const idMatch = attrs.match(/id=["']([^"']+)["']/);
+
+      if (idMatch) {
+        id = idMatch[1];
+      } else {
+        id = cleanText
+          .toLowerCase()
+          .replace(/[áàảãạăắằẳẵặâấầẩẫậ]/g, "a")
+          .replace(/[éèẻẽẹêếềểễệ]/g, "e")
+          .replace(/[íìỉĩị]/g, "i")
+          .replace(/[óòỏõọôốồổỗộơớờởỡợ]/g, "o")
+          .replace(/[úùủũụưứừửữự]/g, "u")
+          .replace(/[ýỳỷỹỵ]/g, "y")
+          .replace(/đ/g, "d")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+
+        attrs = ` id="${id}"${attrs}`;
+      }
+
+      headings.push({
+        id,
+        text: cleanText,
+        level: parseInt(level, 10),
+      });
+
+      return `<h${level}${attrs}>${textContent}</h${level}>`;
+    },
+  );
+
+  return { processedHtml, headings };
+}
+
+// ----------------- Page Component ----------------- //
+
+export default async function SlugPage({ params, searchParams }: Props) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
+
+  // Try fetching as Article
+  const article = await cms.getArticleBySlug(slug).catch(() => null);
+  if (article) {
+    return renderArticle(article);
   }
 
+  // Try fetching as Category
+  const category = await cms.getCategoryBySlug(slug).catch(() => null);
+  if (category) {
+    const searchParamsResolved = await searchParams;
+    const page =
+      typeof searchParamsResolved.page === "string" ? parseInt(searchParamsResolved.page, 10) : 1;
+    return renderCategory(category, page);
+  }
+
+  notFound();
+}
+
+// ----------------- Article Renderer ----------------- //
+
+function renderArticle(article: any) {
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -78,10 +166,24 @@ export default async function ArticlePage({ params }: Props) {
     },
   };
 
+  const { processedHtml, headings } = processContentHtml(article.contentHtml || "");
+  const readingTime = Math.max(
+    1,
+    Math.ceil((article.contentHtml?.replace(/<[^>]*>?/gm, "").split(/\s+/).length || 0) / 250),
+  );
+
   return (
-    <main className="min-h-screen bg-canvas pt-8 pb-24 lg:pt-12">
+    <main className="min-h-screen bg-canvas">
       <JsonLd data={articleJsonLd} />
-      <Container size="narrow">
+
+      <ArticleLayout
+        toc={<ArticleTOC headings={headings} />}
+        sidebar={
+          <div className="mt-8 flex flex-col gap-8">
+            <ArticleShare title={article.title} />
+          </div>
+        }
+      >
         <Breadcrumbs
           items={[
             { label: "Trang chủ", href: "/" },
@@ -90,7 +192,7 @@ export default async function ArticlePage({ params }: Props) {
               ? [
                   {
                     label: article.category.title,
-                    href: `/tin-tuc?category=${article.category.slug}`,
+                    href: `/tin-tuc/${article.category.slug}`,
                   },
                 ]
               : []),
@@ -100,57 +202,25 @@ export default async function ArticlePage({ params }: Props) {
         />
 
         <article>
-          <header className="mb-12">
-            <h1 className="mb-6 font-display text-h1 text-ink-950">{article.title}</h1>
+          <ArticleHeader article={article} readingTime={readingTime} />
+          <ArticleHero image={article.featuredImage} title={article.title} />
 
-            <div className="flex flex-wrap items-center gap-6 border-y border-line-200 py-4 text-body-sm text-ink-600">
-              {article.author && (
-                <div className="flex items-center gap-2">
-                  <div className="font-semibold text-ink-950">{article.author.name}</div>
-                </div>
-              )}
-              {article.publishedAt && (
-                <time dateTime={article.publishedAt}>
-                  {format(new Date(article.publishedAt), "dd/MM/yyyy HH:mm")}
-                </time>
-              )}
-              {article.category && (
-                <Link
-                  href={`/tin-tuc?category=${article.category.slug}`}
-                  className="font-semibold text-brand-700 hover:underline"
-                >
-                  {article.category.title}
-                </Link>
-              )}
-            </div>
-          </header>
-
-          {article.featuredImage && (
-            <figure className="mb-12 overflow-hidden rounded-xl">
-              <div className="relative aspect-[21/9] w-full">
-                <Image
-                  src={article.featuredImage.url}
-                  alt={article.featuredImage.alt || article.title}
-                  fill
-                  priority
-                  className="object-cover"
-                />
-              </div>
-            </figure>
-          )}
-
-          {article.contentHtml ? (
-            <WordPressContent html={article.contentHtml} />
+          {processedHtml ? (
+            <Prose html={processedHtml} />
           ) : (
             <p className="text-ink-600 italic">Nội dung đang được cập nhật...</p>
           )}
+
+          <div className="my-12">
+            <ArticleInlineCTA />
+          </div>
 
           {/* Tags */}
           {article.tags.length > 0 && (
             <div className="mt-12 flex items-center gap-2 border-t border-line-200 pt-8">
               <span className="text-body-sm font-semibold text-ink-950">Tags:</span>
               <div className="flex flex-wrap gap-2">
-                {article.tags.map((tag) => (
+                {article.tags.map((tag: any) => (
                   <span
                     key={tag.slug}
                     className="rounded bg-line-100 px-2 py-1 text-body-sm text-ink-800"
@@ -164,10 +234,50 @@ export default async function ArticlePage({ params }: Props) {
         </article>
 
         <RelatedArticles articleSlug={article.slug} articleId={article.id} />
+      </ArticleLayout>
+    </main>
+  );
+}
+
+// ----------------- Category Renderer ----------------- //
+
+async function renderCategory(category: any, page: number) {
+  const result = await cms
+    .getArticles({ category: category.slug, page, limit: 12 })
+    .catch(() => null);
+  const articles = result?.articles || [];
+
+  return (
+    <main className="min-h-screen bg-canvas pb-24">
+      <PageHeader
+        title={category.title}
+        subtitle={category.description || `Các bài viết thuộc chuyên mục ${category.title}`}
+        breadcrumbs={[
+          { label: "Trang chủ", href: "/" },
+          { label: "Tin tức", href: "/tin-tuc/" },
+          { label: category.title },
+        ]}
+      />
+
+      <Container className="mt-16">
+        {articles.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} variant="default" />
+            ))}
+          </div>
+        ) : (
+          <div className="py-24 text-center">
+            <h3 className="text-h4 mb-2 font-bold text-ink-950">Chuyên mục chưa có bài viết</h3>
+            <p className="text-ink-600">Vui lòng quay lại sau.</p>
+          </div>
+        )}
       </Container>
     </main>
   );
 }
+
+// ----------------- Shared Components ----------------- //
 
 async function RelatedArticles({ articleSlug }: { articleSlug: string; articleId: number }) {
   const article = await cms.getArticleBySlug(articleSlug).catch(() => null);
@@ -176,15 +286,8 @@ async function RelatedArticles({ articleSlug }: { articleSlug: string; articleId
   if (related.length === 0) return null;
 
   return (
-    <section className="mt-16 border-t border-line-200 pt-10" aria-labelledby="related-title">
-      <h2 id="related-title" className="mb-6 font-display text-h2 text-ink-950">
-        Bài viết liên quan
-      </h2>
-      <div className="grid gap-6 md:grid-cols-3">
-        {related.map((item) => (
-          <ArticleCard key={item.id} article={item} />
-        ))}
-      </div>
-    </section>
+    <div className="mt-16">
+      <RelatedContent articles={related} showCTA={true} />
+    </div>
   );
 }

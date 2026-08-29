@@ -14,21 +14,21 @@ không cung cấp các nội dung này.
 
 ## Phạm vi triển khai
 
-| Đường dẫn                               | Nguồn học thuật | Trạng thái ProgramPage                    |
-| --------------------------------------- | ---------------- | ----------------------------------------- |
-| `/quan-tri-kinh-doanh-marketing/`       | DOCX đầy đủ      | Dữ liệu học thuật đã đối chiếu            |
-| `/quan-tri-dich-vu-du-lich-va-lu-hanh/` | DOCX đầy đủ      | Dữ liệu học thuật đã đối chiếu            |
-| `/cong-nghe-thong-tin/`                 | Ảnh kế hoạch     | Đủ học phần, tín chỉ và 9 học kỳ          |
-| `/ngon-ngu-anh/`                        | Ảnh kế hoạch     | Đủ học phần, tín chỉ, lựa chọn và 9 học kỳ |
-| `/ngon-ngu-trung-quoc/`                 | Ảnh kế hoạch     | Đủ học phần, tín chỉ, lựa chọn và 9 học kỳ |
+| Đường dẫn                               | Nguồn học thuật | Trạng thái ProgramPage                     |
+| --------------------------------------- | --------------- | ------------------------------------------ |
+| `/quan-tri-kinh-doanh-marketing/`       | DOCX đầy đủ     | Dữ liệu học thuật đã đối chiếu             |
+| `/quan-tri-dich-vu-du-lich-va-lu-hanh/` | DOCX đầy đủ     | Dữ liệu học thuật đã đối chiếu             |
+| `/cong-nghe-thong-tin/`                 | Ảnh kế hoạch    | Đủ học phần, tín chỉ và 9 học kỳ           |
+| `/ngon-ngu-anh/`                        | Ảnh kế hoạch    | Đủ học phần, tín chỉ, lựa chọn và 9 học kỳ |
+| `/ngon-ngu-trung-quoc/`                 | Ảnh kế hoạch    | Đủ học phần, tín chỉ, lựa chọn và 9 học kỳ |
 
 Không nhân bản dữ liệu giữa các ngành. Trường nào không xuất hiện trong nguồn tương ứng được bỏ
 khỏi giao diện.
 
 ## Dữ liệu bổ sung từ nguồn mới
 
-| Ngành                               | Dữ liệu đã bổ sung                                                                                      |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Ngành                               | Dữ liệu đã bổ sung                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Quản trị dịch vụ du lịch và lữ hành | Mã 7810103; thông tin chung; 126 tín chỉ; 9 học kỳ; học phần; 10 PLO; tuyển sinh; tốt nghiệp; học tiếp |
 | Công nghệ thông tin                 | 126 tín chỉ; 9 học kỳ; toàn bộ học phần trong ảnh; khối không tích lũy                                 |
 | Ngôn ngữ Anh                        | 126 tín chỉ; 9 học kỳ; học phần bắt buộc/tự chọn; hai định hướng; khối không tích lũy                  |

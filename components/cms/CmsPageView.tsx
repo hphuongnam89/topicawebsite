@@ -3,13 +3,20 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { WordPressContent } from "./WordPressContent";
 import Image from "next/image";
+import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
+import { CredentialSamples } from "./CredentialSamples";
+import { FacilitiesDirectory } from "./FacilitiesDirectory";
 
 interface CmsPageViewProps {
   page: CmsPage;
   parent?: { label: string; href: string };
+  showAdmissionCTA?: boolean;
 }
 
-export function CmsPageView({ page, parent }: CmsPageViewProps) {
+export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageViewProps) {
+  const hasCredentialSamples = page.slug === "cong-khai-van-bang-chung-chi";
+  const hasFacilities = page.slug === "co-so-vat-chat";
+
   return (
     <>
       <PageHeader
@@ -21,9 +28,9 @@ export function CmsPageView({ page, parent }: CmsPageViewProps) {
           { label: page.title },
         ]}
       />
-      
+
       <section className="bg-canvas py-12 sm:py-16 lg:py-20">
-        <Container size="narrow">
+        <Container size={hasCredentialSamples && !page.contentHtml ? "default" : "narrow"}>
           {page.featuredImage && (
             <figure className="mb-12 overflow-hidden rounded-xl">
               <div className="relative aspect-[16/9] w-full shadow-sm">
@@ -43,11 +50,18 @@ export function CmsPageView({ page, parent }: CmsPageViewProps) {
             <div className="prose-lg max-w-none">
               <WordPressContent html={page.contentHtml} />
             </div>
+          ) : hasCredentialSamples ? (
+            <CredentialSamples />
+          ) : hasFacilities ? (
+            <FacilitiesDirectory />
           ) : (
-            <p className="text-body text-ink-600 text-center italic">Nội dung đang được cập nhật.</p>
+            <p className="text-center text-body text-ink-600 italic">
+              Nội dung đang được cập nhật.
+            </p>
           )}
         </Container>
       </section>
+      {showAdmissionCTA && <AdmissionCTA />}
     </>
   );
 }

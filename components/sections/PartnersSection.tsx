@@ -20,7 +20,7 @@ const duplicatedPartners = [...partners, ...partners];
 
 export function PartnersSection() {
   return (
-    <section className="bg-canvas py-16 sm:py-24 overflow-hidden">
+    <section className="overflow-hidden bg-canvas py-16 sm:py-24">
       <Container>
         {/* Header Area */}
         <div className="mb-14 text-center">
@@ -29,7 +29,8 @@ export function PartnersSection() {
           </h2>
           <div className="mx-auto mt-4 mb-6 h-[3px] w-12 bg-brand-500" />
           <p className="mx-auto max-w-[47.5rem] text-body-lg text-ink-600">
-            Viện đào tạo Quốc tế Topica tự hào là đối tác của các đại học, viện nghiên cứu, doanh nghiệp, tập đoàn hàng đầu thế giới.
+            Viện đào tạo Quốc tế Topica tự hào là đối tác của các đại học, viện nghiên cứu, doanh
+            nghiệp, tập đoàn hàng đầu thế giới.
           </p>
         </div>
 
@@ -39,11 +40,11 @@ export function PartnersSection() {
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-canvas to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-canvas to-transparent" />
 
-          <div className="flex w-max animate-marquee gap-6 py-4">
+          <div className="animate-marquee flex w-max gap-6 py-4">
             {duplicatedPartners.map((src, idx) => (
               <div
                 key={idx}
-                className="flex aspect-square w-[160px] shrink-0 items-center justify-center rounded-xl bg-white p-6 shadow-xs ring-1 ring-ink-100 transition-all hover:scale-105 hover:shadow-md sm:w-[200px]"
+                className="ring-ink-100 flex aspect-square w-[160px] shrink-0 items-center justify-center rounded-xl bg-white p-6 shadow-xs ring-1 transition-all hover:scale-105 hover:shadow-md sm:w-[200px]"
               >
                 <div className="relative h-full w-full">
                   <Image

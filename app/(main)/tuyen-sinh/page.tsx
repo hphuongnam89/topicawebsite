@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CmsPageView } from "@/components/cms/CmsPageView";
+import { AdmissionHub } from "@/components/admission/AdmissionHub";
 import { cms } from "@/lib/cms";
 import { env } from "@/lib/env";
 
@@ -18,5 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AdmissionsPage() {
   const page = await cms.getPageByPath("tuyen-sinh").catch(() => null);
   if (!page) notFound();
-  return <CmsPageView page={page} />;
+
+  return <AdmissionHub page={page} />;
 }

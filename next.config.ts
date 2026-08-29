@@ -8,7 +8,7 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
   "form-action 'self' https://www.tuyensinh.topicauni.edu.vn",
   "frame-ancestors 'self'",
-  "img-src 'self' data: blob: https://topicauni.edu.vn https://images.unsplash.com",
+  "img-src 'self' data: blob: https://topicauni.edu.vn https://nbs.edu.vn http://pxu.edu.vn http://tuyensinhnew.maudemo.vip https://images.unsplash.com",
   "object-src 'none'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
@@ -48,6 +48,8 @@ const nextConfig: NextConfig = {
       { source: "/hoc-phi", destination: "/tuyen-sinh/hoc-phi-hoc-bong/", permanent: true },
       { source: "/tuyen-sinh-van-bang-2", destination: "/van-bang-hai/", permanent: true },
       { source: "/de-an-quy-che-tuyen-sinh", destination: "/tuyen-sinh/", permanent: true },
+      { source: "/thong-bao-tuyen-sinh", destination: "/tin-tuc?category=thong-bao-tuyen-sinh", permanent: true },
+      { source: "/tuyen-sinh/thong-bao-tuyen-sinh", destination: "/tin-tuc?category=thong-bao-tuyen-sinh", permanent: true },
     ];
   },
   async headers() {

@@ -28,8 +28,10 @@ interface HeroSectionProps {
 const DEFAULT_HERO_DATA: HeroSectionData = {
   badge: "Trực thuộc Trường Đại học Phú Xuân — Thành viên EQuest",
   title: "HỌC CHỦ ĐỘNG —\nKIẾN TẠO TƯƠNG LAI",
-  description: "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
-  bgImage: "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
+  description:
+    "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
+  bgImage:
+    "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
   ctaPrimaryText: "Đăng ký xét tuyển",
   ctaPrimaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
   ctaSecondaryText: "Xem ngành học",
@@ -49,6 +51,7 @@ export function HeroSection({ data }: HeroSectionProps) {
           alt="Topica University Campus"
           fill
           priority
+          sizes="100vw"
           className="object-cover object-center"
         />
         {/* Gradient Overlay */}
@@ -56,7 +59,9 @@ export function HeroSection({ data }: HeroSectionProps) {
       </div>
 
       <Container className="relative z-10 py-12 lg:py-20">
-        <div className={`grid grid-cols-1 items-center gap-12 ${content.showLeadForm ? "lg:grid-cols-2 lg:gap-8" : "max-w-3xl"}`}>
+        <div
+          className={`grid grid-cols-1 items-center gap-12 ${content.showLeadForm ? "lg:grid-cols-2 lg:gap-8" : "max-w-3xl"}`}
+        >
           {/* Left Content */}
           <motion.div
             variants={staggerContainer}
@@ -74,7 +79,7 @@ export function HeroSection({ data }: HeroSectionProps) {
 
             <motion.h1
               variants={fadeUp}
-              className="mb-6 font-display text-4xl leading-tight font-bold text-white uppercase sm:text-5xl lg:text-display whitespace-pre-line"
+              className="mb-6 font-display text-4xl leading-tight font-bold whitespace-pre-line text-white uppercase sm:text-5xl lg:text-display"
             >
               {content.title}
             </motion.h1>

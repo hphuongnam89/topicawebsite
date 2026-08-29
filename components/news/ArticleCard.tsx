@@ -26,6 +26,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
                 alt={article.featuredImage.alt || article.title}
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
@@ -53,7 +54,10 @@ export function ArticleCard({ article, variant = "default", className }: Article
 
   if (variant === "homepage-featured") {
     return (
-      <Link href={`/tin-tuc/${article.slug}`} className={cn("group flex h-full flex-col", className)}>
+      <Link
+        href={`/tin-tuc/${article.slug}`}
+        className={cn("group flex h-full flex-col", className)}
+      >
         <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line-200 bg-paper transition-shadow hover:shadow-lg">
           <div className="relative aspect-video w-full shrink-0 overflow-hidden bg-line-100">
             {article.featuredImage ? (
@@ -61,7 +65,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
                 src={article.featuredImage.url}
                 alt={article.featuredImage.alt || article.title}
                 fill
-                priority
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
@@ -102,6 +106,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               src={article.featuredImage.url}
               alt={article.featuredImage.alt || article.title}
               fill
+              sizes="6rem"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
@@ -151,6 +156,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               src={article.featuredImage.url}
               alt={article.featuredImage.alt || article.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (

@@ -15,7 +15,7 @@
   }
 
   html {
-    min-width: 320px;
+    min-width: 0;
     background: var(--color-canvas);
     color-scheme: light;
   }
@@ -152,6 +152,178 @@
     border: 1px solid var(--color-line-200);
     padding: 0.75rem;
     text-align: left;
+  }
+
+  /* Editorial prose — optimized for long-form Vietnamese content */
+  .prose-editorial {
+    color: var(--color-ink-800);
+    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    font-size: var(--text-body-lg);
+    line-height: var(--text-body-lg--line-height);
+  }
+
+  .prose-editorial > * + * {
+    margin-top: 1.25rem;
+  }
+
+  .prose-editorial h2 {
+    margin-top: 2.5rem;
+    font-family: var(--font-lora), Georgia, serif;
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: 700;
+    color: var(--color-ink-950);
+    scroll-margin-top: calc(var(--height-header) + 1.5rem);
+  }
+
+  .prose-editorial h3 {
+    margin-top: 2rem;
+    font-family: var(--font-lora), Georgia, serif;
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: 700;
+    color: var(--color-ink-950);
+    scroll-margin-top: calc(var(--height-header) + 1.5rem);
+  }
+
+  .prose-editorial h4 {
+    margin-top: 1.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-ink-950);
+  }
+
+  .prose-editorial p {
+    overflow-wrap: anywhere;
+  }
+
+  .prose-editorial a {
+    color: var(--color-brand-700);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    text-decoration-color: var(--color-brand-300);
+    transition: text-decoration-color 0.15s;
+  }
+
+  .prose-editorial a:hover {
+    text-decoration-color: var(--color-brand-700);
+  }
+
+  .prose-editorial strong {
+    font-weight: 600;
+    color: var(--color-ink-950);
+  }
+
+  .prose-editorial ul,
+  .prose-editorial ol {
+    padding-left: 1.5rem;
+  }
+
+  .prose-editorial ul {
+    list-style: disc;
+  }
+
+  .prose-editorial ol {
+    list-style: decimal;
+  }
+
+  .prose-editorial li + li {
+    margin-top: 0.5rem;
+  }
+
+  .prose-editorial blockquote {
+    border-left: 3px solid var(--color-brand-500);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    background: var(--color-paper);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--color-ink-600);
+  }
+
+  .prose-editorial blockquote p {
+    margin-top: 0;
+  }
+
+  .prose-editorial figure {
+    margin: 2rem 0;
+  }
+
+  .prose-editorial figure img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  .prose-editorial figcaption {
+    margin-top: 0.5rem;
+    font-size: var(--text-body-sm);
+    line-height: var(--text-body-sm--line-height);
+    color: var(--color-ink-600);
+    text-align: center;
+  }
+
+  .prose-editorial img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    margin-inline: auto;
+  }
+
+  .prose-editorial table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  .prose-editorial thead {
+    background: var(--color-paper);
+  }
+
+  .prose-editorial th {
+    border: 1px solid var(--color-line-200);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-ink-950);
+    white-space: nowrap;
+  }
+
+  .prose-editorial td {
+    border: 1px solid var(--color-line-200);
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  .prose-editorial hr {
+    border: none;
+    border-top: 1px solid var(--color-line-200);
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 767px) {
+    .prose-editorial {
+      font-size: var(--text-body);
+      line-height: var(--text-body--line-height);
+    }
+
+    .prose-editorial h2 {
+      font-size: 1.875rem;
+      line-height: 2.375rem;
+      scroll-margin-top: calc(var(--height-header-compact) + 1rem);
+    }
+
+    .prose-editorial h3 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      scroll-margin-top: calc(var(--height-header-compact) + 1rem);
+    }
   }
 }
 

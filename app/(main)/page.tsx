@@ -2,7 +2,6 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { TrustSection } from "@/components/sections/TrustSection";
 import { ProgramsSection } from "@/components/sections/ProgramsSection";
 import { WhyTopicaSection } from "@/components/sections/WhyTopicaSection";
-import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { NewsPreview } from "@/components/sections/NewsPreview";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { AdmissionTimeline } from "@/components/sections/AdmissionTimeline";
@@ -44,7 +43,6 @@ export default function Home() {
       <TrustSection data={trustData} />
       <ProgramsSection />
       <WhyTopicaSection />
-      <AdmissionCTA />
       <NewsPreview />
       {/* TestimonialSection uses CMS data if available, otherwise falls back to static verified data */}
       {finalTestimonials && finalTestimonials.length > 0 && (

@@ -45,7 +45,7 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li aria-current="page" className="min-w-0">
+              <li aria-current="page" className="min-w-0 [overflow-wrap:anywhere] break-words">
                 {program.officialName}
               </li>
             </ol>
@@ -55,8 +55,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             {program.heroLabel}
           </p>
           <h1
-            className={`max-w-[14ch] font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.045em] text-[var(--color-academic-ink)] ${
-              program.officialName.length > 35
+            className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.045em] break-words text-[var(--color-academic-ink)] sm:max-w-[14ch] ${
+              program.officialName.length >= 35
                 ? "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02]"
                 : "text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.98]"
             }`}
@@ -152,7 +152,7 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                   href={program.source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="whitespace-nowrap underline underline-offset-4"
+                  className="[overflow-wrap:anywhere] break-words underline underline-offset-4"
                 >
                   {program.source.label}
                 </a>

@@ -2,16 +2,17 @@ import { cms } from "@/lib/cms";
 import { Article, Category } from "@/lib/cms/types";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
-import Link from "next/link";
 import { ArticleCard } from "@/components/news/ArticleCard";
 import { NewsFilterBar } from "@/components/news/NewsFilterBar";
+import { Pagination } from "@/components/ui/Pagination";
+import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { env } from "@/lib/env";
 
 export async function generateMetadata({ searchParams }: Props) {
   const resolvedParams = await searchParams;
   const category = resolvedParams.category as string | undefined;
   const page = resolvedParams.page as string | undefined;
-  
+
   let url = `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc`;
   const query = new URLSearchParams();
   if (category) query.set("category", category);
@@ -21,7 +22,8 @@ export async function generateMetadata({ searchParams }: Props) {
 
   return {
     title: "Tin tức & Sự kiện",
-    description: "Cập nhật những tin tức, sự kiện và thông báo mới nhất từ Viện Đào tạo Quốc tế Topica.",
+    description:
+      "Cập nhật những tin tức, sự kiện và thông báo mới nhất từ Viện Đào tạo Quốc tế Topica.",
     alternates: {
       canonical: url,
     },
@@ -68,6 +70,12 @@ export default async function NewsHomepage({ searchParams }: Props) {
     cmsUnavailable = true;
     console.error("CMS Error:", error instanceof Error ? error.message : "Unknown CMS error");
   }
+
+  const paginationParams = new URLSearchParams();
+  if (category) paginationParams.set("category", category);
+  if (search) paginationParams.set("q", search);
+  const paginationQuery = paginationParams.toString();
+  const paginationBaseUrl = `/tin-tuc${paginationQuery ? `?${paginationQuery}` : ""}`;
 
   return (
     <main className="min-h-screen bg-canvas pb-24">
@@ -122,23 +130,12 @@ export default async function NewsHomepage({ searchParams }: Props) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="mt-16 flex justify-center gap-2">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <Link
-                key={i}
-                href={`/tin-tuc?page=${i + 1}${category ? `&category=${category}` : ""}${search ? `&q=${search}` : ""}`}
-                className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
-                  page === i + 1
-                    ? "border-brand-500 bg-brand-500 text-white"
-                    : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500"
-                }`}
-              >
-                {i + 1}
-              </Link>
-            ))}
+          <div className="mt-16 flex justify-center">
+            <Pagination currentPage={page} totalPages={totalPages} baseUrl={paginationBaseUrl} />
           </div>
         )}
       </Container>
+      <AdmissionCTA />
     </main>
   );
 }

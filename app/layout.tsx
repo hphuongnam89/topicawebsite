@@ -21,6 +21,9 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+  icons: {
+    icon: "/topica-logo.png",
+  },
   title: {
     default: "Viện Đào tạo Quốc tế Topica",
     template: "%s | Topica",
@@ -68,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="vi" data-scroll-behavior="smooth">
       <body
         className={`${beVietnamPro.variable} ${lora.variable} bg-canvas font-sans text-ink-800 antialiased`}
       >

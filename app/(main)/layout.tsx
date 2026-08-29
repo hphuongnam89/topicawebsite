@@ -2,6 +2,7 @@ import React from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
+import { MobileStickyBar } from "@/components/layout/MobileStickyBar";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <main id="main-content">{children}</main>
       <Footer />
       <FloatingActions />
+      <MobileStickyBar />
     </>
   );
 }

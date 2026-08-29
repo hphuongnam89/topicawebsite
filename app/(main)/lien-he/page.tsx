@@ -18,5 +18,5 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const page = await cms.getPageByPath("lien-he").catch(() => null);
   if (!page) notFound();
-  return <CmsPageView page={page} />;
+  return <CmsPageView page={page} showAdmissionCTA={false} />;
 }
