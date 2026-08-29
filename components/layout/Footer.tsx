@@ -39,9 +39,21 @@ const footerGroups = [
 ] as const;
 
 const socialLinks = [
-  { label: "Facebook", href: "#", icon: "fb" },
-  { label: "YouTube", href: "#", icon: "yt" },
-  { label: "TikTok", href: "#", icon: "tt" },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/viendaotaoquocte.topica",
+    icon: "fb",
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@viendaotaoquoctetopica",
+    icon: "yt",
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@viendaotaoquoctetopica",
+    icon: "tt",
+  },
 ] as const;
 
 export function Footer() {

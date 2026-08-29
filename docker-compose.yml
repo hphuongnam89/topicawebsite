@@ -10,4 +10,13 @@ services:
       NEXT_PUBLIC_SITE_URL: https://topicauni.edu.vn
       WORDPRESS_API_URL: https://topicauni.edu.vn/wp-json/wp/v2
       CMS_REVALIDATE_SECONDS: 300
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:?ADMIN_SESSION_SECRET is required}
+      ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD:-}
+    volumes:
+      - topica-data:/app/data
+      - topica-uploads:/app/public/uploads
     restart: always
+
+volumes:
+  topica-data:
+  topica-uploads:

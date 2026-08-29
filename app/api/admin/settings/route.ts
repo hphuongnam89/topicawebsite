@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { requireAdmin } from "@/lib/auth/guards";
 import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { isSameOrigin } from "@/lib/security/request";
 
 const DEFAULT_SETTINGS = {
   hotline: "1800 646466",
@@ -17,15 +18,16 @@ const DEFAULT_SETTINGS = {
 };
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
   const settings = getSetting("site_settings", DEFAULT_SETTINGS);
   return NextResponse.json({ settings });
 }
 
 export async function PUT(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();

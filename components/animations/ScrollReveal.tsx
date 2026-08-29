@@ -1,19 +1,7 @@
-"use client";
-
-import { useMemo } from "react";
-import { motion, type Variants } from "motion/react";
-import { fadeUp, slideInLeft, slideInRight, scaleIn, imageReveal } from "@/lib/motion";
-
-const variantMap: Record<string, Variants> = {
-  fadeUp,
-  slideInLeft,
-  slideInRight,
-  scaleIn,
-  imageReveal,
-};
+import type { CSSProperties } from "react";
 
 type ScrollRevealProps = {
-  variant?: keyof typeof variantMap;
+  variant?: "fadeUp" | "slideInLeft" | "slideInRight" | "scaleIn" | "imageReveal";
   delay?: number;
   className?: string;
   children: React.ReactNode;
@@ -27,38 +15,18 @@ export function ScrollReveal({
   children,
   viewportMargin = "-64px",
 }: ScrollRevealProps) {
-  const selectedVariant = variantMap[variant] ?? fadeUp;
-
-  const customVariant = useMemo((): Variants => {
-    if (!delay) return selectedVariant;
-
-    // Clone to safely add delay without modifying original
-    const visible =
-      typeof selectedVariant.visible === "object"
-        ? { ...selectedVariant.visible }
-        : selectedVariant.visible;
-
-    if (typeof visible === "object" && visible !== null) {
-      const visibleObj = visible as Record<string, unknown>;
-      const existingTransition = (visibleObj.transition as Record<string, unknown>) ?? {};
-      visibleObj.transition = { ...existingTransition, delay };
-    }
-
-    return {
-      ...selectedVariant,
-      visible,
-    };
-  }, [selectedVariant, delay]);
-
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: viewportMargin }}
-      variants={customVariant}
-      className={className}
+    <div
+      className={`scroll-reveal${className ? ` ${className}` : ""}`}
+      data-reveal={variant}
+      style={
+        {
+          "--reveal-delay": `${Math.min(delay ?? 0, 0.24)}s`,
+          "--reveal-margin": viewportMargin,
+        } as CSSProperties
+      }
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

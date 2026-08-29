@@ -20,11 +20,14 @@ const duplicatedPartners = [...partners, ...partners];
 
 export function PartnersSection() {
   return (
-    <section className="overflow-hidden bg-canvas py-16 sm:py-24">
+    <section className="overflow-hidden bg-canvas py-16 sm:py-24" aria-labelledby="partners-title">
       <Container>
         {/* Header Area */}
         <div className="mb-14 text-center">
-          <h2 className="font-display text-h2 font-bold text-brand-500 uppercase">
+          <h2
+            id="partners-title"
+            className="font-display text-h2 font-bold text-brand-700 uppercase"
+          >
             NHÀ TUYỂN DỤNG
           </h2>
           <div className="mx-auto mt-4 mb-6 h-[3px] w-12 bg-brand-500" />
@@ -35,21 +38,27 @@ export function PartnersSection() {
         </div>
 
         {/* Marquee Area */}
-        <div className="relative mx-auto flex w-full max-w-[1200px] overflow-hidden">
+        <div
+          className="group relative mx-auto flex w-full max-w-[1200px] overflow-hidden motion-reduce:overflow-x-auto"
+          role="region"
+          aria-label="Danh sách đối tác của Topica"
+          tabIndex={0}
+        >
           {/* Fading Edges */}
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-canvas to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-canvas to-transparent" />
 
-          <div className="animate-marquee flex w-max gap-6 py-4">
+          <div className="animate-marquee flex w-max gap-6 py-4 group-focus-within:[animation-play-state:paused] group-hover:[animation-play-state:paused] motion-reduce:animate-none">
             {duplicatedPartners.map((src, idx) => (
               <div
                 key={idx}
-                className="ring-ink-100 flex aspect-square w-[160px] shrink-0 items-center justify-center rounded-xl bg-white p-6 shadow-xs ring-1 transition-all hover:scale-105 hover:shadow-md sm:w-[200px]"
+                aria-hidden={idx >= partners.length}
+                className="flex aspect-[4/3] w-[160px] shrink-0 items-center justify-center rounded-lg border border-line-200 bg-white p-5 shadow-xs transition-[border-color,transform,box-shadow] hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-sm motion-reduce:transform-none sm:w-[200px]"
               >
                 <div className="relative h-full w-full">
                   <Image
                     src={src}
-                    alt={`Nhà tuyển dụng ${idx + 1}`}
+                    alt={idx < partners.length ? `Biểu trưng đối tác Topica ${idx + 1}` : ""}
                     fill
                     className="object-contain"
                     sizes="(max-width: 768px) 160px, 200px"

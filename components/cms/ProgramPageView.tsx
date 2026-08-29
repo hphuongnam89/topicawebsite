@@ -53,10 +53,6 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
         ]
       : []),
     [
-      "Dữ liệu chương trình lấy từ đâu?",
-      `Từ ${program.source.label}, ${program.source.reference}; đối chiếu ngày ${program.source.reviewedAt}.`,
-    ],
-    [
       "Học phí và lịch khai giảng hiện tại?",
       "Vui lòng nhận tư vấn để kiểm tra thông báo tuyển sinh hiện hành.",
     ],

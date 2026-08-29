@@ -19,6 +19,7 @@ import { Prose } from "@/components/ui/Prose";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { ArticleCard } from "@/components/news/ArticleCard";
+import type { Article, Category } from "@/lib/cms/types";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -135,7 +136,7 @@ export default async function SlugPage({ params, searchParams }: Props) {
 
 // ----------------- Article Renderer ----------------- //
 
-function renderArticle(article: any) {
+function renderArticle(article: Article) {
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -220,7 +221,7 @@ function renderArticle(article: any) {
             <div className="mt-12 flex items-center gap-2 border-t border-line-200 pt-8">
               <span className="text-body-sm font-semibold text-ink-950">Tags:</span>
               <div className="flex flex-wrap gap-2">
-                {article.tags.map((tag: any) => (
+                {article.tags.map((tag) => (
                   <span
                     key={tag.slug}
                     className="rounded bg-line-100 px-2 py-1 text-body-sm text-ink-800"
@@ -241,7 +242,7 @@ function renderArticle(article: any) {
 
 // ----------------- Category Renderer ----------------- //
 
-async function renderCategory(category: any, page: number) {
+async function renderCategory(category: Category, page: number) {
   const result = await cms
     .getArticles({ category: category.slug, page, limit: 12 })
     .catch(() => null);

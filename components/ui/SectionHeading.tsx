@@ -26,7 +26,7 @@ export function SectionHeading({
       <Component className="font-display text-h2 font-bold text-ink-950">
         {title ?? children}
       </Component>
-      {align === "center" && <div className="mx-auto mt-4 h-[3px] w-12 bg-brand-500" />}
+      {align === "center" && <div aria-hidden="true" className="mx-auto mt-4 h-[3px] w-12 bg-brand-500" />}
       {subtitle && <p className="mt-3 font-sans text-body-lg text-ink-600">{subtitle}</p>}
     </div>
   );

@@ -1,24 +1,22 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
-import { getUsers, createUser, deleteUser, getUserByUsername } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/guards";
+import { getUsers, createUser, deleteUser, getUserByUsername, updateUser } from "@/lib/db";
 import { hashPassword } from "@/lib/auth/password";
 import crypto from "node:crypto";
+import { isSameOrigin } from "@/lib/security/request";
 
 export async function GET() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
 
   const users = getUsers();
   return NextResponse.json({ users });
 }
 
 export async function POST(request: Request) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser || currentUser.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -57,11 +55,44 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser || currentUser.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+export async function PUT(request: Request) {
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+
+  try {
+    const body = await request.json();
+    const { id, name, role, password } = body;
+
+    if (!id || !name) {
+      return NextResponse.json(
+        { error: "Thiếu ID hoặc họ tên." },
+        { status: 400 }
+      );
+    }
+
+    const updates: { name?: string; role?: string; password_hash?: string } = {
+      name: name.trim(),
+      role: role === "admin" ? "admin" : "editor",
+    };
+
+    if (password && password.trim().length > 0) {
+      updates.password_hash = hashPassword(password);
+    }
+
+    updateUser(id, updates);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Update user error:", error);
+    return NextResponse.json({ error: "Lỗi cập nhật tài khoản." }, { status: 500 });
   }
+}
+
+export async function DELETE(request: Request) {
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -70,7 +101,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Thiếu ID người dùng." }, { status: 400 });
   }
 
-  if (id === currentUser.id || id === "admin_root") {
+  if (id === auth.user.id || id === "admin_root") {
     return NextResponse.json({ error: "Không thể xóa tài khoản này." }, { status: 400 });
   }
 

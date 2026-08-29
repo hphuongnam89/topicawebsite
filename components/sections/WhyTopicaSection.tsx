@@ -116,7 +116,7 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
     return (
       <ol
         aria-label="Lộ trình học tập trực tuyến"
-        className="mt-8 grid grid-cols-2 gap-x-5 gap-y-6 border-t border-line-200 pt-6 sm:grid-cols-4"
+        className="mt-8 grid grid-cols-1 gap-4 border-t border-line-200 pt-6 sm:grid-cols-4 sm:gap-x-5 sm:gap-y-6"
       >
         {learningSteps.map((step, index) => (
           <li key={step} className="relative min-w-0">
@@ -203,7 +203,7 @@ export function FeaturedSupportCard() {
   return (
     <ScrollReveal
       delay={0.2}
-      className="order-2 min-w-0 rounded-[1.5rem] bg-ink-950 p-6 text-white sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
+      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-ink-950 p-6 text-white shadow-xs [background-image:radial-gradient(circle_at_85%_15%,rgba(196,145,61,0.16),transparent_34%)] sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
     >
       <article
         className="flex h-full min-h-[30rem] min-w-0 flex-col"
@@ -237,7 +237,7 @@ export function FeaturedSupportCard() {
         </ul>
         <Link
           href="/gioi-thieu/"
-          className="group/link mt-auto inline-flex min-h-11 items-center self-start border-b border-brand-300/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white"
+          className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-brand-300/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-300"
         >
           Gặp đội ngũ giảng viên và cố vấn
           <ArrowRight
@@ -289,9 +289,15 @@ function buildMetrics(metrics?: WhyTopicaMetrics): TrustMetric[] {
 export function ConsultationCTA() {
   return (
     <ScrollReveal delay={0.1}>
-      <div className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] bg-brand-100 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10">
+      <div
+        className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] bg-brand-100 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10"
+        aria-labelledby="consultation-cta-title"
+      >
         <div className="min-w-0">
-          <h3 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.15] font-semibold text-ink-950">
+          <h3
+            id="consultation-cta-title"
+            className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.15] font-semibold text-ink-950"
+          >
             Lộ trình phù hợp với bạn bắt đầu từ một cuộc tư vấn.
           </h3>
           <p className="mt-4 max-w-[62ch] text-body text-ink-600">

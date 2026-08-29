@@ -29,8 +29,8 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
         ]}
       />
 
-      <section className="bg-canvas py-12 sm:py-16 lg:py-20">
-        <Container size={hasCredentialSamples && !page.contentHtml ? "default" : "narrow"}>
+      <section className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}>
+        <Container size="default">
           {page.featuredImage && (
             <figure className="mb-12 overflow-hidden rounded-xl">
               <div className="relative aspect-[16/9] w-full shadow-sm">
@@ -47,7 +47,7 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
           )}
 
           {page.contentHtml ? (
-            <div className="prose-lg max-w-none">
+            <div className="mx-auto max-w-4xl">
               <WordPressContent html={page.contentHtml} />
             </div>
           ) : hasCredentialSamples ? (

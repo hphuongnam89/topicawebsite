@@ -42,8 +42,14 @@ describe("business administration program data", () => {
     expect(tourism?.semesters.reduce((sum, term) => sum + term.credits, 0)).toBe(126);
   });
 
-  test("keeps image-backed plans complete without inventing missing profile fields", () => {
-    for (const slug of ["cong-nghe-thong-tin", "ngon-ngu-anh", "ngon-ngu-trung-quoc"]) {
+  test("keeps curriculum-backed plans complete with verified profile fields", () => {
+    const expectedCodes = {
+      "cong-nghe-thong-tin": "7480201",
+      "ngon-ngu-anh": "7220201",
+      "ngon-ngu-trung-quoc": "7220204",
+    } as const;
+
+    for (const slug of Object.keys(expectedCodes) as Array<keyof typeof expectedCodes>) {
       const program = getProgramDetail(slug);
       expect(program?.evidenceLevel).toBe("curriculum_source");
       expect(program?.curriculum.length).toBeGreaterThanOrEqual(10);
@@ -51,8 +57,8 @@ describe("business administration program data", () => {
       expect(program?.semesters.reduce((sum, term) => sum + term.credits, 0)).toBe(126);
       expect(program?.outcomes).toEqual([]);
       expect(program?.facts.every((fact) => fact.status === "verified")).toBe(true);
-      expect(program?.code).toBeNull();
-      expect(program?.admissions).toBeNull();
+      expect(program?.code).toBe(expectedCodes[slug]);
+      expect(program?.admissions).toBeTruthy();
     }
   });
 });

@@ -14,7 +14,9 @@ import { getSetting } from "@/lib/db";
 import type { HeroSectionData } from "@/components/sections/HeroSection";
 import { testimonials as staticTestimonials, type Testimonial } from "@/data/testimonials";
 
-export const dynamic = "force-dynamic";
+// Keep the homepage fast after the first render while preserving on-demand
+// refreshes from the admin settings endpoint via revalidatePath("/").
+export const revalidate = 300;
 
 export default function Home() {
   const heroData = getSetting<HeroSectionData | undefined>("homepage_hero", undefined);

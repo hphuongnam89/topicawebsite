@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { requireUser } from "@/lib/auth/guards";
 import { getUserById, updateUserPassword } from "@/lib/db";
 import { verifyPassword, hashPassword } from "@/lib/auth/password";
+import { isSameOrigin } from "@/lib/security/request";
 
 export async function POST(request: Request) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = getUserById(currentUser.id);
+    const user = getUserById(auth.user.id);
     if (!user) {
       return NextResponse.json({ error: "Không tìm thấy người dùng." }, { status: 404 });
     }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     }
 
     const newHash = hashPassword(newPassword);
-    updateUserPassword(currentUser.id, newHash);
+    updateUserPassword(auth.user.id, newHash);
 
     return NextResponse.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {

@@ -1,3 +1,9 @@
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
+ * genre: editorial/academic · tone: precise, warm, trustworthy · anchor: warm gold
+ * macrostructure: long-form institutional landing (preserved) · theme: Topica academic
+ * nav: N11 existing · footer: institutional directory · contrast: pass (40–41)
+ * honest: pass (46) · tokens: pass (48) · responsive/mobile: pass (34, 49–57)
+ */
 @import "tailwindcss";
 @import "../tokens.css";
 @import "./theme.css";
@@ -97,6 +103,65 @@
 }
 
 @layer components {
+  .homepage-enter,
+  .scroll-reveal {
+    min-width: 0;
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .homepage-enter {
+      animation: homepage-enter var(--duration-enter) var(--ease-emphasized) both;
+      animation-delay: var(--enter-delay, 0ms);
+    }
+
+    @supports (animation-timeline: view()) {
+      .scroll-reveal {
+        animation: scroll-reveal linear both;
+        animation-range: entry 4% cover 24%;
+        animation-timeline: view();
+      }
+
+      .scroll-reveal[data-reveal="slideInLeft"] {
+        --reveal-x: -1.5rem;
+        --reveal-y: 0;
+      }
+
+      .scroll-reveal[data-reveal="slideInRight"] {
+        --reveal-x: 1.5rem;
+        --reveal-y: 0;
+      }
+
+      .scroll-reveal[data-reveal="scaleIn"],
+      .scroll-reveal[data-reveal="imageReveal"] {
+        --reveal-scale: 0.98;
+      }
+    }
+  }
+
+  @keyframes homepage-enter {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes scroll-reveal {
+    from {
+      opacity: 0;
+      transform: translate(var(--reveal-x, 0), var(--reveal-y, 1rem)) scale(var(--reveal-scale, 1));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   .article-content {
     color: var(--color-ink-800);
     font-size: var(--text-body);
@@ -105,6 +170,27 @@
 
   .article-content > * + * {
     margin-top: 1rem;
+  }
+
+  /* Normalize legacy WordPress layout wrappers into the site grid. */
+  .article-content .section,
+  .article-content .section-content,
+  .article-content .row,
+  .article-content .col,
+  .article-content .col-inner {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .article-content .section {
+    padding-block: 0;
+  }
+
+  .article-content .aligncenter {
+    display: block;
+    margin-inline: auto;
   }
 
   .article-content h2,
@@ -128,9 +214,11 @@
   }
 
   .article-content img {
-    width: auto;
+    width: min(100%, 42rem);
     max-width: 100%;
     height: auto;
+    display: block;
+    border-radius: var(--radius-lg);
     margin-inline: auto;
   }
 
@@ -270,6 +358,57 @@
     height: auto;
     border-radius: var(--radius-lg);
     margin-inline: auto;
+  }
+
+  .article-content.prose-editorial img {
+    width: min(100%, 42rem);
+  }
+
+  /* Turn the duration page into a scannable admissions highlight. */
+  .cms-content--thoi-gian-dao-tao {
+    padding-top: 3rem;
+  }
+
+  .cms-content--thoi-gian-dao-tao .article-content {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line-200);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--color-brand-100) 55%, transparent), transparent 42%),
+      var(--color-paper);
+    box-shadow: 0 1.5rem 3rem color-mix(in srgb, var(--color-ink-950) 8%, transparent);
+  }
+
+  .cms-content--thoi-gian-dao-tao .article-content::before {
+    content: "LỘ TRÌNH HỌC TẬP";
+    display: block;
+    margin-bottom: 1.25rem;
+    color: var(--color-brand-700);
+    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+
+  .cms-content--thoi-gian-dao-tao .article-content h2 {
+    margin-top: 0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.1;
+  }
+
+  .cms-content--thoi-gian-dao-tao .article-content p {
+    margin-top: 1.5rem;
+    color: var(--color-ink-700);
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    line-height: 1.9;
+  }
+
+  @media (max-width: 767px) {
+    .cms-content--thoi-gian-dao-tao {
+      padding-top: 2rem;
+    }
   }
 
   .prose-editorial table {

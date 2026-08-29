@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { requireAdmin } from "@/lib/auth/guards";
 import { getLeads, updateLeadStatus, deleteLead } from "@/lib/db";
+import { isSameOrigin } from "@/lib/security/request";
+import { leadStatusSchema } from "@/lib/validation/admin";
 
 export async function GET(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
 
   const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || undefined;
@@ -26,18 +26,14 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const body = await request.json();
-    const { id, status } = body;
-
-    if (!id || !status) {
-      return NextResponse.json({ error: "Thiếu thông tin cập nhật." }, { status: 400 });
-    }
+    const parsed = leadStatusSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Dữ liệu cập nhật không hợp lệ." }, { status: 422 });
+    const { id, status } = parsed.data;
 
     const success = updateLeadStatus(Number(id), status);
     if (!success) {
@@ -52,10 +48,9 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");

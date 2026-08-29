@@ -3,7 +3,7 @@
 Next.js 16 App Router website for Topica University.
 
 ## Requirements
-- Node.js >= 20
+- Node.js >= 22.5
 - npm >= 10
 
 ## Setup

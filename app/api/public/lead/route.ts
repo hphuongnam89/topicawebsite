@@ -1,74 +1,49 @@
 import { NextResponse } from "next/server";
-import { createLead, getSetting } from "@/lib/db";
+import { leadApiSchema } from "@/lib/form-schema";
+import { submitLead } from "@/lib/services/leads";
 
-async function notifyTelegram(lead: {
-  fullname: string;
-  phone: string;
-  email?: string;
-  program?: string;
-  notes?: string;
-}) {
-  try {
-    const settings = getSetting<any>("site_settings", {});
-    const token = settings.telegramBotToken;
-    const chatId = settings.telegramChatId;
+const MAX_SUBMISSIONS = 5;
+const WINDOW_MS = 15 * 60 * 1000;
+const submissions = new Map<string, { count: number; resetAt: number }>();
 
-    if (!token || !chatId) return;
+function getClientKey(request: Request): string {
+  return request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+}
 
-    const message = [
-      "🎓 *HỌC VIÊN ĐĂNG KÝ TƯ VẤN MỚI*",
-      `👤 *Họ tên:* ${lead.fullname}`,
-      `📞 *Số điện thoại:* \`${lead.phone}\``,
-      lead.email ? `✉️ *Email:* ${lead.email}` : "",
-      lead.program ? `📚 *Ngành quan tâm:* ${lead.program}` : "",
-      lead.notes ? `📝 *Ghi chú:* ${lead.notes}` : "",
-      `⏰ *Thời gian:* ${new Date().toLocaleString("vi-VN")}`,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: "Markdown",
-      }),
-    });
-  } catch (err) {
-    console.error("Telegram notification error:", err);
+function consumeSubmission(request: Request): number | null {
+  const key = getClientKey(request);
+  const now = Date.now();
+  const entry = submissions.get(key);
+  if (!entry || entry.resetAt <= now) {
+    submissions.set(key, { count: 1, resetAt: now + WINDOW_MS });
+    return null;
   }
+  if (entry.count >= MAX_SUBMISSIONS) return Math.ceil((entry.resetAt - now) / 1000);
+  entry.count += 1;
+  return null;
 }
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { fullname, phone, email, program, notes } = body;
-
-    if (!fullname || !phone) {
-      return NextResponse.json(
-        { error: "Vui lòng nhập họ tên và số điện thoại." },
-        { status: 400 }
-      );
+    const retryAfter = consumeSubmission(request);
+    if (retryAfter !== null) {
+      return NextResponse.json({ error: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau." }, {
+        status: 429,
+        headers: { "Retry-After": String(retryAfter) },
+      });
     }
 
-    const lead = createLead({
+    const parsed = leadApiSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Dữ liệu đăng ký không hợp lệ." }, { status: 422 });
+    const { fullname, phone, email, program, notes } = parsed.data;
+
+    const lead = submitLead({
       fullname: fullname.trim(),
       phone: phone.trim(),
       email: email ? email.trim() : undefined,
       program: program ? program.trim() : undefined,
       notes: notes ? notes.trim() : undefined,
     });
-
-    // Notify in background (non-blocking)
-    notifyTelegram({
-      fullname: lead.fullname,
-      phone: lead.phone,
-      email: lead.email ?? undefined,
-      program: lead.program ?? undefined,
-      notes: lead.notes ?? undefined,
-    }).catch(console.error);
 
     return NextResponse.json({ success: true, id: lead.id });
   } catch (error) {

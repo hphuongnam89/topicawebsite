@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { requireUser } from "@/lib/auth/guards";
 import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { isSameOrigin } from "@/lib/security/request";
 
 export interface HomepageHeroSettings {
   badge: string;
@@ -110,10 +111,9 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();

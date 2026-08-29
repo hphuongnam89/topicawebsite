@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { GraduationCap, Award, Globe, Users, MapPin, Shield } from "lucide-react";
+import { GraduationCap, Award, Globe, Users, MapPin, Shield, type LucideIcon } from "lucide-react";
 
 /**
  * Trust items verified from https://topicauni.edu.vn/ on 2026-08-28.
@@ -42,7 +42,7 @@ const trustItems = [
 
 interface TrustItem {
   label: string;
-  icon?: any;
+  icon?: LucideIcon;
   sourceUrl?: string;
 }
 
@@ -56,9 +56,12 @@ export function TrustSection({ data }: TrustSectionProps) {
   const items = data && data.length > 0 ? data : trustItems;
 
   return (
-    <section className="bg-canvas py-16 lg:py-20">
+    <section
+      className="border-y border-line-100 bg-paper py-6 sm:py-8"
+      aria-label="Dấu ấn Topica"
+    >
       <Container>
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {items.map((item, index) => {
             const Icon = item.icon || defaultIcons[index % defaultIcons.length];
             const delay = index * 0.1;
@@ -68,12 +71,12 @@ export function TrustSection({ data }: TrustSectionProps) {
                 key={index}
                 variant="fadeUp"
                 delay={delay}
-                className="flex flex-col items-center justify-start text-center"
+                className="flex min-w-0 items-center gap-3 rounded-lg border border-line-100 bg-canvas px-3 py-3 text-left transition-colors hover:border-brand-200 sm:px-4"
               >
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-50 text-brand-500">
-                  <Icon className="h-8 w-8" />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700">
+                  <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
                 </div>
-                <p className="text-body font-medium text-ink-600">{item.label}</p>
+                <p className="text-body-sm leading-snug font-semibold text-ink-800">{item.label}</p>
               </ScrollReveal>
             );
           })}

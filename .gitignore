@@ -54,3 +54,6 @@ next-env.d.ts
 *.xlsx
 *.pptx
 color_extractor*.py
+
+# scratch directory
+scratch/

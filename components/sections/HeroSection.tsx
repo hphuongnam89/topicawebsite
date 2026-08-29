@@ -1,13 +1,9 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion } from "motion/react";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { LeadForm } from "@/components/forms/LeadForm";
-import { fadeUp, staggerContainer } from "@/lib/motion";
+import { ArrowRight } from "lucide-react";
 
 export interface HeroSectionData {
   badge?: string;
@@ -43,57 +39,66 @@ export function HeroSection({ data }: HeroSectionProps) {
   const content = { ...DEFAULT_HERO_DATA, ...data };
 
   return (
-    <section className="relative flex min-h-[600px] w-full items-center overflow-hidden lg:min-h-[720px]">
+    <section
+      className="relative flex min-h-[calc(100svh-var(--height-header-compact))] w-full items-center overflow-hidden bg-ink-950"
+      aria-labelledby="homepage-title"
+    >
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
           src={content.bgImage || DEFAULT_HERO_DATA.bgImage!}
-          alt="Topica University Campus"
+          alt="Lớp học trực tuyến của Topica"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-[62%_center] lg:object-center"
         />
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-ink-950/70 lg:bg-gradient-to-r lg:from-ink-950/95 lg:via-ink-950/80 lg:to-transparent" />
+        <div className="absolute inset-0 bg-ink-950/80 lg:bg-gradient-to-r lg:from-ink-950/95 lg:via-ink-950/85 lg:to-ink-950/35" />
       </div>
 
-      <Container className="relative z-10 py-12 lg:py-20">
+      <Container className="relative z-10 py-10 sm:py-12 lg:py-12">
         <div
-          className={`grid grid-cols-1 items-center gap-12 ${content.showLeadForm ? "lg:grid-cols-2 lg:gap-8" : "max-w-3xl"}`}
+          className={`grid min-w-0 grid-cols-1 items-center gap-10 ${content.showLeadForm ? "lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-12" : "max-w-3xl"}`}
         >
           {/* Left Content */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="flex max-w-xl flex-col"
-          >
+          <div className="flex max-w-2xl min-w-0 flex-col">
             {content.badge && (
-              <motion.div variants={fadeUp} className="mb-6">
-                <span className="bg-ink-900/50 inline-block rounded-full border border-brand-300/20 px-4 py-1.5 text-body-sm font-medium text-brand-300 backdrop-blur-sm">
+              <div
+                className="homepage-enter mb-5"
+                style={{ "--enter-delay": "40ms" } as React.CSSProperties}
+              >
+                <span className="inline-block rounded-full border border-brand-300/35 bg-ink-950/45 px-4 py-2 text-body-sm font-semibold text-brand-300 backdrop-blur-sm">
                   {content.badge}
                 </span>
-              </motion.div>
+              </div>
             )}
 
-            <motion.h1
-              variants={fadeUp}
-              className="mb-6 font-display text-4xl leading-tight font-bold whitespace-pre-line text-white uppercase sm:text-5xl lg:text-display"
+            <h1
+              id="homepage-title"
+              className="homepage-enter mb-5 max-w-[13ch] font-display text-[clamp(2.35rem,7.8vw,4rem)] leading-[1.08] font-bold tracking-[-0.025em] whitespace-pre-line text-white uppercase"
+              style={{ "--enter-delay": "100ms" } as React.CSSProperties}
             >
               {content.title}
-            </motion.h1>
+            </h1>
 
-            <motion.p variants={fadeUp} className="mb-8 text-body-lg text-white/80">
+            <p
+              className="homepage-enter mb-7 max-w-[58ch] text-body-lg text-white/80"
+              style={{ "--enter-delay": "160ms" } as React.CSSProperties}
+            >
               {content.description}
-            </motion.p>
+            </p>
 
-            <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:flex-row">
+            <div
+              className="homepage-enter flex flex-col gap-3 min-[390px]:flex-row"
+              style={{ "--enter-delay": "220ms" } as React.CSSProperties}
+            >
               {content.ctaPrimaryText && (
                 <ButtonLink
                   href={content.ctaPrimaryLink || "https://www.tuyensinh.topicauni.edu.vn/"}
                   size="lg"
                   variant="primary"
+                  rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
                 >
                   {content.ctaPrimaryText}
                 </ButtonLink>
@@ -103,26 +108,24 @@ export function HeroSection({ data }: HeroSectionProps) {
                   href={content.ctaSecondaryLink || "/nganh-dao-tao/"}
                   size="lg"
                   variant="secondary"
-                  className="border-white text-white hover:bg-white/10 hover:text-white"
+                  className="border-white/70 text-white hover:border-white hover:bg-white/10 hover:text-white"
                 >
                   {content.ctaSecondaryText}
                 </ButtonLink>
               )}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Right Content - Lead Form */}
           {content.showLeadForm && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="mx-auto w-full max-w-md lg:mr-0 lg:ml-auto"
+            <div
+              className="homepage-enter mx-auto w-full max-w-md lg:mr-0 lg:ml-auto"
+              style={{ "--enter-delay": "260ms" } as React.CSSProperties}
             >
-              <div className="bg-ink-900/40 rounded-xl p-2 backdrop-blur-md">
+              <div className="rounded-[1.25rem] border border-white/25 bg-ink-950/45 p-2 shadow-xl shadow-ink-950/20 backdrop-blur-md sm:p-2.5">
                 <LeadForm />
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       </Container>

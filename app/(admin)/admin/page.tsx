@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getLeads, getArticles, getCategories } from "@/lib/db";
+import { getLeads, getArticles, getCategories, getAnalyticsStats } from "@/lib/db";
 import { redirect } from "next/navigation";
 import {
   Users,
@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   AlertCircle,
   PlusCircle,
+  BarChart,
 } from "lucide-react";
 
 export default async function AdminDashboardPage() {
@@ -21,13 +22,23 @@ export default async function AdminDashboardPage() {
     redirect("/admin/login");
   }
 
-  const { items: recentLeads, total: totalLeads } = getLeads({ limit: 5 });
+  const totalLeads = getLeads().total;
+  const { items: recentLeads } = getLeads({ limit: 5 });
   const { items: recentArticles, total: totalArticles } = getArticles({ limit: 5 });
   const categories = getCategories();
 
   const newLeadsCount = getLeads({ status: "new" }).total;
+  const analytics = getAnalyticsStats(7); // Last 7 days
 
   const statCards = [
+    {
+      title: "Lượt truy cập",
+      value: analytics.totalViews,
+      total: "Trong 7 ngày qua",
+      icon: BarChart,
+      color: "bg-indigo-600 text-white",
+      href: "/admin", // No specific page for analytics yet
+    },
     {
       title: "Lead Tư vấn mới",
       value: newLeadsCount,
@@ -51,14 +62,6 @@ export default async function AdminDashboardPage() {
       icon: FolderTree,
       color: "bg-emerald-600 text-white",
       href: "/admin/articles/categories",
-    },
-    {
-      title: "Trang chủ & Banner",
-      value: "Live",
-      total: "Đang hoạt động",
-      icon: ImageIcon,
-      color: "bg-purple-600 text-white",
-      href: "/admin/homepage",
     },
   ];
 
@@ -220,6 +223,38 @@ export default async function AdminDashboardPage() {
               ))
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Analytics Section: Top Pages */}
+      <div className="rounded-xl border border-line-200 bg-white shadow-xs">
+        <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
+          <div className="flex items-center gap-2">
+            <BarChart className="h-5 w-5 text-indigo-600" />
+            <h2 className="font-display text-lg font-bold text-ink-950">Top Trang Xem Nhiều (7 ngày qua)</h2>
+          </div>
+        </div>
+
+        <div className="divide-y divide-line-100">
+          {analytics.topPages.length === 0 ? (
+            <div className="p-8 text-center text-body-sm text-ink-400">
+              Chưa có dữ liệu truy cập nào được ghi nhận.
+            </div>
+          ) : (
+            analytics.topPages.map((page, idx) => (
+              <div key={idx} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/70 transition-colors">
+                <div className="flex items-center gap-4">
+                  <span className="text-body-sm font-bold text-ink-400 w-4">{idx + 1}</span>
+                  <a href={page.path} target="_blank" rel="noreferrer" className="text-body-sm font-medium text-ink-900 hover:text-brand-700 transition-colors">
+                    {page.path}
+                  </a>
+                </div>
+                <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+                  {page.views} lượt
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

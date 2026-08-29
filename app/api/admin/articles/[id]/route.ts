@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
-import { getArticleById, updateArticle, deleteArticle } from "@/lib/db";
+import { requireUser } from "@/lib/auth/guards";
+import { getArticleById, deleteArticle } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { isSameOrigin } from "@/lib/security/request";
+import { articleUpdateSchema } from "@/lib/validation/admin";
+import { updateArticleFromInput } from "@/lib/services/articles";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(_request: Request, { params }: RouteParams) {
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
   const { id } = await params;
   const article = getArticleById(Number(id));
   if (!article) {
@@ -17,21 +22,17 @@ export async function GET(_request: Request, { params }: RouteParams) {
 }
 
 export async function PUT(request: Request, { params }: RouteParams) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { id } = await params;
   const articleId = Number(id);
 
   try {
-    const body = await request.json();
-    const updated = updateArticle(articleId, {
-      ...body,
-      category_id: body.category_id !== undefined ? (body.category_id ? Number(body.category_id) : null) : undefined,
-      is_featured: body.is_featured !== undefined ? (body.is_featured ? 1 : 0) : undefined,
-    });
+    const parsed = articleUpdateSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
+    const updated = updateArticleFromInput(articleId, parsed.data);
 
     if (!updated) {
       return NextResponse.json({ error: "Không tìm thấy bài viết để cập nhật." }, { status: 404 });
@@ -44,9 +45,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
     }
 
     return NextResponse.json({ success: true, article: updated });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Update article error:", error);
-    if (error.message && error.message.includes("UNIQUE constraint failed: articles.slug")) {
+    if (error instanceof Error && error.message.includes("UNIQUE constraint failed: articles.slug")) {
       return NextResponse.json({ error: "Đường dẫn (slug) bài viết đã tồn tại." }, { status: 409 });
     }
     return NextResponse.json({ error: "Lỗi cập nhật bài viết." }, { status: 500 });
@@ -54,10 +55,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
 }
 
 export async function DELETE(_request: Request, { params }: RouteParams) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(_request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { id } = await params;
   const success = deleteArticle(Number(id));

@@ -22,8 +22,6 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
       value: fact("Ngôn ngữ")?.status === "verified" ? fact("Ngôn ngữ")?.value : null,
     },
   ].filter((item) => item.value);
-  const sourceText = `Nguồn: ${program.source.label}, ${program.source.reference}. Đối chiếu ngày ${program.source.reviewedAt}.`;
-
   return (
     <header className="border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-canvas)]">
       <Container className="grid min-h-[38rem] min-w-0 gap-0 px-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
@@ -144,24 +142,6 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               ))}
             </dl>
           )}
-          <p className="mt-8 text-xs leading-5 text-[var(--color-academic-muted)]">
-            {program.source.url ? (
-              <>
-                Nguồn:{" "}
-                <a
-                  href={program.source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="[overflow-wrap:anywhere] break-words underline underline-offset-4"
-                >
-                  {program.source.label}
-                </a>
-                , {program.source.reference}. Đối chiếu ngày {program.source.reviewedAt}.
-              </>
-            ) : (
-              sourceText
-            )}
-          </p>
         </div>
       </Container>
     </header>

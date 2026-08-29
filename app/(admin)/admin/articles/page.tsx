@@ -62,7 +62,7 @@ export default function AdminArticlesPage() {
 
   const fetchArticles = async (searchQuery = search) => {
     try {
-      await Promise.resolve(); await Promise.resolve(); // // setLoading(true);
+      setLoading(true);
       const params = new URLSearchParams();
       params.set("page", String(page));
       params.set("limit", "15");

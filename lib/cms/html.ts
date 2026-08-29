@@ -1,5 +1,3 @@
-import "server-only";
-
 import sanitizeHtml from "sanitize-html";
 
 declare const sanitizedHtmlBrand: unique symbol;

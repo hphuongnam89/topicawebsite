@@ -10,6 +10,9 @@ export function WordPressContent({ html, className }: WordPressContentProps) {
   if (!html) return null;
 
   return (
-    <div className={cn("article-content", className)} dangerouslySetInnerHTML={{ __html: html }} />
+    <div
+      className={cn("article-content prose-editorial", className)}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }

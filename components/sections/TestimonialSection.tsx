@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, KeyboardEvent } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -35,10 +36,17 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const scrollContainer = scrollRef.current;
-    const scrollLeft = scrollContainer.scrollLeft;
-    const containerWidth = scrollContainer.clientWidth;
-    const newIndex = Math.round(scrollLeft / containerWidth);
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < testimonials.length) {
+    const scrollLeft = scrollContainer.scrollLeft + scrollContainer.offsetLeft;
+    const newIndex = Array.from(scrollContainer.children).reduce(
+      (closestIndex, child, index) => {
+        const closest = scrollContainer.children[closestIndex] as HTMLElement | undefined;
+        const currentDistance = Math.abs((child as HTMLElement).offsetLeft - scrollLeft);
+        const closestDistance = closest ? Math.abs(closest.offsetLeft - scrollLeft) : Infinity;
+        return currentDistance < closestDistance ? index : closestIndex;
+      },
+      0,
+    );
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < items.length) {
       setActiveIndex(newIndex);
     }
   };
@@ -47,24 +55,29 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
     if (e.key === "ArrowLeft") {
       scrollToIndex(Math.max(0, activeIndex - 1));
     } else if (e.key === "ArrowRight") {
-      scrollToIndex(Math.min(testimonials.length - 1, activeIndex + 1));
+      scrollToIndex(Math.min(items.length - 1, activeIndex + 1));
     }
   };
 
   return (
-    <section className="bg-canvas py-16 lg:py-24" aria-label="Testimonials">
+    <section className="bg-canvas py-16 lg:py-24" aria-labelledby="testimonials-title">
       <Container>
-        <SectionHeading title="Sinh viên nói gì về Topica?" align="center" />
+        <SectionHeading
+          id="testimonials-title"
+          title="Sinh viên nói gì về Topica?"
+          align="center"
+        />
 
         <div className="group relative mt-12 flex justify-center">
           <div
             ref={scrollRef}
-            className="flex snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-8 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:w-max"
+            className="flex snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-8 [-ms-overflow-style:none] md:w-max [&::-webkit-scrollbar]:hidden"
             onScroll={handleScroll}
             onKeyDown={handleKeyDown}
             tabIndex={0}
             role="region"
-            aria-label="Testimonial slider"
+            aria-label="Chia sẻ của sinh viên"
+            aria-roledescription="carousel"
           >
             {items.map((testimonial) => (
               <div
@@ -77,9 +90,11 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
                   <div className="mt-6 flex items-center gap-4">
                     {testimonial.avatar ? (
-                      <img
+                      <Image
                         src={testimonial.avatar}
                         alt={testimonial.name}
+                        width={48}
+                        height={48}
                         className="h-12 w-12 rounded-full object-cover"
                       />
                     ) : (
@@ -102,18 +117,18 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
           <button
             onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
-            className="absolute top-1/2 -left-5 z-10 flex hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
+            className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
             disabled={activeIndex === 0}
-            aria-label="Previous testimonial"
+            aria-label="Chia sẻ trước"
           >
             <ChevronLeft className="h-5 w-5 text-ink-800" />
           </button>
 
           <button
             onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
-            className="absolute top-1/2 -right-5 z-10 flex hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
+            className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
             disabled={activeIndex === items.length - 1}
-            aria-label="Next testimonial"
+            aria-label="Chia sẻ tiếp theo"
           >
             <ChevronRight className="h-5 w-5 text-ink-800" />
           </button>
@@ -124,12 +139,17 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
             <button
               key={index}
               onClick={() => scrollToIndex(index)}
-              className={cn(
-                "h-2 w-2 rounded-full transition-colors",
-                index === activeIndex ? "bg-brand-500" : "bg-line-200",
-              )}
-              aria-label={`Go to slide ${index + 1}`}
-            />
+              className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-brand-500"
+              aria-label={`Xem chia sẻ ${index + 1}`}
+              aria-current={index === activeIndex ? "true" : undefined}
+            >
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full transition-[width,background-color]",
+                  index === activeIndex ? "w-6 bg-brand-700" : "bg-line-200",
+                )}
+              />
+            </button>
           ))}
         </div>
       </Container>

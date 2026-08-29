@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { primaryNav, actionItems } from "@/data/navigation";
 import { cn } from "@/components/ui/cn";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -14,6 +14,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -32,6 +33,7 @@ export function Header() {
       if (e.key === "Escape") {
         setOpenMenuId(null);
         setMobileOpen(false);
+        setSearchOpen(false);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -40,15 +42,24 @@ export function Header() {
 
   // Close mega menu when clicking outside header
   useEffect(() => {
-    if (!openMenuId) return;
+    if (!openMenuId && !searchOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+      const target = e.target;
+      const clickedSearch = target instanceof Element && target.closest("#header-search");
+      const clickedSearchToggle =
+        target instanceof Element && target.closest('[aria-controls="header-search"]');
+
+      if (!clickedSearch && !clickedSearchToggle) {
+        setSearchOpen(false);
+      }
+
+      if (headerRef.current && !headerRef.current.contains(target as Node)) {
         setOpenMenuId(null);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [openMenuId]);
+  }, [openMenuId, searchOpen]);
 
   const handleMenuEnter = useCallback((id: string) => {
     if (closeTimeoutRef.current) {
@@ -83,7 +94,7 @@ export function Header() {
       <header
         ref={headerRef}
         className={cn(
-          "fixed top-0 right-0 left-0 z-50 w-full border-b transition-all duration-[var(--duration-slow)]",
+          "fixed top-0 right-0 left-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow] duration-[var(--duration-slow)]",
           scrolled
             ? "border-brand-600 bg-brand-500/95 shadow-sm backdrop-blur-md"
             : "border-transparent bg-brand-500",
@@ -153,12 +164,27 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSearchOpen((open) => !open)}
+              aria-label="Tìm kiếm"
+              aria-expanded={searchOpen}
+              aria-controls="header-search"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors duration-[var(--duration-base)] hover:bg-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {searchOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Search className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+
             {applyAction?.href && (
               <ButtonLink
                 href={applyAction.href}
                 external={applyAction.external}
                 size="default"
-                className="hidden sm:inline-flex bg-white text-brand-700 hover:bg-white/90 shadow-sm"
+                className="hidden bg-white text-brand-700 shadow-sm hover:bg-white/90 sm:inline-flex"
               >
                 {applyAction.label}
               </ButtonLink>
@@ -171,11 +197,39 @@ export function Header() {
               onClick={() => setMobileOpen(true)}
               aria-label="Mở menu"
               aria-expanded={mobileOpen}
-              className="xl:hidden text-white hover:bg-black/10 hover:text-white"
+              className="text-white hover:bg-black/10 hover:text-white xl:hidden"
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
+
+          {searchOpen && (
+            <form
+              id="header-search"
+              action="/tim-kiem/"
+              role="search"
+              className="absolute top-full right-4 left-4 z-20 mt-2 flex items-center gap-2 rounded-lg border border-brand-300 bg-canvas p-2 shadow-md sm:left-auto sm:w-80"
+            >
+              <label htmlFor="header-search-input" className="sr-only">
+                Từ khóa tìm kiếm
+              </label>
+              <input
+                id="header-search-input"
+                name="q"
+                type="search"
+                autoFocus
+                placeholder="Bạn muốn tìm gì?"
+                className="min-w-0 flex-1 rounded-md border border-line-200 bg-white px-3 py-2 text-body-sm text-ink-950 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+              />
+              <button
+                type="submit"
+                aria-label="Tìm kiếm"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-700 text-white transition-colors hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+              >
+                <Search className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </form>
+          )}
         </div>
       </header>
 

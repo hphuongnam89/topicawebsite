@@ -85,7 +85,7 @@ export default async function NewsHomepage({ searchParams }: Props) {
         breadcrumbs={[{ label: "Trang chủ", href: "/" }, { label: "Tin tức" }]}
       />
 
-      <Container className="mt-16">
+      <Container className="my-16 lg:my-24">
         <NewsFilterBar categories={categories} />
 
         {/* Featured Article */}

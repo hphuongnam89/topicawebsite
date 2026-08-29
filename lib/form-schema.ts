@@ -11,5 +11,13 @@ export const leadFormSchema = z.object({
   }),
 });
 
+export const leadApiSchema = z.object({
+  fullname: z.string().trim().min(2).max(100),
+  phone: z.string().trim().regex(/^(0[3-9]\d{8}|\+84[3-9]\d{8})$/),
+  email: z.string().trim().email().max(254).optional(),
+  program: z.string().trim().max(200).optional(),
+  notes: z.string().trim().max(1000).optional(),
+}).strict();
+
 export type LeadFormData = z.infer<typeof leadFormSchema>;
 export type LeadFormErrors = Partial<Record<keyof LeadFormData, string>>;

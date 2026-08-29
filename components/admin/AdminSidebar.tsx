@@ -51,6 +51,12 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       icon: Home,
     },
     {
+      title: "Quản lý Trang (Pages)",
+      href: "/admin/pages",
+      icon: FileText,
+      exact: false,
+    },
+    {
       title: "Quản lý Tin tức",
       href: "/admin/articles",
       icon: FileText,
@@ -69,6 +75,11 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     {
       title: "Tiếp nhận Lead Tư vấn",
       href: "/admin/leads",
+      icon: Users,
+    },
+    {
+      title: "Quản trị viên (Users)",
+      href: "/admin/users",
       icon: Users,
     },
     {

@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { sanitizeWordPressHtml } from "@/lib/cms/html";
 import {
   Save,
   ArrowLeft,
@@ -23,6 +24,7 @@ import {
   Sparkles,
   Globe,
 } from "lucide-react";
+import { RichTextEditor } from "@/components/ui/RichTextEditor";
 
 interface CategoryOption {
   id: number;
@@ -92,7 +94,7 @@ export function ArticleEditorForm({
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
+  
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -132,26 +134,7 @@ export function ArticleEditorForm({
     }
   };
 
-  const insertTag = (openTag: string, closeTag: string = "") => {
-    const textarea = document.getElementById("content-textarea") as HTMLTextAreaElement;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    const replacement = `${openTag}${selectedText || "Nội dung"}${closeTag}`;
-
-    const newContent =
-      textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
-
-    setFormData((prev) => ({ ...prev, content_html: newContent }));
-
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + openTag.length, start + replacement.length - closeTag.length);
-    }, 50);
-  };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
@@ -288,131 +271,25 @@ export function ArticleEditorForm({
           </div>
 
           {/* Content Editor */}
-          <div className="rounded-xl border border-line-200 bg-white shadow-xs overflow-hidden">
-            {/* Editor Toolbar & Tab Switcher */}
-            <div className="flex flex-wrap items-center justify-between border-b border-line-200 bg-slate-50 p-2.5 px-4 gap-2">
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => insertTag("<h2>", "</h2>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Tiêu đề H2"
-                >
-                  <Heading2 className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertTag("<h3>", "</h3>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Tiêu đề H3"
-                >
-                  <Heading3 className="h-4 w-4" />
-                </button>
-                <span className="h-4 w-[1px] bg-line-200 mx-1" />
-                <button
-                  type="button"
-                  onClick={() => insertTag("<strong>", "</strong>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="In đậm"
-                >
-                  <Bold className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertTag("<em>", "</em>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="In nghiêng"
-                >
-                  <Italic className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertTag("<ul>\n  <li>", "</li>\n</ul>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Danh sách gạch đầu dòng"
-                >
-                  <List className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => insertTag("<blockquote>", "</blockquote>")}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Trích dẫn"
-                >
-                  <Quote className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = prompt("Nhập liên kết URL:");
-                    if (url) insertTag(`<a href="${url}">`, "</a>");
-                  }}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Chèn liên kết"
-                >
-                  <LinkIcon className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const imgUrl = prompt("Nhập URL hình ảnh:");
-                    if (imgUrl) insertTag(`<img src="${imgUrl}" alt="Hình ảnh bài viết" />`);
-                  }}
-                  className="rounded p-1.5 text-ink-700 hover:bg-slate-200"
-                  title="Chèn ảnh vào nội dung"
-                >
-                  <ImageIcon className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Tab Switcher */}
-              <div className="flex items-center rounded-lg border border-line-200 bg-white p-0.5">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("write")}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
-                    activeTab === "write"
-                      ? "bg-brand-50 text-brand-700"
-                      : "text-ink-600 hover:text-ink-950"
-                  }`}
-                >
-                  <Edit3 className="h-3.5 w-3.5" />
-                  <span>Soạn thảo</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("preview")}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-semibold ${
-                    activeTab === "preview"
-                      ? "bg-brand-50 text-brand-700"
-                      : "text-ink-600 hover:text-ink-950"
-                  }`}
-                >
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>Xem trước</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Editor Area */}
-            <div className="p-4">
-              {activeTab === "write" ? (
-                <textarea
-                  id="content-textarea"
-                  rows={16}
-                  required
-                  value={formData.content_html}
-                  onChange={(e) => setFormData({ ...formData, content_html: e.target.value })}
-                  placeholder="<p>Nhập nội dung bài viết bằng định dạng văn bản hoặc HTML...</p>"
-                  className="w-full font-mono text-body-sm text-ink-950 focus:outline-none resize-y"
-                />
-              ) : (
-                <div
-                  className="prose prose-slate max-w-none min-h-[380px] p-2"
-                  dangerouslySetInnerHTML={{ __html: formData.content_html || "<em>Chưa có nội dung để xem trước.</em>" }}
-                />
-              )}
-            </div>
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-ink-950 flex justify-between items-center">
+              <span>Nội dung chính</span>
+            </label>
+            <RichTextEditor
+              value={formData.content_html}
+              onChange={(val) => setFormData({ ...formData, content_html: val })}
+              onUploadImage={async (file) => {
+                const data = new FormData();
+                data.append("file", file);
+                const res = await fetch("/api/admin/upload", {
+                  method: "POST",
+                  body: data,
+                });
+                if (!res.ok) throw new Error("Upload failed");
+                const resData = await res.json();
+                return resData.url;
+              }}
+            />
           </div>
 
           {/* SEO Metadata Box */}

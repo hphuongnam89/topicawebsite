@@ -3,6 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { hashPassword } from "@/lib/auth/password";
+import type { ArticleRecord, CategoryRecord, LeadRecord, UserRecord } from "./types";
+
+export type { ArticleRecord, CategoryRecord, LeadRecord, UserRecord, PageRecord } from "./types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DB_PATH = path.join(DATA_DIR, "topica.db");
@@ -93,10 +96,39 @@ function initSchema(db: DatabaseSync) {
     );
   `);
 
-  // Seed default admin user if not exists
+  // 6. Pages table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS pages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      excerpt TEXT,
+      content_html TEXT NOT NULL,
+      featured_image TEXT,
+      status TEXT DEFAULT 'published',
+      seo_title TEXT,
+      seo_description TEXT,
+      published_at TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+  `);
+
+  // 7. Page Views table (Analytics)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS page_views (
+      path TEXT NOT NULL,
+      date TEXT NOT NULL,
+      views INTEGER DEFAULT 1,
+      PRIMARY KEY (path, date)
+    );
+  `);
+
+  // Provision the first admin explicitly; never ship a known default credential.
   const checkAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get("admin");
-  if (!checkAdmin) {
-    const adminPasswordHash = hashPassword("admin@topica2026");
+  const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  if (!checkAdmin && initialAdminPassword) {
+    const adminPasswordHash = hashPassword(initialAdminPassword);
     db.prepare(`
       INSERT INTO users (id, username, password_hash, name, role, created_at)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -172,15 +204,6 @@ export function setSetting(key: string, value: unknown): void {
 // ----------------------------------------------------
 // USERS HELPERS
 // ----------------------------------------------------
-export interface UserRecord {
-  id: string;
-  username: string;
-  password_hash: string;
-  name: string;
-  role: string;
-  created_at: string;
-}
-
 export function getUserByUsername(username: string): UserRecord | null {
   const row = getDb().prepare("SELECT * FROM users WHERE username = ?").get(username) as UserRecord | undefined;
   return row ?? null;
@@ -201,6 +224,34 @@ export function updateUserPassword(userId: string, newPasswordHash: string): boo
   return result.changes > 0;
 }
 
+export function updateUser(userId: string, data: { name?: string; role?: string; password_hash?: string }): boolean {
+  const db = getDb();
+  let query = "UPDATE users SET ";
+  const updates: string[] = [];
+  const params: any[] = [];
+  
+  if (data.name !== undefined) {
+    updates.push("name = ?");
+    params.push(data.name);
+  }
+  if (data.role !== undefined) {
+    updates.push("role = ?");
+    params.push(data.role);
+  }
+  if (data.password_hash !== undefined) {
+    updates.push("password_hash = ?");
+    params.push(data.password_hash);
+  }
+
+  if (updates.length === 0) return true;
+
+  query += updates.join(", ") + " WHERE id = ?";
+  params.push(userId);
+
+  const result = db.prepare(query).run(...params);
+  return result.changes > 0;
+}
+
 export function createUser(user: Omit<UserRecord, "created_at">): void {
   const now = new Date().toISOString();
   getDb().prepare(`
@@ -217,15 +268,6 @@ export function deleteUser(id: string): boolean {
 // ----------------------------------------------------
 // CATEGORIES HELPERS
 // ----------------------------------------------------
-export interface CategoryRecord {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  created_at: string;
-  article_count?: number;
-}
-
 export function getCategories(): CategoryRecord[] {
   const rows = getDb().prepare(`
     SELECT c.*, COUNT(a.id) as article_count
@@ -266,27 +308,6 @@ export function deleteCategory(id: number): void {
 // ----------------------------------------------------
 // ARTICLES HELPERS
 // ----------------------------------------------------
-export interface ArticleRecord {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  content_html: string;
-  featured_image: string | null;
-  category_id: number | null;
-  category_name?: string | null;
-  category_slug?: string | null;
-  tags: string | null;
-  author_name: string | null;
-  is_featured: number;
-  status: string;
-  seo_title: string | null;
-  seo_description: string | null;
-  published_at: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export function getArticles(options: {
   search?: string;
   categoryId?: number;
@@ -439,17 +460,6 @@ export function deleteArticle(id: number): boolean {
 // ----------------------------------------------------
 // LEADS HELPERS
 // ----------------------------------------------------
-export interface LeadRecord {
-  id: number;
-  fullname: string;
-  phone: string;
-  email: string | null;
-  program: string | null;
-  notes: string | null;
-  status: "new" | "contacted" | "consulted" | "cancelled";
-  created_at: string;
-}
-
 export function getLeads(options: { search?: string; status?: string; limit?: number; offset?: number } = {}): {
   items: LeadRecord[];
   total: number;
@@ -511,4 +521,118 @@ export function updateLeadStatus(id: number, status: "new" | "contacted" | "cons
 export function deleteLead(id: number): boolean {
   const result = getDb().prepare("DELETE FROM leads WHERE id = ?").run(id);
   return result.changes > 0;
+}
+// ----------------------------------------------------
+// PAGES HELPERS
+// ----------------------------------------------------
+export function getPages(): any[] {
+  return getDb().prepare('SELECT * FROM pages ORDER BY published_at DESC').all();
+}
+
+export function getPageBySlug(slug: string): any | null {
+  const row = getDb().prepare('SELECT * FROM pages WHERE slug = ?').get(slug);
+  return row ?? null;
+}
+
+export function createPage(data: any): any {
+  const db = getDb();
+  const now = new Date().toISOString();
+  try {
+    const result = db.prepare(`
+      INSERT INTO pages (
+        title, slug, excerpt, content_html, featured_image,
+        status, seo_title, seo_description, published_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      data.title, data.slug, data.excerpt ?? null, data.content_html, data.featured_image ?? null,
+      data.status || 'published', data.seo_title ?? null, data.seo_description ?? null,
+      data.published_at || now, now, now
+    );
+    return getPageBySlug(data.slug);
+  } catch (e) {
+    return getPageBySlug(data.slug);
+  }
+}
+
+export function getPageById(id: number): any | null {
+  const row = getDb().prepare('SELECT * FROM pages WHERE id = ?').get(id);
+  return row ?? null;
+}
+
+export function updatePage(id: number, data: Partial<any>): any | null {
+  const db = getDb();
+  const existing = getPageById(id);
+  if (!existing) return null;
+
+  const now = new Date().toISOString();
+  db.prepare(`
+    UPDATE pages SET
+      title = COALESCE(?, title),
+      slug = COALESCE(?, slug),
+      excerpt = COALESCE(?, excerpt),
+      content_html = COALESCE(?, content_html),
+      featured_image = COALESCE(?, featured_image),
+      status = COALESCE(?, status),
+      seo_title = COALESCE(?, seo_title),
+      seo_description = COALESCE(?, seo_description),
+      published_at = COALESCE(?, published_at),
+      updated_at = ?
+    WHERE id = ?
+  `).run(
+    data.title ?? null,
+    data.slug ?? null,
+    data.excerpt ?? null,
+    data.content_html ?? null,
+    data.featured_image ?? null,
+    data.status ?? null,
+    data.seo_title ?? null,
+    data.seo_description ?? null,
+    data.published_at ?? null,
+    now,
+    id
+  );
+
+  return getPageById(id);
+}
+
+export function deletePage(id: number): boolean {
+  const result = getDb().prepare("DELETE FROM pages WHERE id = ?").run(id);
+  return result.changes > 0;
+}
+// ----------------------------------------------------
+// ANALYTICS HELPERS
+// ----------------------------------------------------
+export function recordPageView(path: string): void {
+  const db = getDb();
+  const date = new Date().toISOString().split('T')[0];
+  db.prepare(`
+    INSERT INTO page_views (path, date, views)
+    VALUES (?, ?, 1)
+    ON CONFLICT(path, date) DO UPDATE SET views = views + 1
+  `).run(path, date);
+}
+
+export function getAnalyticsStats(days: number = 7): { totalViews: number; topPages: {path: string; views: number}[] } {
+  const db = getDb();
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  const cutoffDate = d.toISOString().split('T')[0];
+  
+  const totalViews = db.prepare(`
+    SELECT SUM(views) as total FROM page_views WHERE date >= ?
+  `).get(cutoffDate) as { total: number | null };
+
+  const topPages = db.prepare(`
+    SELECT path, SUM(views) as views
+    FROM page_views
+    WHERE date >= ?
+    GROUP BY path
+    ORDER BY views DESC
+    LIMIT 10
+  `).all(cutoffDate) as {path: string; views: number}[];
+
+  return {
+    totalViews: totalViews?.total || 0,
+    topPages,
+  };
 }

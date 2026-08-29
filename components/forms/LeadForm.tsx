@@ -12,11 +12,7 @@ interface LeadFormProps {
 const programs = [
   "Quản trị Kinh doanh - Marketing",
   "Quản trị Dịch vụ Du lịch và Lữ hành",
-  "Quản lý công nghiệp",
   "Công nghệ thông tin",
-  "Ứng dụng công nghệ thông tin",
-  "Truyền thông Đa phương tiện",
-  "Công nghệ Kỹ thuật Ô tô",
   "Ngôn ngữ Anh",
   "Ngôn ngữ Trung Quốc",
 ];
@@ -30,9 +26,7 @@ const educationLevels = [
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-export function LeadForm({
-  onSubmit,
-}: LeadFormProps) {
+export function LeadForm({ onSubmit }: LeadFormProps) {
   const [formData, setFormData] = useState<Partial<LeadFormData>>({
     fullName: "",
     phone: "",
@@ -121,18 +115,33 @@ export function LeadForm({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="space-y-4 rounded-lg border border-line-200 bg-paper p-6 shadow-sm"
+      className="space-y-4 rounded-[0.75rem] border border-white/60 bg-paper p-5 shadow-sm sm:p-6"
       aria-live="polite"
+      aria-busy={status === "loading"}
     >
+      <div className="border-b border-line-200 pb-4">
+        <p className="text-body-sm font-semibold tracking-[0.1em] text-brand-700 uppercase">
+          Tư vấn tuyển sinh
+        </p>
+        <h2 className="mt-1 font-display text-[1.5rem] leading-tight font-bold text-ink-950">
+          Nhận lộ trình phù hợp với bạn
+        </h2>
+      </div>
       {status === "error" && Object.keys(errors).length > 0 && (
-        <div className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error">
+        <div
+          className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
+          role="alert"
+        >
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span>Vui lòng kiểm tra lại thông tin bên dưới.</span>
         </div>
       )}
 
       {globalError && (
-        <div className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error">
+        <div
+          className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
+          role="alert"
+        >
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{globalError}</span>
         </div>
@@ -146,10 +155,11 @@ export function LeadForm({
           type="text"
           id="fullName"
           name="fullName"
+          autoComplete="name"
           value={formData.fullName || ""}
           onChange={handleChange}
           disabled={status === "loading"}
-          className={`h-12 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
+          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
             errors.fullName
               ? "border-error focus:border-error focus:ring-error"
               : "border-line-200 focus:border-info focus:ring-info"
@@ -173,17 +183,19 @@ export function LeadForm({
           type="tel"
           id="phone"
           name="phone"
+          autoComplete="tel"
+          inputMode="tel"
           value={formData.phone || ""}
           onChange={handleChange}
           disabled={status === "loading"}
-          className={`h-12 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
+          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
             errors.phone
               ? "border-error focus:border-error focus:ring-error"
               : "border-line-200 focus:border-info focus:ring-info"
           }`}
           aria-invalid={!!errors.phone}
           aria-describedby={errors.phone ? "phone-error" : undefined}
-          placeholder="Nhập số điện thoại (VD: 0912345678)"
+          placeholder="VD: 0912345678"
         />
         {errors.phone && (
           <p id="phone-error" className="mt-1 flex items-center gap-1 text-body-sm text-error">
@@ -200,10 +212,12 @@ export function LeadForm({
           type="email"
           id="email"
           name="email"
+          autoComplete="email"
+          inputMode="email"
           value={formData.email || ""}
           onChange={handleChange}
           disabled={status === "loading"}
-          className={`h-12 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
+          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
             errors.email
               ? "border-error focus:border-error focus:ring-error"
               : "border-line-200 focus:border-info focus:ring-info"
@@ -229,7 +243,7 @@ export function LeadForm({
           value={formData.program || ""}
           onChange={handleChange}
           disabled={status === "loading"}
-          className={`h-12 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
+          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
             errors.program
               ? "border-error focus:border-error focus:ring-error"
               : "border-line-200 focus:border-info focus:ring-info"
@@ -263,7 +277,7 @@ export function LeadForm({
           value={formData.educationLevel || ""}
           onChange={handleChange}
           disabled={status === "loading"}
-          className={`h-12 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
+          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
             errors.educationLevel
               ? "border-error focus:border-error focus:ring-error"
               : "border-line-200 focus:border-info focus:ring-info"
@@ -300,17 +314,19 @@ export function LeadForm({
             onChange={handleChange}
             disabled={status === "loading"}
             className="mt-1 h-4 w-4 rounded border-line-200 text-brand-700 focus:ring-info"
+            aria-invalid={!!errors.consent}
+            aria-describedby={errors.consent ? "consent-error" : undefined}
           />
           <label htmlFor="consent" className="text-body-sm text-ink-600">
             Tôi đồng ý với{" "}
-            <a href="#" className="text-info hover:underline">
+            <span className="font-medium text-info underline decoration-info/40 underline-offset-2">
               Chính sách bảo mật
-            </a>{" "}
+            </span>{" "}
             và cho phép Topica liên hệ để tư vấn.
           </label>
         </div>
         {errors.consent && (
-          <p className="flex items-center gap-1 text-body-sm text-error">
+          <p id="consent-error" className="flex items-center gap-1 text-body-sm text-error">
             <AlertCircle className="h-3.5 w-3.5" /> {errors.consent}
           </p>
         )}
@@ -319,7 +335,7 @@ export function LeadForm({
       <button
         type="submit"
         disabled={status === "loading"}
-        className="mt-4 flex h-12 w-full items-center justify-center rounded-md bg-brand-700 font-semibold text-white transition-colors hover:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-4 flex h-12 w-full items-center justify-center rounded-md bg-brand-700 font-semibold text-white shadow-xs transition-[background-color,transform,box-shadow] hover:bg-brand-800 hover:shadow-sm active:translate-y-px disabled:cursor-not-allowed disabled:opacity-70"
       >
         {status === "loading" ? (
           <>
