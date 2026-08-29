@@ -1,4 +1,4 @@
-import navigationData from "../docs/architecture/NAVIGATION.json";
+import navigationData from "./navigation.json";
 
 export interface NavItem {
   label: string;
