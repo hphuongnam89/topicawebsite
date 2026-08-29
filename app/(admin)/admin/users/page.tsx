@@ -161,9 +161,9 @@ export default function AdminUsersPage() {
               <tr>
                 <th className="px-6 py-3.5">Người dùng</th>
                 <th className="px-4 py-3.5">Vai trò</th>
-                <th className="px-4 py-3.5">Ngày tạo</th>
-                <th className="px-6 py-3.5 text-right">Thao tác</th>
-              </tr>
+                  <th className="px-4 py-3.5 hidden sm:table-cell">Ngày tạo</th>
+                  <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
+                </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
               {loading ? (
@@ -204,11 +204,11 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500">
+                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden sm:table-cell">
                       {new Date(user.created_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(user)}

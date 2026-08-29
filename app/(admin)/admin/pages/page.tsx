@@ -116,8 +116,8 @@ export default function AdminPagesPage() {
               <tr>
                 <th className="px-6 py-3.5">Tiêu đề</th>
                 <th className="px-4 py-3.5">Trạng thái</th>
-                <th className="px-4 py-3.5">Ngày đăng</th>
-                <th className="px-6 py-3.5 text-right">Thao tác</th>
+                <th className="px-4 py-3.5 hidden sm:table-cell">Ngày đăng</th>
+                <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
@@ -165,11 +165,11 @@ export default function AdminPagesPage() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500">
+                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden sm:table-cell">
                       {new Date(page.published_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <a
                           href={`/${page.slug}`}
