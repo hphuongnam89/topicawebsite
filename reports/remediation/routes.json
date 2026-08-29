@@ -1,5 +1,0 @@
-{
-  "public": ["/", "/tin-tuc", "/thong-tin-tuyen-sinh-nam-2026", "/tuyen-sinh"],
-  "dynamic": ["/tin-tuc/[slug]", "/[...slug]"],
-  "api": ["/api/revalidate"]
-}
