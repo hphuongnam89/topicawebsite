@@ -22,8 +22,18 @@ export default async function AdminLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  // If user is not logged in and not on login page, we let individual pages or middleware handle redirect,
-  // or we pass a fallback user if on login.
+  // We handle redirect here in Node.js runtime instead of Edge middleware
+  // because Edge middleware on Render does not reliably receive runtime environment variables (like ADMIN_SESSION_SECRET),
+  // causing signature verification mismatch.
+  if (!user && pathname !== "/admin/login") {
+    const from = pathname && pathname !== "/admin" ? `?from=${encodeURIComponent(pathname)}` : "";
+    redirect(`/admin/login${from}`);
+  }
+  
+  if (user && pathname === "/admin/login") {
+    redirect("/admin");
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans text-ink-950 antialiased">
       {user && <AdminSidebar user={user} />}
