@@ -109,13 +109,7 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
-              <span className="font-semibold text-slate-800">Tài khoản mặc định:</span>
-              <div className="mt-1 flex justify-between">
-                <span>User: <code className="bg-white px-1.5 py-0.5 rounded border">admin</code></span>
-                <span>Pass: <code className="bg-white px-1.5 py-0.5 rounded border">admin@topica2026</code></span>
-              </div>
-            </div>
+
 
             <button
               type="submit"
