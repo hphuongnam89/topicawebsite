@@ -82,15 +82,7 @@ export async function POST(request: Request) {
 
     failures.delete(key);
 
-    // Set cookie
-    await setSessionCookie({
-      id: user.id,
-      username: user.username,
-      name: user.name,
-      role: user.role,
-    });
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       user: {
         id: user.id,
@@ -99,6 +91,25 @@ export async function POST(request: Request) {
         role: user.role,
       },
     });
+
+    // Instead of using cookies().set, set directly on the response to ensure it sets properly on Render
+    const { createSessionToken } = await import("@/lib/auth/session");
+    const token = createSessionToken({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      role: user.role,
+    });
+    
+    response.cookies.set("topica_admin_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(

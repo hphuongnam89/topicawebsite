@@ -17,7 +17,6 @@ export async function middleware(request: NextRequest) {
     const hasSession = Boolean(
       sessionCookie?.value &&
         sessionSecret &&
-        sessionSecret.length >= 32 &&
         (await verifySessionToken(sessionCookie.value, sessionSecret)),
     );
 
