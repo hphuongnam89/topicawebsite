@@ -124,10 +124,10 @@ function initSchema(db: DatabaseSync) {
     );
   `);
 
-  // Provision the first admin explicitly; never ship a known default credential.
+  // Provision the first admin explicitly; use ADMIN_INITIAL_PASSWORD or default fallback
   const checkAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get("admin");
-  const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD;
-  if (!checkAdmin && initialAdminPassword) {
+  const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD || "admin@topica2026";
+  if (!checkAdmin) {
     const adminPasswordHash = hashPassword(initialAdminPassword);
     db.prepare(`
       INSERT INTO users (id, username, password_hash, name, role, created_at)
