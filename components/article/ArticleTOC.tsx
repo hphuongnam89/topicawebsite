@@ -29,7 +29,10 @@ function TOCList({
   return (
     <ul className={cn("flex flex-col gap-3", className)}>
       {headings.map((heading) => (
-        <li key={heading.id} style={{ paddingLeft: `${(heading.level - 2) * 1}rem` }}>
+        <li
+          key={heading.id}
+          className={`toc-indent-${Math.min(Math.max(heading.level - 2, 0), 4)}`}
+        >
           <a
             href={`#${heading.id}`}
             onClick={(e) => onItemClick(e, heading.id)}

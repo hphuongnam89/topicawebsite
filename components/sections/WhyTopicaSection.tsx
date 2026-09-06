@@ -3,7 +3,6 @@
  * section: S2 Hanging · features: F1 Bento · proof: T4 Stat strip · cta: C1 + C3
  */
 
-import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
@@ -18,6 +17,7 @@ import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { TrustMetrics, type TrustMetric } from "@/components/sections/why-topica/TrustMetrics";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { homepageContent } from "@/data/homepage-content";
 
 type BenefitVisual = "learning-flow" | "transparent-value" | "learning-progress";
 
@@ -48,9 +48,9 @@ export type WhyTopicaSectionProps = {
 const benefitItems: BenefitItem[] = [
   {
     eyebrow: "Linh hoạt theo nhịp sống",
-    title: "Học online 100%",
+    title: "Đào tạo từ xa qua LMS",
     description:
-      "Học mọi lúc, mọi nơi trên nền tảng E-Learning hiện đại. Chủ động thời gian nhưng vẫn theo sát lộ trình học tập.",
+      "Học theo phương thức E-learning qua LMS, kết hợp lớp trực tuyến theo lịch của từng đợt tuyển sinh.",
     icon: Globe2,
     visual: "learning-flow",
     className: "order-1 lg:col-span-8 lg:row-start-1",
@@ -194,16 +194,12 @@ export function BenefitCard({ item, index }: { item: BenefitItem; index: number 
 }
 
 export function FeaturedSupportCard() {
-  const proofPoints = [
-    "Giảng viên giàu kinh nghiệm thực tiễn",
-    "Cố vấn học tập xuyên suốt",
-    "Hỗ trợ kỹ thuật khi cần",
-  ];
+  const proofPoints = ["MegaSchool LMS", "Google Classroom", "Google Meet"];
 
   return (
     <ScrollReveal
       delay={0.2}
-      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-ink-950 p-6 text-white shadow-xs [background-image:radial-gradient(circle_at_85%_15%,rgba(196,145,61,0.16),transparent_34%)] sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
+      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-ink-950 [background-image:radial-gradient(circle_at_85%_15%,rgba(196,145,61,0.16),transparent_34%)] p-6 text-white shadow-xs sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
     >
       <article
         className="flex h-full min-h-[30rem] min-w-0 flex-col"
@@ -213,17 +209,17 @@ export function FeaturedSupportCard() {
           <UsersRound aria-hidden="true" className="h-6 w-6" strokeWidth={1.7} />
         </div>
         <p className="mt-10 text-body-sm font-semibold tracking-[0.1em] text-brand-300 uppercase">
-          Không học một mình
+          Hệ thống học tập
         </p>
         <h3
           id="support-title"
           className="mt-4 font-display text-[clamp(1.875rem,3vw,2.75rem)] leading-[1.15] font-semibold text-white"
         >
-          Đồng hành cùng bạn đến đích
+          Công cụ hỗ trợ rõ ràng
         </h3>
         <p className="mt-5 text-body text-white/75">
-          Giảng viên, cố vấn học tập và đội ngũ hỗ trợ luôn sẵn sàng giúp bạn duy trì tiến độ trong
-          suốt hành trình học.
+          Website chính thức công khai các hệ thống phục vụ dạy, học và quản lý đào tạo để người học
+          có thể kiểm tra trước khi đăng ký.
         </p>
         <ul className="mt-8 flex flex-wrap gap-2.5" aria-label="Các hình thức hỗ trợ">
           {proofPoints.map((proof) => (
@@ -235,16 +231,20 @@ export function FeaturedSupportCard() {
             </li>
           ))}
         </ul>
-        <Link
-          href="/gioi-thieu/"
+        <a
+          href="https://topicauni.edu.vn/he-thong/"
+          target="_blank"
+          rel="noreferrer"
+          data-track="official_source_click"
+          data-track-label="Hệ thống học tập"
           className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-brand-300/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-300"
         >
-          Gặp đội ngũ giảng viên và cố vấn
+          Xem hệ thống trên nguồn chính thức
           <ArrowRight
             aria-hidden="true"
             className="ml-2 h-4 w-4 transition-transform duration-[var(--duration-base)] group-hover/link:translate-x-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
           />
-        </Link>
+        </a>
       </article>
     </ScrollReveal>
   );
@@ -310,19 +310,21 @@ export function ConsultationCTA() {
         </div>
         <div className="flex min-w-0 flex-col items-start gap-4 lg:items-end">
           <ButtonLink
-            href="/lien-he/"
+            href="#consultation-form"
             size="lg"
+            aria-label={homepageContent.hero.primaryCta}
             rightIcon={<ArrowRight aria-hidden="true" className="h-4 w-4" />}
             className="w-full sm:w-auto"
           >
-            Nhận tư vấn miễn phí
+            <span className="sm:hidden">Kiểm tra hồ sơ</span>
+            <span className="hidden sm:inline">{homepageContent.hero.primaryCta}</span>
           </ButtonLink>
           <ButtonLink
-            href="/tuyen-sinh/"
+            href="#programs"
             variant="tertiary"
             className="h-auto min-h-11 px-0 underline decoration-line-200 underline-offset-8 hover:decoration-brand-700"
           >
-            Xem các chương trình đào tạo
+            Xem 5 ngành đào tạo
           </ButtonLink>
         </div>
       </div>

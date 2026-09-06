@@ -3,7 +3,9 @@ import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
 
 export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
-  const creditFact = program.facts.find((fact) => fact.label === "Khối lượng");
+  const creditFact = program.facts.find(
+    (fact) => fact.label === "Khối lượng" && fact.status === "verified" && !fact.needsVerification,
+  );
 
   return (
     <section
@@ -26,8 +28,8 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                 : "Khung học phần đã xác minh"}
             </h2>
             <p className="mt-5 max-w-md leading-7 text-[var(--color-academic-muted)]">
-              Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng
-              chương trình nguồn.
+              Danh sách dưới đây trình bày mã, tên, số tín chỉ và điều kiện lựa chọn của từng học
+              phần.
             </p>
           </div>
 
@@ -38,7 +40,11 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                 className="group border-b border-[var(--color-academic-rule)]"
                 open={index === 0}
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-6 marker:content-none">
+                <summary
+                  data-track="curriculum_expand"
+                  data-track-label={group.name}
+                  className="flex cursor-pointer list-none items-center justify-between gap-5 py-6 marker:content-none"
+                >
                   <span className="min-w-0">
                     <span className="block text-lg font-semibold text-[var(--color-academic-ink)]">
                       {group.name}
@@ -85,11 +91,6 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                           {item.detail && (
                             <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
                               {item.detail}
-                            </p>
-                          )}
-                          {item.note && (
-                            <p className="mt-2 text-xs leading-5 text-[var(--color-academic-warning)]">
-                              Cần xác nhận: {item.note}
                             </p>
                           )}
                         </div>

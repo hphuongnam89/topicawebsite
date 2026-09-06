@@ -37,11 +37,11 @@ export function PendingAcademicSections({ program }: { program: ProgramDetail })
               id="pending-academic-title"
               className="mt-3 max-w-[14ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              Hồ sơ học thuật đang chờ bổ sung
+              Nhận chương trình đào tạo theo ngành
             </h2>
             <p className="mt-5 max-w-lg leading-7 text-[var(--color-academic-muted)]">
-              Trang hiện có mới xác minh phần giới thiệu ngành và cơ hội nghề nghiệp. Các dữ liệu
-              học thuật chỉ được công bố sau khi có hồ sơ chương trình chính thức.
+              Chi tiết học phần được cung cấp theo phiên bản chương trình áp dụng cho từng khóa.
+              Liên hệ tuyển sinh để nhận tài liệu phù hợp với đợt đăng ký của bạn.
             </p>
           </div>
 

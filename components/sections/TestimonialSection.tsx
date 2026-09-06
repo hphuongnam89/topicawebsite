@@ -1,13 +1,6 @@
-"use client";
-
-import { useRef, useState, KeyboardEvent } from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink, Quote } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import { testimonials } from "@/data/testimonials";
-import { cn } from "@/components/ui/cn";
-
 import type { Testimonial } from "@/data/testimonials";
 
 interface TestimonialSectionProps {
@@ -16,143 +9,79 @@ interface TestimonialSectionProps {
 
 export function TestimonialSection({ data }: TestimonialSectionProps) {
   const items = data && data.length > 0 ? data : testimonials;
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const scrollToIndex = (index: number) => {
-    if (!scrollRef.current) return;
-    const scrollContainer = scrollRef.current;
-    const cards = scrollContainer.children;
-    if (cards.length > index) {
-      const targetCard = cards[index] as HTMLElement;
-      scrollContainer.scrollTo({
-        left: targetCard.offsetLeft - scrollContainer.offsetLeft,
-        behavior: "smooth",
-      });
-      setActiveIndex(index);
-    }
-  };
-
-  const handleScroll = () => {
-    if (!scrollRef.current) return;
-    const scrollContainer = scrollRef.current;
-    const scrollLeft = scrollContainer.scrollLeft + scrollContainer.offsetLeft;
-    const newIndex = Array.from(scrollContainer.children).reduce(
-      (closestIndex, child, index) => {
-        const closest = scrollContainer.children[closestIndex] as HTMLElement | undefined;
-        const currentDistance = Math.abs((child as HTMLElement).offsetLeft - scrollLeft);
-        const closestDistance = closest ? Math.abs(closest.offsetLeft - scrollLeft) : Infinity;
-        return currentDistance < closestDistance ? index : closestIndex;
-      },
-      0,
-    );
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < items.length) {
-      setActiveIndex(newIndex);
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      scrollToIndex(Math.max(0, activeIndex - 1));
-    } else if (e.key === "ArrowRight") {
-      scrollToIndex(Math.min(items.length - 1, activeIndex + 1));
-    }
-  };
+  const [featured, ...supporting] = items;
+  if (!featured) return null;
 
   return (
-    <section className="bg-canvas py-16 lg:py-24" aria-labelledby="testimonials-title">
+    <section className="bg-canvas py-16 sm:py-20 lg:py-24" aria-labelledby="testimonials-title">
       <Container>
-        <SectionHeading
-          id="testimonials-title"
-          title="Sinh viên nói gì về Topica?"
-          align="center"
-        />
-
-        <div className="group relative mt-12 flex justify-center">
-          <div
-            ref={scrollRef}
-            className="flex snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-8 [-ms-overflow-style:none] md:w-max [&::-webkit-scrollbar]:hidden"
-            onScroll={handleScroll}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
-            role="region"
-            aria-label="Chia sẻ của sinh viên"
-            aria-roledescription="carousel"
-          >
-            {items.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="w-[85vw] max-w-[350px] min-w-[280px] shrink-0 snap-center sm:w-[350px]"
-              >
-                <div className="flex h-full flex-col rounded-lg border border-line-200 bg-paper p-6">
-                  <div className="font-display text-[3rem] leading-none text-brand-300">&quot;</div>
-                  <p className="mt-2 flex-grow text-body text-ink-800">{testimonial.quote}</p>
-
-                  <div className="mt-6 flex items-center gap-4">
-                    {testimonial.avatar ? (
-                      <Image
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700">
-                        {testimonial.name.charAt(0)}
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-semibold text-ink-950">{testimonial.name}</div>
-                      <div className="text-body-sm text-ink-600">{testimonial.role}</div>
-                      {testimonial.program && (
-                        <div className="text-body-sm text-brand-700">{testimonial.program}</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
-            className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
-            disabled={activeIndex === 0}
-            aria-label="Chia sẻ trước"
-          >
-            <ChevronLeft className="h-5 w-5 text-ink-800" />
-          </button>
-
-          <button
-            onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
-            className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
-            disabled={activeIndex === items.length - 1}
-            aria-label="Chia sẻ tiếp theo"
-          >
-            <ChevronRight className="h-5 w-5 text-ink-800" />
-          </button>
-        </div>
-
-        <div className="mt-4 flex justify-center gap-2">
-          {items.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => scrollToIndex(index)}
-              className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-brand-500"
-              aria-label={`Xem chia sẻ ${index + 1}`}
-              aria-current={index === activeIndex ? "true" : undefined}
+        <div className="grid min-w-0 gap-8 border-t-2 border-ink-950 pt-8 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1.35fr)] lg:gap-16">
+          <header className="min-w-0">
+            <p className="text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
+              Cảm nhận người học
+            </p>
+            <h2
+              id="testimonials-title"
+              className="mt-4 max-w-[12ch] font-display text-[clamp(2.2rem,5vw,4rem)] leading-[1.08] font-semibold text-ink-950"
             >
-              <span
-                className={cn(
-                  "h-2 w-2 rounded-full transition-[width,background-color]",
-                  index === activeIndex ? "w-6 bg-brand-700" : "bg-line-200",
-                )}
-              />
-            </button>
-          ))}
+              Người học nói về trải nghiệm tại Topica
+            </h2>
+            <p className="mt-5 max-w-md text-body text-ink-600">
+              Các chia sẻ dưới đây được dẫn lại từ trang chủ chính thức và gắn liên kết để bạn tự
+              kiểm tra nguồn.
+            </p>
+          </header>
+          <div className="min-w-0">
+            <figure className="border-b border-line-200 pb-8">
+              <Quote className="h-8 w-8 text-brand-500" aria-hidden="true" />
+              <blockquote className="mt-5 font-display text-[clamp(1.4rem,2.5vw,2rem)] leading-relaxed text-ink-950">
+                {featured.quote}
+              </blockquote>
+              <figcaption className="mt-6 flex flex-wrap items-center justify-between gap-4">
+                <span>
+                  <strong className="block text-ink-950">{featured.name}</strong>
+                  <span className="text-body-sm text-ink-600">
+                    {featured.role} · {featured.program}
+                  </span>
+                </span>
+                <SourceLink testimonial={featured} />
+              </figcaption>
+            </figure>
+            <div className="grid min-w-0 gap-8 pt-8 md:grid-cols-2">
+              {supporting.map((testimonial) => (
+                <figure key={testimonial.id} className="min-w-0 border-l-2 border-brand-300 pl-5">
+                  <blockquote className="text-body leading-relaxed text-ink-800">
+                    {testimonial.quote}
+                  </blockquote>
+                  <figcaption className="mt-5">
+                    <strong className="block text-ink-950">{testimonial.name}</strong>
+                    <span className="text-body-sm text-ink-600">
+                      {testimonial.role} · {testimonial.program}
+                    </span>
+                    <SourceLink testimonial={testimonial} />
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
         </div>
       </Container>
     </section>
+  );
+}
+
+function SourceLink({ testimonial }: { testimonial: Testimonial }) {
+  return (
+    <a
+      href={testimonial.sourceUrl}
+      target="_blank"
+      rel="noreferrer"
+      data-track="official_source_click"
+      data-track-label={`Cảm nhận ${testimonial.name}`}
+      className="mt-3 inline-flex min-h-11 items-center text-xs font-semibold whitespace-nowrap text-brand-800 underline decoration-brand-300 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info"
+    >
+      Xem nguồn chính thức
+      <ExternalLink className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+    </a>
   );
 }

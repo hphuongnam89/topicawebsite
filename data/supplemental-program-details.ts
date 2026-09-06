@@ -84,7 +84,7 @@ type StandardFactsInput = {
   creditsNote?: string;
   language?: string;
   courseCount?: string;
-  courseCountNote?: string;
+  courseCountNeedsVerification?: boolean;
 };
 
 const standardProgramFacts = (input: StandardFactsInput = {}): ProgramDetail["facts"] => [
@@ -95,7 +95,11 @@ const standardProgramFacts = (input: StandardFactsInput = {}): ProgramDetail["fa
     status: input.code ? "verified" : "need_confirmation",
   },
   { label: "Trình độ", value: input.degree ?? "Đại học", status: "verified" },
-  { label: "Hình thức", value: input.deliveryMode ?? "Chính quy", status: "verified" },
+  {
+    label: "Hình thức",
+    value: input.deliveryMode ?? "Từ xa · E-learning (chính quy)",
+    status: "verified",
+  },
   { label: "Văn bằng", value: input.award ?? "Cử nhân", status: "verified" },
   { label: "Thời gian", value: input.duration ?? "3 năm · 9 học kỳ", status: "verified" },
   {
@@ -112,8 +116,9 @@ const standardProgramFacts = (input: StandardFactsInput = {}): ProgramDetail["fa
   {
     label: "Tổng học phần",
     value: input.courseCount ?? "Cần cập nhật",
-    note: input.courseCountNote ?? "Sẽ cập nhật sau khi chốt bộ dữ liệu học phần cuối cùng",
-    status: input.courseCount ? "verified" : "need_confirmation",
+    status:
+      input.courseCount && !input.courseCountNeedsVerification ? "verified" : "need_confirmation",
+    needsVerification: input.courseCountNeedsVerification || !input.courseCount,
   },
 ];
 
@@ -305,7 +310,7 @@ export const tourismProgram: ProgramDetail = {
     code: "7810103",
     language: "Tiếng Việt",
     courseCount: "57 học phần",
-    courseCountNote: "Theo số học phần được đánh số trong bảng chương trình đào tạo 2026",
+    courseCountNeedsVerification: false,
   }),
   curriculum: [...tourismPlan.curriculum, nonAccumulated("tourism")],
   semesters: tourismPlan.semesters,
@@ -769,6 +774,7 @@ type ImageProgramInput = Pick<
   code?: string;
   language?: string;
   courseCount?: string;
+  courseCountNeedsVerification?: boolean;
   admissions?: string;
   graduation?: string;
   furtherStudy?: string;
@@ -797,6 +803,7 @@ const imageProgram = (input: ImageProgramInput): ProgramDetail => {
       code: input.code,
       language: input.language,
       courseCount: input.courseCount,
+      courseCountNeedsVerification: input.courseCountNeedsVerification,
       creditsNote: "Không gồm Giáo dục thể chất và Giáo dục quốc phòng và an ninh",
     }),
     curriculum: [...plan.curriculum, nonAccumulated(input.planPrefix)],
@@ -824,11 +831,12 @@ export const informationTechnologyProgram = imageProgram({
     "Giám đốc sáng tạo.",
     "Giảng viên hoặc khởi nghiệp trong lĩnh vực thiết kế đồ họa.",
   ],
-  sourceLabel: "chương trình đào tạo-02.jpg",
+  sourceLabel: "CTĐT ĐHKTS 2024 - thu vien (SUA NGAY 11-5).docx",
   englishName: "Information Technology · Digital Graphics",
   code: "7480201",
   language: "Tiếng Việt và Tiếng Anh",
   courseCount: "53 học phần",
+  courseCountNeedsVerification: false,
   admissions:
     "Thí sinh đã tốt nghiệp THPT, đáp ứng tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.",
   graduation: "Theo quy định tại Điều 14, Thông tư số 08/2021/TT-BGDĐT.",
@@ -852,11 +860,12 @@ export const englishLanguageProgram = imageProgram({
     "Nhân viên phòng vé, đặt chỗ hoặc tiếp tân.",
     "Giáo viên hoặc giảng viên tiếng Anh tại cơ sở giáo dục.",
   ],
-  sourceLabel: "chương trình đào tạo-04.jpg",
+  sourceLabel: "CTĐT NNA 2025_THANH 18Aug_bản cuối.docx",
   englishName: "English Language",
   code: "7220201",
   language: "Tiếng Việt và Tiếng Anh",
   courseCount: "62 học phần",
+  courseCountNeedsVerification: false,
   admissions:
     "Thí sinh đã tốt nghiệp THPT, đáp ứng tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.",
   graduation: "Theo quy định tại Điều 14, Thông tư số 08/2021/TT-BGDĐT.",
@@ -880,11 +889,12 @@ export const chineseLanguageProgram = imageProgram({
     "Chuyên viên chăm sóc khách hàng, nội dung, truyền thông hoặc marketing tiếng Trung.",
     "Nhân viên văn phòng tại công ty Trung Quốc hoặc Đài Loan.",
   ],
-  sourceLabel: "chương trình đào tạo-03.jpg",
+  sourceLabel: "CTĐT ĐÃ CHỈNH THEO ĐGNGOAI-28.6.25.docx",
   englishName: "Chinese Language",
   code: "7220204",
   language: "Tiếng Việt và Tiếng Trung Quốc",
   courseCount: "54 học phần",
+  courseCountNeedsVerification: false,
   admissions:
     "Thí sinh đã tốt nghiệp THPT, đáp ứng đủ tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.",
   graduation: "Theo quy định tại Điều 14, Thông tư số 08/2021/TT-BGDĐT.",

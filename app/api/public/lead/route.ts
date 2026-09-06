@@ -7,12 +7,16 @@ const WINDOW_MS = 15 * 60 * 1000;
 const submissions = new Map<string, { count: number; resetAt: number }>();
 
 function getClientKey(request: Request): string {
-  return request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  return request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown";
 }
 
 function consumeSubmission(request: Request): number | null {
   const key = getClientKey(request);
   const now = Date.now();
+  for (const [storedKey, value] of submissions) {
+    if (value.resetAt <= now) submissions.delete(storedKey);
+  }
+  if (!submissions.has(key) && submissions.size >= 10_000) return 3600;
   const entry = submissions.get(key);
   if (!entry || entry.resetAt <= now) {
     submissions.set(key, { count: 1, resetAt: now + WINDOW_MS });
@@ -35,14 +39,38 @@ export async function POST(request: Request) {
 
     const parsed = leadApiSchema.safeParse(await request.json());
     if (!parsed.success) return NextResponse.json({ error: "Dữ liệu đăng ký không hợp lệ." }, { status: 422 });
-    const { fullname, phone, email, program, notes } = parsed.data;
+    const {
+      fullname,
+      phone,
+      email,
+      program,
+      program_name,
+      program_code,
+      program_direction,
+      notes,
+      source,
+      medium,
+      campaign,
+      content,
+      term,
+      landing_page,
+      referrer,
+      submitted_at,
+      device_type,
+    } = parsed.data;
+    const attribution = { source, medium, campaign, content, term, landing_page, referrer, submitted_at, device_type };
+    const attributionNote = Object.values(attribution).some(Boolean)
+      ? `\nAttribution: ${JSON.stringify(attribution)}`
+      : "";
 
     const lead = submitLead({
       fullname: fullname.trim(),
       phone: phone.trim(),
       email: email ? email.trim() : undefined,
-      program: program ? program.trim() : undefined,
-      notes: notes ? notes.trim() : undefined,
+      program: (program_name || program)?.trim() || undefined,
+      notes:
+        `${notes ? notes.trim() : ""}${program_code ? `\nMã ngành: ${program_code}` : ""}${program_direction ? `\nĐịnh hướng: ${program_direction}` : ""}${attributionNote}`.trim() ||
+        undefined,
     });
 
     return NextResponse.json({ success: true, id: lead.id });

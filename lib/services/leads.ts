@@ -26,19 +26,19 @@ async function notifyTelegram(lead: LeadNotification): Promise<void> {
     if (!settings.telegramBotToken || !settings.telegramChatId) return;
 
     const message = [
-      "🎓 *HỌC VIÊN ĐĂNG KÝ TƯ VẤN MỚI*",
-      `👤 *Họ tên:* ${lead.fullname}`,
-      `📞 *Số điện thoại:* \`${lead.phone}\``,
-      lead.email ? `✉️ *Email:* ${lead.email}` : "",
-      lead.program ? `📚 *Ngành quan tâm:* ${lead.program}` : "",
-      lead.notes ? `📝 *Ghi chú:* ${lead.notes}` : "",
-      `⏰ *Thời gian:* ${new Date().toLocaleString("vi-VN")}`,
+      "🎓 HỌC VIÊN ĐĂNG KÝ TƯ VẤN MỚI",
+      `👤 Họ tên: ${lead.fullname}`,
+      `📞 Số điện thoại: ${lead.phone}`,
+      lead.email ? `✉️ Email: ${lead.email}` : "",
+      lead.program ? `📚 Ngành quan tâm: ${lead.program}` : "",
+      lead.notes ? `📝 Ghi chú: ${lead.notes}` : "",
+      `⏰ Thời gian: ${new Date().toLocaleString("vi-VN")}`,
     ].filter(Boolean).join("\n");
 
     await fetch(`https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: settings.telegramChatId, text: message, parse_mode: "Markdown" }),
+      body: JSON.stringify({ chat_id: settings.telegramChatId, text: message }),
     });
   } catch (error) {
     console.error("Telegram notification failed", error instanceof Error ? error.message : "unknown error");

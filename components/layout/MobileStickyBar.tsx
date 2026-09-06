@@ -25,28 +25,28 @@ export function MobileStickyBar() {
     <div
       data-mobile-sticky-bar
       className={cn(
-        "fixed right-0 bottom-0 left-0 z-40 border-t border-line-200 bg-canvas/95 backdrop-blur-md transition-transform duration-300 lg:hidden",
+        "fixed right-0 bottom-0 left-0 z-40 border-t border-line-200 bg-canvas/95 pb-safe-area backdrop-blur-md transition-transform duration-300 lg:hidden",
         visible ? "translate-y-0" : "translate-y-full",
       )}
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       <div className="flex items-center gap-3 px-4 py-3">
         <ButtonLink
-          href="/lien-he/"
-          variant="secondary"
-          size="sm"
-          className="flex-1"
-        >
-          Nhận tư vấn
-        </ButtonLink>
-        <ButtonLink
-          href="https://www.tuyensinh.topicauni.edu.vn/"
+          href="#consultation-form"
           variant="primary"
           size="sm"
           className="flex-1"
-          external
+          data-track="hero_primary_cta_click"
         >
-          Đăng ký xét tuyển
+          Kiểm tra hồ sơ
+        </ButtonLink>
+        <ButtonLink
+          href="#programs"
+          variant="secondary"
+          size="sm"
+          className="flex-1"
+          data-track="hero_secondary_cta_click"
+        >
+          Xem 5 ngành
         </ButtonLink>
       </div>
     </div>

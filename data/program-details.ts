@@ -46,6 +46,7 @@ export type ProgramDetail = {
     value: string;
     note?: string;
     status: EvidenceStatus;
+    needsVerification?: boolean;
   }>;
   curriculum: CurriculumGroup[];
   semesters: Array<{
@@ -89,7 +90,7 @@ export const businessAdministrationProgram = {
   facts: [
     { label: "Mã ngành", value: "7340101", status: "verified" },
     { label: "Trình độ", value: "Đại học", status: "verified" },
-    { label: "Hình thức", value: "Chính quy", status: "verified" },
+    { label: "Hình thức", value: "Từ xa · E-learning (chính quy)", status: "verified" },
     { label: "Văn bằng", value: "Cử nhân", status: "verified" },
     { label: "Thời gian", value: "3 năm · 9 học kỳ", status: "verified" },
     {
@@ -101,9 +102,9 @@ export const businessAdministrationProgram = {
     { label: "Ngôn ngữ", value: "Tiếng Việt", status: "verified" },
     {
       label: "Tổng học phần",
-      value: "Cần xác nhận",
-      note: "Bảng học phần và kế hoạch học tập còn một số mã trùng/khác nhau",
-      status: "need_confirmation",
+      value: "59 học phần",
+      status: "verified",
+      needsVerification: false,
     },
   ],
   curriculum: [

@@ -10,13 +10,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     "",
     "/gioi-thieu",
+    "/nganh-dao-tao",
     "/tuyen-sinh",
+    "/tuyen-sinh/hoc-phi-hoc-bong",
     "/tin-tuc",
     "/lien-he",
     "/nhung-cau-hoi-thuong-gap",
+    "/chinh-sach-bao-mat",
+    "/chuong-trinh",
+    "/dam-bao-chat-luong",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: route === "" ? 1 : 0.8,
   }));
@@ -24,7 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Programs from static data
   const programPages = programs.map((program) => ({
     url: `${baseUrl}/${program.slug}`,
-    lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.9,
   }));
@@ -32,8 +35,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Articles from CMS
   let articlePages: MetadataRoute.Sitemap = [];
   try {
-    // We only fetch first 100 for sitemap here as an example
-    // In a real huge site, we'd paginate or use Next.js dynamic sitemaps with id
     const { articles } = await cms.getArticles({ limit: 100 });
     articlePages = articles.map((article) => ({
       url: `${baseUrl}/tin-tuc/${article.slug}`,
@@ -45,19 +46,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error generating sitemap for articles", err);
   }
 
-  // Categories
-  let categoryPages: MetadataRoute.Sitemap = [];
-  try {
-    const categories = await cms.getCategories();
-    categoryPages = categories.map((cat) => ({
-      url: `${baseUrl}/tin-tuc?category=${cat.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    }));
-  } catch (err) {
-    console.error("Error generating sitemap for categories", err);
-  }
-
-  return [...staticPages, ...programPages, ...articlePages, ...categoryPages];
+  return [...staticPages, ...programPages, ...articlePages];
 }

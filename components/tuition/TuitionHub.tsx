@@ -1,85 +1,94 @@
+import { AdmissionBanner } from "@/components/cta/AdmissionBanner";
 import { Container } from "@/components/ui/Container";
+import { DocumentCard } from "@/components/ui/DocumentCard";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { AdmissionBanner } from "@/components/cta/AdmissionBanner";
-import { DocumentCard } from "@/components/ui/DocumentCard";
 import { Check } from "lucide-react";
+
+const admissions2026Url = "https://topicauni.edu.vn/thong-tin-tuyen-sinh-nam-2026/";
+const admissionsNoticeUrl =
+  "https://topicauni.edu.vn/thong-bao-tuyen-sinh-dai-hoc-chinh-quy-hinh-thuc-tu-xa-pxuni-elearning-nam-2026-dot-2/";
+
+const scholarships = [
+  {
+    rate: "30%",
+    title: "Topica Talent",
+    description:
+      "Giảm 30% học phí toàn bộ chương trình. Nguồn 2026 công bố 500 suất, áp dụng cho sinh viên nhập học trước 31/12/2026 hoặc đến khi có thông báo khác.",
+  },
+  {
+    rate: "20%",
+    title: "Topica Leadership",
+    description:
+      "Giảm 20% học phí toàn bộ chương trình sau khi hết suất Talent; nguồn 2026 công bố 200 suất và thời hạn trước 31/01/2027.",
+  },
+  {
+    rate: "40%",
+    title: "Topica Cooperation",
+    description:
+      "Giảm 40% học phí toàn bộ chương trình cho người làm trong lĩnh vực giáo dục hoặc quản lý doanh nghiệp từ cấp phó phòng, có hồ sơ xác nhận.",
+  },
+  {
+    rate: "5%",
+    title: "Topica Future",
+    description: "Giảm 5% tổng học phí khi nộp học phí toàn khóa ngay từ khi nhập học.",
+  },
+  {
+    rate: "50%",
+    title: "Chính sách dành cho tu sĩ",
+    description: "Giảm 50% học phí toàn khóa theo chính sách tuyển sinh năm 2026.",
+  },
+] as const;
 
 export function TuitionHub() {
   return (
     <div>
       <Section variant="paper">
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
             <div>
-              <SectionHeading>Học phí áp dụng năm 2026</SectionHeading>
+              <SectionHeading>Học phí tuyển sinh năm 2026</SectionHeading>
               <div className="prose-editorial text-ink-800">
                 <p>
-                  Topica cam kết cung cấp các chương trình đào tạo chất lượng cao với mức học phí hợp lý, minh bạch và ổn định trong toàn khóa học.
+                  Học phí được tính theo số tín chỉ đăng ký. Mức áp dụng cần được đối chiếu với
+                  thông báo tuyển sinh tại thời điểm hoàn tất hồ sơ.
                 </p>
-                <p>
-                  Học phí được tính theo số tín chỉ đăng ký trong mỗi học kỳ. Sinh viên đóng học phí theo từng học kỳ (2 học kỳ chính/năm).
-                </p>
-                
-                <h4 className="text-ink-950 font-semibold mt-8 mb-4">Các khoản phí khi nhập học:</h4>
-                <ul className="space-y-2">
+
+                <h4 className="mt-8 mb-4 font-semibold text-ink-950">
+                  Các khoản phí được công bố:
+                </h4>
+                <ul className="space-y-3">
                   <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-brand-500 shrink-0 mt-0.5" />
-                    <span>Lệ phí nhập học: 1.000.000 VNĐ (đóng 1 lần duy nhất)</span>
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                    <span>Học phí: 600.000 đồng/tín chỉ.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-brand-500 shrink-0 mt-0.5" />
-                    <span>Phí khám sức khỏe & Bảo hiểm Y tế: Theo quy định của Nhà nước</span>
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                    <span>Lệ phí xét tuyển: 80.000 đồng/nguyện vọng.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                    <span>Lệ phí hồ sơ: miễn phí.</span>
                   </li>
                 </ul>
               </div>
             </div>
 
-            <div className="bg-canvas rounded-xl p-6 lg:p-8 border border-line-200 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-50 rounded-full blur-3xl opacity-50 -mr-10 -mt-10" />
-              
-              <h3 className="text-h3 font-display font-bold text-ink-950 mb-6 relative z-10">
-                Bảng giá học phí dự kiến
-              </h3>
-              
-              <div className="space-y-4 relative z-10">
-                <div className="flex justify-between items-end border-b border-line-200 pb-4">
-                  <div>
-                    <div className="font-semibold text-ink-950">Chương trình Tiêu chuẩn</div>
-                    <div className="text-body-sm text-ink-600">Áp dụng cho khối ngành Kinh tế, Ngôn ngữ</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-h4 font-bold text-brand-700">750.000đ</div>
-                    <div className="text-body-sm text-ink-600">/ tín chỉ</div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-end border-b border-line-200 pb-4">
-                  <div>
-                    <div className="font-semibold text-ink-950">Chương trình Tiêu chuẩn</div>
-                    <div className="text-body-sm text-ink-600">Áp dụng cho khối ngành CNTT, Kỹ thuật</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-h4 font-bold text-brand-700">850.000đ</div>
-                    <div className="text-body-sm text-ink-600">/ tín chỉ</div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-end pb-2">
-                  <div>
-                    <div className="font-semibold text-ink-950">Chương trình Chất lượng cao</div>
-                    <div className="text-body-sm text-ink-600">Tiếng Anh toàn phần</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-h4 font-bold text-brand-700">1.250.000đ</div>
-                    <div className="text-body-sm text-ink-600">/ tín chỉ</div>
-                  </div>
-                </div>
+            <div className="relative overflow-hidden rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
+              <div className="absolute top-0 right-0 -mt-10 -mr-10 h-32 w-32 rounded-full bg-brand-50 opacity-50 blur-3xl" />
+              <p className="relative z-10 text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
+                Theo thông tin tuyển sinh 2026
+              </p>
+              <div className="relative z-10 mt-4 text-[clamp(2.75rem,7vw,5rem)] leading-none font-bold text-brand-700">
+                600.000đ
               </div>
-              
-              <div className="mt-8 pt-6 border-t border-line-200 text-body-sm text-ink-600 italic">
-                * Học phí trên chưa bao gồm lộ trình học Tiếng Anh đầu vào đối với sinh viên chưa đạt chuẩn. Học phí không tăng quá 10% mỗi năm.
-              </div>
+              <p className="relative z-10 mt-2 text-body-lg font-semibold text-ink-950">
+                mỗi tín chỉ
+              </p>
+              <p className="relative z-10 mt-6 border-t border-line-200 pt-5 text-body-sm text-ink-600">
+                Lộ trình tăng học phí dự kiến không quá 10%/năm và thực hiện vào đầu học kỳ của năm
+                học mới nếu có. Hãy xác nhận lại mức áp dụng cho khóa nhập học của bạn.
+              </p>
             </div>
           </div>
         </Container>
@@ -87,85 +96,60 @@ export function TuitionHub() {
 
       <Section variant="default">
         <Container>
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <SectionHeading align="center">Chính sách Học bổng</SectionHeading>
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <SectionHeading align="center">Chính sách học bổng năm 2026</SectionHeading>
             <p className="text-body-lg text-ink-600">
-              Với quỹ học bổng trị giá hơn 20 tỷ đồng, Topica tự hào đồng hành cùng các tài năng trẻ, tạo điều kiện học tập tốt nhất cho sinh viên vượt khó.
+              Mỗi chính sách có điều kiện và thời hạn riêng. Tình trạng suất học bổng cần được xác
+              nhận tại thời điểm đăng ký.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-paper p-6 lg:p-8 rounded-xl border border-line-200 flex flex-col h-full">
-              <div className="h-12 w-12 bg-brand-100 rounded-full flex items-center justify-center mb-6">
-                <span className="text-brand-700 font-bold text-lg">100%</span>
-              </div>
-              <h3 className="text-h4 font-bold text-ink-950 mb-3">Học bổng Tài năng</h3>
-              <p className="text-ink-600 mb-6 flex-1">
-                Miễn 100% học phí toàn khóa học dành cho học sinh đạt giải Nhất, Nhì, Ba trong các kỳ thi Học sinh giỏi cấp Quốc gia, Quốc tế.
-              </p>
-            </div>
-            
-            <div className="bg-paper p-6 lg:p-8 rounded-xl border border-line-200 flex flex-col h-full relative overflow-hidden border-brand-500/30">
-              <div className="absolute top-0 right-0 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-lg">
-                Phổ biến
-              </div>
-              <div className="h-12 w-12 bg-brand-100 rounded-full flex items-center justify-center mb-6">
-                <span className="text-brand-700 font-bold text-lg">50%</span>
-              </div>
-              <h3 className="text-h4 font-bold text-ink-950 mb-3">Học bổng Khuyến học</h3>
-              <p className="text-ink-600 mb-6 flex-1">
-                Giảm 50% học phí năm đầu tiên cho tân sinh viên có điểm thi THPT từ 26 điểm trở lên hoặc IELTS từ 6.5 trở lên.
-              </p>
-            </div>
-
-            <div className="bg-paper p-6 lg:p-8 rounded-xl border border-line-200 flex flex-col h-full">
-              <div className="h-12 w-12 bg-brand-100 rounded-full flex items-center justify-center mb-6">
-                <span className="text-brand-700 font-bold text-lg">30%</span>
-              </div>
-              <h3 className="text-h4 font-bold text-ink-950 mb-3">Học bổng Hỗ trợ tài chính</h3>
-              <p className="text-ink-600 mb-6 flex-1">
-                Giảm 30% học phí toàn khóa cho sinh viên có hoàn cảnh khó khăn, vượt khó trong học tập (cần có giấy xác nhận của địa phương).
-              </p>
-            </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {scholarships.map((scholarship) => (
+              <article
+                key={scholarship.title}
+                className="flex h-full flex-col rounded-xl border border-line-200 bg-paper p-6 lg:p-8"
+              >
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100">
+                  <span className="text-lg font-bold text-brand-700">{scholarship.rate}</span>
+                </div>
+                <h3 className="text-h4 mb-3 font-bold text-ink-950">{scholarship.title}</h3>
+                <p className="text-ink-600">{scholarship.description}</p>
+              </article>
+            ))}
           </div>
         </Container>
       </Section>
 
       <Section variant="paper">
         <Container>
-          <div className="max-w-3xl mx-auto">
-            <SectionHeading align="center">Tài liệu tham khảo</SectionHeading>
+          <div className="mx-auto max-w-3xl">
+            <SectionHeading align="center">Nguồn thông tin chính thức</SectionHeading>
+            <p className="mt-3 text-center text-body text-ink-600">
+              Đọc văn bản nguồn để kiểm tra điều kiện, thời hạn và phạm vi áp dụng trước khi đăng
+              ký.
+            </p>
             <div className="mt-8 space-y-4">
-              <DocumentCard 
-                title="Quy định Học phí và Thu phí sinh viên 2026"
-                type="Quy định"
-                date="Ban hành: 15/01/2026"
-                fileSize="1.2 MB"
-                downloadUrl="#"
+              <DocumentCard
+                title="Thông tin tuyển sinh phương thức đào tạo từ xa năm 2026"
+                type="Nguồn chính thức"
+                date="Trường Đại học Phú Xuân"
+                viewUrl={admissions2026Url}
               />
-              <DocumentCard 
-                title="Hướng dẫn thanh toán học phí trực tuyến"
-                type="Hướng dẫn"
-                date="Ban hành: 10/02/2026"
-                fileSize="850 KB"
-                viewUrl="#"
-                downloadUrl="#"
-              />
-              <DocumentCard 
-                title="Biểu mẫu xin cấp Học bổng Hỗ trợ tài chính"
-                type="Biểu mẫu"
-                date="Ban hành: 15/01/2026"
-                fileSize="420 KB"
-                downloadUrl="#"
+              <DocumentCard
+                title="Thông báo tuyển sinh PXUni-Elearning năm 2026 – đợt 2"
+                type="Thông báo tuyển sinh"
+                date="Trường Đại học Phú Xuân"
+                viewUrl={admissionsNoticeUrl}
               />
             </div>
           </div>
         </Container>
       </Section>
 
-      <AdmissionBanner 
-        heading="Sẵn sàng trở thành sinh viên Topica?"
-        description="Đăng ký xét tuyển ngay hôm nay để nhận cơ hội học bổng giá trị."
+      <AdmissionBanner
+        heading="Cần xác nhận mức phí theo hồ sơ của bạn?"
+        description="Để lại thông tin để được tư vấn về số tín chỉ, học bổng và mức phí áp dụng cho đợt nhập học hiện hành."
         primaryHref="https://www.tuyensinh.topicauni.edu.vn/"
         primaryLabel="Đăng ký xét tuyển"
         secondaryHref="/lien-he/"

@@ -4,6 +4,7 @@ export interface UserRecord {
   password_hash: string;
   name: string;
   role: string;
+  session_version: number;
   created_at: string;
 }
 

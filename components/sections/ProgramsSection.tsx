@@ -11,12 +11,12 @@ import { programs, programGroups } from "@/data/programs";
 
 export function ProgramsSection() {
   return (
-    <section className="bg-paper py-16 lg:py-24" aria-labelledby="programs-title">
+    <section id="programs" className="bg-paper py-16 lg:py-24" aria-labelledby="programs-title">
       <Container>
         <SectionHeading
           id="programs-title"
           title="Chương trình đào tạo"
-          subtitle="Đa dạng ngành nghề, chương trình đào tạo chất lượng cao được Bộ GD&ĐT công nhận"
+          subtitle="Khám phá 5 ngành đang được giới thiệu trên trang chính thức của Viện Topica"
           align="center"
         />
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -24,10 +24,12 @@ export function ProgramsSection() {
             <ScrollReveal key={program.slug} delay={index * 0.05}>
               <Link
                 href={program.href}
+                data-track="program_card_click"
+                data-track-label={program.name}
                 className="group block h-full rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
                 aria-label={`Tìm hiểu chương trình ${program.name}`}
               >
-                <Card className="flex h-full flex-col overflow-hidden border-line-200 transition-[border-color,box-shadow,transform] duration-[var(--duration-base)] group-hover:border-brand-300 group-focus-visible:-translate-y-0.5 group-focus-visible:border-brand-500 group-focus-visible:shadow-sm motion-reduce:transform-none">
+                <Card className="flex h-full flex-col overflow-hidden border-line-200 transition-transform duration-[var(--duration-base)] group-hover:-translate-y-1 group-focus-visible:-translate-y-0.5 group-focus-visible:border-brand-500 group-focus-visible:shadow-sm motion-reduce:transform-none">
                   <CardMedia aspect="aspect-[4/3]">
                     <div className="relative h-full w-full overflow-hidden bg-brand-50">
                       <Image
@@ -41,10 +43,10 @@ export function ProgramsSection() {
                   </CardMedia>
                   <CardBody className="flex-1">
                     <Badge variant="brand">{programGroups[program.group]}</Badge>
-                    <h3 className="mt-2 line-clamp-2 font-display text-h3 text-ink-950">{program.name}</h3>
-                    <p className="mt-2 line-clamp-2 text-body-sm text-ink-600">
-                      {program.shortDescription}
-                    </p>
+                    <h3 className="mt-2 min-h-[2.5rem] font-display text-h3 text-ink-950">
+                      {program.name}
+                    </h3>
+                    <p className="mt-2 text-body-sm text-ink-600">{program.shortDescription}</p>
                   </CardBody>
                   <CardFooter>
                     <span
@@ -55,7 +57,10 @@ export function ProgramsSection() {
                       })}
                     >
                       Tìm hiểu thêm
-                      <ArrowRight className="h-4 w-4 transition-transform duration-[var(--duration-fast)] group-hover/cta:translate-x-1" aria-hidden="true" />
+                      <ArrowRight
+                        className="h-4 w-4 transition-transform duration-[var(--duration-fast)] group-hover/cta:translate-x-1"
+                        aria-hidden="true"
+                      />
                     </span>
                   </CardFooter>
                 </Card>

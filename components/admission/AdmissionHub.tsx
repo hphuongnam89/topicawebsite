@@ -29,27 +29,27 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
     {
       question: "Topica xét tuyển bằng những phương thức nào?",
       answer:
-        "Topica xét tuyển thông qua 3 phương thức chính: Xét tuyển thẳng, Xét tuyển dựa trên kết quả thi THPT Quốc gia, và Xét tuyển học bạ THPT.",
+        "Thông báo tuyển sinh năm 2026 công bố 5 phương thức: xét tuyển thẳng; dựa trên kết quả thi tốt nghiệp THPT; dựa trên kết quả học tập THPT; dựa trên kết quả thi đánh giá năng lực, đánh giá tư duy; và xét tuyển theo đề án tuyển sinh của Trường Đại học Phú Xuân.",
     },
     {
       question: "Hồ sơ xét tuyển trực tuyến cần chuẩn bị những gì?",
       answer:
-        "Hồ sơ trực tuyến bao gồm: Ảnh chụp học bạ (nếu xét học bạ), ảnh chụp CMND/CCCD, và giấy chứng nhận tốt nghiệp tạm thời (có thể bổ sung sau).",
+        "Thành phần hồ sơ phụ thuộc vào phương thức xét tuyển và văn bằng hiện có. Thí sinh nên mở thông báo tuyển sinh năm 2026 hoặc gửi thông tin để được đối chiếu hồ sơ trước khi nộp.",
     },
     {
       question: "Topica có các chương trình học bổng nào cho tân sinh viên?",
       answer:
-        "Topica có nhiều loại học bổng cho tân sinh viên, bao gồm Học bổng Tài năng, Học bổng Khuyến học, và Học bổng Hỗ trợ tài chính. Giá trị học bổng có thể lên tới 100% học phí toàn khóa.",
+        "Thông báo tuyển sinh năm 2026 nêu các mức hỗ trợ gồm Talent 30%, Leadership 20%, Cooperation 40%, Future 5% và 50% dành cho tu sĩ. Mỗi chương trình có điều kiện áp dụng riêng và cần được xác nhận theo hồ sơ.",
     },
     {
       question: "Thời gian nhận hồ sơ xét tuyển là khi nào?",
       answer:
-        "Topica tổ chức nhiều đợt xét tuyển trong năm. Đợt 1 thường bắt đầu từ tháng 3 và kết thúc vào tháng 5. Bạn nên theo dõi thông báo trên website để cập nhật lịch chi tiết.",
+        "Lịch nhận hồ sơ được công bố theo từng đợt tuyển sinh. Vui lòng xem thông báo đang còn hiệu lực hoặc liên hệ tư vấn để xác nhận hạn nộp của đợt hiện tại.",
     },
     {
       question: "Học phí tại Topica được đóng như thế nào?",
       answer:
-        "Học phí được đóng theo từng kỳ học (2 kỳ/năm). Sinh viên có thể chọn đóng qua chuyển khoản ngân hàng hoặc qua cổng thanh toán trực tuyến của trường.",
+        "Mức học phí công bố cho tuyển sinh năm 2026 là 600.000 đồng/tín chỉ; lệ phí xét tuyển 80.000 đồng và phí hồ sơ 0 đồng. Tổng số tiền và lịch đóng phụ thuộc số tín chỉ thực học, miễn giảm được duyệt và thông báo của từng đợt.",
     },
   ];
 
@@ -60,12 +60,12 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
         <Container className="relative z-10">
           <div className="max-w-measure mx-auto text-center">
             <span className="text-brand-400 mb-4 inline-block rounded-full border border-brand-500/30 px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              Năm học 2026-2027
+              Tuyển sinh năm 2026
             </span>
             <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
             <p className="text-ink-200 mx-auto mb-10 max-w-2xl text-body-lg">
               {page.excerpt ||
-                "Khám phá các chương trình đào tạo chất lượng cao tại Topica. Chúng tôi chào đón những sinh viên đam mê học hỏi, sẵn sàng kiến tạo tương lai."}
+                "Chương trình đại học từ xa qua hệ thống học tập trực tuyến, phù hợp với người đang đi làm và cần chủ động thời gian học."}
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <ButtonLink
@@ -137,7 +137,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
         <Container>
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <SectionHeading className="mb-0">Tin tuyển sinh mới nhất</SectionHeading>
-            <ButtonLink href="/tin-tuc-tuyen-sinh/" variant="secondary" size="sm">
+            <ButtonLink href="/tin-tuc?category=tin-tuc-tuyen-sinh" variant="secondary" size="sm">
               Xem tất cả
             </ButtonLink>
           </div>
@@ -148,7 +148,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                 <AdmissionAnnouncementCard
                   key={article.id}
                   title={article.title}
-                  href={`/tin-tuc-tuyen-sinh/${article.slug}`}
+                  href={`/tin-tuc/${article.slug}`}
                   date={new Date(article.publishedAt).toLocaleDateString("vi-VN")}
                   summary={article.excerpt}
                 />

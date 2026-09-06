@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Be_Vietnam_Pro, Lora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -65,11 +66,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await connection();
+
   return (
     <html lang="vi" data-scroll-behavior="smooth">
       <body

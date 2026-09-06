@@ -17,15 +17,15 @@ describe("business administration program data", () => {
     );
   });
 
-  test("does not turn unresolved course counts into a published metric", () => {
+  test("publishes the DOCX-backed course count", () => {
     expect(businessAdministrationProgram.facts).toContainEqual(
       expect.objectContaining({
         label: "Tổng học phần",
-        value: "Cần xác nhận",
-        status: "need_confirmation",
+        value: "59 học phần",
+        status: "verified",
+        needsVerification: false,
       }),
     );
-    expect(businessAdministrationProgram.confirmations.length).toBeGreaterThan(0);
   });
 
   test("exposes five structured program pages", () => {
@@ -56,9 +56,26 @@ describe("business administration program data", () => {
       expect(program?.semesters).toHaveLength(9);
       expect(program?.semesters.reduce((sum, term) => sum + term.credits, 0)).toBe(126);
       expect(program?.outcomes).toEqual([]);
-      expect(program?.facts.every((fact) => fact.status === "verified")).toBe(true);
       expect(program?.code).toBe(expectedCodes[slug]);
       expect(program?.admissions).toBeTruthy();
+    }
+
+    const expectedCourseCounts = {
+      "cong-nghe-thong-tin": "53 học phần",
+      "quan-tri-dich-vu-du-lich-va-lu-hanh": "57 học phần",
+      "ngon-ngu-anh": "62 học phần",
+      "ngon-ngu-trung-quoc": "54 học phần",
+    } as const;
+
+    for (const [slug, value] of Object.entries(expectedCourseCounts)) {
+      expect(getProgramDetail(slug)?.facts).toContainEqual(
+        expect.objectContaining({
+          label: "Tổng học phần",
+          value,
+          status: "verified",
+          needsVerification: false,
+        }),
+      );
     }
   });
 });

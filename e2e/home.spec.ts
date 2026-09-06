@@ -6,14 +6,14 @@ test.describe("Homepage", () => {
 
     await expect(page).toHaveTitle(/Topica/);
     await expect(
-      page.getByRole("heading", { name: /HỌC CHỦ ĐỘNG.*KIẾN TẠO TƯƠNG LAI/ }),
+      page.getByRole("heading", { name: /Hoàn thiện bằng đại học/ }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Nhận lộ trình phù hợp với bạn" }),
+      page.getByRole("heading", { name: "Nhận tư vấn theo hồ sơ của bạn" }),
     ).toBeVisible();
     await expect(page.getByRole("heading", { name: "Chương trình đào tạo" })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Lộ trình trở thành sinh viên Topica" }),
+      page.getByRole("heading", { name: "5 bước để bắt đầu" }),
     ).toBeVisible();
 
     const viewport = page.viewportSize();
@@ -23,7 +23,7 @@ test.describe("Homepage", () => {
 
   test("validates the lead form before submission", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Đăng ký tư vấn miễn phí" }).click();
+    await page.getByRole("button", { name: "Nhận lộ trình & học phí" }).first().click();
 
     await expect(page.getByRole("alert")).toContainText("Vui lòng kiểm tra lại thông tin");
     await expect(page.getByLabel(/Họ tên/)).toHaveAttribute("aria-invalid", "true");

@@ -53,6 +53,8 @@ export default function AdminUsersPage() {
   };
 
   useEffect(() => {
+    // Initial data synchronization intentionally updates loading/users from the request lifecycle.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUsers();
   }, []);
 

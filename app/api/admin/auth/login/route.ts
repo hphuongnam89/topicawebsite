@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getUserByUsername } from "@/lib/db";
+import { getUserByUsername, writeAuditLog } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth/password";
-import { setSessionCookie } from "@/lib/auth/session";
+import { createSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
 const MAX_FAILURES = 5;
 const WINDOW_MS = 15 * 60 * 1000;
@@ -13,10 +13,17 @@ function clientKey(request: Request, username: string): string {
   return `${ip}:${username.toLowerCase()}`;
 }
 
+function clientIp(request: Request): string {
+  return request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown";
+}
+
 function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  for (const [storedKey, value] of failures) {
+    if (value.resetAt <= now) failures.delete(storedKey);
+  }
   const entry = failures.get(key);
-  if (!entry || entry.resetAt <= Date.now()) {
-    failures.delete(key);
+  if (!entry) {
     return false;
   }
   return entry.count >= MAX_FAILURES;
@@ -24,6 +31,7 @@ function isRateLimited(key: string): boolean {
 
 function recordFailure(key: string): void {
   const now = Date.now();
+  if (!failures.has(key) && failures.size >= 10_000) return;
   const entry = failures.get(key);
   if (!entry || entry.resetAt <= now) {
     failures.set(key, { count: 1, resetAt: now + WINDOW_MS });
@@ -47,7 +55,14 @@ export async function POST(request: Request) {
 
     const { username, password } = (body && typeof body === "object" ? body as Record<string, unknown> : {});
 
-    if (typeof username !== "string" || typeof password !== "string" || !username.trim() || !password) {
+    if (
+      typeof username !== "string" ||
+      typeof password !== "string" ||
+      username.trim().length < 3 ||
+      username.trim().length > 100 ||
+      password.length < 1 ||
+      password.length > 256
+    ) {
       return NextResponse.json(
         { error: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu." },
         { status: 400 }
@@ -65,6 +80,7 @@ export async function POST(request: Request) {
     const user = getUserByUsername(username.trim());
     if (!user) {
       recordFailure(key);
+      writeAuditLog({ action: "auth.login_failed", target: username.trim(), ip: clientIp(request) });
       return NextResponse.json(
         { error: "Tên đăng nhập hoặc mật khẩu không chính xác." },
         { status: 401 }
@@ -74,6 +90,7 @@ export async function POST(request: Request) {
     const isValid = verifyPassword(password, user.password_hash);
     if (!isValid) {
       recordFailure(key);
+      writeAuditLog({ action: "auth.login_failed", target: username.trim(), ip: clientIp(request) });
       return NextResponse.json(
         { error: "Tên đăng nhập hoặc mật khẩu không chính xác." },
         { status: 401 }
@@ -81,6 +98,7 @@ export async function POST(request: Request) {
     }
 
     failures.delete(key);
+    writeAuditLog({ action: "auth.login_success", actorId: user.id, ip: clientIp(request) });
 
     const response = NextResponse.json({
       success: true,
@@ -93,20 +111,19 @@ export async function POST(request: Request) {
     });
 
     // Instead of using cookies().set, set directly on the response to ensure it sets properly on Render
-    const { createSessionToken } = await import("@/lib/auth/session");
     const token = createSessionToken({
       id: user.id,
       username: user.username,
       name: user.name,
       role: user.role,
-    });
+    }, user.session_version);
     
-    response.cookies.set("topica_admin_session", token, {
+    response.cookies.set(SESSION_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 60 * 8,
     });
 
     return response;

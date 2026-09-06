@@ -26,8 +26,8 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
             </h2>
           </div>
           <p className="max-w-xl leading-7 text-[var(--color-academic-muted)] md:justify-self-end">
-            Tổng tín chỉ và nội dung tiêu biểu của từng học kỳ được đối chiếu từ{" "}
-            {program.source.label}.
+            Lộ trình dưới đây giúp bạn hình dung thứ tự các nhóm năng lực và học phần tiêu biểu
+            trong 9 học kỳ. Học phần thực tế có thể thay đổi theo kế hoạch đào tạo từng khóa.
           </p>
         </div>
 

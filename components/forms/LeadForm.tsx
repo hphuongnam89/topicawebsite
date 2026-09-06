@@ -1,351 +1,268 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { leadFormSchema, LeadFormData, LeadFormErrors } from "@/lib/form-schema";
-import { ZodError } from "zod";
+import { leadFormSchema, type LeadFormData, type LeadFormErrors } from "@/lib/form-schema";
+import { homepageContent } from "@/data/homepage-content";
+import { trackEvent } from "@/lib/analytics";
 
-interface LeadFormProps {
+type FormStatus = "idle" | "validating" | "submitting" | "success" | "error";
+type LeadFormProps = {
+  id?: string;
+  heading?: string;
+  description?: string;
+  responseTime?: string;
+  programCode?: string;
+  programName?: string;
+  programDirection?: string;
   onSubmit?: (data: LeadFormData) => Promise<void>;
+};
+type FormValues = { fullName?: string; phone?: string; consent?: boolean };
+const attributionKeys = ["source", "medium", "campaign", "content", "term"] as const;
+type AttributionKey = (typeof attributionKeys)[number];
+
+function getAttribution(): Record<
+  AttributionKey | "landing_page" | "referrer" | "submitted_at" | "device_type",
+  string
+> {
+  const empty = {
+    source: "",
+    medium: "",
+    campaign: "",
+    content: "",
+    term: "",
+    landing_page: "",
+    referrer: "",
+    submitted_at: "",
+    device_type: "",
+  };
+  if (typeof window === "undefined") return empty;
+  const values = Object.fromEntries(
+    attributionKeys.map((key) => [
+      key,
+      new URLSearchParams(window.location.search).get(`utm_${key}`) ||
+        sessionStorage.getItem(`utm_${key}`) ||
+        "",
+    ]),
+  ) as Record<AttributionKey, string>;
+  for (const key of attributionKeys)
+    if (values[key]) sessionStorage.setItem(`utm_${key}`, values[key]);
+  return {
+    ...values,
+    landing_page: window.location.pathname,
+    referrer: document.referrer.slice(0, 512),
+    submitted_at: new Date().toISOString(),
+    device_type: window.innerWidth < 768 ? "mobile" : "desktop",
+  };
 }
 
-const programs = [
-  "Quản trị Kinh doanh - Marketing",
-  "Quản trị Dịch vụ Du lịch và Lữ hành",
-  "Công nghệ thông tin",
-  "Ngôn ngữ Anh",
-  "Ngôn ngữ Trung Quốc",
-];
-
-const educationLevels = [
-  "Tốt nghiệp THPT / Trung học nghề",
-  "Tốt nghiệp Trung cấp",
-  "Tốt nghiệp Cao đẳng",
-  "Tốt nghiệp Đại học",
-];
-
-type FormStatus = "idle" | "loading" | "success" | "error";
-
-export function LeadForm({ onSubmit }: LeadFormProps) {
-  const [formData, setFormData] = useState<Partial<LeadFormData>>({
+export function LeadForm({
+  id = "lead-form",
+  heading = homepageContent.hero.formTitle,
+  description = homepageContent.hero.formDescription,
+  responseTime = homepageContent.hero.responseTime,
+  programCode,
+  programName,
+  programDirection,
+  onSubmit,
+}: LeadFormProps) {
+  const [formData, setFormData] = useState<FormValues>({
     fullName: "",
     phone: "",
-    email: "",
-    program: "",
-    educationLevel: "",
+    consent: false,
   });
-
   const [errors, setErrors] = useState<LeadFormErrors>({});
   const [status, setStatus] = useState<FormStatus>("idle");
   const [globalError, setGlobalError] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const val = type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
-
-    setFormData((prev) => ({ ...prev, [name]: val }));
-    // Clear error for the field when typing
-    if (errors[name as keyof LeadFormData]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
+  const updateField = (name: keyof FormValues, value: string | boolean) => {
+    setFormData((current) => ({ ...current, [name]: value }));
+    setErrors((current) => ({ ...current, [name]: undefined }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (status === "validating" || status === "submitting") return;
     setErrors({});
     setGlobalError(null);
-    setStatus("loading");
-
+    setStatus("validating");
+    const result = leadFormSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: LeadFormErrors = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof LeadFormData | undefined;
+        if (field) fieldErrors[field] = issue.message;
+      });
+      setErrors(fieldErrors);
+      setStatus("error");
+      trackEvent("form_field_error", { count: result.error.issues.length });
+      return;
+    }
+    trackEvent("form_submit");
+    setStatus("submitting");
     try {
-      // Validate
-      const validData = leadFormSchema.parse(formData);
-
-      if (onSubmit) {
-        await onSubmit(validData);
-      } else {
-        const res = await fetch("/api/public/lead", {
+      if (onSubmit) await onSubmit(result.data);
+      else {
+        const response = await fetch("/api/public/lead", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fullname: validData.fullName,
-            phone: validData.phone,
-            email: validData.email,
-            program: validData.program,
-            notes: `Trình độ học vấn: ${validData.educationLevel}`,
+            fullname: result.data.fullName,
+            phone: result.data.phone,
+            email: result.data.email || undefined,
+            program: programName,
+            program_code: programCode,
+            program_name: programName,
+            program_direction: programDirection,
+            notes: "Đăng ký nhận lộ trình và học phí.",
+            ...getAttribution(),
           }),
         });
-
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || "Gửi thông tin thất bại.");
-        }
+        const payload = (await response.json().catch(() => ({}))) as { error?: string };
+        if (!response.ok) throw new Error(payload.error || "Gửi thông tin thất bại.");
       }
-
       setStatus("success");
-    } catch (error) {
+      trackEvent("form_success");
+    } catch {
+      setGlobalError("Không thể gửi thông tin lúc này. Vui lòng thử lại hoặc gọi hotline.");
       setStatus("error");
-      if (error instanceof ZodError) {
-        const fieldErrors: LeadFormErrors = {};
-        error.issues.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof LeadFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      } else {
-        setGlobalError("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-      }
+      trackEvent("form_error");
     }
   };
 
-  if (status === "success") {
+  if (status === "success")
     return (
-      <div className="flex flex-col items-center justify-center space-y-4 rounded-lg border border-line-200 bg-paper p-8 text-center shadow-sm">
-        <CheckCircle className="h-12 w-12 text-success" />
-        <h3 className="font-display text-h3 text-ink-950">Đăng ký thành công!</h3>
-        <p className="text-body text-ink-600">
-          Cảm ơn bạn đã quan tâm. Chuyên viên tư vấn của Topica sẽ liên hệ với bạn trong thời gian
-          sớm nhất.
+      <div className="rounded-md border border-success/30 bg-paper p-6 text-center" role="status">
+        <CheckCircle className="mx-auto h-10 w-10 text-success" aria-hidden="true" />
+        <h2 className="mt-4 font-display text-h3 font-semibold text-ink-950">Đã nhận thông tin</h2>
+        <p className="mt-3 text-body-sm text-ink-600">
+          Chúng tôi sẽ liên hệ theo số{" "}
+          {formData.phone
+            ? `${String(formData.phone).slice(0, 3)}••••${String(formData.phone).slice(-3)}`
+            : "bạn cung cấp"}
+          . {responseTime}
         </p>
       </div>
     );
-  }
-
+  const busy = status === "validating" || status === "submitting";
   return (
     <form
+      id={id}
       onSubmit={handleSubmit}
       noValidate
-      className="space-y-4 rounded-[0.75rem] border border-white/60 bg-paper p-5 shadow-sm sm:p-6"
-      aria-live="polite"
-      aria-busy={status === "loading"}
+      className="rounded-md bg-paper p-5 text-ink-950 shadow-md sm:p-7"
+      aria-busy={busy}
     >
       <div className="border-b border-line-200 pb-4">
-        <p className="text-body-sm font-semibold tracking-[0.1em] text-brand-700 uppercase">
+        <p className="text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
           Tư vấn tuyển sinh
         </p>
-        <h2 className="mt-1 font-display text-[1.5rem] leading-tight font-bold text-ink-950">
-          Nhận lộ trình phù hợp với bạn
+        <h2 className="mt-2 font-display text-[1.65rem] leading-tight font-semibold text-ink-950">
+          {heading}
         </h2>
+        <p className="mt-3 text-body-sm leading-relaxed text-ink-600">{description}</p>
+        {programName && (
+          <p className="text-ink-700 mt-4 border-l-2 border-brand-500 pl-3 text-body-sm font-semibold">
+            Ngành đã chọn: {programName}
+            {programDirection ? ` · ${programDirection}` : ""}
+          </p>
+        )}
       </div>
-      {status === "error" && Object.keys(errors).length > 0 && (
+      {(Object.keys(errors).length > 0 || globalError) && (
         <div
-          className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
+          className="mt-5 flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
           role="alert"
         >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>Vui lòng kiểm tra lại thông tin bên dưới.</span>
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>{globalError || "Vui lòng kiểm tra lại thông tin."}</span>
         </div>
       )}
-
-      {globalError && (
-        <div
-          className="flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
-          role="alert"
-        >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-          <span>{globalError}</span>
-        </div>
-      )}
-
-      <div className="space-y-1.5">
-        <label htmlFor="fullName" className="block text-body-sm font-medium text-ink-950">
-          Họ tên <span className="text-error">*</span>
-        </label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          autoComplete="name"
-          value={formData.fullName || ""}
-          onChange={handleChange}
-          disabled={status === "loading"}
-          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
-            errors.fullName
-              ? "border-error focus:border-error focus:ring-error"
-              : "border-line-200 focus:border-info focus:ring-info"
-          }`}
-          aria-invalid={!!errors.fullName}
-          aria-describedby={errors.fullName ? "fullName-error" : undefined}
-          placeholder="Nhập họ tên của bạn"
-        />
-        {errors.fullName && (
-          <p id="fullName-error" className="mt-1 flex items-center gap-1 text-body-sm text-error">
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.fullName}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="phone" className="block text-body-sm font-medium text-ink-950">
-          Số điện thoại <span className="text-error">*</span>
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          autoComplete="tel"
-          inputMode="tel"
-          value={formData.phone || ""}
-          onChange={handleChange}
-          disabled={status === "loading"}
-          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
-            errors.phone
-              ? "border-error focus:border-error focus:ring-error"
-              : "border-line-200 focus:border-info focus:ring-info"
-          }`}
-          aria-invalid={!!errors.phone}
-          aria-describedby={errors.phone ? "phone-error" : undefined}
-          placeholder="VD: 0912345678"
-        />
-        {errors.phone && (
-          <p id="phone-error" className="mt-1 flex items-center gap-1 text-body-sm text-error">
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.phone}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="email" className="block text-body-sm font-medium text-ink-950">
-          Email <span className="text-error">*</span>
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          autoComplete="email"
-          inputMode="email"
-          value={formData.email || ""}
-          onChange={handleChange}
-          disabled={status === "loading"}
-          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
-            errors.email
-              ? "border-error focus:border-error focus:ring-error"
-              : "border-line-200 focus:border-info focus:ring-info"
-          }`}
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "email-error" : undefined}
-          placeholder="Nhập địa chỉ email"
-        />
-        {errors.email && (
-          <p id="email-error" className="mt-1 flex items-center gap-1 text-body-sm text-error">
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.email}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="program" className="block text-body-sm font-medium text-ink-950">
-          Ngành quan tâm <span className="text-error">*</span>
-        </label>
-        <select
-          id="program"
-          name="program"
-          value={formData.program || ""}
-          onChange={handleChange}
-          disabled={status === "loading"}
-          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
-            errors.program
-              ? "border-error focus:border-error focus:ring-error"
-              : "border-line-200 focus:border-info focus:ring-info"
-          }`}
-          aria-invalid={!!errors.program}
-          aria-describedby={errors.program ? "program-error" : undefined}
-        >
-          <option value="" disabled>
-            Chọn ngành học
-          </option>
-          {programs.map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
-          ))}
-        </select>
-        {errors.program && (
-          <p id="program-error" className="mt-1 flex items-center gap-1 text-body-sm text-error">
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.program}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="educationLevel" className="block text-body-sm font-medium text-ink-950">
-          Trình độ học vấn hiện tại <span className="text-error">*</span>
-        </label>
-        <select
-          id="educationLevel"
-          name="educationLevel"
-          value={formData.educationLevel || ""}
-          onChange={handleChange}
-          disabled={status === "loading"}
-          className={`h-11 w-full rounded-md border bg-white px-3 transition-colors focus:ring-1 focus:outline-none ${
-            errors.educationLevel
-              ? "border-error focus:border-error focus:ring-error"
-              : "border-line-200 focus:border-info focus:ring-info"
-          }`}
-          aria-invalid={!!errors.educationLevel}
-          aria-describedby={errors.educationLevel ? "educationLevel-error" : undefined}
-        >
-          <option value="" disabled>
-            Chọn trình độ
-          </option>
-          {educationLevels.map((lvl) => (
-            <option key={lvl} value={lvl}>
-              {lvl}
-            </option>
-          ))}
-        </select>
-        {errors.educationLevel && (
-          <p
-            id="educationLevel-error"
-            className="mt-1 flex items-center gap-1 text-body-sm text-error"
-          >
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.educationLevel}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-1.5 pt-2">
-        <div className="flex items-start gap-2">
+      <div className="mt-5 space-y-4">
+        <div>
+          <label htmlFor="fullName" className="block text-body-sm font-semibold">
+            Họ tên <span className="text-error">*</span>
+          </label>
           <input
-            type="checkbox"
+            id="fullName"
+            name="fullName"
+            autoComplete="name"
+            value={formData.fullName || ""}
+            onChange={(event) => updateField("fullName", event.target.value)}
+            disabled={busy}
+            className={`mt-1.5 h-12 w-full rounded-sm border bg-white px-3 outline-none focus:ring-2 focus:ring-info/20 ${errors.fullName ? "border-error" : "border-line-200 focus:border-info"}`}
+            aria-invalid={Boolean(errors.fullName)}
+            aria-describedby={errors.fullName ? "fullName-error" : undefined}
+            placeholder="Nhập họ tên của bạn"
+          />
+          {errors.fullName && (
+            <p id="fullName-error" className="mt-1 text-body-sm text-error">
+              {errors.fullName}
+            </p>
+          )}
+        </div>
+        <div>
+          <label htmlFor="phone" className="block text-body-sm font-semibold">
+            Số điện thoại <span className="text-error">*</span>
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            value={formData.phone || ""}
+            onChange={(event) => updateField("phone", event.target.value)}
+            disabled={busy}
+            className={`mt-1.5 h-12 w-full rounded-sm border bg-white px-3 outline-none focus:ring-2 focus:ring-info/20 ${errors.phone ? "border-error" : "border-line-200 focus:border-info"}`}
+            aria-invalid={Boolean(errors.phone)}
+            aria-describedby={errors.phone ? "phone-error" : undefined}
+            placeholder="VD: 0912 345 678"
+          />
+          {errors.phone && (
+            <p id="phone-error" className="mt-1 text-body-sm text-error">
+              {errors.phone}
+            </p>
+          )}
+        </div>
+        <div className="flex items-start gap-3">
+          <input
             id="consent"
             name="consent"
-            checked={!!formData.consent}
-            onChange={handleChange}
-            disabled={status === "loading"}
+            type="checkbox"
+            checked={Boolean(formData.consent)}
+            onChange={(event) => updateField("consent", event.target.checked)}
+            disabled={busy}
             className="mt-1 h-4 w-4 rounded border-line-200 text-brand-700 focus:ring-info"
-            aria-invalid={!!errors.consent}
+            aria-invalid={Boolean(errors.consent)}
             aria-describedby={errors.consent ? "consent-error" : undefined}
           />
-          <label htmlFor="consent" className="text-body-sm text-ink-600">
-            Tôi đồng ý với{" "}
-            <span className="font-medium text-info underline decoration-info/40 underline-offset-2">
+          <label htmlFor="consent" className="text-body-sm leading-relaxed text-ink-600">
+            Tôi đồng ý để Topica tiếp nhận đăng ký, tư vấn tuyển sinh và liên hệ theo thông tin tôi
+            cung cấp.{" "}
+            <a
+              href={homepageContent.privacyPolicyHref}
+              className="font-semibold text-info underline underline-offset-2"
+            >
               Chính sách bảo mật
-            </span>{" "}
-            và cho phép Topica liên hệ để tư vấn.
+            </a>
           </label>
         </div>
         {errors.consent && (
-          <p id="consent-error" className="flex items-center gap-1 text-body-sm text-error">
-            <AlertCircle className="h-3.5 w-3.5" /> {errors.consent}
+          <p id="consent-error" className="text-body-sm text-error">
+            {errors.consent}
           </p>
         )}
       </div>
-
       <button
         type="submit"
-        disabled={status === "loading"}
-        className="mt-4 flex h-12 w-full items-center justify-center rounded-md bg-brand-700 font-semibold text-white shadow-xs transition-[background-color,transform,box-shadow] hover:bg-brand-800 hover:shadow-sm active:translate-y-px disabled:cursor-not-allowed disabled:opacity-70"
+        disabled={busy}
+        className="mt-5 inline-flex h-12 w-full items-center justify-center rounded-sm bg-brand-700 px-5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {status === "loading" ? (
-          <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Đang xử lý...
-          </>
-        ) : (
-          "Đăng ký tư vấn miễn phí"
-        )}
+        {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+        {status === "submitting" ? "Đang gửi thông tin…" : homepageContent.hero.primaryCta}
       </button>
+      <p className="mt-3 text-center text-[0.75rem] text-ink-600">
+        Thông tin chỉ dùng cho mục đích tư vấn tuyển sinh. {responseTime}
+      </p>
     </form>
   );
 }

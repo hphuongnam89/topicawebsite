@@ -12,9 +12,10 @@ export const programs: readonly Program[] = [
   {
     name: "Quản Trị Kinh Doanh – Truyền thông & marketing số",
     slug: "quan-tri-kinh-doanh-marketing",
-    shortDescription: "Cung cấp kiến thức chuyên sâu về quản trị và chiến lược truyền thông, marketing số hiện đại.",
+    shortDescription:
+      "Cung cấp kiến thức chuyên sâu về quản trị và chiến lược truyền thông, marketing số hiện đại.",
     icon: "Briefcase",
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/programs/quan-tri-kinh-doanh.jpg",
     href: "/quan-tri-kinh-doanh-marketing/",
     group: "business",
   },
@@ -24,7 +25,7 @@ export const programs: readonly Program[] = [
     shortDescription:
       "Đào tạo kỹ năng quản lý, điều hành các hoạt động du lịch và lữ hành chuyên nghiệp.",
     icon: "Plane",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/programs/du-lich-lu-hanh.jpg",
     href: "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
     group: "business",
   },
@@ -33,7 +34,7 @@ export const programs: readonly Program[] = [
     slug: "cong-nghe-thong-tin",
     shortDescription: "Đào tạo kỹ sư với kiến thức nền tảng và chuyên sâu về đồ hoạ kỹ thuật số.",
     icon: "Monitor",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/programs/cong-nghe-thong-tin.jpg",
     href: "/cong-nghe-thong-tin/",
     group: "technology",
   },
@@ -42,7 +43,7 @@ export const programs: readonly Program[] = [
     slug: "ngon-ngu-anh",
     shortDescription: "Phát triển kỹ năng ngoại ngữ toàn diện, đáp ứng nhu cầu giao tiếp quốc tế.",
     icon: "BookOpen",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/programs/ngon-ngu-anh.jpg",
     href: "/ngon-ngu-anh/",
     group: "language",
   },
@@ -52,7 +53,7 @@ export const programs: readonly Program[] = [
     shortDescription:
       "Đào tạo ngôn ngữ và văn hóa Trung Quốc, mở rộng cơ hội nghề nghiệp toàn cầu.",
     icon: "Languages",
-    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/programs/ngon-ngu-trung.jpg",
     href: "/ngon-ngu-trung-quoc/",
     group: "language",
   },

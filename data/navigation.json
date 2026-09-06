@@ -38,10 +38,6 @@
             {
               "label": "Cơ cấu tổ chức",
               "href": "/gioi-thieu/co-cau-to-chuc/"
-            },
-            {
-              "label": "Cơ sở vật chất",
-              "href": "/gioi-thieu/co-so-vat-chat/"
             }
           ]
         }
@@ -148,19 +144,7 @@
           "items": [
             {
               "label": "Đào tạo từ xa",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/"
-            },
-            {
-              "label": "Khung chương trình",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/khung-chuong-trinh/"
-            },
-            {
-              "label": "Mục tiêu & Chuẩn đầu ra",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/muc-tieu-va-chuan-dau-ra/"
-            },
-            {
-              "label": "Đào tạo ngắn hạn",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-ngan-han/"
+              "href": "/chuong-trinh/"
             }
           ]
         },
@@ -168,34 +152,14 @@
           "heading": "Kế hoạch đào tạo",
           "items": [
             {
-              "label": "Quy chế đào tạo",
-              "href": "/dao-tao/quy-che-dao-tao/"
-            },
-            {
               "label": "Kế hoạch năm học",
               "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-nam-hoc/"
-            },
-            {
-              "label": "Kế hoạch toàn khóa",
-              "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-toan-khoa/"
-            },
-            {
-              "label": "Kế hoạch học kỳ",
-              "href": "/dao-tao/ke-hoach-dao-tao/ke-hoach-hoc-ky/"
             }
           ]
         },
         {
           "heading": "Dành cho sinh viên",
           "items": [
-            {
-              "label": "Thời khóa biểu",
-              "href": "/dao-tao/thoi-khoa-bieu/"
-            },
-            {
-              "label": "Lịch thi",
-              "href": "/dao-tao/lich-thi/"
-            },
             {
               "label": "Quy định",
               "href": "/quy-dinh/"
@@ -253,30 +217,18 @@
           "heading": "Công khai & Báo cáo",
           "items": [
             {
-              "label": "Công khai",
-              "href": "/cong-khai/"
-            },
-            {
-              "label": "Báo cáo thường niên",
-              "href": "/bao-cao-thuong-nien/"
-            },
-            {
-              "label": "Công khai văn bằng chứng chỉ",
-              "href": "/cong-khai-van-bang-chung-chi/"
-            },
-            {
               "label": "Khảo thí & ĐBCL",
               "href": "/khao-thi-dbcl/"
+            },
+            {
+              "label": "Báo cáo & công khai",
+              "href": "/dam-bao-chat-luong/"
             }
           ]
         },
         {
           "heading": "Quy trình & Biểu mẫu",
           "items": [
-            {
-              "label": "Bộ quy trình",
-              "href": "/bo-quy-trinh/"
-            },
             {
               "label": "Bộ biểu mẫu",
               "href": "/bo-bieu-mau/"
@@ -306,14 +258,14 @@
   "actions": [
     {
       "id": "apply",
-      "label": "Đăng ký xét tuyển",
-      "href": "https://www.tuyensinh.topicauni.edu.vn/",
-      "external": true,
+      "label": "Kiểm tra điều kiện",
+      "href": "/#consultation-form",
+      "external": false,
       "variant": "primary"
     },
     {
       "id": "consult",
-      "label": "Nhận tư vấn",
+      "label": "Liên hệ trực tiếp",
       "action": "open-consultation-form",
       "variant": "secondary",
       "mobileOnly": true

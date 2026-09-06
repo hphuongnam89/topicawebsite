@@ -36,8 +36,7 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // Hard redirect to ensure session cookie is attached cleanly on full page load
-      window.location.href = "/admin";
+      router.replace("/admin");
     } catch (err) {
       console.error(err);
       setError("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
@@ -46,11 +45,11 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-brand-950 to-slate-900 px-4 py-12">
+    <div className="via-brand-950 flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-900 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo Card Header */}
         <div className="mb-8 text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-xl shadow-brand-900/50 mb-4 ring-8 ring-white/10">
+          <div className="shadow-brand-900/50 mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-xl ring-8 ring-white/10">
             <GraduationCap className="h-9 w-9" />
           </div>
           <h1 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -64,7 +63,7 @@ export default function AdminLoginPage() {
         {/* Login Card Form */}
         <div className="rounded-2xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur-xl">
           {error && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg bg-red-50 p-4 text-body-sm text-red-700 border border-red-200">
+            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-700">
               <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
               <span>{error}</span>
             </div>
@@ -72,7 +71,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                 Tên đăng nhập
               </label>
               <div className="relative">
@@ -85,13 +84,13 @@ export default function AdminLoginPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="admin"
-                  className="h-11 w-full rounded-lg border border-line-200 bg-white pl-10 pr-3.5 text-body text-ink-950 transition-all placeholder:text-ink-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 focus:outline-none"
+                  className="h-11 w-full rounded-lg border border-line-200 bg-white pr-3.5 pl-10 text-body text-ink-950 transition-all placeholder:text-ink-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                 Mật khẩu
               </label>
               <div className="relative">
@@ -104,17 +103,15 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="h-11 w-full rounded-lg border border-line-200 bg-white pl-10 pr-3.5 text-body text-ink-950 transition-all placeholder:text-ink-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 focus:outline-none"
+                  className="h-11 w-full rounded-lg border border-line-200 bg-white pr-3.5 pl-10 text-body text-ink-950 transition-all placeholder:text-ink-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 focus:outline-none"
                 />
               </div>
             </div>
 
-
-
             <button
               type="submit"
               disabled={loading}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-700 font-semibold text-white transition-all hover:bg-brand-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 shadow-md shadow-brand-700/25"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-700 font-semibold text-white shadow-md shadow-brand-700/25 transition-all hover:bg-brand-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {loading ? (
                 <>

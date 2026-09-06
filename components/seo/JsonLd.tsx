@@ -1,6 +1,9 @@
+import { headers } from "next/headers";
+
 type JsonLdValue = string | number | boolean | null | JsonLdValue[] | { [key: string]: JsonLdValue };
 
-export function JsonLd({ data }: { data: JsonLdValue }) {
+export async function JsonLd({ data }: { data: JsonLdValue }) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const serialized = JSON.stringify(data).replace(/[<>&]/g, (character) => ({
     "<": "\\u003c",
     ">": "\\u003e",
@@ -8,6 +11,6 @@ export function JsonLd({ data }: { data: JsonLdValue }) {
   })[character]!);
 
   return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialized }} />
+    <script nonce={nonce} type="application/ld+json" dangerouslySetInnerHTML={{ __html: serialized }} />
   );
 }

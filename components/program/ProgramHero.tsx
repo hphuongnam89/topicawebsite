@@ -4,13 +4,26 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import type { ProgramDetail } from "@/data/program-details";
 
-export function ProgramHero({ program }: { program: ProgramDetail }) {
+export function ProgramHero({
+  program,
+  audience,
+  showAcademicDetails,
+}: {
+  program: ProgramDetail;
+  audience: string;
+  showAcademicDetails: boolean;
+}) {
   const fact = (label: string) => program.facts.find((item) => item.label === label);
   const credits = fact("Khối lượng");
   const duration = fact("Thời gian");
-  const creditValue = credits?.status === "verified" ? credits.value.match(/^\d+/)?.[0] : undefined;
+  const creditValue =
+    credits?.status === "verified" && !credits.needsVerification
+      ? credits.value.match(/^\d+/)?.[0]
+      : undefined;
   const termValue =
-    duration?.status === "verified" ? duration.value.match(/(\d+) học kỳ/)?.[1] : undefined;
+    duration?.status === "verified" && !duration.needsVerification
+      ? duration.value.match(/(\d+) học kỳ/)?.[1]
+      : undefined;
   const profileFacts = [
     { label: "Mã ngành", value: program.code },
     {
@@ -67,26 +80,29 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
           <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--color-academic-muted)] sm:text-lg">
             {program.summary}
           </p>
+          <p className="mt-4 max-w-2xl text-sm leading-6 font-medium text-[var(--color-academic-ink)] sm:text-base">
+            {audience}
+          </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <ButtonLink
-              href="https://www.tuyensinh.topicauni.edu.vn/"
+              href="#program-consultation-form"
+              data-track="eligibility_click"
               size="lg"
               rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
             >
-              Đăng ký xét tuyển
+              Kiểm tra điều kiện & nhận lộ trình
             </ButtonLink>
             <ButtonLink
-              href="#chuong-trinh"
+              href={showAcademicDetails ? "#chuong-trinh" : "#thong-tin-tuyen-sinh"}
+              data-track="program_cta_click"
               size="lg"
               variant="secondary"
               rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
               className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
-              {program.evidenceLevel === "academic_source"
-                ? "Xem chương trình"
-                : "Xem trạng thái hồ sơ"}
+              {showAcademicDetails ? "Xem chương trình" : "Xem thông tin tuyển sinh"}
             </ButtonLink>
           </div>
         </div>
@@ -97,7 +113,7 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             className="absolute inset-x-0 top-0 h-1 bg-[var(--color-academic-accent)] lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"
           />
           <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-muted)] uppercase">
-            Hồ sơ học thuật
+            Thông tin chính
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
             <div className="border-b border-[var(--color-academic-rule)] pb-8">
@@ -106,10 +122,10 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 aria-hidden="true"
               />
               <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {creditValue ?? "—"}
+                {showAcademicDetails ? (creditValue ?? "—") : "Từ xa"}
               </p>
               <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {creditValue ? "tín chỉ tích lũy" : "tín chỉ · chờ hồ sơ"}
+                {showAcademicDetails ? "tín chỉ tích lũy" : "hình thức đào tạo"}
               </p>
             </div>
             <div className="border-b border-[var(--color-academic-rule)] pb-8">
@@ -118,10 +134,10 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 aria-hidden="true"
               />
               <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {termValue ?? "—"}
+                {showAcademicDetails ? (termValue ?? "—") : "LMS"}
               </p>
               <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {termValue ? duration?.value : "học kỳ · chờ hồ sơ"}
+                {showAcademicDetails ? duration?.value : "phương thức E-learning"}
               </p>
             </div>
           </div>

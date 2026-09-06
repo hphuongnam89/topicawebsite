@@ -18,10 +18,18 @@ export function LearningOutcomes({ program }: { program: ProgramDetail }) {
               id="outcomes-title"
               className="mt-3 max-w-[13ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              {program.outcomes.length} năng lực sau tốt nghiệp
+              {program.outcomes.length > 0
+                ? `${program.outcomes.length} năng lực sau tốt nghiệp`
+                : "Chuẩn đầu ra theo ngành"}
             </h2>
           </div>
           <div className="border-t border-[var(--color-academic-rule-strong)]">
+            {program.outcomes.length === 0 ? (
+              <p className="py-6 leading-7 text-[var(--color-academic-muted)]">
+                Thông tin chuẩn đầu ra chuyên ngành Đồ họa kỹ thuật số sẽ được tư vấn viên cung cấp
+                theo bản cập nhật mới nhất.
+              </p>
+            ) : null}
             {program.outcomes.map((outcome) => (
               <details
                 key={outcome.code}

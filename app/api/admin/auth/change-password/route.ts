@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/guards";
-import { getUserById, updateUserPassword } from "@/lib/db";
+import { getUserById, updateUserPassword, writeAuditLog } from "@/lib/db";
 import { verifyPassword, hashPassword } from "@/lib/auth/password";
 import { isSameOrigin } from "@/lib/security/request";
 
@@ -20,9 +20,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 12 || newPassword.length > 256) {
       return NextResponse.json(
-        { error: "Mật khẩu mới phải có tối thiểu 6 ký tự." },
+        { error: "Mật khẩu mới phải có từ 12 đến 256 ký tự." },
         { status: 400 }
       );
     }
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
     const newHash = hashPassword(newPassword);
     updateUserPassword(auth.user.id, newHash);
+    writeAuditLog({ action: "auth.password_changed", actorId: auth.user.id, ip: request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown" });
 
     return NextResponse.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {

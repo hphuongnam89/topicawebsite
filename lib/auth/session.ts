@@ -1,17 +1,20 @@
 import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
+import { getUserById } from "@/lib/db";
 import { verifySessionToken, type SessionPayload, type SessionUser } from "./token";
 
-const SESSION_COOKIE_NAME = "topica_admin_session";
-const DEVELOPMENT_SESSION_SECRET = "development-only-session-secret-do-not-use-in-production";
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days in seconds
+export const SESSION_COOKIE_NAME = "topica_admin_session";
+const SESSION_MAX_AGE = 60 * 60 * 8; // 8 hours in seconds
 
 export type { SessionUser } from "./token";
 
 function getSessionSecret(): string {
-  const secret = process.env.ADMIN_SESSION_SECRET || process.env.SESSION_SECRET;
-  return secret || "topica-super-safe-production-session-secret-2026-xyz";
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("ADMIN_SESSION_SECRET must be set to at least 32 characters.");
+  }
+  return secret;
 }
 
 function signToken(data: string): string {
@@ -22,9 +25,10 @@ function signToken(data: string): string {
 /**
  * Creates a signed session token for a user
  */
-export function createSessionToken(user: SessionUser): string {
+export function createSessionToken(user: SessionUser, sessionVersion = 0): string {
   const payload: SessionPayload = {
     user,
+    sessionVersion,
     expiresAt: Date.now() + SESSION_MAX_AGE * 1000,
   };
   const data = Buffer.from(JSON.stringify(payload)).toString("base64url");
@@ -40,7 +44,7 @@ export async function setSessionCookie(user: SessionUser) {
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
     maxAge: SESSION_MAX_AGE,
   });
@@ -64,7 +68,15 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     if (!sessionCookie?.value) return null;
 
     const payload = await verifySessionToken(sessionCookie.value, getSessionSecret());
-    return payload?.user ?? null;
+    if (!payload || typeof payload.sessionVersion !== "number") return null;
+    const currentUser = getUserById(payload.user.id);
+    if (!currentUser || payload.sessionVersion !== currentUser.session_version) return null;
+    return {
+      id: currentUser.id,
+      username: currentUser.username,
+      name: currentUser.name,
+      role: currentUser.role,
+    };
   } catch {
     return null;
   }

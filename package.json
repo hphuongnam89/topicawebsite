@@ -14,6 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:seo": "tsx scripts/seo-check.ts",
+    "test:program-data": "tsx scripts/program-data-check.ts",
     "test": "vitest run",
     "test:unit": "vitest",
     "test:e2e": "playwright test",

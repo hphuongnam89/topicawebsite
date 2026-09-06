@@ -35,9 +35,15 @@ function initSchema(db: DatabaseSync) {
       password_hash TEXT NOT NULL,
       name TEXT NOT NULL,
       role TEXT NOT NULL DEFAULT 'admin',
+      session_version INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL
     );
   `);
+
+  const userColumns = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
+  if (!userColumns.some((column) => column.name === "session_version")) {
+    db.exec("ALTER TABLE users ADD COLUMN session_version INTEGER NOT NULL DEFAULT 0");
+  }
 
   // 2. Settings table (Key-Value JSON store)
   db.exec(`
@@ -124,10 +130,24 @@ function initSchema(db: DatabaseSync) {
     );
   `);
 
-  // Provision the first admin explicitly; use ADMIN_INITIAL_PASSWORD or default fallback
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      actor_id TEXT,
+      action TEXT NOT NULL,
+      target TEXT,
+      ip TEXT,
+      created_at TEXT NOT NULL
+    );
+  `);
+
+  // Provision the first admin only with an explicitly configured password.
   const checkAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get("admin");
-  const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD || "admin@topica2026";
   if (!checkAdmin) {
+    const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+    if (!initialAdminPassword || initialAdminPassword.length < 12) {
+      throw new Error("ADMIN_INITIAL_PASSWORD must be set to at least 12 characters before first startup.");
+    }
     const adminPasswordHash = hashPassword(initialAdminPassword);
     db.prepare(`
       INSERT INTO users (id, username, password_hash, name, role, created_at)
@@ -201,6 +221,24 @@ export function setSetting(key: string, value: unknown): void {
   `).run(key, valueJson, now);
 }
 
+export function writeAuditLog(input: {
+  actorId?: string;
+  action: string;
+  target?: string;
+  ip?: string;
+}): void {
+  getDb().prepare(`
+    INSERT INTO audit_logs (actor_id, action, target, ip, created_at)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(
+    input.actorId ?? null,
+    input.action,
+    input.target ?? null,
+    input.ip ?? null,
+    new Date().toISOString(),
+  );
+}
+
 // ----------------------------------------------------
 // USERS HELPERS
 // ----------------------------------------------------
@@ -220,7 +258,7 @@ export function getUsers(): Omit<UserRecord, "password_hash">[] {
 }
 
 export function updateUserPassword(userId: string, newPasswordHash: string): boolean {
-  const result = getDb().prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(newPasswordHash, userId);
+  const result = getDb().prepare("UPDATE users SET password_hash = ?, session_version = session_version + 1 WHERE id = ?").run(newPasswordHash, userId);
   return result.changes > 0;
 }
 
@@ -243,6 +281,10 @@ export function updateUser(userId: string, data: { name?: string; role?: string;
     params.push(data.password_hash);
   }
 
+  if (data.password_hash !== undefined || data.role !== undefined) {
+    updates.push("session_version = session_version + 1");
+  }
+
   if (updates.length === 0) return true;
 
   query += updates.join(", ") + " WHERE id = ?";
@@ -252,7 +294,7 @@ export function updateUser(userId: string, data: { name?: string; role?: string;
   return result.changes > 0;
 }
 
-export function createUser(user: Omit<UserRecord, "created_at">): void {
+export function createUser(user: Omit<UserRecord, "created_at" | "session_version">): void {
   const now = new Date().toISOString();
   getDb().prepare(`
     INSERT INTO users (id, username, password_hash, name, role, created_at)

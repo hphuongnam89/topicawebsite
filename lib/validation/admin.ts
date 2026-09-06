@@ -28,3 +28,24 @@ export const leadStatusSchema = z.object({
   id: z.coerce.number().int().positive(),
   status: z.enum(["new", "contacted", "consulted", "cancelled"]),
 }).strict();
+
+export const adminUserSchema = z.object({
+  username: z.string().trim().min(3).max(100),
+  password: z.string().min(12).max(256),
+  name: z.string().trim().min(1).max(200),
+  role: z.enum(["admin", "editor"]).default("editor"),
+}).strict();
+
+const optionalUrl = z.union([z.literal(""), z.string().url()]).optional();
+export const siteSettingsSchema = z.object({
+  hotline: z.string().trim().max(50),
+  email: z.string().trim().email().max(254),
+  address: z.string().trim().max(300),
+  facebook: optionalUrl,
+  youtube: optionalUrl,
+  zalo: optionalUrl,
+  siteTitle: z.string().trim().max(240),
+  siteDescription: z.string().trim().max(1000),
+  telegramBotToken: z.string().max(300).optional(),
+  telegramChatId: z.string().trim().max(100).optional(),
+}).strict();

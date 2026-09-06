@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth/guards";
+import { requireAdmin, requireUser } from "@/lib/auth/guards";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { isSameOrigin } from "@/lib/security/request";
@@ -41,7 +41,7 @@ export async function GET() {
 }
 
 export async function DELETE(request: Request) {
-  const auth = await requireUser();
+  const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 

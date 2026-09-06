@@ -133,6 +133,7 @@ export function Header() {
               <div
                 key={group.id}
                 className="relative"
+                onFocus={() => handleMenuEnter(group.id)}
                 onMouseEnter={() => handleMenuEnter(group.id)}
                 onMouseLeave={handleMenuLeave}
               >

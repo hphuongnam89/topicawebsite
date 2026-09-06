@@ -97,6 +97,9 @@ const DEFAULT_STEPS: AdmissionStepSetting[] = [
 ];
 
 export async function GET() {
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+
   const hero = getSetting<HomepageHeroSettings>("homepage_hero", DEFAULT_HERO);
   const trustItems = getSetting<TrustItemSetting[]>("homepage_trust", DEFAULT_TRUST_ITEMS);
   const testimonials = getSetting<TestimonialSetting[]>("homepage_testimonials", DEFAULT_TESTIMONIALS);

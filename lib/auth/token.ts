@@ -8,6 +8,7 @@ export interface SessionUser {
 export interface SessionPayload {
   user: SessionUser;
   expiresAt: number;
+  sessionVersion?: number;
 }
 
 function decodeBase64Url(value: string): ArrayBuffer {

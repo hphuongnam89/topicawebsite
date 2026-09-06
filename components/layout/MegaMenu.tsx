@@ -54,7 +54,7 @@ export function MegaMenu({ columns, onClose, onMouseEnter, onMouseLeave }: MegaM
         onMouseLeave={onMouseLeave}
         onKeyDown={handleKeyDown}
         role="menu"
-        className="absolute top-full left-1/2 z-50 mt-1 w-max max-w-[640px] min-w-[280px] -translate-x-1/2 rounded-lg border border-line-200 bg-canvas p-5 shadow-sm"
+        className="absolute top-full left-1/2 z-50 mt-0 w-max max-w-[640px] min-w-[280px] -translate-x-1/2 rounded-lg border border-line-200 bg-canvas p-5 shadow-sm"
       >
         <div
           className={`grid gap-8 ${columns.length > 2 ? "grid-cols-3" : columns.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
