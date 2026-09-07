@@ -24,22 +24,22 @@ function Hero() {
       </div>
       <Container className="relative grid gap-10 py-14 min-[820px]:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.75fr)] min-[820px]:items-center min-[820px]:gap-8 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.65fr)] lg:gap-16 lg:pt-14 lg:pb-20">
         <div className="max-w-3xl min-w-0">
-          <p className="text-body-sm font-semibold tracking-[0.14em] text-brand-300">
+          <p className="homepage-enter homepage-enter-delay-40 text-body-sm font-semibold tracking-[0.14em] text-brand-300">
             {homepageContent.hero.eyebrow}
           </p>
           <h1
             id="homepage-title"
-            className="mt-6 max-w-[14ch] font-display text-[clamp(2.45rem,6vw,5rem)] leading-[1.04] font-semibold text-white"
+            className="homepage-enter homepage-enter-delay-100 mt-6 max-w-[14ch] font-display text-[clamp(2.45rem,6vw,5rem)] leading-[1.04] font-semibold text-white"
           >
             {homepageContent.hero.title}
           </h1>
           <p
             id="homepage-description"
-            className="mt-6 max-w-[58ch] text-body-lg leading-relaxed text-white/75"
+            className="homepage-enter homepage-enter-delay-160 mt-6 max-w-[58ch] text-body-lg leading-relaxed text-white/75"
           >
             {homepageContent.hero.description}
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <div className="homepage-enter homepage-enter-delay-220 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <ButtonLink
               href="#consultation-form"
               data-track="hero_primary_cta_click"
@@ -58,7 +58,10 @@ function Hero() {
               {homepageContent.hero.secondaryCta}
             </ButtonLink>
           </div>
-          <ul className="mt-8 flex flex-wrap gap-2" aria-label="Điểm nổi bật">
+          <ul
+            className="homepage-enter homepage-enter-delay-260 mt-8 flex flex-wrap gap-2"
+            aria-label="Điểm nổi bật"
+          >
             <li className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-body-sm text-white/75 backdrop-blur-sm">
               <CheckCircle2 className="h-4 w-4 text-brand-300" aria-hidden="true" />
               Học linh hoạt
@@ -73,7 +76,10 @@ function Hero() {
             </li>
           </ul>
         </div>
-        <div id="consultation-form" className="min-w-0 scroll-mt-24">
+        <div
+          id="consultation-form"
+          className="homepage-enter homepage-enter-delay-260 min-w-0 scroll-mt-24"
+        >
           <LeadForm
             heading={homepageContent.hero.formTitle}
             description={homepageContent.hero.formDescription}
