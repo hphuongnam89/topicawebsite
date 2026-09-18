@@ -12,8 +12,8 @@ export function DecisionStrip({ facts }: { facts: readonly HomepageFact[] }) {
       <Container>
         <div className="grid gap-px overflow-hidden rounded-2xl border border-line-200 bg-line-200 sm:grid-cols-2 lg:grid-cols-5">
           {facts.map((fact, index) => (
-            <ScrollReveal key={fact.label} delay={index * 0.04}>
-              <article className="flex min-h-[7.5rem] min-w-0 flex-col justify-between bg-paper px-4 py-4 sm:px-5 sm:py-5">
+            <ScrollReveal key={fact.label} delay={index * 0.04} className="h-full">
+              <article className="flex h-full min-h-[7.5rem] min-w-0 flex-col justify-between bg-paper px-4 py-4 sm:px-5 sm:py-5">
                 <span className="text-body-sm font-semibold text-ink-600">{fact.label}</span>
                 <span className="mt-3 flex items-start gap-2 text-body-sm leading-snug font-semibold text-ink-950">
                   <CheckCircle2

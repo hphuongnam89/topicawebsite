@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/guards";
-import { getUsers, createUser, deleteUser, getUserByUsername, updateUser, writeAuditLog } from "@/lib/db";
+import {
+  getUsers,
+  createUser,
+  deleteUser,
+  getUserByUsername,
+  updateUser,
+  writeAuditLog,
+} from "@/lib/db";
 import { hashPassword } from "@/lib/auth/password";
 import crypto from "node:crypto";
-import { isSameOrigin } from "@/lib/security/request";
+import { isSameOrigin, getClientIp } from "@/lib/security/request";
 import { adminUserSchema } from "@/lib/validation/admin";
 
 export async function GET() {
@@ -17,19 +24,18 @@ export async function GET() {
 export async function POST(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const parsed = adminUserSchema.safeParse(await request.json());
-    if (!parsed.success) return NextResponse.json({ error: "Dữ liệu tài khoản không hợp lệ." }, { status: 422 });
+    if (!parsed.success)
+      return NextResponse.json({ error: "Dữ liệu tài khoản không hợp lệ." }, { status: 422 });
     const { username, password, name, role } = parsed.data;
 
     const existing = getUserByUsername(username.trim());
     if (existing) {
-      return NextResponse.json(
-        { error: "Tên đăng nhập đã được sử dụng." },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: "Tên đăng nhập đã được sử dụng." }, { status: 409 });
     }
 
     const id = `user_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
@@ -42,7 +48,12 @@ export async function POST(request: Request) {
       name: name.trim(),
       role,
     });
-    writeAuditLog({ actorId: auth.user.id, action: "user.created", target: username, ip: request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown" });
+    writeAuditLog({
+      actorId: auth.user.id,
+      action: "user.created",
+      target: username,
+      ip: getClientIp(request),
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -54,17 +65,21 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
     const { id, name, role, password } = body;
 
-    if (typeof id !== "string" || !id || typeof name !== "string" || !name.trim() || name.length > 200) {
-      return NextResponse.json(
-        { error: "Thiếu ID hoặc họ tên." },
-        { status: 400 }
-      );
+    if (
+      typeof id !== "string" ||
+      !id ||
+      typeof name !== "string" ||
+      !name.trim() ||
+      name.length > 200
+    ) {
+      return NextResponse.json({ error: "Thiếu ID hoặc họ tên." }, { status: 400 });
     }
 
     const updates: { name?: string; role?: string; password_hash?: string } = {
@@ -74,13 +89,21 @@ export async function PUT(request: Request) {
 
     if (password !== undefined) {
       if (typeof password !== "string" || password.length < 12 || password.length > 256) {
-        return NextResponse.json({ error: "Mật khẩu phải có từ 12 đến 256 ký tự." }, { status: 422 });
+        return NextResponse.json(
+          { error: "Mật khẩu phải có từ 12 đến 256 ký tự." },
+          { status: 422 },
+        );
       }
       updates.password_hash = hashPassword(password);
     }
 
     updateUser(id, updates);
-    writeAuditLog({ actorId: auth.user.id, action: "user.updated", target: id, ip: request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown" });
+    writeAuditLog({
+      actorId: auth.user.id,
+      action: "user.updated",
+      target: id,
+      ip: getClientIp(request),
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -92,7 +115,8 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -106,6 +130,11 @@ export async function DELETE(request: Request) {
   }
 
   deleteUser(id);
-  writeAuditLog({ actorId: auth.user.id, action: "user.deleted", target: id, ip: request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown" });
+  writeAuditLog({
+    actorId: auth.user.id,
+    action: "user.deleted",
+    target: id,
+    ip: getClientIp(request),
+  });
   return NextResponse.json({ success: true });
 }

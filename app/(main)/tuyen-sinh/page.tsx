@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AdmissionsPage() {
-  const page = await cms.getPageByPath("tuyen-sinh").catch(() => null);
+  const page = await cms.getPageByPath("tuyen-sinh");
   if (!page) notFound();
 
   return <AdmissionHub page={page} />;

@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { leadApiSchema } from "@/lib/form-schema";
 import { submitLead } from "@/lib/services/leads";
+import { getClientIp } from "@/lib/security/request";
 
 const MAX_SUBMISSIONS = 5;
 const WINDOW_MS = 15 * 60 * 1000;
 const submissions = new Map<string, { count: number; resetAt: number }>();
 
 function getClientKey(request: Request): string {
-  return request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown";
+  return getClientIp(request);
 }
 
 function consumeSubmission(request: Request): number | null {

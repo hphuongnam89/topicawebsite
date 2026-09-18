@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getSetting, setSetting, writeAuditLog } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { isSameOrigin } from "@/lib/security/request";
+import { isSameOrigin, getClientIp } from "@/lib/security/request";
 import { siteSettingsSchema } from "@/lib/validation/admin";
 
 const DEFAULT_SETTINGS = {
@@ -33,7 +33,8 @@ export async function GET() {
 export async function PUT(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -55,7 +56,7 @@ export async function PUT(request: Request) {
     writeAuditLog({
       actorId: auth.user.id,
       action: "settings.updated",
-      ip: request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown",
+      ip: getClientIp(request),
     });
 
     // Revalidate whole website layout
@@ -63,7 +64,10 @@ export async function PUT(request: Request) {
 
     return NextResponse.json({
       success: true,
-      settings: { ...safeSettings, telegramBotToken: safeSettings.telegramBotToken ? "••••••••" : "" },
+      settings: {
+        ...safeSettings,
+        telegramBotToken: safeSettings.telegramBotToken ? "••••••••" : "",
+      },
     });
   } catch (error) {
     console.error("Save settings error:", error);

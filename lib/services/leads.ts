@@ -22,7 +22,10 @@ export function submitLead(data: LeadNotification): LeadRecord {
 
 async function notifyTelegram(lead: LeadNotification): Promise<void> {
   try {
-    const settings = getSetting<{ telegramBotToken?: string; telegramChatId?: string }>("site_settings", {});
+    const settings = getSetting<{ telegramBotToken?: string; telegramChatId?: string }>(
+      "site_settings",
+      {},
+    );
     if (!settings.telegramBotToken || !settings.telegramChatId) return;
 
     const message = [
@@ -33,14 +36,23 @@ async function notifyTelegram(lead: LeadNotification): Promise<void> {
       lead.program ? `📚 Ngành quan tâm: ${lead.program}` : "",
       lead.notes ? `📝 Ghi chú: ${lead.notes}` : "",
       `⏰ Thời gian: ${new Date().toLocaleString("vi-VN")}`,
-    ].filter(Boolean).join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-    await fetch(`https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: settings.telegramChatId, text: message }),
-    });
+    await fetch(
+      `https://api.telegram.org/bot${encodeURIComponent(settings.telegramBotToken.trim())}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: settings.telegramChatId.trim(), text: message }),
+        signal: AbortSignal.timeout(5000),
+      },
+    );
   } catch (error) {
-    console.error("Telegram notification failed", error instanceof Error ? error.message : "unknown error");
+    console.error(
+      "Telegram notification failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
   }
 }

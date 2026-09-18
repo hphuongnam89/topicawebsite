@@ -27,7 +27,7 @@ export async function GET() {
             size: stats.size,
             updatedAt: stats.mtime.toISOString(),
           };
-        })
+        }),
     );
 
     // Sort by newest first
@@ -43,17 +43,31 @@ export async function GET() {
 export async function DELETE(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const name = searchParams.get("name");
 
-  if (!name || name.includes("..") || name.includes("/")) {
+  if (!name || typeof name !== "string") {
+    return NextResponse.json({ error: "Thiếu tên file." }, { status: 400 });
+  }
+
+  const safeName = path.basename(name);
+  const uploadsDir = path.resolve(process.cwd(), "public", "uploads");
+  const filePath = path.resolve(uploadsDir, safeName);
+
+  if (
+    safeName !== name ||
+    name.startsWith(".") ||
+    name.includes("/") ||
+    name.includes("\\") ||
+    !filePath.startsWith(uploadsDir + path.sep)
+  ) {
     return NextResponse.json({ error: "Tên file không hợp lệ." }, { status: 400 });
   }
 
   try {
-    const filePath = path.join(process.cwd(), "public", "uploads", name);
     await fs.unlink(filePath);
     return NextResponse.json({ success: true });
   } catch (error) {

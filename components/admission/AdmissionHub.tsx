@@ -1,4 +1,5 @@
 import { cn } from "@/components/ui/cn";
+import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -17,13 +18,40 @@ export interface AdmissionHubProps {
   page: CmsPage;
 }
 
-export async function AdmissionHub({ page }: AdmissionHubProps) {
-  // Fetch latest admission news
-  const admissionNews = await cms.getArticles({
-    category: "tin-tuc-tuyen-sinh",
-    limit: 4,
-  });
+async function AdmissionNews() {
+  const admissionNews = await cms
+    .getArticles({
+      category: "tin-tuc-tuyen-sinh",
+      limit: 4,
+    })
+    .catch(() => null);
 
+  if (!admissionNews || admissionNews.articles.length === 0) {
+    return (
+      <p className="rounded-lg border border-line-200 bg-canvas py-12 text-center text-ink-600">
+        {admissionNews
+          ? "Hiện chưa có tin tức tuyển sinh mới."
+          : "Tin tuyển sinh tạm thời chưa tải được. Vui lòng thử lại sau."}
+      </p>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {admissionNews.articles.map((article) => (
+        <AdmissionAnnouncementCard
+          key={article.id}
+          title={article.title}
+          href={`/tin-tuc/${article.slug}`}
+          date={new Date(article.publishedAt).toLocaleDateString("vi-VN")}
+          summary={article.excerpt}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function AdmissionHub({ page }: AdmissionHubProps) {
   // Common admission FAQs
   const faqData = [
     {
@@ -142,23 +170,15 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
             </ButtonLink>
           </div>
 
-          {admissionNews.articles.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {admissionNews.articles.map((article) => (
-                <AdmissionAnnouncementCard
-                  key={article.id}
-                  title={article.title}
-                  href={`/tin-tuc/${article.slug}`}
-                  date={new Date(article.publishedAt).toLocaleDateString("vi-VN")}
-                  summary={article.excerpt}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-line-200 bg-canvas py-12 text-center text-ink-600">
-              Hiện chưa có tin tức tuyển sinh mới.
-            </div>
-          )}
+          <Suspense
+            fallback={
+              <p role="status" className="py-12 text-ink-600">
+                Đang tải tin tuyển sinh…
+              </p>
+            }
+          >
+            <AdmissionNews />
+          </Suspense>
         </Container>
       </Section>
 

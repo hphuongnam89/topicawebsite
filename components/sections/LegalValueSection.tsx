@@ -40,14 +40,18 @@ export function LegalValueSection() {
                 </a>
               </p>
             </ScrollReveal>
-            <ScrollReveal variant="scaleIn" delay={0.12}>
-              <Image
-                src="/official-assets/mau-phoi-bang.png"
-                alt="Mẫu phôi bằng cử nhân của Trường Đại học Phú Xuân theo phương thức đào tạo từ xa"
-                width={1254}
-                height={1254}
-                className="h-auto w-full rounded-2xl border border-line-200 bg-canvas shadow-sm"
-              />
+            <ScrollReveal variant="scaleIn" delay={0.12} className="min-w-0 max-w-full">
+              <div className="relative min-w-0 max-w-full overflow-hidden rounded-2xl border border-line-200 bg-canvas shadow-sm">
+                <Image
+                  src="/official-assets/mau-phoi-bang.png"
+                  alt="Mẫu phôi bằng cử nhân của Trường Đại học Phú Xuân theo phương thức đào tạo từ xa"
+                  width={1254}
+                  height={1254}
+                  style={{ width: "100%", maxWidth: "100%", height: "auto" }}
+                  className="h-auto w-full max-w-full object-contain"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                />
+              </div>
             </ScrollReveal>
           </div>
         </div>

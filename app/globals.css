@@ -17,7 +17,17 @@
 
   html,
   body {
-    overflow-x: clip;
+    overflow-x: hidden;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 
   html {
@@ -106,28 +116,26 @@
   .homepage-enter,
   .scroll-reveal {
     min-width: 0;
-    opacity: 1;
-    transform: none;
   }
 
   .homepage-enter-delay-40 {
-    --enter-delay: 40ms;
+    --enter-delay: 0ms;
   }
 
   .homepage-enter-delay-100 {
-    --enter-delay: 100ms;
+    --enter-delay: 120ms;
   }
 
   .homepage-enter-delay-160 {
-    --enter-delay: 160ms;
+    --enter-delay: 240ms;
   }
 
   .homepage-enter-delay-220 {
-    --enter-delay: 220ms;
+    --enter-delay: 360ms;
   }
 
   .homepage-enter-delay-260 {
-    --enter-delay: 260ms;
+    --enter-delay: 460ms;
   }
 
   .pb-safe-area {
@@ -156,49 +164,15 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .homepage-enter {
-      animation: homepage-enter var(--duration-enter) var(--ease-emphasized) both;
+      animation: homepage-enter 560ms var(--ease-emphasized) both;
       animation-delay: var(--enter-delay, 0ms);
-    }
-
-    @supports (animation-timeline: view()) {
-      .scroll-reveal {
-        animation: scroll-reveal linear both;
-        animation-range: entry 4% cover 24%;
-        animation-timeline: view();
-      }
-
-      .scroll-reveal[data-reveal="slideInLeft"] {
-        --reveal-x: -1.5rem;
-        --reveal-y: 0;
-      }
-
-      .scroll-reveal[data-reveal="slideInRight"] {
-        --reveal-x: 1.5rem;
-        --reveal-y: 0;
-      }
-
-      .scroll-reveal[data-reveal="scaleIn"],
-      .scroll-reveal[data-reveal="imageReveal"] {
-        --reveal-scale: 0.98;
-      }
     }
   }
 
   @keyframes homepage-enter {
     from {
       opacity: 0;
-      transform: translateY(1rem);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes scroll-reveal {
-    from {
-      opacity: 0;
-      transform: translate(var(--reveal-x, 0), var(--reveal-y, 1rem)) scale(var(--reveal-scale, 1));
+      transform: translateY(0.875rem);
     }
     to {
       opacity: 1;

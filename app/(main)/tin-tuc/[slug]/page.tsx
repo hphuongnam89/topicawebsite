@@ -1,4 +1,5 @@
 import { cms } from "@/lib/cms";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { env } from "@/lib/env";
@@ -117,13 +118,13 @@ export default async function SlugPage({ params, searchParams }: Props) {
   const slug = resolvedParams.slug;
 
   // Try fetching as Article
-  const article = await cms.getArticleBySlug(slug).catch(() => null);
+  const article = await cms.getArticleBySlug(slug);
   if (article) {
     return renderArticle(article);
   }
 
   // Try fetching as Category
-  const category = await cms.getCategoryBySlug(slug).catch(() => null);
+  const category = await cms.getCategoryBySlug(slug);
   if (category) {
     const searchParamsResolved = await searchParams;
     const page =
@@ -234,7 +235,15 @@ function renderArticle(article: Article) {
           )}
         </article>
 
-        <RelatedArticles articleSlug={article.slug} articleId={article.id} />
+        <Suspense
+          fallback={
+            <p role="status" className="mt-16 text-ink-600">
+              Đang tải bài viết liên quan…
+            </p>
+          }
+        >
+          <RelatedArticles article={article} />
+        </Suspense>
       </ArticleLayout>
     </main>
   );
@@ -243,10 +252,8 @@ function renderArticle(article: Article) {
 // ----------------- Category Renderer ----------------- //
 
 async function renderCategory(category: Category, page: number) {
-  const result = await cms
-    .getArticles({ category: category.slug, page, limit: 12 })
-    .catch(() => null);
-  const articles = result?.articles || [];
+  const result = await cms.getArticles({ category: category.slug, page, limit: 12 });
+  const articles = result.articles;
 
   return (
     <main className="min-h-screen bg-canvas pb-24">
@@ -280,9 +287,7 @@ async function renderCategory(category: Category, page: number) {
 
 // ----------------- Shared Components ----------------- //
 
-async function RelatedArticles({ articleSlug }: { articleSlug: string; articleId: number }) {
-  const article = await cms.getArticleBySlug(articleSlug).catch(() => null);
-  if (!article) return null;
+async function RelatedArticles({ article }: { article: Article }) {
   const related = await cms.getRelatedArticles(article, 3).catch(() => []);
   if (related.length === 0) return null;
 

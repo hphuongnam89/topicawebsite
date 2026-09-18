@@ -18,7 +18,7 @@ export function CampusSection() {
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {campuses.map((campus, index) => (
-            <ScrollReveal key={campus.city} delay={index * 0.1}>
+            <ScrollReveal key={campus.city} delay={index * 0.1} className="h-full">
               <article className="flex h-full flex-col rounded-lg border border-line-200 bg-canvas p-5 transition-[border-color,box-shadow] hover:border-brand-300 hover:shadow-sm sm:p-6">
                 <h3 className="font-sans text-body-lg font-bold text-ink-950">{campus.city}</h3>
 

@@ -42,8 +42,8 @@ export function FitCheckSection() {
             {homepageContent.fitProfiles.map((profile, index) => {
               const Icon = icons[index];
               return (
-                <ScrollReveal key={profile.title} delay={index * 0.06}>
-                  <article className="min-w-0 border-t-2 border-brand-500 bg-canvas p-5 sm:p-6">
+                <ScrollReveal key={profile.title} delay={index * 0.06} className="h-full">
+                  <article className="h-full min-w-0 border-t-2 border-brand-500 bg-canvas p-5 sm:p-6">
                     <Icon className="h-6 w-6 text-brand-700" aria-hidden="true" />
                     <h3 className="mt-10 font-display text-h3 font-semibold text-ink-950">
                       {profile.title}

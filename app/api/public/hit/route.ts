@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { recordPageView } from "@/lib/db";
+import { getClientIp } from "@/lib/security/request";
 
 const MAX_HITS = 60;
 const WINDOW_MS = 60 * 60 * 1000;
 const hits = new Map<string, { count: number; resetAt: number }>();
 
 function clientKey(request: Request): string {
-  return request.headers.get("cf-connecting-ip") || request.headers.get("x-real-ip") || "unknown";
+  return getClientIp(request);
 }
 
 function isRateLimited(request: Request): boolean {

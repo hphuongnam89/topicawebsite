@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const page = await cms.getPageByPath("gioi-thieu").catch(() => null);
+  const page = await cms.getPageByPath("gioi-thieu");
   if (!page) notFound();
   return <CmsPageView page={page} />;
 }

@@ -21,7 +21,7 @@ export function ProgramsSection() {
         />
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {programs.map((program, index) => (
-            <ScrollReveal key={program.slug} delay={index * 0.05}>
+            <ScrollReveal key={program.slug} delay={index * 0.05} className="h-full">
               <Link
                 href={program.href}
                 data-track="program_card_click"

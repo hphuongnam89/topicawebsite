@@ -4,7 +4,6 @@ import { cache } from "react";
 import { wordpressCollection } from "./client";
 import { sanitizeWordPressHtml, wordpressText } from "./html";
 import {
-  wpAuthorSchema,
   wpCategorySchema,
   wpMediaSchema,
   wpPageSchema,
@@ -114,6 +113,8 @@ const summaryFields = [
   "tags",
   "sticky",
   "yoast_head_json",
+  "_links",
+  "_embedded",
 ].join(",");
 
 function isoFromGmt(value: string): string {
@@ -225,6 +226,7 @@ async function getTagsByIds(ids: number[]): Promise<Map<number, Tag>> {
 }
 
 async function getMediaByIds(ids: number[]): Promise<Map<number, ImageAsset>> {
+  ids = [...new Set(ids.filter((id) => id > 0))];
   if (ids.length === 0) return new Map();
   const result = await wordpressCollection("/media", wpMediaSchema, {
     params: { include: ids, per_page: Math.min(ids.length, 100) },
@@ -233,30 +235,28 @@ async function getMediaByIds(ids: number[]): Promise<Map<number, ImageAsset>> {
   return new Map(result.items.map((item) => [item.id, mediaFromWordPress(item)]));
 }
 
-async function getAuthorsByIds(ids: number[]): Promise<Map<number, Author>> {
-  if (ids.length === 0) return new Map();
-
-  try {
-    const result = await wordpressCollection("/users", wpAuthorSchema, {
-      params: { include: ids, per_page: Math.min(ids.length, 100) },
-      tags: ["wordpress:authors"],
-    });
-    return new Map(
-      result.items.map((item) => [
-        item.id,
-        {
-          id: item.id,
-          name: wordpressText(item.name),
-          slug: item.slug,
-          avatar: item.avatar_urls
-            ? { id: item.id, url: Object.values(item.avatar_urls).at(-1) ?? "" }
-            : undefined,
-        },
-      ]),
-    );
-  } catch {
-    return new Map();
-  }
+function getEmbeddedAuthors(posts: Array<WpPost | WpPostSummary>): Map<number, Author> {
+  return new Map(
+    posts.flatMap((post) =>
+      (post._embedded?.author ?? []).flatMap((item) =>
+        "name" in item
+          ? [
+              [
+                item.id,
+                {
+                  id: item.id,
+                  name: wordpressText(item.name),
+                  slug: item.slug,
+                  avatar: item.avatar_urls
+                    ? { id: item.id, url: Object.values(item.avatar_urls).at(-1) ?? "" }
+                    : undefined,
+                },
+              ] as [number, Author],
+            ]
+          : [],
+      ),
+    ),
+  );
 }
 
 async function buildRelations(posts: Array<WpPost | WpPostSummary>): Promise<ArticleRelations> {
@@ -264,16 +264,14 @@ async function buildRelations(posts: Array<WpPost | WpPostSummary>): Promise<Art
   const categoryIds = unique(posts.flatMap((post) => post.categories));
   const tagIds = unique(posts.flatMap((post) => post.tags));
   const mediaIds = unique(posts.map((post) => post.featured_media));
-  const authorIds = unique(posts.map((post) => post.author));
 
-  const [categories, tags, media, authors] = await Promise.all([
+  const [categories, tags, media] = await Promise.all([
     getCategoriesByIds(categoryIds),
     getTagsByIds(tagIds),
     getMediaByIds(mediaIds),
-    getAuthorsByIds(authorIds),
   ]);
 
-  return { categories, tags, media, authors };
+  return { categories, tags, media, authors: getEmbeddedAuthors(posts) };
 }
 
 function normalizeQuery(params: ArticleQuery = {}) {
@@ -314,7 +312,7 @@ const getWordPressPages = cache(async (slug: string) => {
       status: "publish",
       per_page: 10,
       _fields:
-        "id,date_gmt,modified_gmt,slug,status,link,title,content,excerpt,featured_media,yoast_head_json",
+        "id,date_gmt,modified_gmt,slug,status,link,title,content,excerpt,featured_media,parent,yoast_head_json",
     },
     tags: ["wordpress:pages", `wordpress:page:${slug}`],
   });
@@ -373,6 +371,7 @@ async function getArticleList(params: ArticleQuery = {}): Promise<PaginatedArtic
         orderby: "date",
         order: "desc",
         _fields: summaryFields,
+        _embed: "author",
       },
       tags: ["wordpress:posts"],
     });
@@ -396,6 +395,7 @@ async function getArticleList(params: ArticleQuery = {}): Promise<PaginatedArtic
     };
   } catch (error) {
     // If WordPress is unreachable, gracefully return local articles from database
+    if (localArticles.length === 0) throw error;
     return {
       articles: localArticles,
       total: localDbResult.total,
@@ -404,68 +404,97 @@ async function getArticleList(params: ArticleQuery = {}): Promise<PaginatedArtic
   }
 }
 
+const getPageBySlug = cache(async (slug: string): Promise<CmsPage | null> => {
+  const dbPage = getDbPageBySlug(slug);
+  if (dbPage && dbPage.status === "published") return mapDbPageToCmsPage(dbPage);
+
+  const pages = await getWordPressPages(slug);
+  const page = pages[0];
+  if (!page) return null;
+
+  const media = await getMediaByIds([page.featured_media]);
+  return pageFromWordPress(page, media);
+});
+
+const getPageByPath = cache(async (path: string): Promise<CmsPage | null> => {
+  const normalizedPath = normalizePath(path);
+  const slug = normalizedPath.split("/").at(-1);
+  if (!slug) return null;
+
+  const dbPage = getDbPageBySlug(slug);
+  if (dbPage && dbPage.status === "published") return mapDbPageToCmsPage(dbPage);
+
+  const pages = await getWordPressPages(slug);
+  const page = pages.find((item) => {
+    const sourcePath = normalizePath(new URL(item.link).pathname);
+    return sourcePath === normalizedPath;
+  });
+  if (!page) return null;
+
+  const media = await getMediaByIds([page.featured_media]);
+  return pageFromWordPress(page, media);
+});
+
+const getArticleBySlug = cache(async (slug: string): Promise<Article | null> => {
+  // Check local database first
+  const dbArticle = getDbArticleBySlug(slug);
+  if (dbArticle && dbArticle.status === "published") {
+    return mapDbArticleToArticle(dbArticle);
+  }
+
+  const result = await wordpressCollection("/posts", wpPostSchema, {
+    params: {
+      slug,
+      status: "publish",
+      per_page: 1,
+      _embed: "author",
+      _fields: `${summaryFields},content`,
+    },
+    tags: ["wordpress:posts", `wordpress:post:${slug}`],
+  });
+  const post = result.items[0];
+  if (!post) return null;
+  const relations = await buildRelations([post]);
+  return articleFromWordPress(post, relations);
+});
+
+const getCategories = cache(async (): Promise<Category[]> => {
+  const localCategories = getDbCategories()
+    .filter((item) => (item.article_count ?? 0) > 0)
+    .map<Category>((item) => ({
+      id: item.id,
+      title: item.name,
+      slug: item.slug,
+      description: item.description || "",
+      count: item.article_count || 0,
+    }));
+
+  try {
+    const result = await wordpressCollection("/categories", wpCategorySchema, {
+      params: { per_page: 100, hide_empty: true, orderby: "name", order: "asc" },
+      tags: ["wordpress:categories"],
+    });
+    const combined = new Map(
+      result.items.map(categoryFromWordPress).map((item) => [item.slug, item]),
+    );
+    for (const item of localCategories) combined.set(item.slug, item);
+    return [...combined.values()];
+  } catch (error) {
+    if (localCategories.length === 0) throw error;
+    return localCategories;
+  }
+});
+
+const getCategoryBySlug = cache(async (slug: string): Promise<Category | null> => {
+  const categories = await getCategories();
+  return categories.find((item) => item.slug === slug) ?? null;
+});
+
 export const cms: CmsService = {
-  async getPageBySlug(slug) {
-    const dbPage = getDbPageBySlug(slug);
-    if (dbPage && dbPage.status === "published") return mapDbPageToCmsPage(dbPage);
-
-    try {
-      const pages = await getWordPressPages(slug);
-      const page = pages[0];
-      if (!page) return null;
-
-      const media = await getMediaByIds([page.featured_media]);
-      return pageFromWordPress(page, media);
-    } catch {
-      return null;
-    }
-  },
-
-  async getPageByPath(path) {
-    const normalizedPath = normalizePath(path);
-    const slug = normalizedPath.split("/").at(-1);
-    if (!slug) return null;
-
-    const dbPage = getDbPageBySlug(slug);
-    if (dbPage && dbPage.status === "published") return mapDbPageToCmsPage(dbPage);
-
-    try {
-      const pages = await getWordPressPages(slug);
-      const page = pages.find((item) => {
-        const sourcePath = normalizePath(new URL(item.link).pathname);
-        return sourcePath === normalizedPath;
-      });
-      if (!page) return null;
-
-      const media = await getMediaByIds([page.featured_media]);
-      return pageFromWordPress(page, media);
-    } catch {
-      return null;
-    }
-  },
-
+  getPageBySlug,
+  getPageByPath,
   getArticles: getArticleList,
-
-  async getArticleBySlug(slug) {
-    // Check local database first
-    const dbArticle = getDbArticleBySlug(slug);
-    if (dbArticle && dbArticle.status === "published") {
-      return mapDbArticleToArticle(dbArticle);
-    }
-
-    try {
-      const result = await wordpressCollection("/posts", wpPostSchema, {
-        params: { slug, status: "publish", per_page: 1 },
-        tags: ["wordpress:posts", `wordpress:post:${slug}`],
-      });
-      const post = result.items[0];
-      if (!post) return null;
-      const relations = await buildRelations([post]);
-      return articleFromWordPress(post, relations);
-    } catch {
-      return null;
-    }
-  },
+  getArticleBySlug,
 
   async getFeaturedArticles(limit = 1) {
     const normalizedLimit = Math.min(10, Math.max(1, Math.trunc(limit)));
@@ -493,34 +522,6 @@ export const cms: CmsService = {
     return getArticleList({ ...params, category: slug });
   },
 
-  async getCategories() {
-    const localCategories = getDbCategories()
-      .filter((item) => (item.article_count ?? 0) > 0)
-      .map<Category>((item) => ({
-        id: item.id,
-        title: item.name,
-        slug: item.slug,
-        description: item.description || "",
-        count: item.article_count || 0,
-      }));
-
-    try {
-      const result = await wordpressCollection("/categories", wpCategorySchema, {
-        params: { per_page: 100, hide_empty: true, orderby: "name", order: "asc" },
-        tags: ["wordpress:categories"],
-      });
-      const combined = new Map(
-        result.items.map(categoryFromWordPress).map((item) => [item.slug, item]),
-      );
-      for (const item of localCategories) combined.set(item.slug, item);
-      return [...combined.values()];
-    } catch {
-      return localCategories;
-    }
-  },
-
-  async getCategoryBySlug(slug) {
-    const categories = await this.getCategories();
-    return categories.find((item) => item.slug === slug) ?? null;
-  },
+  getCategories,
+  getCategoryBySlug,
 };

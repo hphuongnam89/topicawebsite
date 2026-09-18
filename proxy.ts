@@ -13,6 +13,8 @@ export async function proxy(request: NextRequest) {
   });
 
   const isDevelopment = process.env.NODE_ENV === "development";
+  const isLocalhost =
+    request.nextUrl.hostname === "localhost" || request.nextUrl.hostname === "127.0.0.1";
   const csp = [
     "default-src 'self'",
     "base-uri 'self'",
@@ -26,8 +28,12 @@ export async function proxy(request: NextRequest) {
     "object-src 'none'",
     `connect-src 'self'${isDevelopment ? " ws: wss:" : ""}`,
     "worker-src 'self' blob:",
-    "upgrade-insecure-requests",
-  ].join("; ");
+    !isDevelopment && !isLocalhost && request.nextUrl.protocol === "https:"
+      ? "upgrade-insecure-requests"
+      : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
   response.headers.set("Content-Security-Policy", csp);
   return response;
 }

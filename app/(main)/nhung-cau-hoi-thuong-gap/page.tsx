@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FAQPage() {
-  const page = await cms.getPageByPath("nhung-cau-hoi-thuong-gap").catch(() => null);
+  const page = await cms.getPageByPath("nhung-cau-hoi-thuong-gap");
   if (!page) notFound();
 
   // Structured answers are kept deliberately narrower than marketing copy and

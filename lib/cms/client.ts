@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import { cache } from "react";
 import { env } from "@/lib/env";
 
 type QueryValue = string | number | boolean | readonly number[] | undefined;
@@ -33,8 +34,9 @@ function buildUrl(endpoint: string, params: Record<string, QueryValue> = {}): UR
   return url;
 }
 
-async function request(endpoint: string, options: WordPressFetchOptions): Promise<Response> {
-  const url = buildUrl(endpoint, options.params);
+// Share parsed responses within one render, including metadata. A custom abort
+// signal opts out of Next's automatic fetch memoization.
+const request = cache(async (url: string, revalidate: number, tags: string) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 4_000);
 
@@ -44,8 +46,8 @@ async function request(endpoint: string, options: WordPressFetchOptions): Promis
       redirect: "error",
       signal: controller.signal,
       next: {
-        revalidate: options.revalidate ?? env.CMS_REVALIDATE_SECONDS,
-        tags: ["wordpress", ...(options.tags ?? [])],
+        revalidate,
+        tags: JSON.parse(tags) as string[],
       },
     });
 
@@ -53,7 +55,13 @@ async function request(endpoint: string, options: WordPressFetchOptions): Promis
       throw new Error(`WordPress request failed with status ${response.status}.`);
     }
 
-    return response;
+    // Keep the timeout active while reading the body as well as the headers.
+    const payload: unknown = await response.json();
+    return {
+      payload,
+      total: response.headers.get("X-WP-Total"),
+      totalPages: response.headers.get("X-WP-TotalPages"),
+    };
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new Error("WordPress request timed out.");
@@ -62,16 +70,19 @@ async function request(endpoint: string, options: WordPressFetchOptions): Promis
   } finally {
     clearTimeout(timeout);
   }
-}
+});
 
 export async function wordpressCollection<T>(
   endpoint: string,
   itemSchema: z.ZodType<T>,
   options: WordPressFetchOptions = {},
 ): Promise<WordPressCollection<T>> {
-  const response = await request(endpoint, options);
-  const payload: unknown = await response.json();
-  const result = z.array(itemSchema).safeParse(payload);
+  const response = await request(
+    buildUrl(endpoint, options.params).href,
+    options.revalidate ?? env.CMS_REVALIDATE_SECONDS,
+    JSON.stringify(["wordpress", ...(options.tags ?? [])].sort()),
+  );
+  const result = z.array(itemSchema).safeParse(response.payload);
 
   if (!result.success) {
     throw new Error(`WordPress collection validation failed for ${endpoint}.`);
@@ -79,7 +90,7 @@ export async function wordpressCollection<T>(
 
   return {
     items: result.data,
-    total: Number(response.headers.get("X-WP-Total") ?? result.data.length),
-    totalPages: Number(response.headers.get("X-WP-TotalPages") ?? 1),
+    total: Number(response.total ?? result.data.length),
+    totalPages: Number(response.totalPages ?? 1),
   };
 }

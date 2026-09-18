@@ -81,7 +81,7 @@ export default async function CmsRoutePage({ params }: Props) {
     return <ProgramPageView program={program} />;
   }
 
-  const page = await cms.getPageByPath(path).catch(() => null);
+  const page = await cms.getPageByPath(path);
 
   if (page) {
     const parentGroup = primaryNav.find((group) =>
@@ -103,7 +103,7 @@ export default async function CmsRoutePage({ params }: Props) {
   // Fallback: If it's a post served at a non-standard path, redirect it to the proper news URL
   const lastSlug = slug[slug.length - 1];
   if (lastSlug) {
-    const article = await cms.getArticleBySlug(lastSlug).catch(() => null);
+    const article = await cms.getArticleBySlug(lastSlug);
     if (article) {
       redirect(`/tin-tuc/${article.slug}`);
     }

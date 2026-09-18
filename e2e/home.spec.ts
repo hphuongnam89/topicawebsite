@@ -13,7 +13,7 @@ test.describe("Homepage", () => {
     ).toBeVisible();
     await expect(page.getByRole("heading", { name: "Chương trình đào tạo" })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "5 bước để bắt đầu" }),
+      page.getByRole("heading", { name: "Bạn có phù hợp không?" }),
     ).toBeVisible();
 
     const viewport = page.viewportSize();
@@ -23,9 +23,9 @@ test.describe("Homepage", () => {
 
   test("validates the lead form before submission", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Nhận lộ trình & học phí" }).first().click();
+    await page.locator("form").getByRole("button", { name: /Kiểm tra điều kiện & nhận lộ trình/ }).click();
 
-    await expect(page.getByRole("alert")).toContainText("Vui lòng kiểm tra lại thông tin");
+    await expect(page.locator("form").getByRole("alert")).toContainText("Vui lòng kiểm tra lại thông tin");
     await expect(page.getByLabel(/Họ tên/)).toHaveAttribute("aria-invalid", "true");
     await expect(page.getByRole("checkbox")).toHaveAttribute("aria-invalid", "true");
   });

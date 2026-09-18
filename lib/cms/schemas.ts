@@ -22,6 +22,13 @@ const seoSchema = z
   })
   .passthrough();
 
+export const wpAuthorSchema = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  avatar_urls: z.record(z.string(), z.string().url()).optional(),
+});
+
 const contentBaseSchema = z.object({
   id: z.number().int().positive(),
   date_gmt: z.string(),
@@ -33,6 +40,12 @@ const contentBaseSchema = z.object({
   excerpt: renderedSchema,
   featured_media: z.number().int().nonnegative(),
   yoast_head_json: seoSchema.optional(),
+  _embedded: z
+    .object({
+      // WordPress may embed an error when an author is not publicly available.
+      author: z.array(z.union([wpAuthorSchema, z.object({ code: z.string() })])).optional(),
+    })
+    .optional(),
 });
 
 export const wpPostSchema = contentBaseSchema.extend({
@@ -52,7 +65,13 @@ export const wpPostSummarySchema = contentBaseSchema.extend({
 
 export const wpPageSchema = contentBaseSchema.extend({
   content: renderedSchema,
-  parent: z.number().int().nonnegative(),
+  parent: z
+    .number()
+    .int()
+    .nonnegative()
+    .nullish()
+    .transform((val) => val ?? 0)
+    .default(0),
 });
 
 export const wpCategorySchema = z.object({
@@ -77,13 +96,6 @@ export const wpMediaSchema = z.object({
     })
     .passthrough()
     .optional(),
-});
-
-export const wpAuthorSchema = z.object({
-  id: z.number().int().positive(),
-  name: z.string().min(1),
-  slug: z.string().min(1),
-  avatar_urls: z.record(z.string(), z.string().url()).optional(),
 });
 
 export type WpPost = z.infer<typeof wpPostSchema>;
