@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { CredentialSamples } from "./CredentialSamples";
 import { FacilitiesDirectory } from "./FacilitiesDirectory";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 
 interface CmsPageViewProps {
   page: CmsPage;
@@ -32,33 +33,37 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
       <section className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}>
         <Container size="default">
           {page.featuredImage && (
-            <figure className="mb-12 overflow-hidden rounded-xl">
-              <div className="relative aspect-[16/9] w-full shadow-sm">
-                <Image
-                  src={page.featuredImage.url}
-                  alt={page.featuredImage.alt || page.title}
-                  fill
-                  priority
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 800px"
-                />
-              </div>
-            </figure>
+            <ScrollReveal variant="imageReveal">
+              <figure className="mb-12 overflow-hidden rounded-xl">
+                <div className="relative aspect-[16/9] w-full shadow-sm">
+                  <Image
+                    src={page.featuredImage.url}
+                    alt={page.featuredImage.alt || page.title}
+                    fill
+                    priority
+                    className="object-cover transition-transform duration-700 hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 800px"
+                  />
+                </div>
+              </figure>
+            </ScrollReveal>
           )}
 
-          {page.contentHtml ? (
-            <div className="mx-auto max-w-4xl">
-              <WordPressContent html={page.contentHtml} />
-            </div>
-          ) : hasCredentialSamples ? (
-            <CredentialSamples />
-          ) : hasFacilities ? (
-            <FacilitiesDirectory />
-          ) : (
-            <p className="text-center text-body text-ink-600 italic">
-              Nội dung đang được cập nhật.
-            </p>
-          )}
+          <ScrollReveal delay={0.06}>
+            {page.contentHtml ? (
+              <div className="mx-auto max-w-4xl">
+                <WordPressContent html={page.contentHtml} />
+              </div>
+            ) : hasCredentialSamples ? (
+              <CredentialSamples />
+            ) : hasFacilities ? (
+              <FacilitiesDirectory />
+            ) : (
+              <p className="text-center text-body text-ink-600 italic">
+                Nội dung đang được cập nhật.
+              </p>
+            )}
+          </ScrollReveal>
         </Container>
       </section>
       {showAdmissionCTA && <AdmissionCTA />}

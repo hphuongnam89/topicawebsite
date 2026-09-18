@@ -226,6 +226,8 @@ export default function AdminHomepageManager() {
 
       {message && (
         <div
+          role={message.type === "error" ? "alert" : "status"}
+          aria-live="polite"
           className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
             message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"

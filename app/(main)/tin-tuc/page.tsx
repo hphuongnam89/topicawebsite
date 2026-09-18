@@ -6,6 +6,7 @@ import { ArticleCard } from "@/components/news/ArticleCard";
 import { NewsFilterBar } from "@/components/news/NewsFilterBar";
 import { Pagination } from "@/components/ui/Pagination";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { env } from "@/lib/env";
 
 export async function generateMetadata({ searchParams }: Props) {
@@ -89,9 +90,11 @@ export default async function NewsHomepage({ searchParams }: Props) {
 
         {/* Featured Article */}
         {featuredArticle && (
-          <div className="mb-16">
-            <ArticleCard article={featuredArticle} variant="featured" />
-          </div>
+          <ScrollReveal variant="fadeUp">
+            <div className="mb-16">
+              <ArticleCard article={featuredArticle} variant="featured" />
+            </div>
+          </ScrollReveal>
         )}
 
         {/* Search Results Summary */}
@@ -116,8 +119,10 @@ export default async function NewsHomepage({ searchParams }: Props) {
           </div>
         ) : articles.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => (
-              <ArticleCard key={article.id} article={article} variant="default" />
+            {articles.map((article, index) => (
+              <ScrollReveal key={article.id} delay={index * 0.04} className="h-full">
+                <ArticleCard article={article} variant="default" />
+              </ScrollReveal>
             ))}
           </div>
         ) : (

@@ -105,7 +105,7 @@ export default function AdminSettingsPage() {
   return (
     <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky top-0 z-20 -mx-4 flex flex-col gap-4 bg-slate-50/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:p-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
             <Settings className="h-6 w-6 text-brand-700" />
@@ -131,6 +131,8 @@ export default function AdminSettingsPage() {
 
       {message && (
         <div
+          role={message.type === "error" ? "alert" : "status"}
+          aria-live="polite"
           className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
             message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"
@@ -287,11 +289,11 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label htmlFor="telegram-bot-token" className="block text-body-sm font-semibold text-ink-900 mb-1.5">
               Telegram Bot Token
             </label>
             <input
-              type="text"
+              type="password" id="telegram-bot-token" autoComplete="off"
               value={settings.telegramBotToken || ""}
               onChange={(e) => setSettings({ ...settings, telegramBotToken: e.target.value })}
               placeholder="VD: 7123456789:AAHKz..."
@@ -300,11 +302,11 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label htmlFor="telegram-chat-id" className="block text-body-sm font-semibold text-ink-900 mb-1.5">
               Telegram Chat ID / Group ID
             </label>
             <input
-              type="text"
+              type="text" id="telegram-chat-id" autoComplete="off"
               value={settings.telegramChatId || ""}
               onChange={(e) => setSettings({ ...settings, telegramChatId: e.target.value })}
               placeholder="VD: -1001234567890 hoặc 12345678"

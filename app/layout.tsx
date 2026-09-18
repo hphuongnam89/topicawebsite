@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/topica-logo.png",
-        width: 1200,
-        height: 630,
+        width: 930,
+        height: 433,
         alt: "Viện Đào tạo Quốc tế Topica",
       },
     ],

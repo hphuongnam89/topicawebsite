@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import {
   FolderTree,
   Plus,
@@ -8,6 +9,7 @@ import {
   RefreshCw,
   AlertCircle,
   CheckCircle,
+  ArrowLeft,
 } from "lucide-react";
 
 interface CategoryItem {
@@ -120,20 +122,42 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
-      <div className="flex items-center gap-2">
-        <FolderTree className="h-6 w-6 text-brand-700" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
-            Danh mục Tin tức
-          </h1>
-          <p className="mt-0.5 text-body-sm text-ink-500">
-            Quản lý và phân loại các chuyên mục bài viết trên website Topica.
-          </p>
+          <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-2 text-xs text-ink-500">
+            <Link href="/admin/articles" className="transition-colors hover:text-brand-700">
+              Tin tức
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" className="font-medium text-ink-700">
+              Danh mục
+            </span>
+          </nav>
+          <div className="flex items-center gap-2">
+            <FolderTree className="h-6 w-6 text-brand-700" />
+            <div>
+              <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
+                Danh mục Tin tức
+              </h1>
+              <p className="mt-0.5 text-body-sm text-ink-500">
+                Quản lý và phân loại các chuyên mục bài viết trên website Topica.
+              </p>
+            </div>
+          </div>
         </div>
+        <Link
+          href="/admin/articles"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-700 shadow-xs transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          <span>Quay lại danh sách bài viết</span>
+        </Link>
       </div>
 
       {message && (
         <div
+          role={message.type === "error" ? "alert" : "status"}
+          aria-live="polite"
           className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
             message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"
@@ -158,10 +182,11 @@ export default function AdminCategoriesPage() {
 
           <form onSubmit={handleAddCategory} className="space-y-4">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label htmlFor="category-name" className="block text-body-sm font-semibold text-ink-900 mb-1">
                 Tên danh mục <span className="text-error">*</span>
               </label>
               <input
+                id="category-name"
                 type="text"
                 required
                 value={name}
@@ -172,10 +197,11 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label htmlFor="category-slug" className="block text-body-sm font-semibold text-ink-900 mb-1">
                 Đường dẫn tĩnh (Slug) <span className="text-error">*</span>
               </label>
               <input
+                id="category-slug"
                 type="text"
                 required
                 value={slug}
@@ -186,10 +212,11 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label htmlFor="category-description" className="block text-body-sm font-semibold text-ink-900 mb-1">
                 Mô tả ngắn
               </label>
               <textarea
+                id="category-description"
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -212,7 +239,7 @@ export default function AdminCategoriesPage() {
         {/* Right 2 Cols: Categories List Table */}
         <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs lg:col-span-2">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-body-sm">
+            <table className="admin-data-table w-full text-left text-body-sm">
               <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
                 <tr>
                   <th className="px-6 py-3.5">Tên danh mục</th>

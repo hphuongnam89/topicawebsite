@@ -36,6 +36,7 @@ export function MobileStickyBar() {
           size="sm"
           className="flex-1"
           data-track="hero_primary_cta_click"
+          data-track-label="mobile_consultation"
         >
           Kiểm tra hồ sơ
         </ButtonLink>
@@ -45,6 +46,7 @@ export function MobileStickyBar() {
           size="sm"
           className="flex-1"
           data-track="hero_secondary_cta_click"
+          data-track-label="mobile_programs"
         >
           Xem 5 ngành
         </ButtonLink>

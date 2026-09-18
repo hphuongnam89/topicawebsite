@@ -111,7 +111,7 @@ export default function AdminPagesPage() {
       {/* Pages Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-body-sm">
+          <table className="admin-data-table w-full text-left text-body-sm">
             <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
               <tr>
                 <th className="px-6 py-3.5">Tiêu đề</th>

@@ -142,6 +142,9 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
+  body:has(.program-page) [data-mobile-sticky-bar] {
+    display: none;
+  }
   .toc-indent-0 {
     padding-left: 0;
   }
@@ -167,12 +170,26 @@
       animation: homepage-enter 560ms var(--ease-emphasized) both;
       animation-delay: var(--enter-delay, 0ms);
     }
+    .page-enter {
+      animation: page-enter 500ms var(--ease-emphasized) both;
+    }
   }
 
   @keyframes homepage-enter {
     from {
       opacity: 0;
       transform: translateY(0.875rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
     }
     to {
       opacity: 1;
@@ -516,4 +533,43 @@
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* Admin portal shared interaction and responsive treatment. */
+.admin-main :where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+.admin-main input,
+.admin-main textarea,
+.admin-main select {
+  min-height: 2.75rem;
+}
+.admin-data-table {
+  min-width: 42rem;
+}
+.admin-main .overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-200) transparent;
+}
+@media (max-width: 767px) {
+  .admin-main > div {
+    padding: 1rem;
+  }
+  .admin-main .admin-data-table {
+    min-width: 36rem;
+    font-size: 0.8125rem;
+  }
+  .admin-main .admin-data-table th,
+  .admin-main .admin-data-table td {
+    padding-inline: 0.75rem;
+  }
+  .admin-main .overflow-x-auto:has(.admin-data-table)::after {
+    content: "Vuốt ngang để xem thêm";
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-ink-500);
+    font-size: 0.75rem;
+    text-align: right;
+  }
 }

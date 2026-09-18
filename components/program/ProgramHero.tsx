@@ -2,6 +2,7 @@ import { ArrowDown, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import type { ProgramDetail } from "@/data/program-details";
 
 export function ProgramHero({
@@ -38,7 +39,8 @@ export function ProgramHero({
   return (
     <header className="border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-canvas)]">
       <Container className="grid min-h-[38rem] min-w-0 gap-0 px-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-        <div className="min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
+        <ScrollReveal variant="slideInLeft" className="min-w-0">
+          <div className="min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
           <nav aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
             <ol className="flex min-w-0 flex-wrap gap-x-2 gap-y-1">
               <li>
@@ -106,59 +108,62 @@ export function ProgramHero({
             </ButtonLink>
           </div>
         </div>
+      </ScrollReveal>
 
-        <div className="relative min-w-0 border-t border-[var(--color-academic-rule)] bg-[var(--color-academic-paper)] px-[var(--academic-gutter)] py-12 lg:border-t-0 lg:border-l lg:pt-12 lg:pb-16">
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-1 bg-[var(--color-academic-accent)] lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"
-          />
-          <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-muted)] uppercase">
-            Thông tin chính
-          </p>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="border-b border-[var(--color-academic-rule)] pb-8">
-              <GraduationCap
-                className="h-7 w-7 text-[var(--color-academic-accent-strong)]"
-                aria-hidden="true"
-              />
-              <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {showAcademicDetails ? (creditValue ?? "—") : "Từ xa"}
-              </p>
-              <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {showAcademicDetails ? "tín chỉ tích lũy" : "hình thức đào tạo"}
-              </p>
+        <ScrollReveal variant="slideInRight" delay={0.06} className="min-w-0">
+          <div className="relative h-full min-w-0 border-t border-[var(--color-academic-rule)] bg-[var(--color-academic-paper)] px-[var(--academic-gutter)] py-12 lg:border-t-0 lg:border-l lg:pt-12 lg:pb-16">
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-1 bg-[var(--color-academic-accent)] lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"
+            />
+            <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-muted)] uppercase">
+              Thông tin chính
+            </p>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="border-b border-[var(--color-academic-rule)] pb-8">
+                <GraduationCap
+                  className="h-7 w-7 text-[var(--color-academic-accent-strong)]"
+                  aria-hidden="true"
+                />
+                <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
+                  {showAcademicDetails ? (creditValue ?? "—") : "Từ xa"}
+                </p>
+                <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
+                  {showAcademicDetails ? "tín chỉ tích lũy" : "hình thức đào tạo"}
+                </p>
+              </div>
+              <div className="border-b border-[var(--color-academic-rule)] pb-8">
+                <BookOpen
+                  className="h-7 w-7 text-[var(--color-academic-accent-strong)]"
+                  aria-hidden="true"
+                />
+                <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
+                  {showAcademicDetails ? (termValue ?? "—") : "LMS"}
+                </p>
+                <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
+                  {showAcademicDetails ? duration?.value : "phương thức E-learning"}
+                </p>
+              </div>
             </div>
-            <div className="border-b border-[var(--color-academic-rule)] pb-8">
-              <BookOpen
-                className="h-7 w-7 text-[var(--color-academic-accent-strong)]"
-                aria-hidden="true"
-              />
-              <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {showAcademicDetails ? (termValue ?? "—") : "LMS"}
-              </p>
-              <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {showAcademicDetails ? duration?.value : "phương thức E-learning"}
-              </p>
-            </div>
+            {profileFacts.length > 0 && (
+              <dl className="mt-8 space-y-5 text-sm">
+                {profileFacts.map((item, index) => (
+                  <div
+                    key={item.label}
+                    className={`flex items-baseline justify-between gap-4 pb-4 ${
+                      index < profileFacts.length - 1
+                        ? "border-b border-[var(--color-academic-rule)]"
+                        : ""
+                    }`}
+                  >
+                    <dt className="text-[var(--color-academic-muted)]">{item.label}</dt>
+                    <dd className="font-semibold text-[var(--color-academic-ink)]">{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
-          {profileFacts.length > 0 && (
-            <dl className="mt-8 space-y-5 text-sm">
-              {profileFacts.map((item, index) => (
-                <div
-                  key={item.label}
-                  className={`flex items-baseline justify-between gap-4 pb-4 ${
-                    index < profileFacts.length - 1
-                      ? "border-b border-[var(--color-academic-rule)]"
-                      : ""
-                  }`}
-                >
-                  <dt className="text-[var(--color-academic-muted)]">{item.label}</dt>
-                  <dd className="font-semibold text-[var(--color-academic-ink)]">{item.value}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-        </div>
+        </ScrollReveal>
       </Container>
     </header>
   );

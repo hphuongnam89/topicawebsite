@@ -158,7 +158,7 @@ export default function AdminUsersPage() {
       {/* Users Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-body-sm">
+          <table className="admin-data-table w-full text-left text-body-sm">
             <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
               <tr>
                 <th className="px-6 py-3.5">Người dùng</th>
@@ -256,14 +256,15 @@ export default function AdminUsersPage() {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {error && (
-                <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
+                <div role="alert" className="rounded-lg bg-error/10 p-3 text-sm text-error">
                   {error}
                 </div>
               )}
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">Họ và tên</label>
+                <label htmlFor="user-name" className="text-sm font-semibold text-ink-950">Họ và tên</label>
                 <input
+                  id="user-name"
                   type="text"
                   required
                   value={formData.name}
@@ -273,8 +274,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">Tên đăng nhập</label>
+                <label htmlFor="user-username" className="text-sm font-semibold text-ink-950">Tên đăng nhập</label>
                 <input
+                  id="user-username"
                   type="text"
                   required={!isEditMode}
                   disabled={isEditMode} // Cannot change username after creation
@@ -285,11 +287,13 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
+                <label htmlFor="user-password" className="text-sm font-semibold text-ink-950">
                   {isEditMode ? "Mật khẩu mới (Để trống nếu không đổi)" : "Mật khẩu"}
                 </label>
                 <input
+                  id="user-password"
                   type="password"
+                  autoComplete="new-password"
                   required={!isEditMode}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -298,8 +302,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">Phân quyền</label>
+                <label htmlFor="user-role" className="text-sm font-semibold text-ink-950">Phân quyền</label>
                 <select
+                  id="user-role"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   disabled={formData.id === "admin_root"}

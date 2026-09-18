@@ -12,6 +12,7 @@ import { FAQAccordion } from "@/components/sections/FAQAccordion";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { QuickActionCard } from "./QuickActionCard";
 import { AdmissionAnnouncementCard } from "./AdmissionAnnouncementCard";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { GraduationCap, ClipboardList, FileText, Banknote, HelpCircle, Phone } from "lucide-react";
 
 export interface AdmissionHubProps {
@@ -86,33 +87,35 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-ink-950 pt-24 pb-16 md:pt-32 md:pb-24">
         <Container className="relative z-10">
-          <div className="max-w-measure mx-auto text-center">
-            <span className="text-brand-400 mb-4 inline-block rounded-full border border-brand-500/30 px-3 py-1 text-xs font-semibold tracking-wider uppercase">
-              Tuyển sinh năm 2026
-            </span>
-            <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
-            <p className="text-ink-200 mx-auto mb-10 max-w-2xl text-body-lg">
-              {page.excerpt ||
-                "Chương trình đại học từ xa qua hệ thống học tập trực tuyến, phù hợp với người đang đi làm và cần chủ động thời gian học."}
-            </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <ButtonLink
-                href="https://www.tuyensinh.topicauni.edu.vn/"
-                variant="primary"
-                size="lg"
-              >
-                Đăng ký xét tuyển
-              </ButtonLink>
-              <ButtonLink
-                href="/lien-he/"
-                variant="secondary"
-                size="lg"
-                className="border-line-600 text-white hover:bg-white/10"
-              >
-                Nhận tư vấn
-              </ButtonLink>
+          <ScrollReveal>
+            <div className="max-w-measure mx-auto text-center">
+              <span className="text-brand-400 mb-4 inline-block rounded-full border border-brand-500/30 px-3 py-1 text-xs font-semibold tracking-wider uppercase">
+                Tuyển sinh năm 2026
+              </span>
+              <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
+              <p className="text-ink-200 mx-auto mb-10 max-w-2xl text-body-lg">
+                {page.excerpt ||
+                  "Chương trình đại học từ xa qua hệ thống học tập trực tuyến, phù hợp với người đang đi làm và cần chủ động thời gian học."}
+              </p>
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                <ButtonLink
+                  href="https://www.tuyensinh.topicauni.edu.vn/"
+                  variant="primary"
+                  size="lg"
+                >
+                  Đăng ký xét tuyển
+                </ButtonLink>
+                <ButtonLink
+                  href="/lien-he/"
+                  variant="secondary"
+                  size="lg"
+                  className="border-line-600 text-white hover:bg-white/10"
+                >
+                  Nhận tư vấn
+                </ButtonLink>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </Container>
       </section>
 
@@ -120,42 +123,53 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
       <Section className="bg-canvas">
         <Container>
           <div className="relative z-20 -mt-8 grid grid-cols-1 gap-6 md:-mt-12 md:grid-cols-2 lg:grid-cols-3">
-            <QuickActionCard
-              icon={<GraduationCap size={24} />}
-              title="Ngành đào tạo"
-              description="Khám phá các chương trình đại học chính quy."
-              href="/nganh-dao-tao/"
-            />
-            <QuickActionCard
-              icon={<ClipboardList size={24} />}
-              title="Phương thức xét tuyển"
-              description="Các hình thức và điều kiện tuyển sinh năm 2026."
-              href="/thong-tin-tuyen-sinh-nam-2026/"
-            />
-            <QuickActionCard
-              icon={<FileText size={24} />}
-              title="Hồ sơ xét tuyển"
-              description="Hướng dẫn chuẩn bị và nộp hồ sơ trực tuyến."
-              href="/tuyen-sinh/xet-tuyen-truc-tuyen/"
-            />
-            <QuickActionCard
-              icon={<Banknote size={24} />}
-              title="Học phí & Học bổng"
-              description="Thông tin học phí và chính sách hỗ trợ tài chính."
-              href="/tuyen-sinh/hoc-phi-hoc-bong/"
-            />
-            <QuickActionCard
-              icon={<HelpCircle size={24} />}
-              title="Câu hỏi thường gặp"
-              description="Giải đáp các thắc mắc về quá trình tuyển sinh."
-              href="/nhung-cau-hoi-thuong-gap/"
-            />
-            <QuickActionCard
-              icon={<Phone size={24} />}
-              title="Liên hệ tư vấn"
-              description="Kết nối với đội ngũ tư vấn tuyển sinh Topica."
-              href="/lien-he/"
-            />
+            {[
+              {
+                icon: <GraduationCap size={24} />,
+                title: "Ngành đào tạo",
+                description: "Khám phá các chương trình đại học chính quy.",
+                href: "/nganh-dao-tao/",
+              },
+              {
+                icon: <ClipboardList size={24} />,
+                title: "Phương thức xét tuyển",
+                description: "Các hình thức và điều kiện tuyển sinh năm 2026.",
+                href: "/thong-tin-tuyen-sinh-nam-2026/",
+              },
+              {
+                icon: <FileText size={24} />,
+                title: "Hồ sơ xét tuyển",
+                description: "Hướng dẫn chuẩn bị và nộp hồ sơ trực tuyến.",
+                href: "/tuyen-sinh/xet-tuyen-truc-tuyen/",
+              },
+              {
+                icon: <Banknote size={24} />,
+                title: "Học phí & Học bổng",
+                description: "Thông tin học phí và chính sách hỗ trợ tài chính.",
+                href: "/tuyen-sinh/hoc-phi-hoc-bong/",
+              },
+              {
+                icon: <HelpCircle size={24} />,
+                title: "Câu hỏi thường gặp",
+                description: "Giải đáp các thắc mắc về quá trình tuyển sinh.",
+                href: "/nhung-cau-hoi-thuong-gap/",
+              },
+              {
+                icon: <Phone size={24} />,
+                title: "Liên hệ tư vấn",
+                description: "Kết nối với đội ngũ tư vấn tuyển sinh Topica.",
+                href: "/lien-he/",
+              },
+            ].map((card, index) => (
+              <ScrollReveal key={card.title} delay={index * 0.05} className="h-full">
+                <QuickActionCard
+                  icon={card.icon}
+                  title={card.title}
+                  description={card.description}
+                  href={card.href}
+                />
+              </ScrollReveal>
+            ))}
           </div>
         </Container>
       </Section>
@@ -163,12 +177,14 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
       {/* Latest Admission News */}
       <Section className="bg-paper">
         <Container>
-          <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <SectionHeading className="mb-0">Tin tuyển sinh mới nhất</SectionHeading>
-            <ButtonLink href="/tin-tuc?category=tin-tuc-tuyen-sinh" variant="secondary" size="sm">
-              Xem tất cả
-            </ButtonLink>
-          </div>
+          <ScrollReveal>
+            <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+              <SectionHeading className="mb-0">Tin tuyển sinh mới nhất</SectionHeading>
+              <ButtonLink href="/tin-tuc?category=tin-tuc-tuyen-sinh" variant="secondary" size="sm">
+                Xem tất cả
+              </ButtonLink>
+            </div>
+          </ScrollReveal>
 
           <Suspense
             fallback={
@@ -185,7 +201,9 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
       {/* Admission Timeline */}
       <Section className="border-y border-line-100 bg-canvas">
         <Container>
-          <SectionHeading align="center">Quy trình xét tuyển</SectionHeading>
+          <ScrollReveal>
+            <SectionHeading align="center">Quy trình xét tuyển</SectionHeading>
+          </ScrollReveal>
           <div className="mx-auto mt-12 max-w-4xl">
             <div className="relative">
               {/* Desktop timeline line */}
@@ -195,18 +213,17 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
 
               <div className="relative flex flex-col gap-8 md:flex-row md:gap-4">
                 {admissionSteps?.map((step, index) => (
-                  <div
-                    key={index}
-                    className="relative flex flex-1 flex-row items-start gap-6 md:flex-col md:items-center md:gap-4"
-                  >
-                    <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-4 border-canvas bg-brand-600 text-lg font-bold text-white">
-                      {index + 1}
+                  <ScrollReveal key={index} delay={index * 0.08} className="flex-1">
+                    <div className="relative flex flex-row items-start gap-6 md:flex-col md:items-center md:gap-4">
+                      <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-4 border-canvas bg-brand-600 text-lg font-bold text-white">
+                        {index + 1}
+                      </div>
+                      <div className="pt-2 md:pt-0 md:text-center">
+                        <h4 className="text-h4 mb-2 text-ink-950">{step.title}</h4>
+                        <p className="text-body-sm text-ink-600">{step.description}</p>
+                      </div>
                     </div>
-                    <div className="pt-2 md:pt-0 md:text-center">
-                      <h4 className="text-h4 mb-2 text-ink-950">{step.title}</h4>
-                      <p className="text-body-sm text-ink-600">{step.description}</p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
@@ -220,24 +237,26 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
       {/* FAQ Preview */}
       <Section className="bg-canvas">
         <Container>
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-10 text-center">
-              <SectionHeading align="center" className="mb-4">
-                Câu hỏi thường gặp
-              </SectionHeading>
-              <p className="text-ink-600">
-                Những thắc mắc phổ biến của thí sinh và phụ huynh về kỳ tuyển sinh.
-              </p>
-            </div>
+          <ScrollReveal>
+            <div className="mx-auto max-w-3xl">
+              <div className="mb-10 text-center">
+                <SectionHeading align="center" className="mb-4">
+                  Câu hỏi thường gặp
+                </SectionHeading>
+                <p className="text-ink-600">
+                  Những thắc mắc phổ biến của thí sinh và phụ huynh về kỳ tuyển sinh.
+                </p>
+              </div>
 
-            <FAQAccordion faqs={faqData} />
+              <FAQAccordion faqs={faqData} />
 
-            <div className="mt-8 text-center">
-              <ButtonLink href="/nhung-cau-hoi-thuong-gap/" variant="secondary">
-                Xem tất cả câu hỏi
-              </ButtonLink>
+              <div className="mt-8 text-center">
+                <ButtonLink href="/nhung-cau-hoi-thuong-gap/" variant="secondary">
+                  Xem tất cả câu hỏi
+                </ButtonLink>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </Container>
       </Section>
 

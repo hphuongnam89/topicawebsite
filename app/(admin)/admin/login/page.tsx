@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="via-brand-950 flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-900 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-900 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Logo Card Header */}
         <div className="mb-8 text-center">
@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
         {/* Login Card Form */}
         <div className="rounded-2xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur-xl">
           {error && (
-            <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-700">
+            <div role="alert" aria-live="assertive" className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-700">
               <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
               <span>{error}</span>
             </div>
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
+              <label htmlFor="admin-username" className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                 Tên đăng nhập
               </label>
               <div className="relative">
@@ -80,6 +80,9 @@ export default function AdminLoginPage() {
                 </div>
                 <input
                   type="text"
+                  id="admin-username"
+                  name="username"
+                  autoComplete="username"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -90,7 +93,7 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
+              <label htmlFor="admin-password" className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                 Mật khẩu
               </label>
               <div className="relative">
@@ -99,6 +102,9 @@ export default function AdminLoginPage() {
                 </div>
                 <input
                   type="password"
+                  id="admin-password"
+                  name="password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

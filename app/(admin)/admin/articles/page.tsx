@@ -156,6 +156,8 @@ export default function AdminArticlesPage() {
 
       {message && (
         <div
+          role={message.type === "error" ? "alert" : "status"}
+          aria-live="polite"
           className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
             message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"
@@ -178,6 +180,7 @@ export default function AdminArticlesPage() {
           <div className="relative sm:col-span-6">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
             <input
+              aria-label="Tìm kiếm"
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -189,6 +192,7 @@ export default function AdminArticlesPage() {
           {/* Category Filter */}
           <div className="sm:col-span-3">
             <select
+              aria-label="Lọc theo danh mục"
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value);
@@ -226,7 +230,7 @@ export default function AdminArticlesPage() {
       {/* Articles Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-body-sm">
+          <table className="admin-data-table w-full text-left text-body-sm">
             <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
               <tr>
                 <th className="px-6 py-3.5">Bài viết</th>

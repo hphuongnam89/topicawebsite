@@ -161,6 +161,8 @@ export default function AdminMediaPage() {
 
       {message && (
         <div
+          role={message.type === "error" ? "alert" : "status"}
+          aria-live="polite"
           className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
             message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border-emerald-200"
@@ -180,6 +182,7 @@ export default function AdminMediaPage() {
       <div className="relative max-w-md">
         <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
         <input
+          aria-label="Tìm kiếm"
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

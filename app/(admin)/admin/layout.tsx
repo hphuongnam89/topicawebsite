@@ -35,9 +35,9 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 font-sans text-ink-950 antialiased">
+    <div className="admin-shell flex min-h-screen bg-slate-50 font-sans text-ink-950 antialiased">
       {user && <AdminSidebar user={user} />}
-      <main className="flex-1 overflow-x-hidden min-h-screen">
+      <main className="admin-main flex-1 overflow-x-hidden min-h-screen">
         {children}
       </main>
     </div>

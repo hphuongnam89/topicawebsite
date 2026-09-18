@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -32,6 +32,19 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobileOpen]);
 
   // If on login page, don't show sidebar
   if (pathname === "/admin/login") {
@@ -128,7 +141,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           className="rounded-md p-2 text-ink-700 hover:bg-paper"
-          aria-label="Toggle Menu"
+          aria-label={isMobileOpen ? "Đóng menu quản trị" : "Mở menu quản trị"}
+          aria-expanded={isMobileOpen}
+          aria-controls="admin-sidebar"
         >
           {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -138,12 +153,16 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       {isMobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          role="presentation"
+          aria-hidden="true"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
       {/* Sidebar Container */}
-      <aside
+       <aside
+        id="admin-sidebar"
+        aria-label="Điều hướng quản trị"
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-line-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0 ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -160,6 +179,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             </div>
           </Link>
           <button
+            type="button"
+            aria-label="Đóng menu quản trị"
             onClick={() => setIsMobileOpen(false)}
             className="rounded-md p-1.5 text-ink-500 hover:bg-paper lg:hidden"
           >

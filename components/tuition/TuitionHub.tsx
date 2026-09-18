@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { DocumentCard } from "@/components/ui/DocumentCard";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { Check } from "lucide-react";
 
 const admissions2026Url = "https://topicauni.edu.vn/thong-tin-tuyen-sinh-nam-2026/";
@@ -46,76 +47,81 @@ export function TuitionHub() {
       <Section variant="paper">
         <Container>
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
-            <div>
-              <SectionHeading>Học phí tuyển sinh năm 2026</SectionHeading>
-              <div className="prose-editorial text-ink-800">
-                <p>
-                  Học phí được tính theo số tín chỉ đăng ký. Mức áp dụng cần được đối chiếu với
-                  thông báo tuyển sinh tại thời điểm hoàn tất hồ sơ.
+            <ScrollReveal variant="slideInLeft">
+              <div>
+                <SectionHeading>Học phí tuyển sinh năm 2026</SectionHeading>
+                <div className="prose-editorial text-ink-800">
+                  <p>
+                    Học phí được tính theo số tín chỉ đăng ký. Mức áp dụng cần được đối chiếu với
+                    thông báo tuyển sinh tại thời điểm hoàn tất hồ sơ.
+                  </p>
+
+                  <h4 className="mt-8 mb-4 font-semibold text-ink-950">
+                    Các khoản phí được công bố:
+                  </h4>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                      <span>Học phí: 600.000 đồng/tín chỉ.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                      <span>Lệ phí xét tuyển: 80.000 đồng/nguyện vọng.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
+                      <span>Lệ phí hồ sơ: miễn phí.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal variant="slideInRight" delay={0.06}>
+              <div className="relative overflow-hidden rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
+                <div className="absolute top-0 right-0 -mt-10 -mr-10 h-32 w-32 rounded-full bg-brand-50 opacity-50 blur-3xl" />
+                <p className="relative z-10 text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
+                  Theo thông tin tuyển sinh 2026
                 </p>
-
-                <h4 className="mt-8 mb-4 font-semibold text-ink-950">
-                  Các khoản phí được công bố:
-                </h4>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
-                    <span>Học phí: 600.000 đồng/tín chỉ.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
-                    <span>Lệ phí xét tuyển: 80.000 đồng/nguyện vọng.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand-500" />
-                    <span>Lệ phí hồ sơ: miễn phí.</span>
-                  </li>
-                </ul>
+                <div className="relative z-10 mt-4 text-[clamp(2.75rem,7vw,5rem)] leading-none font-bold text-brand-700">
+                  600.000đ
+                </div>
+                <p className="relative z-10 mt-2 text-body-lg font-semibold text-ink-950">
+                  mỗi tín chỉ
+                </p>
+                <p className="relative z-10 mt-6 border-t border-line-200 pt-5 text-body-sm text-ink-600">
+                  Lộ trình tăng học phí dự kiến không quá 10%/năm và thực hiện vào đầu học kỳ của năm
+                  học mới nếu có. Hãy xác nhận lại mức áp dụng cho khóa nhập học của bạn.
+                </p>
               </div>
-            </div>
-
-            <div className="relative overflow-hidden rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
-              <div className="absolute top-0 right-0 -mt-10 -mr-10 h-32 w-32 rounded-full bg-brand-50 opacity-50 blur-3xl" />
-              <p className="relative z-10 text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
-                Theo thông tin tuyển sinh 2026
-              </p>
-              <div className="relative z-10 mt-4 text-[clamp(2.75rem,7vw,5rem)] leading-none font-bold text-brand-700">
-                600.000đ
-              </div>
-              <p className="relative z-10 mt-2 text-body-lg font-semibold text-ink-950">
-                mỗi tín chỉ
-              </p>
-              <p className="relative z-10 mt-6 border-t border-line-200 pt-5 text-body-sm text-ink-600">
-                Lộ trình tăng học phí dự kiến không quá 10%/năm và thực hiện vào đầu học kỳ của năm
-                học mới nếu có. Hãy xác nhận lại mức áp dụng cho khóa nhập học của bạn.
-              </p>
-            </div>
+            </ScrollReveal>
           </div>
         </Container>
       </Section>
 
       <Section variant="default">
         <Container>
-          <div className="mx-auto mb-12 max-w-3xl text-center">
-            <SectionHeading align="center">Chính sách học bổng năm 2026</SectionHeading>
-            <p className="text-body-lg text-ink-600">
-              Mỗi chính sách có điều kiện và thời hạn riêng. Tình trạng suất học bổng cần được xác
-              nhận tại thời điểm đăng ký.
-            </p>
-          </div>
+          <ScrollReveal>
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <SectionHeading align="center">Chính sách học bổng năm 2026</SectionHeading>
+              <p className="text-body-lg text-ink-600">
+                Mỗi chính sách có điều kiện và thời hạn riêng. Tình trạng suất học bổng cần được xác
+                nhận tại thời điểm đăng ký.
+              </p>
+            </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {scholarships.map((scholarship) => (
-              <article
-                key={scholarship.title}
-                className="flex h-full flex-col rounded-xl border border-line-200 bg-paper p-6 lg:p-8"
-              >
-                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100">
-                  <span className="text-lg font-bold text-brand-700">{scholarship.rate}</span>
-                </div>
-                <h3 className="text-h4 mb-3 font-bold text-ink-950">{scholarship.title}</h3>
-                <p className="text-ink-600">{scholarship.description}</p>
-              </article>
+            {scholarships.map((scholarship, index) => (
+              <ScrollReveal key={scholarship.title} delay={index * 0.05} className="h-full">
+                <article className="flex h-full flex-col rounded-xl border border-line-200 bg-paper p-6 transition-all hover:border-brand-300 hover:shadow-md lg:p-8">
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100">
+                    <span className="text-lg font-bold text-brand-700">{scholarship.rate}</span>
+                  </div>
+                  <h3 className="text-h4 mb-3 font-bold text-ink-950">{scholarship.title}</h3>
+                  <p className="text-ink-600">{scholarship.description}</p>
+                </article>
+              </ScrollReveal>
             ))}
           </div>
         </Container>
@@ -124,24 +130,30 @@ export function TuitionHub() {
       <Section variant="paper">
         <Container>
           <div className="mx-auto max-w-3xl">
-            <SectionHeading align="center">Nguồn thông tin chính thức</SectionHeading>
-            <p className="mt-3 text-center text-body text-ink-600">
-              Đọc văn bản nguồn để kiểm tra điều kiện, thời hạn và phạm vi áp dụng trước khi đăng
-              ký.
-            </p>
+            <ScrollReveal>
+              <SectionHeading align="center">Nguồn thông tin chính thức</SectionHeading>
+              <p className="mt-3 text-center text-body text-ink-600">
+                Đọc văn bản nguồn để kiểm tra điều kiện, thời hạn và phạm vi áp dụng trước khi đăng
+                ký.
+              </p>
+            </ScrollReveal>
             <div className="mt-8 space-y-4">
-              <DocumentCard
-                title="Thông tin tuyển sinh phương thức đào tạo từ xa năm 2026"
-                type="Nguồn chính thức"
-                date="Trường Đại học Phú Xuân"
-                viewUrl={admissions2026Url}
-              />
-              <DocumentCard
-                title="Thông báo tuyển sinh PXUni-Elearning năm 2026 – đợt 2"
-                type="Thông báo tuyển sinh"
-                date="Trường Đại học Phú Xuân"
-                viewUrl={admissionsNoticeUrl}
-              />
+              <ScrollReveal delay={0.05}>
+                <DocumentCard
+                  title="Thông tin tuyển sinh phương thức đào tạo từ xa năm 2026"
+                  type="Nguồn chính thức"
+                  date="Trường Đại học Phú Xuân"
+                  viewUrl={admissions2026Url}
+                />
+              </ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <DocumentCard
+                  title="Thông báo tuyển sinh PXUni-Elearning năm 2026 – đợt 2"
+                  type="Thông báo tuyển sinh"
+                  date="Trường Đại học Phú Xuân"
+                  viewUrl={admissionsNoticeUrl}
+                />
+              </ScrollReveal>
             </div>
           </div>
         </Container>
