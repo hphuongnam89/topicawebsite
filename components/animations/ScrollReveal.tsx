@@ -8,6 +8,7 @@ type ScrollRevealProps = {
   className?: string;
   children: React.ReactNode;
   viewportMargin?: string;
+  viewportAmount?: "some" | "all" | number;
 };
 
 export function ScrollReveal({
@@ -16,6 +17,7 @@ export function ScrollReveal({
   className,
   children,
   viewportMargin = "0px 0px -8% 0px",
+  viewportAmount = 0.15,
 }: ScrollRevealProps) {
   const shouldReduceMotion = useReducedMotion();
   const revealDelay = Math.min(delay ?? 0, 0.18);
@@ -33,7 +35,7 @@ export function ScrollReveal({
       className={`scroll-reveal${className ? ` ${className}` : ""}`}
       initial={shouldReduceMotion ? false : initial}
       whileInView={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.15, margin: viewportMargin }}
+      viewport={{ once: true, amount: viewportAmount, margin: viewportMargin }}
       transition={
         shouldReduceMotion
           ? { duration: 0 }

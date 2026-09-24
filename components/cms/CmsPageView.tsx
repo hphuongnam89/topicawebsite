@@ -49,7 +49,7 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
             </ScrollReveal>
           )}
 
-          <ScrollReveal delay={0.06}>
+          <ScrollReveal delay={0.06} viewportAmount="some">
             {page.contentHtml ? (
               <div className="mx-auto max-w-4xl">
                 <WordPressContent html={page.contentHtml} />
