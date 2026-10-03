@@ -8,6 +8,7 @@ import { primaryNav, actionItems } from "@/data/navigation";
 import { cn } from "@/components/ui/cn";
 import { ButtonLink } from "@/components/ui/Button";
 import { transitions } from "@/lib/motion";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface MobileNavProps {
   open: boolean;
@@ -104,14 +105,17 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-line-100 px-4 py-3">
               <span className="text-body-sm font-semibold text-ink-950">Menu</span>
-              <button
-                ref={closeButtonRef}
-                onClick={onClose}
-                aria-label="Đóng menu"
-                className="flex h-10 w-10 items-center justify-center rounded-md text-ink-800 transition-colors hover:bg-brand-50"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                <LanguageSwitcher tone="surface" />
+                <button
+                  ref={closeButtonRef}
+                  onClick={onClose}
+                  aria-label="Đóng menu"
+                  className="flex h-10 w-10 items-center justify-center rounded-md text-ink-800 transition-colors hover:bg-brand-50"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Navigation */}

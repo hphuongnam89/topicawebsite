@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/nganh/quan-tri-kinh-doanh",
+        destination: "/quan-tri-kinh-doanh-marketing/",
+        permanent: true,
+      },
+      {
         source: "/chuyen-muc/thong-bao-tuyen-sinh",
         destination: "/tin-tuc?category=thong-bao-tuyen-sinh",
         permanent: true,

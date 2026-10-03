@@ -108,7 +108,7 @@ export function HeroSlider() {
         {/* SLIDE 1: Hero Section Đăng Ký Tư Vấn (Giao diện chuẩn)     */}
         {/* ========================================================= */}
         <div
-          className="w-full shrink-0 min-w-full"
+          className="w-full min-w-full shrink-0"
           role="group"
           aria-roledescription="slide"
           aria-label="1 of 3: Đăng ký tư vấn"
@@ -187,14 +187,14 @@ export function HeroSlider() {
         {/* SLIDE 2: Thông Báo Tuyển Sinh Mới Nhất (Toàn Hero)       */}
         {/* ========================================================= */}
         <div
-          className="w-full shrink-0 min-w-full"
+          className="w-full min-w-full shrink-0"
           role="group"
           aria-roledescription="slide"
           aria-label="2 of 3: Thông báo tuyển sinh mới nhất"
         >
           <Container className="relative grid gap-10 py-14 min-[820px]:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.75fr)] min-[820px]:items-center min-[820px]:gap-8 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.65fr)] lg:gap-16 lg:pt-14 lg:pb-20">
             <div className="max-w-3xl min-w-0">
-              <p className="inline-flex items-center gap-2 rounded-full border border-brand-400/40 bg-brand-500/20 px-3.5 py-1 text-body-sm font-semibold tracking-[0.14em] text-brand-300 uppercase backdrop-blur-sm">
+              <p className="border-brand-400/40 inline-flex items-center gap-2 rounded-full border bg-brand-500/20 px-3.5 py-1 text-body-sm font-semibold tracking-[0.14em] text-brand-300 uppercase backdrop-blur-sm">
                 <GraduationCap className="h-4 w-4" aria-hidden="true" />
                 Thông báo tuyển sinh đợt mới nhất
               </p>
@@ -202,7 +202,8 @@ export function HeroSlider() {
                 Xét tuyển Đại học trực tuyến đợt 2026 - 2027
               </h2>
               <p className="mt-6 max-w-[58ch] text-body-lg leading-relaxed text-white/80">
-                Tuyển sinh 5 ngành đào tạo trọng điểm: Quản trị Kinh doanh, Công nghệ Thông tin, Ngôn ngữ Anh, Ngôn ngữ Trung Quốc và Du lịch. Học 100% qua E-Learning linh hoạt.
+                Tuyển sinh 5 ngành đào tạo trọng điểm: Quản trị Kinh doanh, Công nghệ Thông tin,
+                Ngôn ngữ Anh, Ngôn ngữ Trung Quốc và Du lịch. Học 100% qua E-Learning linh hoạt.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Button
@@ -240,7 +241,7 @@ export function HeroSlider() {
 
             {/* Cột phải: Poster tuyển sinh */}
             <div
-              className="relative aspect-square w-full max-w-[420px] cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-brand-950/80 to-ink-900/90 shadow-2xl transition-transform hover:scale-[1.02]"
+              className="from-brand-950/80 to-ink-900/90 relative aspect-square w-full max-w-[420px] cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br shadow-2xl transition-transform hover:scale-[1.02]"
               onClick={handleRegisterFromBanner}
               title="Nhấp để đăng ký xét tuyển ngay"
             >
@@ -252,7 +253,7 @@ export function HeroSlider() {
                 className="bg-white object-contain object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-transparent to-black/20" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl bg-ink-950/85 p-3.5 backdrop-blur-md">
+              <div className="absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-xl bg-ink-950/85 p-3.5 backdrop-blur-md">
                 <div>
                   <p className="text-xs font-semibold text-brand-300 uppercase">Topica Uni</p>
                   <p className="text-sm font-bold text-white">Đợt tuyển sinh đang mở</p>
@@ -269,7 +270,7 @@ export function HeroSlider() {
         {/* SLIDE 3: Học Bổng Ngành QTKD Giảm 30% (Toàn Hero)         */}
         {/* ========================================================= */}
         <div
-          className="w-full shrink-0 min-w-full"
+          className="w-full min-w-full shrink-0"
           role="group"
           aria-roledescription="slide"
           aria-label="3 of 3: Học bổng ngành Quản trị kinh doanh"
@@ -284,19 +285,20 @@ export function HeroSlider() {
                 Giảm 30% học phí toàn khoá ngành QTKD
               </h2>
               <p className="mt-6 max-w-[58ch] text-body-lg leading-relaxed text-white/80">
-                Ưu đãi học bổng lớn nhất năm cho ngành Quản trị Kinh doanh trực tuyến tại Topica. Tiết kiệm học phí, học mọi lúc mọi nơi, nhận bằng cử nhân đại học danh giá.
+                Ưu đãi học bổng lớn nhất năm cho ngành Quản trị Kinh doanh trực tuyến tại Topica.
+                Tiết kiệm học phí, học mọi lúc mọi nơi, nhận bằng cử nhân đại học danh giá.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Button
                   onClick={handleRegisterFromBanner}
                   size="lg"
-                  className="cursor-pointer bg-amber-500 text-ink-950 font-bold hover:bg-amber-400"
+                  className="cursor-pointer bg-amber-500 font-bold text-ink-950 hover:bg-amber-400"
                   rightIcon={<ArrowRight className="h-4 w-4 text-ink-950" aria-hidden="true" />}
                 >
                   Nhận học bổng 30% ngay
                 </Button>
                 <ButtonLink
-                  href="/nganh/quan-tri-kinh-doanh"
+                  href="/quan-tri-kinh-doanh-marketing/"
                   variant="secondary"
                   size="lg"
                   className="border-white/50 text-white hover:border-white hover:bg-white/10 hover:text-white"
@@ -311,7 +313,7 @@ export function HeroSlider() {
                 </li>
                 <li className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-body-sm text-white/85 backdrop-blur-sm">
                   <CheckCircle2 className="h-4 w-4 text-brand-300" aria-hidden="true" />
-                  Ưu đãi đến 30/09/2026
+                  Theo chính sách học bổng hiện hành
                 </li>
                 <li className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-body-sm text-white/85 backdrop-blur-sm">
                   <CheckCircle2 className="h-4 w-4 text-brand-300" aria-hidden="true" />
@@ -322,7 +324,7 @@ export function HeroSlider() {
 
             {/* Cột phải: Poster học bổng thật của người dùng */}
             <div
-              className="relative aspect-square w-full max-w-[420px] cursor-pointer overflow-hidden rounded-2xl border-2 border-amber-400/30 bg-ink-900 shadow-2xl transition-transform hover:scale-[1.02]"
+              className="bg-ink-900 relative aspect-square w-full max-w-[420px] cursor-pointer overflow-hidden rounded-2xl border-2 border-amber-400/30 shadow-2xl transition-transform hover:scale-[1.02]"
               onClick={handleRegisterFromBanner}
               title="Nhấp để đăng ký nhận học bổng 30% ngay"
             >
@@ -344,7 +346,7 @@ export function HeroSlider() {
       <button
         type="button"
         onClick={prevSlide}
-        className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/15 bg-ink-950/70 p-2.5 text-white/80 shadow-lg backdrop-blur-md transition-all hover:border-white/40 hover:bg-ink-900 hover:text-white sm:left-6 cursor-pointer"
+        className="hover:bg-ink-900 absolute top-1/2 left-3 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-white/15 bg-ink-950/70 p-2.5 text-white/80 shadow-lg backdrop-blur-md transition-all hover:border-white/40 hover:text-white sm:left-6"
         aria-label="Slide trước"
       >
         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
@@ -353,7 +355,7 @@ export function HeroSlider() {
       <button
         type="button"
         onClick={nextSlide}
-        className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/15 bg-ink-950/70 p-2.5 text-white/80 shadow-lg backdrop-blur-md transition-all hover:border-white/40 hover:bg-ink-900 hover:text-white sm:right-6 cursor-pointer"
+        className="hover:bg-ink-900 absolute top-1/2 right-3 z-20 -translate-y-1/2 cursor-pointer rounded-full border border-white/15 bg-ink-950/70 p-2.5 text-white/80 shadow-lg backdrop-blur-md transition-all hover:border-white/40 hover:text-white sm:right-6"
         aria-label="Slide tiếp theo"
       >
         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
@@ -377,8 +379,8 @@ export function HeroSlider() {
               aria-selected={isActive}
               aria-label={`Chuyển đến: ${item.label}`}
               onClick={() => goToSlide(item.index)}
-              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                isActive ? "w-7 bg-brand-400" : "w-2.5 bg-white/30 hover:bg-white/60"
+              className={`h-2.5 cursor-pointer rounded-full transition-all duration-300 ${
+                isActive ? "bg-brand-400 w-7" : "w-2.5 bg-white/30 hover:bg-white/60"
               }`}
             />
           );

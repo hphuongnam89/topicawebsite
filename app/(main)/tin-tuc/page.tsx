@@ -54,7 +54,7 @@ export default async function NewsHomepage({ searchParams }: Props) {
     // If we are filtering, we don't show the featured article
     const [_list, _cats] = await Promise.all([
       cms.getArticles({ page, limit: 12, category, search }),
-      cms.getCategories(),
+      cms.getCategories().catch(() => []),
     ]);
 
     if (!isFiltered) {

@@ -37,39 +37,55 @@ function buildUrl(endpoint: string, params: Record<string, QueryValue> = {}): UR
 // Share parsed responses within one render, including metadata. A custom abort
 // signal opts out of Next's automatic fetch memoization.
 const request = cache(async (url: string, revalidate: number, tags: string) => {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 4_000);
+  const maxAttempts = 2;
 
-  try {
-    const response = await fetch(url, {
-      headers: { Accept: "application/json" },
-      redirect: "error",
-      signal: controller.signal,
-      next: {
-        revalidate,
-        tags: JSON.parse(tags) as string[],
-      },
-    });
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4_000);
 
-    if (!response.ok) {
-      throw new Error(`WordPress request failed with status ${response.status}.`);
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: "application/json" },
+        redirect: "error",
+        signal: controller.signal,
+        next: {
+          revalidate,
+          tags: JSON.parse(tags) as string[],
+        },
+      });
+
+      if (!response.ok) {
+        const retryableStatus =
+          response.status === 408 || response.status === 429 || response.status >= 500;
+        if (retryableStatus && attempt < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 250));
+          continue;
+        }
+        throw new Error(`WordPress request failed with status ${response.status}.`);
+      }
+
+      // Keep the timeout active while reading the body as well as the headers.
+      const payload: unknown = await response.json();
+      return {
+        payload,
+        total: response.headers.get("X-WP-Total"),
+        totalPages: response.headers.get("X-WP-TotalPages"),
+      };
+    } catch (error) {
+      const timedOut = error instanceof DOMException && error.name === "AbortError";
+      const retryableNetworkError = timedOut || error instanceof TypeError;
+      if (retryableNetworkError && attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, 250));
+        continue;
+      }
+      if (timedOut) throw new Error("WordPress request timed out.");
+      throw error;
+    } finally {
+      clearTimeout(timeout);
     }
-
-    // Keep the timeout active while reading the body as well as the headers.
-    const payload: unknown = await response.json();
-    return {
-      payload,
-      total: response.headers.get("X-WP-Total"),
-      totalPages: response.headers.get("X-WP-TotalPages"),
-    };
-  } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      throw new Error("WordPress request timed out.");
-    }
-    throw error;
-  } finally {
-    clearTimeout(timeout);
   }
+
+  throw new Error("WordPress request failed after retrying.");
 });
 
 export async function wordpressCollection<T>(

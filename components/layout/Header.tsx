@@ -9,6 +9,7 @@ import { cn } from "@/components/ui/cn";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { MegaMenu } from "./MegaMenu";
 import { MobileNav } from "./MobileNav";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -165,6 +166,7 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher className="hidden sm:flex" />
             <button
               type="button"
               onClick={() => setSearchOpen((open) => !open)}

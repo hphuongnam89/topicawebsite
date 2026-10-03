@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -18,9 +18,9 @@
     "test": "vitest run",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
-    "test:links": "echo 'Link testing not implemented yet'",
-    "test:a11y": "echo 'A11y testing not implemented yet'",
-    "test:lighthouse": "echo 'Lighthouse testing not implemented yet'",
+    "test:links": "tsx scripts/links-check.ts",
+    "test:a11y": "playwright test e2e/a11y.spec.ts",
+    "test:lighthouse": "node scripts/lighthouse-check.mjs",
     "verify": "npm run format:check && npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {

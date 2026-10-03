@@ -1,24 +1,11 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { Be_Vietnam_Pro, Lora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { env } from "@/lib/env";
-
-const beVietnamPro = Be_Vietnam_Pro({
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--font-be-vietnam-pro",
-});
-
-const lora = Lora({
-  subsets: ["latin", "vietnamese"],
-  display: "swap",
-  variable: "--font-lora",
-});
+import { LocaleDocument } from "@/components/layout/LocaleDocument";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
@@ -75,9 +62,8 @@ export default async function RootLayout({
 
   return (
     <html lang="vi" data-scroll-behavior="smooth">
-      <body
-        className={`${beVietnamPro.variable} ${lora.variable} bg-canvas font-sans text-ink-800 antialiased`}
-      >
+      <body className="bg-canvas font-sans text-ink-800 antialiased">
+        <LocaleDocument />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
