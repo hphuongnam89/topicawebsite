@@ -215,7 +215,7 @@
       ],
       "preferred_model": "qwen3.5:9b-nvfp4",
       "requires_human_approval": false,
-      "status": "READY",
+      "status": "COMPLETED",
       "ownership_paths": null,
       "contract_version": null
     },
@@ -230,7 +230,7 @@
       ],
       "preferred_model": "ornith1.5:9b",
       "requires_human_approval": false,
-      "status": "PLANNED",
+      "status": "READY",
       "ownership_paths": null,
       "contract_version": null
     },
