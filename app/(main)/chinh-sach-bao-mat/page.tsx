@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { contactInfo } from "@/data/campuses";
+import { PRIVACY_NOTICE_UPDATED_AT, PRIVACY_NOTICE_VERSION } from "@/lib/privacy-policy";
 
 export const metadata: Metadata = {
   title: "Chính sách bảo mật",
@@ -31,7 +32,7 @@ const sections = [
     title: "4. Chia sẻ và lưu trữ dữ liệu",
     content: [
       "Dữ liệu chỉ được truy cập bởi bộ phận phụ trách và nhà cung cấp dịch vụ cần thiết cho việc vận hành, với phạm vi phù hợp với mục đích nêu trên. Chúng tôi không bán dữ liệu cá nhân của bạn.",
-      "Dữ liệu được lưu trong thời gian cần thiết để xử lý yêu cầu, thực hiện nghĩa vụ liên quan hoặc cho đến khi có yêu cầu hợp lệ về việc chấm dứt xử lý, trừ trường hợp pháp luật yêu cầu lưu lâu hơn.",
+      "Dữ liệu được lưu theo thời hạn retention đã được phê duyệt và cấu hình trong môi trường vận hành; hết thời hạn, dữ liệu trong hệ thống chính được xóa theo nhật ký vận hành. Bản sao lưu và kênh thông báo bên thứ ba được xử lý theo cùng quy trình xóa và kiểm soát truy cập.",
     ],
   },
   {
@@ -111,7 +112,9 @@ export default function PrivacyPolicyPage() {
           </section>
         </div>
 
-        <p className="text-ink-500 mt-10 text-body-sm">Cập nhật lần cuối: 04/09/2026.</p>
+        <p className="text-ink-500 mt-10 text-body-sm">
+          Phiên bản: {PRIVACY_NOTICE_VERSION} · Cập nhật lần cuối: {PRIVACY_NOTICE_UPDATED_AT}.
+        </p>
       </Container>
     </section>
   );

@@ -11,7 +11,9 @@ const DIGEST = "sha512";
  */
 export function hashPassword(password: string): string {
   const salt = crypto.randomBytes(SALT_LENGTH).toString("hex");
-  const derivedKey = crypto.pbkdf2Sync(password, salt, ITERATIONS, KEY_LENGTH, DIGEST).toString("hex");
+  const derivedKey = crypto
+    .pbkdf2Sync(password, salt, ITERATIONS, KEY_LENGTH, DIGEST)
+    .toString("hex");
   return `${salt}:${derivedKey}`;
 }
 
@@ -22,7 +24,9 @@ export function verifyPassword(password: string, storedHash: string): boolean {
   const [salt, key] = storedHash.split(":");
   if (!salt || !key) return false;
 
-  const derivedKey = crypto.pbkdf2Sync(password, salt, ITERATIONS, KEY_LENGTH, DIGEST).toString("hex");
+  const derivedKey = crypto
+    .pbkdf2Sync(password, salt, ITERATIONS, KEY_LENGTH, DIGEST)
+    .toString("hex");
   try {
     return crypto.timingSafeEqual(Buffer.from(key, "hex"), Buffer.from(derivedKey, "hex"));
   } catch {

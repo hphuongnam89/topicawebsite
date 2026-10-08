@@ -29,14 +29,55 @@ export function trackEvent(
   properties: Record<string, string | number> = {},
 ) {
   if (typeof window === "undefined") return;
+  let consent = "denied";
+  try {
+    consent = window.localStorage.getItem("topica_analytics_consent") || "denied";
+  } catch {
+    return;
+  }
+  if (consent !== "granted") return;
+  let sessionId = "";
+  try {
+    sessionId =
+      window.sessionStorage.getItem("topica_analytics_session") ||
+      crypto.randomUUID().replaceAll("-", "");
+    window.sessionStorage.setItem("topica_analytics_session", sessionId);
+  } catch {
+    sessionId = crypto.randomUUID().replaceAll("-", "");
+  }
+  const eventId = crypto.randomUUID().replaceAll("-", "");
   const safeProperties = Object.fromEntries(
     Object.entries(properties).filter(
       ([key, value]) => key.length <= 64 && (typeof value === "number" || value.length <= 200),
     ),
   );
   window.dispatchEvent(
-    new CustomEvent("topica:analytics", { detail: { name, properties: safeProperties } }),
+    new CustomEvent("topica:analytics", {
+      detail: { name, properties: safeProperties, eventId, sessionId },
+    }),
   );
   const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
   dataLayer?.push({ event: name, ...safeProperties });
+  void fetch("/api/public/event", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      event_id: eventId,
+      session_id: sessionId,
+      properties: safeProperties,
+      path: window.location.pathname,
+    }),
+    keepalive: true,
+  }).catch(() => {
+    // Analytics must not affect the user flow.
+  });
+}
+
+export function setAnalyticsConsent(granted: boolean): void {
+  try {
+    window.localStorage.setItem("topica_analytics_consent", granted ? "granted" : "denied");
+  } catch {
+    // Restricted storage keeps analytics disabled.
+  }
 }

@@ -1,8 +1,7 @@
-FROM node:22-alpine AS base
+FROM node:22.14.0-bookworm-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
@@ -20,7 +19,10 @@ ARG WORDPRESS_API_URL=https://topicauni.edu.vn/wp-json/wp/v2
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV WORDPRESS_API_URL=$WORDPRESS_API_URL
 
-RUN npm run build
+RUN npm run build && npm run build:worker && rm -rf .next/cache
+
+FROM deps AS production-deps
+RUN npm prune --omit=dev
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -41,8 +43,10 @@ RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=production-deps /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/migrations/100_runtime_schema.sql ./migrations/100_runtime_schema.sql
 
 USER nextjs
 

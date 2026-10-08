@@ -1,61 +1,33 @@
+import { consumeRateLimit } from "@/lib/security/rate-limit";
 import { NextResponse } from "next/server";
 import { getUserByUsername, writeAuditLog } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth/password";
 import { createSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { getClientIp } from "@/lib/security/request";
-
+import { getClientIp, readJsonBody, BodyTooLargeError } from "@/lib/security/request";
 const MAX_FAILURES = 5;
 const WINDOW_MS = 15 * 60 * 1000;
-const failures = new Map<string, { count: number; resetAt: number }>();
-
 function clientKey(request: Request, username: string): string {
   const ip = getClientIp(request);
   return `${ip}:${username.toLowerCase()}`;
 }
-
 function clientIp(request: Request): string {
   return getClientIp(request);
 }
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  for (const [storedKey, value] of failures) {
-    if (value.resetAt <= now) failures.delete(storedKey);
-  }
-  const entry = failures.get(key);
-  if (!entry) {
-    return false;
-  }
-  return entry.count >= MAX_FAILURES;
-}
-
-function recordFailure(key: string): void {
-  const now = Date.now();
-  if (!failures.has(key) && failures.size >= 10_000) return;
-  const entry = failures.get(key);
-  if (!entry || entry.resetAt <= now) {
-    failures.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return;
-  }
-  entry.count += 1;
-}
-
 export async function POST(request: Request) {
   try {
     let body: unknown;
-
     try {
-      body = await request.json();
-    } catch {
+      body = await readJsonBody(request, 4096);
+    } catch (error) {
+      if (error instanceof BodyTooLargeError)
+        return NextResponse.json({ error: "Payload too large" }, { status: 413 });
       return NextResponse.json(
         { error: "Dữ liệu đăng nhập không hợp lệ. Vui lòng thử lại." },
         { status: 400 },
       );
     }
-
     const { username, password } =
       body && typeof body === "object" ? (body as Record<string, unknown>) : {};
-
     if (
       typeof username !== "string" ||
       typeof password !== "string" ||
@@ -69,24 +41,25 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-
     const key = clientKey(request, username.trim());
-    if (isRateLimited(key)) {
+    const retryAfter = await consumeRateLimit(`login:${key}`, {
+      limit: MAX_FAILURES,
+      windowMs: WINDOW_MS,
+    });
+    if (retryAfter !== null) {
       return NextResponse.json(
         { error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." },
         {
           status: 429,
           headers: {
-            "Retry-After": String(Math.ceil((failures.get(key)!.resetAt - Date.now()) / 1000)),
+            "Retry-After": String(retryAfter),
           },
         },
       );
     }
-
-    const user = getUserByUsername(username.trim());
+    const user = await getUserByUsername(username.trim());
     if (!user) {
-      recordFailure(key);
-      writeAuditLog({
+      await writeAuditLog({
         action: "auth.login_failed",
         target: username.trim(),
         ip: clientIp(request),
@@ -96,11 +69,9 @@ export async function POST(request: Request) {
         { status: 401 },
       );
     }
-
     const isValid = verifyPassword(password, user.password_hash);
     if (!isValid) {
-      recordFailure(key);
-      writeAuditLog({
+      await writeAuditLog({
         action: "auth.login_failed",
         target: username.trim(),
         ip: clientIp(request),
@@ -110,10 +81,7 @@ export async function POST(request: Request) {
         { status: 401 },
       );
     }
-
-    failures.delete(key);
-    writeAuditLog({ action: "auth.login_success", actorId: user.id, ip: clientIp(request) });
-
+    await writeAuditLog({ action: "auth.login_success", actorId: user.id, ip: clientIp(request) });
     const response = NextResponse.json({
       success: true,
       user: {
@@ -123,7 +91,6 @@ export async function POST(request: Request) {
         role: user.role,
       },
     });
-
     // Instead of using cookies().set, set directly on the response to ensure it sets properly on Render
     const token = createSessionToken(
       {
@@ -134,7 +101,6 @@ export async function POST(request: Request) {
       },
       user.session_version,
     );
-
     response.cookies.set(SESSION_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -142,7 +108,6 @@ export async function POST(request: Request) {
       path: "/",
       maxAge: 60 * 60 * 8,
     });
-
     return response;
   } catch (error) {
     console.error("Login error:", error);

@@ -1,5 +1,10 @@
-import { createLead, getSetting, type LeadRecord } from "@/lib/db";
-
+import {
+  createLeadWithDelivery,
+  claimLeadDelivery,
+  finishLeadDelivery,
+  getSetting,
+  type LeadRecord,
+} from "@/lib/db";
 interface LeadNotification {
   fullname: string;
   phone: string;
@@ -7,27 +12,48 @@ interface LeadNotification {
   program?: string;
   notes?: string;
 }
-
-export function submitLead(data: LeadNotification): LeadRecord {
-  const lead = createLead(data);
-  void notifyTelegram({
-    fullname: lead.fullname,
-    phone: lead.phone,
-    email: lead.email ?? undefined,
-    program: lead.program ?? undefined,
-    notes: lead.notes ?? undefined,
-  });
-  return lead;
+export async function submitLead(
+  data: LeadNotification & {
+    consent: true;
+  },
+): Promise<LeadRecord> {
+  return await createLeadWithDelivery(data);
 }
-
-async function notifyTelegram(lead: LeadNotification): Promise<void> {
+export async function deliverPendingLeadDeliveries(limit = 20): Promise<number> {
+  if (!Number.isInteger(limit) || limit < 1 || limit > 100)
+    throw new Error("Invalid delivery batch size");
+  let processed = 0;
+  while (processed < limit) {
+    const delivery = await claimLeadDelivery();
+    if (!delivery) break;
+    const result = await notifyTelegram({
+      ...delivery,
+      email: delivery.email ?? undefined,
+      program: delivery.program ?? undefined,
+      notes: delivery.notes ?? undefined,
+    });
+    await finishLeadDelivery(delivery, result.ok ? undefined : result.error);
+    processed++;
+  }
+  return processed;
+}
+async function notifyTelegram(lead: LeadNotification): Promise<
+  | {
+      ok: true;
+    }
+  | {
+      ok: false;
+      error: string;
+    }
+> {
   try {
-    const settings = getSetting<{ telegramBotToken?: string; telegramChatId?: string }>(
-      "site_settings",
-      {},
-    );
-    if (!settings.telegramBotToken || !settings.telegramChatId) return;
-
+    const settings = await getSetting<{
+      telegramBotToken?: string;
+      telegramChatId?: string;
+    }>("site_settings", {});
+    if (!settings.telegramBotToken || !settings.telegramChatId) {
+      return { ok: false, error: "Telegram is not configured" };
+    }
     const message = [
       "🎓 HỌC VIÊN ĐĂNG KÝ TƯ VẤN MỚI",
       `👤 Họ tên: ${lead.fullname}`,
@@ -39,8 +65,7 @@ async function notifyTelegram(lead: LeadNotification): Promise<void> {
     ]
       .filter(Boolean)
       .join("\n");
-
-    await fetch(
+    const response = await fetch(
       `https://api.telegram.org/bot${encodeURIComponent(settings.telegramBotToken.trim())}/sendMessage`,
       {
         method: "POST",
@@ -49,10 +74,19 @@ async function notifyTelegram(lead: LeadNotification): Promise<void> {
         signal: AbortSignal.timeout(5000),
       },
     );
+    if (!response.ok) return { ok: false, error: `Telegram HTTP ${response.status}` };
+    const result = (await response.json()) as {
+      ok?: boolean;
+    };
+    if (result.ok !== true) return { ok: false, error: "Telegram rejected message" };
+    return { ok: true };
   } catch (error) {
-    console.error(
-      "Telegram notification failed",
-      error instanceof Error ? error.message : "unknown error",
-    );
+    return {
+      ok: false,
+      error:
+        error instanceof Error && error.name === "TimeoutError"
+          ? "Telegram timeout"
+          : "Telegram transport error",
+    };
   }
 }

@@ -4,7 +4,6 @@ import { getSetting, setSetting, writeAuditLog } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin, getClientIp } from "@/lib/security/request";
 import { siteSettingsSchema } from "@/lib/validation/admin";
-
 const DEFAULT_SETTINGS = {
   hotline: "1800 646466",
   email: "tuyensinh@topica.edu.vn",
@@ -17,11 +16,10 @@ const DEFAULT_SETTINGS = {
   telegramBotToken: "",
   telegramChatId: "",
 };
-
 export async function GET() {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  const settings = getSetting("site_settings", DEFAULT_SETTINGS);
+  const settings = await getSetting("site_settings", DEFAULT_SETTINGS);
   return NextResponse.json({
     settings: {
       ...settings,
@@ -29,21 +27,18 @@ export async function GET() {
     },
   });
 }
-
 export async function PUT(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
   if (!isSameOrigin(request))
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
-
   try {
     const body = await request.json();
-    const currentSettings = getSetting("site_settings", DEFAULT_SETTINGS);
+    const currentSettings = await getSetting("site_settings", DEFAULT_SETTINGS);
     const parsed = siteSettingsSchema.safeParse(body?.settings);
     if (!parsed.success) {
       return NextResponse.json({ error: "Dữ liệu cài đặt không hợp lệ." }, { status: 400 });
     }
-
     const settings = parsed.data;
     const safeSettings = {
       ...settings,
@@ -52,16 +47,14 @@ export async function PUT(request: Request) {
           ? currentSettings.telegramBotToken
           : settings.telegramBotToken,
     };
-    setSetting("site_settings", safeSettings);
-    writeAuditLog({
+    await setSetting("site_settings", safeSettings);
+    await writeAuditLog({
       actorId: auth.user.id,
       action: "settings.updated",
       ip: getClientIp(request),
     });
-
     // Revalidate whole website layout
     revalidatePath("/", "layout");
-
     return NextResponse.json({
       success: true,
       settings: {

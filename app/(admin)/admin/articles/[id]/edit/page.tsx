@@ -3,28 +3,24 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { getArticleById, getCategories } from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
 import { ArticleEditorForm } from "@/components/admin/ArticleEditorForm";
-
 interface EditArticlePageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 }
-
 export default async function EditArticlePage({ params }: EditArticlePageProps) {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/admin/login");
   }
-
   const { id } = await params;
-  const article = getArticleById(Number(id));
-
+  const article = await getArticleById(Number(id));
   if (!article) {
     notFound();
   }
-
-  const categories = getCategories();
-
+  const categories = await getCategories();
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <ArticleEditorForm
         isEdit={true}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}

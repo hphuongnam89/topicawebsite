@@ -1,260 +1,48 @@
+import { databaseNow } from "./time";
 import "server-only";
-import fs from "node:fs";
-import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
-import { hashPassword } from "@/lib/auth/password";
+import crypto from "node:crypto";
+import { PRIVACY_NOTICE_VERSION } from "@/lib/privacy-policy";
+import { getDb, transaction } from "./connection";
+export { getDb, closeDatabase, migrateDatabase } from "./connection";
 import type { ArticleRecord, CategoryRecord, LeadRecord, UserRecord, PageRecord } from "./types";
-
 export type { ArticleRecord, CategoryRecord, LeadRecord, UserRecord, PageRecord } from "./types";
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_PATH = path.join(DATA_DIR, "topica.db");
-
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-
-let dbInstance: DatabaseSync | null = null;
-
-function getDb(): DatabaseSync {
-  if (!dbInstance) {
-    dbInstance = new DatabaseSync(DB_PATH);
-    // Enable WAL mode for better concurrency
-    dbInstance.exec("PRAGMA journal_mode = WAL;");
-    initSchema(dbInstance);
-  }
-  return dbInstance;
-}
-
-function initSchema(db: DatabaseSync) {
-  // 1. Users table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      username TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      name TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'admin',
-      session_version INTEGER NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  const userColumns = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
-  if (!userColumns.some((column) => column.name === "session_version")) {
-    db.exec("ALTER TABLE users ADD COLUMN session_version INTEGER NOT NULL DEFAULT 0");
-  }
-
-  // 2. Settings table (Key-Value JSON store)
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS settings (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-  `);
-
-  // 3. Categories table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS categories (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      slug TEXT UNIQUE NOT NULL,
-      description TEXT,
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  // 4. Articles table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS articles (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      slug TEXT UNIQUE NOT NULL,
-      excerpt TEXT,
-      content_html TEXT NOT NULL,
-      featured_image TEXT,
-      category_id INTEGER,
-      tags TEXT,
-      author_name TEXT,
-      is_featured INTEGER DEFAULT 0,
-      status TEXT DEFAULT 'published',
-      seo_title TEXT,
-      seo_description TEXT,
-      published_at TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL,
-      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
-    );
-  `);
-
-  // 5. Leads table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS leads (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fullname TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      email TEXT,
-      program TEXT,
-      notes TEXT,
-      status TEXT DEFAULT 'new',
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  // 6. Pages table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS pages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      slug TEXT UNIQUE NOT NULL,
-      excerpt TEXT,
-      content_html TEXT NOT NULL,
-      featured_image TEXT,
-      status TEXT DEFAULT 'published',
-      seo_title TEXT,
-      seo_description TEXT,
-      published_at TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-  `);
-
-  // 7. Page Views table (Analytics)
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS page_views (
-      path TEXT NOT NULL,
-      date TEXT NOT NULL,
-      views INTEGER DEFAULT 1,
-      PRIMARY KEY (path, date)
-    );
-  `);
-
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS audit_logs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      actor_id TEXT,
-      action TEXT NOT NULL,
-      target TEXT,
-      ip TEXT,
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  // Provision the first admin only with an explicitly configured password.
-  const checkAdmin = db.prepare("SELECT id FROM users WHERE username = ?").get("admin");
-  if (!checkAdmin) {
-    const initialAdminPassword = process.env.ADMIN_INITIAL_PASSWORD;
-    if (!initialAdminPassword || initialAdminPassword.length < 12) {
-      throw new Error(
-        "ADMIN_INITIAL_PASSWORD must be set to at least 12 characters before first startup.",
-      );
-    }
-    const adminPasswordHash = hashPassword(initialAdminPassword);
-    db.prepare(
-      `
-      INSERT INTO users (id, username, password_hash, name, role, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `,
-    ).run(
-      "admin_root",
-      "admin",
-      adminPasswordHash,
-      "Quản trị viên Topica",
-      "admin",
-      new Date().toISOString(),
-    );
-  }
-
-  // Seed initial Hero Banner settings if not exists
-  const checkHero = db.prepare("SELECT key FROM settings WHERE key = ?").get("homepage_hero");
-  if (!checkHero) {
-    const defaultHero = {
-      badge: "Trực thuộc Trường Đại học Phú Xuân — Thành viên EQuest",
-      title: "HỌC CHỦ ĐỘNG —\nKIẾN TẠO TƯƠNG LAI",
-      description:
-        "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
-      bgImage:
-        "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
-      ctaPrimaryText: "Đăng ký xét tuyển",
-      ctaPrimaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
-      ctaSecondaryText: "Xem ngành học",
-      ctaSecondaryLink: "/nganh-dao-tao/",
-      showLeadForm: true,
-    };
-    db.prepare(
-      `
-      INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?)
-    `,
-    ).run("homepage_hero", JSON.stringify(defaultHero), new Date().toISOString());
-  }
-
-  // Seed default categories
-  const checkCats = db.prepare("SELECT COUNT(*) as count FROM categories").get() as {
-    count: number;
-  };
-  if (checkCats.count === 0) {
-    const defaultCats = [
-      {
-        name: "Tin tuyển sinh",
-        slug: "tin-tuyen-sinh",
-        desc: "Thông tin tuyển sinh các ngành đào tạo từ xa",
-      },
-      {
-        name: "Tin tức Topica",
-        slug: "tin-tuc-topica",
-        desc: "Tin tức, sự kiện và hoạt động của Topica",
-      },
-      {
-        name: "Góc học tập & Hướng nghiệp",
-        slug: "huong-nghiep",
-        desc: "Cẩm nang học tập trực tuyến và cơ hội nghề nghiệp",
-      },
-    ];
-    for (const cat of defaultCats) {
-      db.prepare(
-        `
-        INSERT INTO categories (name, slug, description, created_at) VALUES (?, ?, ?, ?)
-      `,
-      ).run(cat.name, cat.slug, cat.desc, new Date().toISOString());
-    }
-  }
-}
-
 // ----------------------------------------------------
 // SETTINGS HELPERS
 // ----------------------------------------------------
-export function getSetting<T>(key: string, defaultValue: T): T {
+export async function getSetting<T>(key: string, defaultValue: T): Promise<T> {
   try {
-    const row = getDb().prepare("SELECT value FROM settings WHERE key = ?").get(key) as
-      { value: string } | undefined;
+    const row = (await getDb().prepare("SELECT value FROM settings WHERE key = ?").get(key)) as
+      | {
+          value: string;
+        }
+      | undefined;
     if (!row) return defaultValue;
     return JSON.parse(row.value) as T;
   } catch {
     return defaultValue;
   }
 }
-
-export function setSetting(key: string, value: unknown): void {
+export async function setSetting(key: string, value: unknown): Promise<void> {
   const db = getDb();
   const valueJson = JSON.stringify(value);
   const now = new Date().toISOString();
-  db.prepare(
-    `
+  await db
+    .prepare(
+      `
     INSERT INTO settings (key, value, updated_at)
     VALUES (?, ?, ?)
     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
   `,
-  ).run(key, valueJson, now);
+    )
+    .run(key, valueJson, now);
 }
-
-export function writeAuditLog(input: {
+export async function writeAuditLog(input: {
   actorId?: string;
   action: string;
   target?: string;
   ip?: string;
-}): void {
-  getDb()
+}): Promise<void> {
+  await getDb()
     .prepare(
       `
     INSERT INTO audit_logs (actor_id, action, target, ip, created_at)
@@ -269,46 +57,48 @@ export function writeAuditLog(input: {
       new Date().toISOString(),
     );
 }
-
 // ----------------------------------------------------
 // USERS HELPERS
 // ----------------------------------------------------
-export function getUserByUsername(username: string): UserRecord | null {
-  const row = getDb().prepare("SELECT * FROM users WHERE username = ?").get(username) as
+export async function getUserByUsername(username: string): Promise<UserRecord | null> {
+  const row = (await getDb().prepare("SELECT * FROM users WHERE username = ?").get(username)) as
     UserRecord | undefined;
   return row ?? null;
 }
-
-export function getUserById(id: string): UserRecord | null {
-  const row = getDb().prepare("SELECT * FROM users WHERE id = ?").get(id) as UserRecord | undefined;
+export async function getUserById(id: string): Promise<UserRecord | null> {
+  const row = (await getDb().prepare("SELECT * FROM users WHERE id = ?").get(id)) as
+    UserRecord | undefined;
   return row ?? null;
 }
-
-export function getUsers(): Omit<UserRecord, "password_hash">[] {
-  const rows = getDb()
+export async function getUsers(): Promise<Omit<UserRecord, "password_hash">[]> {
+  const rows = (await getDb()
     .prepare("SELECT id, username, name, role, created_at FROM users ORDER BY created_at ASC")
-    .all() as unknown as Omit<UserRecord, "password_hash">[];
+    .all()) as unknown as Omit<UserRecord, "password_hash">[];
   return rows;
 }
-
-export function updateUserPassword(userId: string, newPasswordHash: string): boolean {
-  const result = getDb()
+export async function updateUserPassword(
+  userId: string,
+  newPasswordHash: string,
+): Promise<boolean> {
+  const result = await getDb()
     .prepare(
       "UPDATE users SET password_hash = ?, session_version = session_version + 1 WHERE id = ?",
     )
     .run(newPasswordHash, userId);
   return result.changes > 0;
 }
-
-export function updateUser(
+export async function updateUser(
   userId: string,
-  data: { name?: string; role?: string; password_hash?: string },
-): boolean {
+  data: {
+    name?: string;
+    role?: string;
+    password_hash?: string;
+  },
+): Promise<boolean> {
   const db = getDb();
   let query = "UPDATE users SET ";
   const updates: string[] = [];
   const params: any[] = [];
-
   if (data.name !== undefined) {
     updates.push("name = ?");
     params.push(data.name);
@@ -321,23 +111,20 @@ export function updateUser(
     updates.push("password_hash = ?");
     params.push(data.password_hash);
   }
-
   if (data.password_hash !== undefined || data.role !== undefined) {
     updates.push("session_version = session_version + 1");
   }
-
   if (updates.length === 0) return true;
-
   query += updates.join(", ") + " WHERE id = ?";
   params.push(userId);
-
-  const result = db.prepare(query).run(...params);
+  const result = await db.prepare(query).run(...params);
   return result.changes > 0;
 }
-
-export function createUser(user: Omit<UserRecord, "created_at" | "session_version">): void {
+export async function createUser(
+  user: Omit<UserRecord, "created_at" | "session_version">,
+): Promise<void> {
   const now = new Date().toISOString();
-  getDb()
+  await getDb()
     .prepare(
       `
     INSERT INTO users (id, username, password_hash, name, role, created_at)
@@ -346,17 +133,17 @@ export function createUser(user: Omit<UserRecord, "created_at" | "session_versio
     )
     .run(user.id, user.username, user.password_hash, user.name, user.role, now);
 }
-
-export function deleteUser(id: string): boolean {
-  const result = getDb().prepare("DELETE FROM users WHERE id = ? AND id != 'admin_root'").run(id);
+export async function deleteUser(id: string): Promise<boolean> {
+  const result = await getDb()
+    .prepare("DELETE FROM users WHERE id = ? AND id != 'admin_root'")
+    .run(id);
   return result.changes > 0;
 }
-
 // ----------------------------------------------------
 // CATEGORIES HELPERS
 // ----------------------------------------------------
-export function getCategories(): CategoryRecord[] {
-  const rows = getDb()
+export async function getCategories(): Promise<CategoryRecord[]> {
+  const rows = (await getDb()
     .prepare(
       `
     SELECT c.*, COUNT(a.id) as article_count
@@ -366,20 +153,22 @@ export function getCategories(): CategoryRecord[] {
     ORDER BY c.name ASC
   `,
     )
-    .all() as unknown as CategoryRecord[];
+    .all()) as unknown as CategoryRecord[];
   return rows;
 }
-
-export function getCategoryById(id: number): CategoryRecord | null {
-  const row = getDb().prepare("SELECT * FROM categories WHERE id = ?").get(id) as
+export async function getCategoryById(id: number): Promise<CategoryRecord | null> {
+  const row = (await getDb().prepare("SELECT * FROM categories WHERE id = ?").get(id)) as
     CategoryRecord | undefined;
   return row ?? null;
 }
-
-export function createCategory(name: string, slug: string, description?: string): CategoryRecord {
+export async function createCategory(
+  name: string,
+  slug: string,
+  description?: string,
+): Promise<CategoryRecord> {
   const db = getDb();
   const now = new Date().toISOString();
-  const result = db
+  const result = await db
     .prepare(
       `
     INSERT INTO categories (name, slug, description, created_at)
@@ -387,7 +176,6 @@ export function createCategory(name: string, slug: string, description?: string)
   `,
     )
     .run(name, slug, description ?? null, now);
-
   return {
     id: Number(result.lastInsertRowid),
     name,
@@ -396,15 +184,13 @@ export function createCategory(name: string, slug: string, description?: string)
     created_at: now,
   };
 }
-
-export function deleteCategory(id: number): void {
-  getDb().prepare("DELETE FROM categories WHERE id = ?").run(id);
+export async function deleteCategory(id: number): Promise<void> {
+  await getDb().prepare("DELETE FROM categories WHERE id = ?").run(id);
 }
-
 // ----------------------------------------------------
 // ARTICLES HELPERS
 // ----------------------------------------------------
-export function getArticles(
+export async function getArticles(
   options: {
     search?: string;
     categoryId?: number;
@@ -412,40 +198,38 @@ export function getArticles(
     limit?: number;
     offset?: number;
   } = {},
-): { items: ArticleRecord[]; total: number } {
+): Promise<{
+  items: ArticleRecord[];
+  total: number;
+}> {
   const db = getDb();
   const conditions: string[] = [];
   const params: unknown[] = [];
-
   if (options.search) {
     conditions.push("(a.title LIKE ? OR a.excerpt LIKE ?)");
     params.push(`%${options.search}%`, `%${options.search}%`);
   }
-
   if (options.categoryId) {
     conditions.push("a.category_id = ?");
     params.push(options.categoryId);
   }
-
   if (options.status) {
     conditions.push("a.status = ?");
     params.push(options.status);
   }
-
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-
-  const totalRow = db
+  const totalRow = (await db
     .prepare(
       `
     SELECT COUNT(*) as count FROM articles a ${whereClause}
   `,
     )
-    .get(...params) as { count: number };
-
+    .get(...params)) as {
+    count: number;
+  };
   const limit = options.limit ?? 20;
   const offset = options.offset ?? 0;
-
-  const items = db
+  const items = (await db
     .prepare(
       `
     SELECT a.*, c.name as category_name, c.slug as category_slug
@@ -456,16 +240,14 @@ export function getArticles(
     LIMIT ? OFFSET ?
   `,
     )
-    .all(...params, limit, offset) as unknown as ArticleRecord[];
-
+    .all(...params, limit, offset)) as unknown as ArticleRecord[];
   return {
     items,
     total: totalRow.count,
   };
 }
-
-export function getArticleById(id: number): ArticleRecord | null {
-  const row = getDb()
+export async function getArticleById(id: number): Promise<ArticleRecord | null> {
+  const row = (await getDb()
     .prepare(
       `
     SELECT a.*, c.name as category_name, c.slug as category_slug
@@ -474,12 +256,11 @@ export function getArticleById(id: number): ArticleRecord | null {
     WHERE a.id = ?
   `,
     )
-    .get(id) as ArticleRecord | undefined;
+    .get(id)) as ArticleRecord | undefined;
   return row ?? null;
 }
-
-export function getArticleBySlug(slug: string): ArticleRecord | null {
-  const row = getDb()
+export async function getArticleBySlug(slug: string): Promise<ArticleRecord | null> {
+  const row = (await getDb()
     .prepare(
       `
     SELECT a.*, c.name as category_name, c.slug as category_slug
@@ -488,16 +269,15 @@ export function getArticleBySlug(slug: string): ArticleRecord | null {
     WHERE a.slug = ?
   `,
     )
-    .get(slug) as ArticleRecord | undefined;
+    .get(slug)) as ArticleRecord | undefined;
   return row ?? null;
 }
-
-export function createArticle(
+export async function createArticle(
   data: Omit<ArticleRecord, "id" | "created_at" | "updated_at">,
-): ArticleRecord {
+): Promise<ArticleRecord> {
   const db = getDb();
   const now = new Date().toISOString();
-  const result = db
+  const result = await db
     .prepare(
       `
     INSERT INTO articles (
@@ -524,18 +304,19 @@ export function createArticle(
       now,
       now,
     );
-
-  return getArticleById(Number(result.lastInsertRowid))!;
+  return (await getArticleById(Number(result.lastInsertRowid)))!;
 }
-
-export function updateArticle(id: number, data: Partial<ArticleRecord>): ArticleRecord | null {
+export async function updateArticle(
+  id: number,
+  data: Partial<ArticleRecord>,
+): Promise<ArticleRecord | null> {
   const db = getDb();
-  const existing = getArticleById(id);
+  const existing = await getArticleById(id);
   if (!existing) return null;
-
   const now = new Date().toISOString();
-  db.prepare(
-    `
+  await db
+    .prepare(
+      `
     UPDATE articles SET
       title = COALESCE(?, title),
       slug = COALESCE(?, slug),
@@ -553,90 +334,96 @@ export function updateArticle(id: number, data: Partial<ArticleRecord>): Article
       updated_at = ?
     WHERE id = ?
   `,
-  ).run(
-    data.title ?? null,
-    data.slug ?? null,
-    data.excerpt ?? null,
-    data.content_html ?? null,
-    data.featured_image ?? null,
-    data.category_id ?? null,
-    data.tags ?? null,
-    data.author_name ?? null,
-    data.is_featured !== undefined ? (data.is_featured ? 1 : 0) : null,
-    data.status ?? null,
-    data.seo_title ?? null,
-    data.seo_description ?? null,
-    data.published_at ?? null,
-    now,
-    id,
-  );
-
-  return getArticleById(id);
+    )
+    .run(
+      data.title ?? null,
+      data.slug ?? null,
+      data.excerpt ?? null,
+      data.content_html ?? null,
+      data.featured_image ?? null,
+      data.category_id ?? null,
+      data.tags ?? null,
+      data.author_name ?? null,
+      data.is_featured !== undefined ? (data.is_featured ? 1 : 0) : null,
+      data.status ?? null,
+      data.seo_title ?? null,
+      data.seo_description ?? null,
+      data.published_at ?? null,
+      now,
+      id,
+    );
+  return await getArticleById(id);
 }
-
-export function deleteArticle(id: number): boolean {
-  const result = getDb().prepare("DELETE FROM articles WHERE id = ?").run(id);
+export async function deleteArticle(id: number): Promise<boolean> {
+  const result = await getDb().prepare("DELETE FROM articles WHERE id = ?").run(id);
   return result.changes > 0;
 }
-
 // ----------------------------------------------------
 // LEADS HELPERS
 // ----------------------------------------------------
-export function getLeads(
-  options: { search?: string; status?: string; limit?: number; offset?: number } = {},
-): {
+export async function getLeads(
+  options: {
+    search?: string;
+    status?: string;
+    limit?: number;
+    offset?: number;
+  } = {},
+): Promise<{
   items: LeadRecord[];
   total: number;
-} {
+}> {
   const db = getDb();
   const conditions: string[] = [];
   const params: unknown[] = [];
-
   if (options.search) {
     conditions.push("(fullname LIKE ? OR phone LIKE ? OR email LIKE ?)");
     params.push(`%${options.search}%`, `%${options.search}%`, `%${options.search}%`);
   }
-
   if (options.status && options.status !== "all") {
     conditions.push("status = ?");
     params.push(options.status);
   }
-
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-
-  const totalRow = db
+  const totalRow = (await db
     .prepare(`SELECT COUNT(*) as count FROM leads ${whereClause}`)
-    .get(...params) as { count: number };
+    .get(...params)) as {
+    count: number;
+  };
   const limit = options.limit ?? 20;
   const offset = options.offset ?? 0;
-
-  const items = db
+  const items = (await db
     .prepare(
       `
-    SELECT * FROM leads ${whereClause}
+    SELECT leads.*,
+      (SELECT status FROM lead_deliveries WHERE lead_id = leads.id AND channel = 'telegram') AS delivery_status,
+      (SELECT attempts FROM lead_deliveries WHERE lead_id = leads.id AND channel = 'telegram') AS delivery_attempts,
+      (SELECT last_error FROM lead_deliveries WHERE lead_id = leads.id AND channel = 'telegram') AS delivery_error,
+      (SELECT next_attempt_at FROM lead_deliveries WHERE lead_id = leads.id AND channel = 'telegram') AS delivery_next_attempt_at
+    FROM leads ${whereClause}
     ORDER BY created_at DESC
     LIMIT ? OFFSET ?
   `,
     )
-    .all(...params, limit, offset) as unknown as LeadRecord[];
-
+    .all(...params, limit, offset)) as unknown as LeadRecord[];
   return { items, total: totalRow.count };
 }
-
-export function createLead(data: {
+export async function createLead(data: {
   fullname: string;
   phone: string;
   email?: string;
   program?: string;
   notes?: string;
-}): LeadRecord {
+  consent: true;
+}): Promise<LeadRecord> {
   const db = getDb();
   const now = new Date().toISOString();
-  const result = db
+  const result = await db
     .prepare(
       `
-    INSERT INTO leads (fullname, phone, email, program, notes, status, created_at)
-    VALUES (?, ?, ?, ?, ?, 'new', ?)
+      INSERT INTO leads (
+        fullname, phone, email, program, notes, status, created_at,
+        consent_at, consent_policy_version, consent_source
+      ) VALUES (?, ?, ?, ?, ?, 'new', ?, ?, ?, ?)
   `,
     )
     .run(
@@ -646,8 +433,10 @@ export function createLead(data: {
       data.program ?? null,
       data.notes ?? null,
       now,
+      now,
+      `privacy-notice-${PRIVACY_NOTICE_VERSION}`,
+      "public-lead-form",
     );
-
   return {
     id: Number(result.lastInsertRowid),
     fullname: data.fullname,
@@ -657,37 +446,147 @@ export function createLead(data: {
     notes: data.notes ?? null,
     status: "new",
     created_at: now,
+    consent_at: now,
+    consent_policy_version: `privacy-notice-${PRIVACY_NOTICE_VERSION}`,
+    consent_source: "public-lead-form",
   };
 }
-
-export function updateLeadStatus(
+export async function updateLeadStatus(
   id: number,
   status: "new" | "contacted" | "consulted" | "cancelled",
-): boolean {
-  const result = getDb().prepare("UPDATE leads SET status = ? WHERE id = ?").run(status, id);
+): Promise<boolean> {
+  const result = await getDb().prepare("UPDATE leads SET status = ? WHERE id = ?").run(status, id);
   return result.changes > 0;
 }
-
-export function deleteLead(id: number): boolean {
-  const result = getDb().prepare("DELETE FROM leads WHERE id = ?").run(id);
+export async function deleteLead(id: number): Promise<boolean> {
+  const result = await getDb().prepare("DELETE FROM leads WHERE id = ?").run(id);
   return result.changes > 0;
+}
+export async function createLeadDelivery(leadId: number, channel = "telegram"): Promise<number> {
+  const result = await getDb()
+    .prepare(
+      `INSERT INTO lead_deliveries (lead_id, channel, status, created_at)
+       VALUES (?, ?, 'pending', ?)`,
+    )
+    .run(leadId, channel, new Date().toISOString());
+  return Number(result.lastInsertRowid);
+}
+export async function createLeadWithDelivery(
+  data: Parameters<typeof createLead>[0],
+): Promise<LeadRecord> {
+  return transaction(async () => {
+    const lead = await createLead(data);
+    await createLeadDelivery(lead.id);
+    return lead;
+  });
+}
+export type PendingLeadDelivery = {
+  id: number;
+  lead_id: number;
+  attempts: number;
+  lease_token: string;
+  fullname: string;
+  phone: string;
+  email: string | null;
+  program: string | null;
+  notes: string | null;
+};
+export async function claimLeadDelivery(): Promise<PendingLeadDelivery | null> {
+  const db = getDb();
+  const timestamp = await databaseNow();
+  const now = new Date(timestamp).toISOString();
+  await db.query(
+    `UPDATE lead_deliveries SET status = 'failed', last_error = 'Lease expired at retry limit',
+    lease_token = NULL, lease_until = NULL, next_attempt_at = $1
+    WHERE status = 'processing' AND lease_until <= $1 AND attempts >= 6`,
+    [now],
+  );
+  const result = await db.query(
+    `WITH candidate AS (
+    SELECT id FROM lead_deliveries WHERE channel = 'telegram' AND attempts < 6
+      AND ((status = 'pending' AND (next_attempt_at IS NULL OR next_attempt_at <= $1))
+        OR (status = 'processing' AND lease_until <= $1))
+    ORDER BY id FOR UPDATE SKIP LOCKED LIMIT 1
+  ), claimed AS (
+    UPDATE lead_deliveries d SET status = 'processing', lease_token = $2, lease_until = $3, attempts = attempts + 1
+    FROM candidate c WHERE d.id = c.id RETURNING d.id, d.lead_id, d.attempts, d.lease_token
+  ) SELECT c.*, l.fullname, l.phone, l.email, l.program, l.notes FROM claimed c JOIN leads l ON l.id = c.lead_id`,
+    [now, crypto.randomUUID(), new Date(timestamp + 30000).toISOString()],
+  );
+  return result.rows[0] ?? null;
+}
+export async function finishLeadDelivery(
+  delivery: PendingLeadDelivery,
+  error?: string,
+): Promise<boolean> {
+  const timestamp = await databaseNow();
+  const now = new Date(timestamp).toISOString();
+  const next = new Date(
+    timestamp + Math.min(60, 5 * 2 ** (delivery.attempts - 1)) * 60000,
+  ).toISOString();
+  return (
+    (
+      await getDb()
+        .prepare(
+          `UPDATE lead_deliveries SET status = ?, last_error = ?, sent_at = ?,
+    next_attempt_at = ?, lease_token = NULL, lease_until = NULL WHERE id = ? AND lease_token = ? AND status = 'processing' AND lease_until > ?`,
+        )
+        .run(
+          error ? (delivery.attempts >= 6 ? "failed" : "pending") : "sent",
+          error ?? null,
+          error ? null : now,
+          error ? next : null,
+          delivery.id,
+          delivery.lease_token,
+          now,
+        )
+    ).changes === 1
+  );
+}
+export async function retryLeadDelivery(leadId: number): Promise<boolean> {
+  const timestamp = await databaseNow();
+  const now = new Date(timestamp).toISOString();
+  return (
+    (
+      await getDb()
+        .prepare(
+          `UPDATE lead_deliveries SET status = 'pending', attempts = 0,
+    manual_retries = manual_retries + 1, next_attempt_at = ?, lease_token = NULL, lease_until = NULL
+    WHERE lead_id = ? AND channel = 'telegram' AND status = 'failed' AND manual_retries < 3
+      AND (next_attempt_at IS NULL OR next_attempt_at <= ?)`,
+        )
+        .run(new Date(timestamp + 60000).toISOString(), leadId, now)
+    ).changes === 1
+  );
+}
+export async function purgeExpiredLeads(retentionDays: number): Promise<number> {
+  if (!Number.isInteger(retentionDays) || retentionDays < 1) {
+    throw new Error("retentionDays must be a positive integer");
+  }
+  const cutoff = new Date(Date.now() - retentionDays * 86400000).toISOString();
+  const db = getDb();
+  await db
+    .prepare(
+      "DELETE FROM lead_deliveries WHERE lead_id IN (SELECT id FROM leads WHERE created_at < ?)",
+    )
+    .run(cutoff);
+  const result = await db.prepare("DELETE FROM leads WHERE created_at < ?").run(cutoff);
+  return result.changes;
 }
 // ----------------------------------------------------
 // PAGES HELPERS
 // ----------------------------------------------------
-export function getPages(): PageRecord[] {
-  return getDb()
+export async function getPages(): Promise<PageRecord[]> {
+  return (await getDb()
     .prepare("SELECT * FROM pages ORDER BY published_at DESC")
-    .all() as unknown as PageRecord[];
+    .all()) as unknown as PageRecord[];
 }
-
-export function getPageBySlug(slug: string): PageRecord | null {
-  const row = getDb().prepare("SELECT * FROM pages WHERE slug = ?").get(slug) as
+export async function getPageBySlug(slug: string): Promise<PageRecord | null> {
+  const row = (await getDb().prepare("SELECT * FROM pages WHERE slug = ?").get(slug)) as
     PageRecord | undefined;
   return row ?? null;
 }
-
-export function createPage(data: {
+export async function createPage(data: {
   title: string;
   slug: string;
   excerpt?: string | null;
@@ -697,10 +596,10 @@ export function createPage(data: {
   seo_title?: string | null;
   seo_description?: string | null;
   published_at?: string;
-}): PageRecord {
+}): Promise<PageRecord> {
   const db = getDb();
   const now = new Date().toISOString();
-  const result = db
+  const result = await db
     .prepare(
       `
     INSERT INTO pages (
@@ -722,22 +621,24 @@ export function createPage(data: {
       now,
       now,
     );
-  return getPageById(Number(result.lastInsertRowid))!;
+  return (await getPageById(Number(result.lastInsertRowid)))!;
 }
-
-export function getPageById(id: number): PageRecord | null {
-  const row = getDb().prepare("SELECT * FROM pages WHERE id = ?").get(id) as PageRecord | undefined;
+export async function getPageById(id: number): Promise<PageRecord | null> {
+  const row = (await getDb().prepare("SELECT * FROM pages WHERE id = ?").get(id)) as
+    PageRecord | undefined;
   return row ?? null;
 }
-
-export function updatePage(id: number, data: Partial<PageRecord>): PageRecord | null {
+export async function updatePage(
+  id: number,
+  data: Partial<PageRecord>,
+): Promise<PageRecord | null> {
   const db = getDb();
-  const existing = getPageById(id);
+  const existing = await getPageById(id);
   if (!existing) return null;
-
   const now = new Date().toISOString();
-  db.prepare(
-    `
+  await db
+    .prepare(
+      `
     UPDATE pages SET
       title = COALESCE(?, title),
       slug = COALESCE(?, slug),
@@ -751,60 +652,99 @@ export function updatePage(id: number, data: Partial<PageRecord>): PageRecord | 
       updated_at = ?
     WHERE id = ?
   `,
-  ).run(
-    data.title ?? null,
-    data.slug ?? null,
-    data.excerpt ?? null,
-    data.content_html ?? null,
-    data.featured_image ?? null,
-    data.status ?? null,
-    data.seo_title ?? null,
-    data.seo_description ?? null,
-    data.published_at ?? null,
-    now,
-    id,
-  );
-
-  return getPageById(id);
+    )
+    .run(
+      data.title ?? null,
+      data.slug ?? null,
+      data.excerpt ?? null,
+      data.content_html ?? null,
+      data.featured_image ?? null,
+      data.status ?? null,
+      data.seo_title ?? null,
+      data.seo_description ?? null,
+      data.published_at ?? null,
+      now,
+      id,
+    );
+  return await getPageById(id);
 }
-
-export function deletePage(id: number): boolean {
-  const result = getDb().prepare("DELETE FROM pages WHERE id = ?").run(id);
+export async function deletePage(id: number): Promise<boolean> {
+  const result = await getDb().prepare("DELETE FROM pages WHERE id = ?").run(id);
   return result.changes > 0;
 }
 // ----------------------------------------------------
 // ANALYTICS HELPERS
 // ----------------------------------------------------
-export function recordPageView(path: string): void {
+export async function recordPageView(path: string): Promise<void> {
   const db = getDb();
   const date = new Date().toISOString().split("T")[0];
-  db.prepare(
-    `
+  await db
+    .prepare(
+      `
     INSERT INTO page_views (path, date, views)
     VALUES (?, ?, 1)
-    ON CONFLICT(path, date) DO UPDATE SET views = views + 1
+    ON CONFLICT(path, date) DO UPDATE SET views = page_views.views + 1
   `,
-  ).run(path, date);
+    )
+    .run(path, date);
 }
-
-export function getAnalyticsStats(days: number = 7): {
+export async function recordAnalyticsEvent(
+  name: string,
+  properties: Record<string, string | number>,
+  path?: string,
+  eventId?: string,
+  sessionId?: string,
+): Promise<void> {
+  await getDb()
+    .prepare(
+      `INSERT INTO analytics_events (event_id, session_id, name, properties_json, path, created_at)
+       VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
+    )
+    .run(
+      eventId ?? null,
+      sessionId ?? null,
+      name,
+      JSON.stringify(properties),
+      path ?? null,
+      new Date().toISOString(),
+    );
+}
+export async function purgeExpiredAnalytics(retentionDays: number): Promise<{
+  events: number;
+  pageViews: number;
+}> {
+  if (!Number.isInteger(retentionDays) || retentionDays < 1)
+    throw new Error("retentionDays must be a positive integer");
+  const cutoff = new Date(Date.now() - retentionDays * 86400000).toISOString();
+  const db = getDb();
+  const events = (await db.prepare("DELETE FROM analytics_events WHERE created_at < ?").run(cutoff))
+    .changes;
+  const pageViews = (
+    await db.prepare("DELETE FROM page_views WHERE date < ?").run(cutoff.slice(0, 10))
+  ).changes;
+  return { events, pageViews };
+}
+export async function getAnalyticsStats(days: number = 7): Promise<{
   totalViews: number;
-  topPages: { path: string; views: number }[];
-} {
+  topPages: {
+    path: string;
+    views: number;
+  }[];
+}> {
   const db = getDb();
   const d = new Date();
   d.setDate(d.getDate() - days);
   const cutoffDate = d.toISOString().split("T")[0];
-
-  const totalViews = db
+  const totalViews = (await db
     .prepare(
       `
     SELECT SUM(views) as total FROM page_views WHERE date >= ?
   `,
     )
-    .get(cutoffDate) as { total: number | null };
-
-  const topPages = db
+    .get(cutoffDate)) as {
+    total: number | null;
+  };
+  const topPages = (await db
     .prepare(
       `
     SELECT path, SUM(views) as views
@@ -815,8 +755,10 @@ export function getAnalyticsStats(days: number = 7): {
     LIMIT 10
   `,
     )
-    .all(cutoffDate) as { path: string; views: number }[];
-
+    .all(cutoffDate)) as {
+    path: string;
+    views: number;
+  }[];
   return {
     totalViews: totalViews?.total || 0,
     topPages,

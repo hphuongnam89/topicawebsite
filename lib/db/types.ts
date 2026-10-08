@@ -47,6 +47,9 @@ export interface LeadRecord {
   notes: string | null;
   status: "new" | "contacted" | "consulted" | "cancelled";
   created_at: string;
+  consent_at: string | null;
+  consent_policy_version: string | null;
+  consent_source: string | null;
 }
 
 export interface PageRecord {

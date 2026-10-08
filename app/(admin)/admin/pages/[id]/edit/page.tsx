@@ -4,30 +4,28 @@ import { getPageById } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { PageEditorForm } from "@/components/admin/PageEditorForm";
 import { PageRecord } from "@/lib/db/types";
-
 export default async function EditPagePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 }) {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/admin/login");
   }
-
   const resolvedParams = await params;
   const pageId = parseInt(resolvedParams.id, 10);
   if (isNaN(pageId)) {
     redirect("/admin/pages");
   }
-
-  const pageRecord = getPageById(pageId) as PageRecord | null;
+  const pageRecord = (await getPageById(pageId)) as PageRecord | null;
   if (!pageRecord) {
     redirect("/admin/pages");
   }
-
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <PageEditorForm
         initialData={{
           id: pageRecord.id,

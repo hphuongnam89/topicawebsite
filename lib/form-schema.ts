@@ -49,6 +49,9 @@ export const leadApiSchema = z
     referrer: z.string().trim().max(512).optional(),
     submitted_at: z.string().trim().max(64).optional(),
     device_type: z.enum(["mobile", "desktop"]).optional(),
+    consent: z.literal(true, {
+      error: "Vui lòng đồng ý với chính sách bảo mật",
+    }),
   })
   .strict();
 

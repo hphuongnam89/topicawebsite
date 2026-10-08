@@ -23,6 +23,10 @@ interface LeadItem {
   notes: string | null;
   status: "new" | "contacted" | "consulted" | "cancelled";
   created_at: string;
+  delivery_status: "pending" | "processing" | "sent" | "failed" | null;
+  delivery_attempts: number | null;
+  delivery_error: string | null;
+  delivery_next_attempt_at: string | null;
 }
 
 export default function AdminLeadsPage() {
@@ -67,15 +71,16 @@ export default function AdminLeadsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, selectedStatus]);
 
-  
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
     fetchLeads(search);
   };
 
-  const handleStatusChange = async (id: number, newStatus: "new" | "contacted" | "consulted" | "cancelled") => {
+  const handleStatusChange = async (
+    id: number,
+    newStatus: "new" | "contacted" | "consulted" | "cancelled",
+  ) => {
     setUpdatingId(id);
     try {
       const res = await fetch("/api/admin/leads", {
@@ -87,7 +92,7 @@ export default function AdminLeadsPage() {
       if (!res.ok) throw new Error("Cập nhật trạng thái thất bại.");
 
       setLeads((prev) =>
-        prev.map((lead) => (lead.id === id ? { ...lead, status: newStatus } : lead))
+        prev.map((lead) => (lead.id === id ? { ...lead, status: newStatus } : lead)),
       );
     } catch (err: any) {
       alert(err.message || "Lỗi cập nhật.");
@@ -115,13 +120,41 @@ export default function AdminLeadsPage() {
     }
   };
 
+  const handleDeliveryRetry = async (id: number) => {
+    setUpdatingId(id);
+    try {
+      const res = await fetch("/api/admin/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "retry_delivery" }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Thử lại thất bại.");
+      setMessage({ type: "success", text: "Đã lên lịch gửi lại." });
+      await fetchLeads();
+    } catch (error) {
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Lỗi thử lại." });
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   const exportCSV = () => {
     if (leads.length === 0) {
       alert("Không có dữ liệu để xuất.");
       return;
     }
 
-    const headers = ["ID", "Ho va Ten", "So Dien Thoai", "Email", "Nganh Quan Tam", "Ghi Chu", "Trang Thai", "Ngay Gui"];
+    const headers = [
+      "ID",
+      "Ho va Ten",
+      "So Dien Thoai",
+      "Email",
+      "Nganh Quan Tam",
+      "Ghi Chu",
+      "Trang Thai",
+      "Ngay Gui",
+    ];
     const rows = leads.map((l) => [
       l.id,
       `"${l.fullname}"`,
@@ -153,7 +186,7 @@ export default function AdminLeadsPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -163,16 +196,17 @@ export default function AdminLeadsPage() {
               Tiếp nhận Lead Tư vấn Tuyển sinh
             </h1>
           </div>
-          <p className="mt-1 text-body-sm text-ink-500">
-            Tổng cộng <span className="font-semibold text-ink-900">{total}</span> hồ sơ / yêu cầu đăng ký tư vấn.
+          <p className="text-ink-500 mt-1 text-body-sm">
+            Tổng cộng <span className="text-ink-900 font-semibold">{total}</span> hồ sơ / yêu cầu
+            đăng ký tư vấn.
           </p>
         </div>
 
         <button
           onClick={exportCSV}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs hover:bg-paper transition-all"
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs transition-all hover:bg-paper"
         >
-          <Download className="h-4 w-4 text-ink-500" />
+          <Download className="text-ink-500 h-4 w-4" />
           <span>Xuất file Excel / CSV</span>
         </button>
       </div>
@@ -181,10 +215,10 @@ export default function AdminLeadsPage() {
         <div
           role={message.type === "error" ? "alert" : "status"}
           aria-live="polite"
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -210,7 +244,7 @@ export default function AdminLeadsPage() {
               className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors ${
                 selectedStatus === tab.key
                   ? "bg-brand-700 text-white"
-                  : "bg-white text-ink-600 hover:bg-slate-100 border border-line-200"
+                  : "border border-line-200 bg-white text-ink-600 hover:bg-slate-100"
               }`}
             >
               {tab.label}
@@ -220,14 +254,14 @@ export default function AdminLeadsPage() {
 
         {/* Search Bar */}
         <form onSubmit={handleSearchSubmit} className="relative max-w-md">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-ink-400" />
           <input
             aria-label="Tìm kiếm"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm theo họ tên, SĐT hoặc email..."
-            className="h-10 w-full rounded-lg border border-line-200 bg-white pl-9 pr-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-line-200 bg-white pr-3 pl-9 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
           />
         </form>
       </div>
@@ -236,7 +270,7 @@ export default function AdminLeadsPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="admin-data-table w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="text-ink-500 border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase">
               <tr>
                 <th className="px-6 py-3.5">Họ tên & Liên hệ</th>
                 <th className="px-4 py-3.5">Ngành & Ghi chú</th>
@@ -248,7 +282,7 @@ export default function AdminLeadsPage() {
             <tbody className="divide-y divide-line-100">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-ink-500">
+                  <td colSpan={5} className="text-ink-500 py-12 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
                       <span>Đang tải danh sách lead...</span>
@@ -257,22 +291,24 @@ export default function AdminLeadsPage() {
                 </tr>
               ) : leads.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-ink-500">
+                  <td colSpan={5} className="text-ink-500 py-12 text-center">
                     Chưa có dữ liệu tư vấn nào.
                   </td>
                 </tr>
               ) : (
                 leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={lead.id} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="font-semibold text-ink-950">{lead.fullname}</div>
                       <div className="mt-1 flex flex-col gap-0.5 text-xs text-ink-600">
                         <span className="flex items-center gap-1 font-medium text-brand-700">
                           <Phone className="h-3 w-3" />
-                          <a href={`tel:${lead.phone}`} className="hover:underline">{lead.phone}</a>
+                          <a href={`tel:${lead.phone}`} className="hover:underline">
+                            {lead.phone}
+                          </a>
                         </span>
                         {lead.email && (
-                          <span className="flex items-center gap-1 text-ink-500">
+                          <span className="text-ink-500 flex items-center gap-1">
                             <Mail className="h-3 w-3" />
                             <span>{lead.email}</span>
                           </span>
@@ -281,12 +317,12 @@ export default function AdminLeadsPage() {
                     </td>
 
                     <td className="px-4 py-4">
-                      <div className="flex items-center gap-1.5 font-medium text-ink-900">
+                      <div className="text-ink-900 flex items-center gap-1.5 font-medium">
                         <BookOpen className="h-3.5 w-3.5 text-ink-400" />
                         <span>{lead.program || "Chưa chọn ngành"}</span>
                       </div>
                       {lead.notes && (
-                        <p className="mt-1 text-xs text-ink-500 max-w-xs">{lead.notes}</p>
+                        <p className="text-ink-500 mt-1 max-w-xs text-xs">{lead.notes}</p>
                       )}
                     </td>
 
@@ -296,14 +332,14 @@ export default function AdminLeadsPage() {
                         value={lead.status}
                         disabled={updatingId === lead.id}
                         onChange={(e) => handleStatusChange(lead.id, e.target.value as any)}
-                        className={`rounded-lg border px-2.5 py-1 text-xs font-semibold focus:outline-none transition-colors ${
+                        className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors focus:outline-none ${
                           lead.status === "new"
-                            ? "bg-amber-50 text-amber-800 border-amber-300"
+                            ? "border-amber-300 bg-amber-50 text-amber-800"
                             : lead.status === "contacted"
-                            ? "bg-blue-50 text-blue-800 border-blue-300"
-                            : lead.status === "consulted"
-                            ? "bg-emerald-50 text-emerald-800 border-emerald-300"
-                            : "bg-slate-100 text-slate-600 border-slate-300"
+                              ? "border-blue-300 bg-blue-50 text-blue-800"
+                              : lead.status === "consulted"
+                                ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                                : "border-slate-300 bg-slate-100 text-slate-600"
                         }`}
                       >
                         <option value="new">Mới</option>
@@ -311,17 +347,49 @@ export default function AdminLeadsPage() {
                         <option value="consulted">Đã tư vấn</option>
                         <option value="cancelled">Hủy</option>
                       </select>
+                      <div className="mt-2 text-xs text-ink-600">
+                        Telegram:{" "}
+                        {lead.delivery_status
+                          ? {
+                              pending: "Chờ gửi",
+                              processing: "Đang gửi",
+                              sent: "Đã gửi",
+                              failed: "Gửi thất bại",
+                            }[lead.delivery_status]
+                          : "Chưa có delivery"}{" "}
+                        ({lead.delivery_attempts ?? 0} lượt)
+                        {lead.delivery_error && (
+                          <p className="mt-1 max-w-xs whitespace-normal text-error">
+                            {lead.delivery_error}
+                          </p>
+                        )}
+                        {lead.delivery_next_attempt_at && (
+                          <p>
+                            Thử lại sau:{" "}
+                            {new Date(lead.delivery_next_attempt_at).toLocaleString("vi-VN")}
+                          </p>
+                        )}
+                        {lead.delivery_status === "failed" && (
+                          <button
+                            className="mt-1 underline"
+                            disabled={updatingId === lead.id}
+                            onClick={() => handleDeliveryRetry(lead.id)}
+                          >
+                            Gửi lại Telegram
+                          </button>
+                        )}
+                      </div>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500">
+                    <td className="text-ink-500 px-4 py-4 text-xs whitespace-nowrap">
                       {new Date(lead.created_at).toLocaleString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => handleDelete(lead.id, lead.fullname)}
                         disabled={deletingId === lead.id}
-                        className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                        className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                         title="Xóa lead"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -336,22 +404,22 @@ export default function AdminLeadsPage() {
 
         {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-line-200 px-6 py-3 bg-slate-50">
-            <span className="text-xs text-ink-500">
+          <div className="flex items-center justify-between border-t border-line-200 bg-slate-50 px-6 py-3">
+            <span className="text-ink-500 text-xs">
               Trang {page} / {totalPages}
             </span>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded border border-line-200 bg-white px-3 py-1 text-xs font-semibold text-ink-700 disabled:opacity-50"
+                className="text-ink-700 rounded border border-line-200 bg-white px-3 py-1 text-xs font-semibold disabled:opacity-50"
               >
                 Trước
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="rounded border border-line-200 bg-white px-3 py-1 text-xs font-semibold text-ink-700 disabled:opacity-50"
+                className="text-ink-700 rounded border border-line-200 bg-white px-3 py-1 text-xs font-semibold disabled:opacity-50"
               >
                 Sau
               </button>

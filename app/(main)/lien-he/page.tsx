@@ -34,8 +34,8 @@ export default function ContactPage() {
                   Nhận thông tin đúng theo hồ sơ của bạn
                 </h2>
                 <p className="mt-4 text-body leading-7 text-ink-600">
-                  Khi liên hệ, bạn nên chuẩn bị văn bằng cao nhất, ngành quan tâm và thời gian có thể
-                  học để đội ngũ tư vấn đối chiếu chính xác.
+                  Khi liên hệ, bạn nên chuẩn bị văn bằng cao nhất, ngành quan tâm và thời gian có
+                  thể học để đội ngũ tư vấn đối chiếu chính xác.
                 </p>
 
                 <div className="mt-8 space-y-4">

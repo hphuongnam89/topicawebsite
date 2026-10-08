@@ -1,0 +1,2 @@
+export const PRIVACY_NOTICE_VERSION = "2026-09-04";
+export const PRIVACY_NOTICE_UPDATED_AT = "04/09/2026";

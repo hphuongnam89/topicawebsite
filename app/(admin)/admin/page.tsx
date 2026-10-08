@@ -15,21 +15,17 @@ import {
   PlusCircle,
   BarChart,
 } from "lucide-react";
-
 export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/admin/login");
   }
-
-  const totalLeads = getLeads().total;
-  const { items: recentLeads } = getLeads({ limit: 5 });
-  const { items: recentArticles, total: totalArticles } = getArticles({ limit: 5 });
-  const categories = getCategories();
-
-  const newLeadsCount = getLeads({ status: "new" }).total;
-  const analytics = getAnalyticsStats(7); // Last 7 days
-
+  const totalLeads = (await getLeads()).total;
+  const { items: recentLeads } = await getLeads({ limit: 5 });
+  const { items: recentArticles, total: totalArticles } = await getArticles({ limit: 5 });
+  const categories = await getCategories();
+  const newLeadsCount = (await getLeads({ status: "new" })).total;
+  const analytics = await getAnalyticsStats(7); // Last 7 days
   const statCards = [
     {
       title: "Lượt truy cập",
@@ -64,30 +60,30 @@ export default async function AdminDashboardPage() {
       href: "/admin/articles/categories",
     },
   ];
-
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+    <div className="mx-auto max-w-7xl space-y-8 p-6 lg:p-10">
       {/* Header Greeting */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
             Bảng điều khiển Quản trị
           </h1>
-          <p className="mt-1 text-body-sm text-ink-500">
-            Xin chào, <span className="font-semibold text-brand-700">{user.name}</span>. Chúc bạn một ngày làm việc hiệu quả!
+          <p className="text-ink-500 mt-1 text-body-sm">
+            Xin chào, <span className="font-semibold text-brand-700">{user.name}</span>. Chúc bạn
+            một ngày làm việc hiệu quả!
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/admin/homepage"
-            className="inline-flex items-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs hover:bg-paper transition-all"
+            className="inline-flex items-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs transition-all hover:bg-paper"
           >
-            <ImageIcon className="h-4 w-4 text-ink-500" />
+            <ImageIcon className="text-ink-500 h-4 w-4" />
             <span>Sửa Hero Banner</span>
           </Link>
           <Link
             href="/admin/articles/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 transition-all"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
           >
             <PlusCircle className="h-4 w-4" />
             <span>Đăng bài mới</span>
@@ -106,14 +102,16 @@ export default async function AdminDashboardPage() {
               className="group relative overflow-hidden rounded-xl border border-line-200 bg-white p-5 shadow-xs transition-all hover:border-brand-300 hover:shadow-md"
             >
               <div className="flex items-center justify-between">
-                <span className="text-body-sm font-medium text-ink-500">{card.title}</span>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.color} shadow-xs`}>
+                <span className="text-ink-500 text-body-sm font-medium">{card.title}</span>
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.color} shadow-xs`}
+                >
                   <Icon className="h-5 w-5" />
                 </div>
               </div>
               <div className="mt-4 flex items-baseline justify-between">
                 <span className="font-display text-3xl font-bold text-ink-950">{card.value}</span>
-                <span className="text-xs font-medium text-ink-500">{card.total}</span>
+                <span className="text-ink-500 text-xs font-medium">{card.total}</span>
               </div>
             </Link>
           );
@@ -145,27 +143,35 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               recentLeads.map((lead) => (
-                <div key={lead.id} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/70 transition-colors">
+                <div
+                  key={lead.id}
+                  className="flex items-center justify-between p-4 px-6 transition-colors hover:bg-slate-50/70"
+                >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-ink-900">{lead.fullname}</span>
+                      <span className="text-ink-900 font-semibold">{lead.fullname}</span>
                       <span
                         className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                           lead.status === "new"
                             ? "bg-amber-100 text-amber-800"
                             : lead.status === "contacted"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-emerald-100 text-emerald-800"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-emerald-100 text-emerald-800"
                         }`}
                       >
-                        {lead.status === "new" ? "Mới" : lead.status === "contacted" ? "Đã liên hệ" : "Đã tư vấn"}
+                        {lead.status === "new"
+                          ? "Mới"
+                          : lead.status === "contacted"
+                            ? "Đã liên hệ"
+                            : "Đã tư vấn"}
                       </span>
                     </div>
-                    <p className="text-xs text-ink-500">
-                      SĐT: <span className="font-medium text-ink-700">{lead.phone}</span> • Ngành: {lead.program || "Chưa chọn"}
+                    <p className="text-ink-500 text-xs">
+                      SĐT: <span className="text-ink-700 font-medium">{lead.phone}</span> • Ngành:{" "}
+                      {lead.program || "Chưa chọn"}
                     </p>
                   </div>
-                  <span className="text-xs text-ink-400 whitespace-nowrap">
+                  <span className="text-xs whitespace-nowrap text-ink-400">
                     {new Date(lead.created_at).toLocaleDateString("vi-VN")}
                   </span>
                 </div>
@@ -197,16 +203,19 @@ export default async function AdminDashboardPage() {
               </div>
             ) : (
               recentArticles.map((art) => (
-                <div key={art.id} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/70 transition-colors">
-                  <div className="space-y-1 min-w-0 pr-4">
+                <div
+                  key={art.id}
+                  className="flex items-center justify-between p-4 px-6 transition-colors hover:bg-slate-50/70"
+                >
+                  <div className="min-w-0 space-y-1 pr-4">
                     <Link
                       href={`/admin/articles/${art.id}/edit`}
-                      className="block truncate font-semibold text-ink-900 hover:text-brand-700 transition-colors"
+                      className="text-ink-900 block truncate font-semibold transition-colors hover:text-brand-700"
                     >
                       {art.title}
                     </Link>
-                    <div className="flex items-center gap-2 text-xs text-ink-500">
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 font-medium">
+                    <div className="text-ink-500 flex items-center gap-2 text-xs">
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 font-medium text-slate-700">
                         {art.category_name || "Chưa phân loại"}
                       </span>
                       <span>•</span>
@@ -231,7 +240,9 @@ export default async function AdminDashboardPage() {
         <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
           <div className="flex items-center gap-2">
             <BarChart className="h-5 w-5 text-indigo-600" />
-            <h2 className="font-display text-lg font-bold text-ink-950">Top Trang Xem Nhiều (7 ngày qua)</h2>
+            <h2 className="font-display text-lg font-bold text-ink-950">
+              Top Trang Xem Nhiều (7 ngày qua)
+            </h2>
           </div>
         </div>
 
@@ -242,10 +253,18 @@ export default async function AdminDashboardPage() {
             </div>
           ) : (
             analytics.topPages.map((page, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 px-6 hover:bg-slate-50/70 transition-colors">
+              <div
+                key={idx}
+                className="flex items-center justify-between p-4 px-6 transition-colors hover:bg-slate-50/70"
+              >
                 <div className="flex items-center gap-4">
-                  <span className="text-body-sm font-bold text-ink-400 w-4">{idx + 1}</span>
-                  <a href={page.path} target="_blank" rel="noreferrer" className="text-body-sm font-medium text-ink-900 hover:text-brand-700 transition-colors">
+                  <span className="w-4 text-body-sm font-bold text-ink-400">{idx + 1}</span>
+                  <a
+                    href={page.path}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-ink-900 text-body-sm font-medium transition-colors hover:text-brand-700"
+                  >
                     {page.path}
                   </a>
                 </div>
