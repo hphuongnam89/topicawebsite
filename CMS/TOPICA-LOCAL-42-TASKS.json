@@ -1,0 +1,710 @@
+{
+  "name": "TOPICA CMS local-agent decomposition (proposal, not executed)",
+  "source_files": [
+    "README(1).md",
+    "TASK-BOARD.md"
+  ],
+  "status": "DRAFT_NOT_DISPATCHED",
+  "note": "This is a proposed microtask decomposition from the two uploaded coordinator documents, not a substitute for the CMS master spec, 10 PHASE files, or repo inspection. Only Integrator should update canonical board/manifest.",
+  "required_external_specs": [
+    "CMS-DATABASE-ADMIN-PLAN.md",
+    "PHASE-00-BASELINE-CONTRACTS.md through PHASE-09-ACCEPTANCE-CUTOVER.md",
+    "AGENTS.md",
+    "RTK.md",
+    "AGENT-HANDOFF.md",
+    "EXECUTION-MANIFEST.json",
+    "actual source repository/snapshots"
+  ],
+  "dispatch_policy": {
+    "max_concurrent_models": 1,
+    "agent_max_active_tasks": 1,
+    "suggested_initial_context_tokens": 8192,
+    "context_scale_if_stable": 16384,
+    "max_files_per_agent_packet_initially": 3,
+    "human_approval_before_content_publish_or_staging_import_or_release": true,
+    "never_modify_other_agents_files": true
+  },
+  "tasks": [
+    {
+      "task_id": "00.1",
+      "phase": "P00",
+      "title": "Ki\u1ec3m k\u00ea checkout v\u00e0 thay \u0111\u1ed5i local",
+      "instructions": "Ki\u1ec3m tra c\u1ea5u tr\u00fac repo, stack/phi\u00ean b\u1ea3n, git status/diff, script test; ch\u1ec9 \u0111\u1ecdc, kh\u00f4ng reset/clean.",
+      "acceptance_evidence": "B\u00e1o c\u00e1o baseline, danh m\u1ee5c thay \u0111\u1ed5i ph\u1ea3i gi\u1eef, l\u1ec7nh test c\u00f3 th\u1eadt.",
+      "depends_on": [],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "CMS/handoff/00.1.md"
+      ],
+      "contract_version": "P00-baseline"
+    },
+    {
+      "task_id": "00.2",
+      "phase": "P00",
+      "title": "\u0110\u1ed1i chi\u1ebfu \u0111\u1eb7c t\u1ea3 ngu\u1ed3n",
+      "instructions": "T\u00ecm v\u00e0 \u0111\u1ecdc CMS-DATABASE-ADMIN-PLAN.md, PHASE-00..09, AGENTS.md, RTK.md v\u00e0 manifest; ghi y\u00eau c\u1ea7u thi\u1ebfu/m\u00e2u thu\u1eabn.",
+      "acceptance_evidence": "Ma tr\u1eadn y\u00eau c\u1ea7u v\u00e0 danh s\u00e1ch BLOCKED n\u1ebfu t\u1ec7p ngu\u1ed3n v\u1eafng.",
+      "depends_on": [
+        "00.1"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "CMS/handoff/00.2.md"
+      ],
+      "contract_version": "P00-baseline"
+    },
+    {
+      "task_id": "00.3",
+      "phase": "P00",
+      "title": "Kh\u00f3a l\u1ef1a ch\u1ecdn CMS v\u00e0 contracts",
+      "instructions": "Tr\u00ecnh c\u00e1c quy\u1ebft \u0111\u1ecbnh c\u1ea7n ng\u01b0\u1eddi duy\u1ec7t: CMS duy nh\u1ea5t, collections, API/errors, quy\u1ec1n, revision, pagination, storage, routes; ch\u1ed1t contract version sau khi duy\u1ec7t.",
+      "acceptance_evidence": "Quy\u1ebft \u0111\u1ecbnh CMS \u0111\u01b0\u1ee3c duy\u1ec7t + contract version; kh\u00f4ng t\u1ef1 ch\u1ecdn Payload/custom.",
+      "depends_on": [
+        "00.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": true,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "CMS/handoff/00.3.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "00.4",
+      "phase": "P00",
+      "title": "Ownership, fixtures v\u00e0 baseline gate",
+      "instructions": "G\u00e1n owner theo path, fixture/API mocks, test harness, baseline commit an to\u00e0n theo x\u00e1c nh\u1eadn c\u1ee7a t\u00e1c gi\u1ea3; c\u1eadp nh\u1eadt board/manifest ph\u1ed1i h\u1ee3p.",
+      "acceptance_evidence": "Baseline/test smoke c\u00f3 log, b\u1ea3ng ownership, gate P00 \u0111\u01b0\u1ee3c reviewer x\u00e1c nh\u1eadn.",
+      "depends_on": [
+        "00.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": true,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "CMS/handoff/00.4.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "01.1",
+      "phase": "P01",
+      "title": "PostgreSQL dev configuration",
+      "instructions": "T\u1ea1o c\u1ea5u h\u00ecnh DB theo stack th\u1ef1c, env.example kh\u00f4ng ch\u1ee9a secret, health/readiness v\u00e0 test k\u1ebft n\u1ed1i.",
+      "acceptance_evidence": "DB dev k\u1ebft n\u1ed1i \u0111\u01b0\u1ee3c; kh\u00f4ng commit credential.",
+      "depends_on": [
+        "00.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        ".env.example",
+        "lib/db/config.ts",
+        "docker-compose.yml",
+        "CMS/handoff/01.1.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "01.2",
+      "phase": "P01",
+      "title": "Schema c\u01a1 s\u1edf",
+      "instructions": "Tri\u1ec3n khai schema theo contract c\u00f3 phi\u00ean b\u1ea3n, index/foreign key v\u00e0 tr\u1ea1ng th\u00e1i revision; ch\u1ec9 schema owner ch\u1ec9nh SQL.",
+      "acceptance_evidence": "Migration/schema diff review \u0111\u01b0\u1ee3c; constraints kh\u1edbp spec.",
+      "depends_on": [
+        "01.1"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "migrations/001_initial_schema.sql",
+        "lib/db/schema.ts",
+        "CMS/handoff/01.2.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "01.3",
+      "phase": "P01",
+      "title": "Repositories v\u00e0 persistence",
+      "instructions": "T\u1ea1o t\u1ea7ng truy c\u1eadp d\u1eef li\u1ec7u cho c\u00e1c \u0111\u1ed1i t\u01b0\u1ee3ng trong contract, CRUD/transaction qua m\u1ed9t interface \u1ed5n \u0111\u1ecbnh.",
+      "acceptance_evidence": "Unit/integration test CRUD + rollback d\u00f9ng DB test.",
+      "depends_on": [
+        "01.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "lib/repositories/**",
+        "__tests__/repositories/**",
+        "CMS/handoff/01.3.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "01.4",
+      "phase": "P01",
+      "title": "Ki\u1ec3m tra migration v\u00e0 chuy\u1ec3n d\u1eef li\u1ec7u v\u1eadn h\u00e0nh",
+      "instructions": "Ki\u1ec3m th\u1eed migration l\u00ean/xu\u1ed1ng khi cho ph\u00e9p, seed/fixture, b\u1ea3o to\u00e0n d\u1eef li\u1ec7u v\u1eadn h\u00e0nh hi\u1ec7n c\u00f3 theo spec.",
+      "acceptance_evidence": "Migration clean DB pass; regression kh\u00f4ng m\u1ea5t d\u1eef li\u1ec7u; gate DB P01.",
+      "depends_on": [
+        "01.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "migrations/**",
+        "lib/db/seed.ts",
+        "__tests__/data/migration-smoke.test.ts",
+        "CMS/handoff/01.4.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "02.1",
+      "phase": "P02",
+      "title": "Policy engine \u0111\u1ed9c l\u1eadp",
+      "instructions": "Vi\u1ebft rules role/action/resource v\u00e0 transition tr\u00ean fixture theo contract P00; deny-by-default.",
+      "acceptance_evidence": "Test matrix vai tr\u00f2/h\u00e0nh \u0111\u1ed9ng g\u1ed3m tr\u01b0\u1eddng h\u1ee3p b\u1ecb t\u1eeb ch\u1ed1i.",
+      "depends_on": [
+        "00.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": [
+        "lib/auth/policy.ts",
+        "__tests__/security/policy.test.ts",
+        "CMS/handoff/02.1.md"
+      ],
+      "contract_version": "v1.0-custom-cms"
+    },
+    {
+      "task_id": "02.2",
+      "phase": "P02",
+      "title": "Auth v\u00e0 service authorization",
+      "instructions": "N\u1ed1i authentication/session v\u1edbi DB th\u1eadt v\u00e0 policy engine; b\u1ea3o v\u1ec7 service/API th\u1ed1ng nh\u1ea5t.",
+      "acceptance_evidence": "Test \u0111\u0103ng nh\u1eadp/\u0111\u0103ng xu\u1ea5t/quy\u1ec1n truy c\u1eadp th\u1ef1c t\u1ebf.",
+      "depends_on": [
+        "02.1",
+        "01.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "COMPLETED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "02.3",
+      "phase": "P02",
+      "title": "Workflow revision/review/publish",
+      "instructions": "Tri\u1ec3n khai state transition v\u00e0 quy\u1ec1n ph\u00ea duy\u1ec7t, draft t\u00e1ch public, optimistic lock theo contract.",
+      "acceptance_evidence": "Test kh\u00f4ng th\u1ec3 publish b\u1ea3n nh\u00e1p tr\u00e1i quy\u1ec1n; conflict revision.",
+      "depends_on": [
+        "02.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "READY",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "02.4",
+      "phase": "P02",
+      "title": "Preview + negative security tests",
+      "instructions": "B\u1ea3o v\u1ec7 preview/import/media/lead theo policy chung, kh\u00f4ng t\u1ef1 ki\u1ec3m tra quy\u1ec1n \u1edf frontend.",
+      "acceptance_evidence": "Test 401/403/role-matrix v\u00e0 preview kh\u00f4ng r\u00f2 d\u1eef li\u1ec7u.",
+      "depends_on": [
+        "02.3"
+      ],
+      "preferred_model": "ornith1.5:9b",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "03.1",
+      "phase": "P03",
+      "title": "Design tokens v\u00e0 admin shell",
+      "instructions": "B\u1ea3o t\u1ed3n nh\u1eadn di\u1ec7n TOPICA; \u0111\u1ecbnh ngh\u0129a token v\u00e0 shell navy/burgundy theo spec, kh\u00f4ng thay frontend public.",
+      "acceptance_evidence": "UI shell hi\u1ec3n th\u1ecb tr\u00ean mock; screenshot so v\u1edbi m\u1eabu \u0111\u01b0\u1ee3c duy\u1ec7t.",
+      "depends_on": [
+        "00.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "03.2",
+      "phase": "P03",
+      "title": "Shared components",
+      "instructions": "X\u00e2y button, form, table, modal, loading, error reusable; tr\u00e1nh t\u1ea1o 2 design systems.",
+      "acceptance_evidence": "Story/mock v\u00e0 unit test component c\u01a1 b\u1ea3n.",
+      "depends_on": [
+        "03.1"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "03.3",
+      "phase": "P03",
+      "title": "Admin navigation/pages mock",
+      "instructions": "G\u1eafn route/layout admin v\u00e0 mock d\u1eef li\u1ec7u theo contract; ch\u01b0a tuy\u00ean b\u1ed1 \u0111\u00e3 c\u00f3 CMS th\u1eadt.",
+      "acceptance_evidence": "Navigation v\u00e0 mock flows ho\u1ea1t \u0111\u1ed9ng, kh\u00f4ng c\u1ea7n DB.",
+      "depends_on": [
+        "03.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "03.4",
+      "phase": "P03",
+      "title": "Responsive/accessibility review",
+      "instructions": "Ki\u1ec3m tra m\u00e0n h\u00ecnh ch\u00ednh, keyboard/focus, tr\u1ea1ng th\u00e1i l\u1ed7i v\u00e0 screenshot \u0111\u1ed1i chi\u1ebfu thi\u1ebft k\u1ebf.",
+      "acceptance_evidence": "Checklist UI + \u1ea3nh \u0111\u1ed1i chi\u1ebfu + l\u1ed7i c\u00f2n t\u1ed3n \u0111\u1ecdng.",
+      "depends_on": [
+        "03.3"
+      ],
+      "preferred_model": "qwen2.5vl:7b",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "04.1",
+      "phase": "P04",
+      "title": "Storage adapter",
+      "instructions": "Ch\u1ecdn adapter theo quy\u1ebft \u0111\u1ecbnh P00, h\u1ed7 tr\u1ee3 put/get/delete v\u00e0 mock test; kh\u00f4ng gi\u1ea3 \u0111\u1ecbnh S3/local.",
+      "acceptance_evidence": "Adapter unit tests + config m\u1eabu kh\u00f4ng secret.",
+      "depends_on": [
+        "00.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "04.2",
+      "phase": "P04",
+      "title": "Media service + persistence",
+      "instructions": "X\u1eed l\u00fd upload, validate lo\u1ea1i/size/quy\u1ec1n, metadata DB v\u00e0 \u0111\u01b0\u1eddng d\u1eabn b\u1ec1n v\u1eefng.",
+      "acceptance_evidence": "Integration test upload/get/delete + unauthorized.",
+      "depends_on": [
+        "04.1",
+        "01.4",
+        "02.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "04.3",
+      "phase": "P04",
+      "title": "Outbox/job/retry",
+      "instructions": "T\u1ea1o c\u01a1 ch\u1ebf job/event theo contract, idempotency, retry v\u00e0 failure log kh\u00f4ng l\u1ed9 th\u00f4ng tin.",
+      "acceptance_evidence": "Test retry/idempotency + x\u1eed l\u00fd l\u1ed7i d\u1ecbch v\u1ee5.",
+      "depends_on": [
+        "04.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "04.4",
+      "phase": "P04",
+      "title": "Runbook v\u00e0 restore smoke",
+      "instructions": "So\u1ea1n health/backup/restore runbook; ch\u1ea1y restore th\u1eed trong m\u00f4i tr\u01b0\u1eddng th\u1eed nghi\u1ec7m kh\u00f4ng ph\u00e1 d\u1eef li\u1ec7u th\u1eadt.",
+      "acceptance_evidence": "B\u1eb1ng ch\u1ee9ng restore test + v\u1eadn h\u00e0nh staging; gate P04.",
+      "depends_on": [
+        "04.3"
+      ],
+      "preferred_model": "gemma4:e4b-it-qat",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "05.1",
+      "phase": "P05",
+      "title": "Article/page/taxonomy service",
+      "instructions": "Tri\u1ec3n khai model/API cho article, page, taxonomy theo schema v\u00e0 contract \u0111\u00e3 duy\u1ec7t.",
+      "acceptance_evidence": "API tests CRUD/validation v\u00e0 scope d\u1eef li\u1ec7u.",
+      "depends_on": [
+        "01.4",
+        "02.4",
+        "04.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "05.2",
+      "phase": "P05",
+      "title": "Revision/draft/review service",
+      "instructions": "\u0110i\u1ec1u ph\u1ed1i revision v\u00e0 review v\u1edbi policy trung t\u00e2m, tr\u1ea1ng th\u00e1i c\u00f4ng khai t\u00e1ch nh\u00e1p.",
+      "acceptance_evidence": "Transaction/revision conflict tests.",
+      "depends_on": [
+        "05.1",
+        "02.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "05.3",
+      "phase": "P05",
+      "title": "Editorial admin UI",
+      "instructions": "L\u00e0m list/search/filter, form editor, revision history v\u00e0 media picker b\u1eb1ng shared components.",
+      "acceptance_evidence": "UI tests tr\u00ean fixture v\u00e0 API th\u1eadt, \u1ea3nh minh ch\u1ee9ng.",
+      "depends_on": [
+        "05.1",
+        "03.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "05.4",
+      "phase": "P05",
+      "title": "Publish orchestration",
+      "instructions": "T\u00edch h\u1ee3p transaction publish, event/cache hook; kh\u00f4ng cho UI t\u1ef1 quy\u1ebft \u0111\u1ecbnh quy\u1ec1n.",
+      "acceptance_evidence": "Publish/rollback/unauthorized integration tests.",
+      "depends_on": [
+        "05.2",
+        "05.3",
+        "04.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "05.5",
+      "phase": "P05",
+      "title": "Gate editorial CMS",
+      "instructions": "R\u00e0 test t\u1ed5ng h\u1ee3p editor/review/publish, audit log v\u00e0 l\u1ed7i t\u1ed3n; kh\u00f4ng d\u00f9ng mock pass \u0111\u1ec3 x\u00e1c nh\u1eadn production.",
+      "acceptance_evidence": "Evidence pack, reviewer VERIFIED P05.",
+      "depends_on": [
+        "05.4"
+      ],
+      "preferred_model": "ornith1.5:9b",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "06.1",
+      "phase": "P06",
+      "title": "Schema v\u00e0 form ch\u01b0\u01a1ng tr\u00ecnh/ng\u00e0nh",
+      "instructions": "B\u00e1m domain contract \u0111\u00e3 ph\u00ea duy\u1ec7t; tri\u1ec3n khai c\u00e1c tr\u01b0\u1eddng d\u1eef li\u1ec7u ch\u01b0\u01a1ng tr\u00ecnh/ng\u00e0nh t\u01b0\u01a1ng \u1ee9ng.",
+      "acceptance_evidence": "CRUD tests + validation + ph\u00e2n quy\u1ec1n.",
+      "depends_on": [
+        "05.5"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "06.2",
+      "phase": "P06",
+      "title": "Ch\u00ednh s\u00e1ch/t\u00e0i li\u1ec7u li\u00ean quan",
+      "instructions": "Th\u00eam metadata, li\u00ean k\u1ebft policy/documents v\u00e0 media quy\u1ec1n h\u1ea1n; kh\u00f4ng t\u1ef1 t\u1ea1o n\u1ed9i dung h\u1ecdc thu\u1eadt.",
+      "acceptance_evidence": "Test li\u00ean k\u1ebft/permissions + empty/unknown content preserved.",
+      "depends_on": [
+        "06.1"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "06.3",
+      "phase": "P06",
+      "title": "Menu/homepage/configuration",
+      "instructions": "X\u00e2y qu\u1ea3n tr\u1ecb c\u1ea5u h\u00ecnh trang ch\u1ee7 v\u00e0 menu theo contract, public ch\u1ec9 \u0111\u1ecdc approved revision.",
+      "acceptance_evidence": "UI/API smoke; test kh\u00f4ng hi\u1ec3n th\u1ecb b\u1ea3n nh\u00e1p.",
+      "depends_on": [
+        "06.2",
+        "03.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "06.4",
+      "phase": "P06",
+      "title": "Lead intake v\u00e0 domain gate",
+      "instructions": "Tri\u1ec3n khai flow lead theo rule b\u1ea3o m\u1eadt/PII c\u1ee7a spec, ki\u1ec3m th\u1eed service v\u00e0 bi\u1ec3u m\u1eabu.",
+      "acceptance_evidence": "Validation/security tests + gate P06; kh\u00f4ng \u0111\u01b0a PII v\u00e0o log.",
+      "depends_on": [
+        "06.3",
+        "02.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "07.1",
+      "phase": "P07",
+      "title": "Snapshot inventory/manifest read-only",
+      "instructions": "Qu\u00e9t snapshot WordPress \u0111\u00e3 l\u01b0u, inventory URL/content/media, hash, provenance, missing flags.",
+      "acceptance_evidence": "Manifest ngu\u1ed3n + b\u00e1o c\u00e1o missing; kh\u00f4ng g\u1ecdi API WordPress \u0111\u1ec3 l\u1ea5p d\u1eef li\u1ec7u.",
+      "depends_on": [
+        "00.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "07.2",
+      "phase": "P07",
+      "title": "Parser v\u00e0 mapping",
+      "instructions": "X\u00e2y parser/diff t\u1eeb snapshot \u0111\u1ebfn schema \u0111\u00edch, c\u1ea3nh b\u00e1o n\u1ed9i dung thi\u1ebfu ho\u1eb7c m\u01a1 h\u1ed3.",
+      "acceptance_evidence": "Unit tests parser, mapping report, kh\u00f4ng t\u1ef1 \u0111i\u1ec1n h\u1ecdc ph\u00ed/ng\u00e0nh.",
+      "depends_on": [
+        "07.1",
+        "01.2"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "07.3",
+      "phase": "P07",
+      "title": "Importer dry-run/idempotency",
+      "instructions": "Tri\u1ec3n khai dry-run, dedup/idempotent, skip/rollback report; apply ch\u1ec9 khi schema v\u00e0 service s\u1eb5n s\u00e0ng.",
+      "acceptance_evidence": "Ch\u1ea1y 2 l\u1ea7n kh\u00f4ng t\u1ea1o b\u1ea3n ghi tr\u00f9ng; dry-run kh\u00f4ng ghi public.",
+      "depends_on": [
+        "07.2",
+        "05.5",
+        "06.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "07.4",
+      "phase": "P07",
+      "title": "Staging import v\u00e0 human content review",
+      "instructions": "Ch\u1ea1y tr\u00ean staging theo ph\u00ea duy\u1ec7t, so s\u00e1nh ngu\u1ed3n/\u0111\u00edch, \u0111\u01b0a n\u1ed9i dung h\u1ecdc thu\u1eadt v\u00e0o h\u00e0ng ch\u1edd ng\u01b0\u1eddi c\u00f3 th\u1ea9m quy\u1ec1n.",
+      "acceptance_evidence": "B\u00e1o c\u00e1o parity, danh s\u00e1ch WAITING_CONTENT, kh\u00f4ng t\u1ef1 publish.",
+      "depends_on": [
+        "07.3",
+        "04.4"
+      ],
+      "preferred_model": "ornith1.5:9b",
+      "requires_human_approval": true,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "08.1",
+      "phase": "P08",
+      "title": "Public read adapter",
+      "instructions": "Frontend \u0111\u1ecdc approved CMS API theo contract, mock fallback ch\u1ec9 ph\u1ee5c v\u1ee5 test ch\u1ee9 kh\u00f4ng thay n\u1ed9i dung thi\u1ebfu.",
+      "acceptance_evidence": "Contract tests public API, kh\u00f4ng l\u1ed9 draft/preview.",
+      "depends_on": [
+        "05.5",
+        "06.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "08.2",
+      "phase": "P08",
+      "title": "Routing v\u00e0 public templates",
+      "instructions": "N\u1ed1i article/page/program/home/menu v\u00e0o template TOPICA hi\u1ec7n c\u00f3, gi\u1eef layout/nh\u1eadn di\u1ec7n.",
+      "acceptance_evidence": "E2E route smoke tr\u00ean fixtures approved.",
+      "depends_on": [
+        "08.1"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "08.3",
+      "phase": "P08",
+      "title": "SEO v\u00e0 cache",
+      "instructions": "X\u1eed l\u00fd metadata/canonical/sitemap theo spec v\u00e0 invalidation t\u1eeb publish event.",
+      "acceptance_evidence": "Cache invalidation/SEO tests.",
+      "depends_on": [
+        "08.2",
+        "04.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "08.4",
+      "phase": "P08",
+      "title": "G\u1ee1 WordPress runtime",
+      "instructions": "Lo\u1ea1i code/dependency/API/media runtime WordPress theo checklist, kh\u00f4ng x\u00f3a snapshot migration.",
+      "acceptance_evidence": "Grep/build/e2e ch\u1ee9ng minh kh\u00f4ng c\u00f3 WP runtime dependency.",
+      "depends_on": [
+        "08.3",
+        "07.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "08.5",
+      "phase": "P08",
+      "title": "Visual/content parity gate",
+      "instructions": "So s\u00e1nh trang public v\u1edbi snapshot v\u00e0 thi\u1ebft k\u1ebf \u0111\u01b0\u1ee3c duy\u1ec7t, ki\u1ec3m tra offline/thi\u1ebfu d\u1eef li\u1ec7u.",
+      "acceptance_evidence": "Parity report c\u00f3 diff; gate 08 kh\u00f4ng v\u01b0\u1ee3t n\u1ebfu source/approval thi\u1ebfu.",
+      "depends_on": [
+        "08.4",
+        "07.4"
+      ],
+      "preferred_model": "qwen2.5vl:7b",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "09.1",
+      "phase": "P09",
+      "title": "E2E v\u00e0 security acceptance",
+      "instructions": "Ch\u1ea1y full lint/typecheck/build/test v\u00e0 end-to-end role/revision/migration/public/lead tr\u00ean release candidate.",
+      "acceptance_evidence": "Log l\u1ec7nh th\u1eadt, pass/fail theo scope, issue register.",
+      "depends_on": [
+        "08.5",
+        "02.4",
+        "05.5"
+      ],
+      "preferred_model": "ornith1.5:9b",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "09.2",
+      "phase": "P09",
+      "title": "Backup/restore + staging rehearsal",
+      "instructions": "Th\u1eed backup/restore v\u00e0 quy tr\u00ecnh rollback tr\u00ean m\u00f4i tr\u01b0\u1eddng ki\u1ec3m so\u00e1t, \u0111o n\u0103ng l\u1ef1c kh\u00f4i ph\u1ee5c.",
+      "acceptance_evidence": "Restore proof, cutover checklist, blocker infra.",
+      "depends_on": [
+        "09.1",
+        "04.4"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": false,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "09.3",
+      "phase": "P09",
+      "title": "UAT v\u00e0 ph\u00ea duy\u1ec7t n\u1ed9i dung/h\u1ea1 t\u1ea7ng",
+      "instructions": "T\u1ed5 ch\u1ee9c UAT v\u1edbi ng\u01b0\u1eddi ph\u00ea duy\u1ec7t; x\u00e1c nh\u1eadn n\u1ed9i dung, URL, media, quy\u1ec1n, h\u1ea1 t\u1ea7ng.",
+      "acceptance_evidence": "Signed-off UAT/content/infra; n\u1ebfu thi\u1ebfu WAITING_CONTENT/INFRA.",
+      "depends_on": [
+        "09.2",
+        "07.4"
+      ],
+      "preferred_model": "gemma4:e4b-it-qat",
+      "requires_human_approval": true,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    },
+    {
+      "task_id": "09.4",
+      "phase": "P09",
+      "title": "Cutover v\u00e0 b\u00e0n giao",
+      "instructions": "Ch\u1ec9 l\u00e0m release sau approval; ghi tr\u1ea1ng th\u00e1i STAGING_VERIFIED/PRODUCTION_READY/RELEASED/HANDOVER_COMPLETE ri\u00eang.",
+      "acceptance_evidence": "Release evidence, monitoring/rollback, handover docs; integrator x\u00e1c nh\u1eadn.",
+      "depends_on": [
+        "09.3"
+      ],
+      "preferred_model": "qwen3.5:9b-nvfp4",
+      "requires_human_approval": true,
+      "status": "PLANNED",
+      "ownership_paths": null,
+      "contract_version": null
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
-import { getUserById } from "@/lib/db";
+import { userRepository } from "@/lib/repositories/user.repository";
 import { verifySessionToken, type SessionPayload, type SessionUser } from "./token";
 export const SESSION_COOKIE_NAME = "topica_admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 8; // 8 hours in seconds
@@ -63,7 +63,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     if (!sessionCookie?.value) return null;
     const payload = await verifySessionToken(sessionCookie.value, getSessionSecret());
     if (!payload || typeof payload.sessionVersion !== "number") return null;
-    const currentUser = await getUserById(payload.user.id);
+    const currentUser = await userRepository.findById(payload.user.id);
     if (!currentUser || payload.sessionVersion !== currentUser.session_version) return null;
     return {
       id: currentUser.id,
