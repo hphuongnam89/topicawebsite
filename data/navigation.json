@@ -91,15 +91,19 @@
       "href": "/tuyen-sinh/",
       "columns": [
         {
-          "heading": "Thông tin tuyển sinh",
+          "heading": "Thông tin & văn bản",
           "items": [
             {
-              "label": "Thông tin tuyển sinh",
+              "label": "Thông tin tuyển sinh 2026",
               "href": "/thong-tin-tuyen-sinh-nam-2026/"
             },
             {
               "label": "Thông báo tuyển sinh",
-              "href": "/thong-bao-tuyen-sinh/"
+              "href": "/tin-tuc?category=thong-bao-tuyen-sinh"
+            },
+            {
+              "label": "Tin tuyển sinh",
+              "href": "/tin-tuc?category=tin-tuc-tuyen-sinh"
             },
             {
               "label": "Đề án tuyển sinh",
@@ -178,16 +182,8 @@
       "href": "/tin-tuc/",
       "columns": [
         {
-          "heading": "Chuyên mục",
+          "heading": "Chủ đề tin tức",
           "items": [
-            {
-              "label": "Tin tuyển sinh",
-              "href": "/tin-tuc?category=tin-tuc-tuyen-sinh"
-            },
-            {
-              "label": "Thông báo tuyển sinh",
-              "href": "/tin-tuc?category=thong-bao-tuyen-sinh"
-            },
             {
               "label": "Sự kiện",
               "href": "/tin-tuc?category=su-kien"

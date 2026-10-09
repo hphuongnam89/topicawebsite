@@ -13,11 +13,7 @@ export const metadata = {
   },
 };
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
@@ -29,7 +25,7 @@ export default async function AdminLayout({
     const from = pathname && pathname !== "/admin" ? `?from=${encodeURIComponent(pathname)}` : "";
     redirect(`/admin/login${from}`);
   }
-  
+
   if (user && pathname === "/admin/login") {
     redirect("/admin");
   }
@@ -37,9 +33,7 @@ export default async function AdminLayout({
   return (
     <div className="admin-shell flex min-h-screen bg-slate-50 font-sans text-ink-950 antialiased">
       {user && <AdminSidebar user={user} />}
-      <main className="admin-main flex-1 overflow-x-hidden min-h-screen">
-        {children}
-      </main>
+      <main className="admin-main min-h-screen flex-1 overflow-x-hidden">{children}</main>
     </div>
   );
 }

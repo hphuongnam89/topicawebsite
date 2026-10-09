@@ -134,13 +134,16 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     <>
       {/* Mobile Top Header */}
       <div className="flex h-16 items-center justify-between border-b border-line-200 bg-white px-4 lg:hidden">
-        <Link href="/admin" className="flex items-center gap-2 font-display text-lg font-bold text-brand-700">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2 font-display text-lg font-bold text-brand-700"
+        >
           <GraduationCap className="h-6 w-6 text-brand-700" />
           <span>TOPICA ADMIN</span>
         </Link>
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="rounded-md p-2 text-ink-700 hover:bg-paper"
+          className="text-ink-700 rounded-md p-2 hover:bg-paper"
           aria-label={isMobileOpen ? "Đóng menu quản trị" : "Mở menu quản trị"}
           aria-expanded={isMobileOpen}
           aria-controls="admin-sidebar"
@@ -160,7 +163,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       )}
 
       {/* Sidebar Container */}
-       <aside
+      <aside
         id="admin-sidebar"
         aria-label="Điều hướng quản trị"
         className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-line-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0 ${
@@ -169,20 +172,25 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       >
         {/* Brand Header */}
         <div className="flex h-16 items-center justify-between border-b border-line-200 px-6">
-          <Link href="/admin" className="flex items-center gap-2.5 font-display text-xl font-bold text-brand-700">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2.5 font-display text-xl font-bold text-brand-700"
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white shadow-sm">
               <GraduationCap className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
               <span className="leading-tight tracking-tight">TOPICA</span>
-              <span className="text-[10px] font-semibold tracking-wider text-ink-500 uppercase">Admin Portal</span>
+              <span className="text-ink-500 text-[10px] font-semibold tracking-wider uppercase">
+                Admin Portal
+              </span>
             </div>
           </Link>
           <button
             type="button"
             aria-label="Đóng menu quản trị"
             onClick={() => setIsMobileOpen(false)}
-            className="rounded-md p-1.5 text-ink-500 hover:bg-paper lg:hidden"
+            className="text-ink-500 rounded-md p-1.5 hover:bg-paper lg:hidden"
           >
             <X className="h-5 w-5" />
           </button>
@@ -208,7 +216,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                       : "text-ink-700 hover:bg-paper hover:text-ink-950"
                   }`}
                 >
-                  <Icon className={`h-5 w-5 shrink-0 ${active ? "text-brand-700" : "text-ink-500"}`} />
+                  <Icon
+                    className={`h-5 w-5 shrink-0 ${active ? "text-brand-700" : "text-ink-500"}`}
+                  />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -222,9 +232,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             <Link
               href="/"
               target="_blank"
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-body-sm font-medium text-ink-700 transition-colors hover:bg-paper hover:text-ink-950"
+              className="text-ink-700 flex items-center gap-3 rounded-lg px-3 py-2.5 text-body-sm font-medium transition-colors hover:bg-paper hover:text-ink-950"
             >
-              <Globe className="h-5 w-5 text-ink-500" />
+              <Globe className="text-ink-500 h-5 w-5" />
               <span>Xem trang ngoài</span>
             </Link>
           </div>
@@ -237,14 +247,16 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-body-sm font-semibold text-ink-900">{user.name}</p>
-              <p className="truncate text-xs text-ink-500">@{user.username} • {user.role}</p>
+              <p className="text-ink-900 truncate text-body-sm font-semibold">{user.name}</p>
+              <p className="text-ink-500 truncate text-xs">
+                @{user.username} • {user.role}
+              </p>
             </div>
           </div>
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3 py-2 text-body-sm font-medium text-error transition-colors hover:bg-error/5 hover:border-error/20"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3 py-2 text-body-sm font-medium text-error transition-colors hover:border-error/20 hover:bg-error/5"
           >
             <LogOut className="h-4 w-4" />
             <span>{loggingOut ? "Đang đăng xuất..." : "Đăng xuất"}</span>

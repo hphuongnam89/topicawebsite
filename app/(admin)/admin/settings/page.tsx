@@ -66,8 +66,6 @@ export default function AdminSettingsPage() {
     })();
   }, []);
 
-  
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -94,7 +92,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <div className="flex items-center gap-2 text-ink-500">
+        <div className="text-ink-500 flex items-center gap-2">
           <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
           <span>Đang tải cài đặt...</span>
         </div>
@@ -103,9 +101,9 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+    <div className="mx-auto max-w-7xl space-y-8 p-6 lg:p-10">
       {/* Header */}
-      <div className="sticky top-0 z-20 -mx-4 flex flex-col gap-4 bg-slate-50/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:p-0 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky top-0 z-20 -mx-4 flex flex-col gap-4 bg-slate-50/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:flex-row sm:items-center sm:justify-between sm:bg-transparent sm:p-0">
         <div>
           <div className="flex items-center gap-2">
             <Settings className="h-6 w-6 text-brand-700" />
@@ -113,7 +111,7 @@ export default function AdminSettingsPage() {
               Cài đặt Hệ thống & Website
             </h1>
           </div>
-          <p className="mt-1 text-body-sm text-ink-500">
+          <p className="text-ink-500 mt-1 text-body-sm">
             Quản lý thông tin liên hệ, mạng xã hội, nhận diện thương hiệu và thông báo tự động.
           </p>
         </div>
@@ -122,7 +120,7 @@ export default function AdminSettingsPage() {
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
         >
           {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           <span>{saving ? "Đang lưu..." : "Lưu cài đặt"}</span>
@@ -133,10 +131,10 @@ export default function AdminSettingsPage() {
         <div
           role={message.type === "error" ? "alert" : "status"}
           aria-live="polite"
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -150,14 +148,14 @@ export default function AdminSettingsPage() {
 
       <form onSubmit={handleSave} className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Contact Info Card */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <Phone className="h-4 w-4 text-brand-700" />
             <span>Thông tin Liên hệ Tuyển sinh</span>
           </h2>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Hotline Tư vấn
             </label>
             <input
@@ -170,7 +168,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Email Tuyển sinh
             </label>
             <input
@@ -183,7 +181,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Địa chỉ Trụ sở chính
             </label>
             <input
@@ -197,14 +195,14 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Social Media Links */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <Share2 className="h-4 w-4 text-brand-700" />
             <span>Kênh Mạng Xã Hội</span>
           </h2>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Facebook Fanpage URL
             </label>
             <input
@@ -217,7 +215,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Kênh YouTube URL
             </label>
             <input
@@ -230,7 +228,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Zalo OA / Hotline Zalo
             </label>
             <input
@@ -244,14 +242,14 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Global SEO Settings */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <Globe className="h-4 w-4 text-brand-700" />
             <span>Nhận diện Website & SEO Tổng quan</span>
           </h2>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Tiêu đề Website (Site Title)
             </label>
             <input
@@ -264,7 +262,7 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
               Mô tả Website (Site Description)
             </label>
             <textarea
@@ -278,22 +276,28 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Telegram Notification Card */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <BellRing className="h-4 w-4 text-brand-700" />
             <span>Thông Báo Lead Về Telegram Tức Thì</span>
           </h2>
 
-          <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
-            Tự động gửi thông tin học viên vừa điền form vào nhóm Telegram của phòng tuyển sinh ngay lập tức.
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
+            Tự động gửi thông tin học viên vừa điền form vào nhóm Telegram của phòng tuyển sinh ngay
+            lập tức.
           </div>
 
           <div>
-            <label htmlFor="telegram-bot-token" className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label
+              htmlFor="telegram-bot-token"
+              className="text-ink-900 mb-1.5 block text-body-sm font-semibold"
+            >
               Telegram Bot Token
             </label>
             <input
-              type="password" id="telegram-bot-token" autoComplete="off"
+              type="password"
+              id="telegram-bot-token"
+              autoComplete="off"
               value={settings.telegramBotToken || ""}
               onChange={(e) => setSettings({ ...settings, telegramBotToken: e.target.value })}
               placeholder="VD: 7123456789:AAHKz..."
@@ -302,11 +306,16 @@ export default function AdminSettingsPage() {
           </div>
 
           <div>
-            <label htmlFor="telegram-chat-id" className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+            <label
+              htmlFor="telegram-chat-id"
+              className="text-ink-900 mb-1.5 block text-body-sm font-semibold"
+            >
               Telegram Chat ID / Group ID
             </label>
             <input
-              type="text" id="telegram-chat-id" autoComplete="off"
+              type="text"
+              id="telegram-chat-id"
+              autoComplete="off"
               value={settings.telegramChatId || ""}
               onChange={(e) => setSettings({ ...settings, telegramChatId: e.target.value })}
               placeholder="VD: -1001234567890 hoặc 12345678"

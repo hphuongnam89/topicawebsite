@@ -56,10 +56,7 @@ function generateSlug(text: string): string {
     .replace(/-+/g, "-");
 }
 
-export function PageEditorForm({
-  initialData,
-  isEdit = false,
-}: PageEditorFormProps) {
+export function PageEditorForm({ initialData, isEdit = false }: PageEditorFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,12 +71,12 @@ export function PageEditorForm({
       seo_title: "",
       seo_description: "",
       published_at: new Date().toISOString().slice(0, 16),
-    }
+    },
   );
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -119,9 +116,6 @@ export function PageEditorForm({
     }
   };
 
-  
-  
-  
   const cleanHtml = () => {
     if (window.confirm("Thao tác này sẽ dọn dẹp các mã HTML rác. Bạn có muốn tiếp tục?")) {
       setFormData((prev) => ({
@@ -178,7 +172,7 @@ export function PageEditorForm({
         <div className="flex items-center gap-4">
           <Link
             href="/admin/pages"
-            className="rounded-full p-2 text-ink-500 hover:bg-white hover:text-ink-950 transition-colors"
+            className="text-ink-500 rounded-full p-2 transition-colors hover:bg-white hover:text-ink-950"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -192,66 +186,58 @@ export function PageEditorForm({
               href={`/${formData.slug}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-700 shadow-xs hover:bg-slate-50 transition-colors"
+              className="text-ink-700 inline-flex items-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold shadow-xs transition-colors hover:bg-slate-50"
             >
-              <Globe className="h-4 w-4 text-ink-500" />
+              <Globe className="text-ink-500 h-4 w-4" />
               <span>Xem thực tế</span>
             </a>
           )}
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
           >
-            {saving ? (
-              <RefreshCw className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
+            {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             <span>{saving ? "Đang lưu..." : "Lưu Trang"}</span>
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="rounded-lg bg-error/10 p-4 text-sm text-error flex items-center gap-2">
+        <div className="flex items-center gap-2 rounded-lg bg-error/10 p-4 text-sm text-error">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <p>{error}</p>
         </div>
       )}
 
       {success && (
-        <div className="rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700 flex items-center gap-2">
+        <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700">
           <CheckCircle className="h-5 w-5 shrink-0" />
           <p>{success}</p>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main Content Column */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-xl border border-line-200 bg-white shadow-xs p-6 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
+          <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Tiêu đề trang
-                </label>
+                <label className="text-sm font-semibold text-ink-950">Tiêu đề trang</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={handleTitleChange}
-                  className="h-12 w-full rounded-lg border border-line-200 bg-white px-4 text-body-base text-ink-950 focus:border-brand-600 focus:outline-none"
+                  className="text-body-base h-12 w-full rounded-lg border border-line-200 bg-white px-4 text-ink-950 focus:border-brand-600 focus:outline-none"
                   placeholder="Nhập tiêu đề trang..."
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Đường dẫn (Slug)
-                </label>
-                <div className="flex rounded-lg border border-line-200 bg-white focus-within:border-brand-600 overflow-hidden">
-                  <span className="flex items-center bg-slate-50 px-3 text-sm text-ink-500 border-r border-line-200">
+                <label className="text-sm font-semibold text-ink-950">Đường dẫn (Slug)</label>
+                <div className="flex overflow-hidden rounded-lg border border-line-200 bg-white focus-within:border-brand-600">
+                  <span className="text-ink-500 flex items-center border-r border-line-200 bg-slate-50 px-3 text-sm">
                     topica.vn/
                   </span>
                   <input
@@ -265,9 +251,7 @@ export function PageEditorForm({
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Tóm tắt ngắn (Excerpt)
-                </label>
+                <label className="text-sm font-semibold text-ink-950">Tóm tắt ngắn (Excerpt)</label>
                 <textarea
                   rows={3}
                   value={formData.excerpt}
@@ -281,16 +265,18 @@ export function PageEditorForm({
 
           {/* Content Editor */}
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-ink-950 flex justify-between items-center">
+            <label className="flex items-center justify-between text-sm font-semibold text-ink-950">
               <span>Nội dung chính</span>
               <button
                 type="button"
                 onClick={cleanHtml}
-                className="flex items-center gap-1.5 rounded px-2 py-1 text-brand-600 hover:bg-slate-100 transition-colors"
+                className="flex items-center gap-1.5 rounded px-2 py-1 text-brand-600 transition-colors hover:bg-slate-100"
                 title="Làm sạch mã HTML từ nguồn khác"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-bold uppercase tracking-wider">Làm sạch HTML rác</span>
+                <span className="text-[10px] font-bold tracking-wider uppercase">
+                  Làm sạch HTML rác
+                </span>
               </button>
             </label>
             <RichTextEditor
@@ -313,17 +299,17 @@ export function PageEditorForm({
 
         {/* Sidebar Settings */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-line-200 bg-white shadow-xs p-6 space-y-6">
+          <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
             <h3 className="font-semibold text-ink-950">Cài đặt Trang</h3>
 
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Trạng thái
-                </label>
+                <label className="text-sm font-semibold text-ink-950">Trạng thái</label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as "published" | "draft" })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, status: e.target.value as "published" | "draft" })
+                  }
                   className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
                 >
                   <option value="published">Xuất bản</option>
@@ -332,9 +318,7 @@ export function PageEditorForm({
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Ngày đăng
-                </label>
+                <label className="text-sm font-semibold text-ink-950">Ngày đăng</label>
                 <input
                   type="datetime-local"
                   value={formData.published_at.slice(0, 16)}
@@ -344,15 +328,13 @@ export function PageEditorForm({
               </div>
 
               <div className="space-y-1">
-                <label className="text-sm font-semibold text-ink-950">
-                  Ảnh đại diện
-                </label>
+                <label className="text-sm font-semibold text-ink-950">Ảnh đại diện</label>
                 {formData.featured_image ? (
                   <div className="relative overflow-hidden rounded-lg border border-line-200">
                     <img
                       src={formData.featured_image}
                       alt="Featured"
-                      className="w-full aspect-video object-cover"
+                      className="aspect-video w-full object-cover"
                     />
                     <button
                       type="button"
@@ -365,16 +347,14 @@ export function PageEditorForm({
                 ) : (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-line-200 bg-slate-50 hover:bg-slate-100 transition-colors"
+                    className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-line-200 bg-slate-50 transition-colors hover:bg-slate-100"
                   >
                     {uploading ? (
                       <RefreshCw className="h-6 w-6 animate-spin text-brand-600" />
                     ) : (
                       <>
                         <Upload className="h-6 w-6 text-ink-400" />
-                        <span className="text-xs font-medium text-ink-500">
-                          Tải ảnh lên
-                        </span>
+                        <span className="text-ink-500 text-xs font-medium">Tải ảnh lên</span>
                       </>
                     )}
                   </div>
@@ -390,9 +370,9 @@ export function PageEditorForm({
             </div>
           </div>
 
-          <div className="rounded-xl border border-line-200 bg-white shadow-xs p-6 space-y-6">
+          <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
             <h3 className="font-semibold text-ink-950">SEO & Meta</h3>
-            
+
             <div className="space-y-4">
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-ink-950">

@@ -64,8 +64,6 @@ export default function AdminCategoriesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setName(val);
@@ -121,15 +119,18 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-2 text-xs text-ink-500">
+          <nav
+            aria-label="Breadcrumb"
+            className="text-ink-500 mb-3 flex items-center gap-2 text-xs"
+          >
             <Link href="/admin/articles" className="transition-colors hover:text-brand-700">
               Tin tức
             </Link>
             <span aria-hidden="true">/</span>
-            <span aria-current="page" className="font-medium text-ink-700">
+            <span aria-current="page" className="text-ink-700 font-medium">
               Danh mục
             </span>
           </nav>
@@ -139,7 +140,7 @@ export default function AdminCategoriesPage() {
               <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
                 Danh mục Tin tức
               </h1>
-              <p className="mt-0.5 text-body-sm text-ink-500">
+              <p className="text-ink-500 mt-0.5 text-body-sm">
                 Quản lý và phân loại các chuyên mục bài viết trên website Topica.
               </p>
             </div>
@@ -147,7 +148,7 @@ export default function AdminCategoriesPage() {
         </div>
         <Link
           href="/admin/articles"
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-700 shadow-xs transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
+          className="text-ink-700 inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold shadow-xs transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           <span>Quay lại danh sách bài viết</span>
@@ -158,10 +159,10 @@ export default function AdminCategoriesPage() {
         <div
           role={message.type === "error" ? "alert" : "status"}
           aria-live="polite"
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -175,14 +176,17 @@ export default function AdminCategoriesPage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left 1 Col: Create Form */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs h-fit space-y-4">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3">
+        <div className="h-fit space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             Thêm Danh mục Mới
           </h2>
 
           <form onSubmit={handleAddCategory} className="space-y-4">
             <div>
-              <label htmlFor="category-name" className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label
+                htmlFor="category-name"
+                className="text-ink-900 mb-1 block text-body-sm font-semibold"
+              >
                 Tên danh mục <span className="text-error">*</span>
               </label>
               <input
@@ -197,7 +201,10 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label htmlFor="category-slug" className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label
+                htmlFor="category-slug"
+                className="text-ink-900 mb-1 block text-body-sm font-semibold"
+              >
                 Đường dẫn tĩnh (Slug) <span className="text-error">*</span>
               </label>
               <input
@@ -212,7 +219,10 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label htmlFor="category-description" className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label
+                htmlFor="category-description"
+                className="text-ink-900 mb-1 block text-body-sm font-semibold"
+              >
                 Mô tả ngắn
               </label>
               <textarea
@@ -228,9 +238,13 @@ export default function AdminCategoriesPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white hover:bg-brand-800 disabled:opacity-70 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-70"
             >
-              {submitting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              {submitting ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
               <span>{submitting ? "Đang thêm..." : "Thêm danh mục"}</span>
             </button>
           </form>
@@ -240,7 +254,7 @@ export default function AdminCategoriesPage() {
         <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs lg:col-span-2">
           <div className="overflow-x-auto">
             <table className="admin-data-table w-full text-left text-body-sm">
-              <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+              <thead className="text-ink-500 border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase">
                 <tr>
                   <th className="px-6 py-3.5">Tên danh mục</th>
                   <th className="px-4 py-3.5">Đường dẫn (Slug)</th>
@@ -251,7 +265,7 @@ export default function AdminCategoriesPage() {
               <tbody className="divide-y divide-line-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="py-12 text-center text-ink-500">
+                    <td colSpan={4} className="text-ink-500 py-12 text-center">
                       <div className="flex items-center justify-center gap-2">
                         <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
                         <span>Đang tải danh mục...</span>
@@ -260,22 +274,22 @@ export default function AdminCategoriesPage() {
                   </tr>
                 ) : categories.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="py-12 text-center text-ink-500">
+                    <td colSpan={4} className="text-ink-500 py-12 text-center">
                       Chưa có danh mục nào.
                     </td>
                   </tr>
                 ) : (
                   categories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={cat.id} className="transition-colors hover:bg-slate-50/70">
                       <td className="px-6 py-4 font-semibold text-ink-950">
                         {cat.name}
                         {cat.description && (
-                          <p className="text-xs font-normal text-ink-500 mt-0.5">{cat.description}</p>
+                          <p className="text-ink-500 mt-0.5 text-xs font-normal">
+                            {cat.description}
+                          </p>
                         )}
                       </td>
-                      <td className="px-4 py-4 font-mono text-xs text-ink-600">
-                        /{cat.slug}
-                      </td>
+                      <td className="px-4 py-4 font-mono text-xs text-ink-600">/{cat.slug}</td>
                       <td className="px-4 py-4 text-center">
                         <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                           {cat.article_count || 0}
@@ -285,7 +299,7 @@ export default function AdminCategoriesPage() {
                         <button
                           onClick={() => handleDelete(cat.id, cat.name)}
                           disabled={deletingId === cat.id}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                           title="Xóa danh mục"
                         >
                           <Trash2 className="h-4 w-4" />

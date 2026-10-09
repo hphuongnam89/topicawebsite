@@ -50,17 +50,24 @@ export function FAQAccordion({ faqs, allowMultiple = false }: FAQAccordionProps)
               onClick={() => toggle(index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               className={cn(
-                "flex w-full items-center justify-between py-5 text-left font-semibold transition-colors focus-visible:outline-brand-500 focus-visible:ring-2 focus-visible:ring-brand-500/20 rounded-sm px-1 -mx-1",
-                isOpen ? "text-brand-700" : "text-ink-950 hover:text-brand-700"
+                "-mx-1 flex w-full items-center justify-between rounded-sm px-1 py-5 text-left font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-brand-500/20 focus-visible:outline-brand-500",
+                isOpen ? "text-brand-700" : "text-ink-950 hover:text-brand-700",
               )}
             >
-              <span className="text-body-lg pr-4">{faq.question}</span>
-              <span className={cn(
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors",
-                isOpen ? "bg-brand-50 text-brand-700" : "bg-paper text-ink-400 group-hover:bg-line-100"
-              )}>
+              <span className="pr-4 text-body-lg">{faq.question}</span>
+              <span
+                className={cn(
+                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors",
+                  isOpen
+                    ? "bg-brand-50 text-brand-700"
+                    : "bg-paper text-ink-400 group-hover:bg-line-100",
+                )}
+              >
                 <ChevronDown
-                  className={cn("h-5 w-5 transition-transform duration-300", isOpen && "rotate-180")}
+                  className={cn(
+                    "h-5 w-5 transition-transform duration-300",
+                    isOpen && "rotate-180",
+                  )}
                   aria-hidden="true"
                 />
               </span>
@@ -77,7 +84,10 @@ export function FAQAccordion({ faqs, allowMultiple = false }: FAQAccordionProps)
                   transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                   className="overflow-hidden"
                 >
-                  <div className="pb-6 pt-1 text-body text-ink-600 pl-1 prose-editorial prose-p:last:mb-0" dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                  <div
+                    className="prose-editorial prose-p:last:mb-0 pt-1 pb-6 pl-1 text-body text-ink-600"
+                    dangerouslySetInnerHTML={{ __html: faq.answer }}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

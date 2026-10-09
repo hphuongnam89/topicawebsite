@@ -84,7 +84,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={transitions.base}
-            className="fixed inset-0 z-[60] bg-ink-950/40"
+            className="fixed inset-0 z-[140] bg-ink-950/40"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -100,7 +100,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Menu điều hướng"
-            className="fixed top-0 right-0 bottom-0 z-[70] flex w-full max-w-[360px] flex-col bg-canvas shadow-md"
+            className="fixed top-0 right-0 bottom-0 z-[150] flex w-full max-w-[360px] flex-col bg-canvas shadow-md"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-line-100 px-4 py-3">

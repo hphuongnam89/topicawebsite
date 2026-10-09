@@ -31,7 +31,7 @@ export function SearchForm({ initialQuery = "", isSearching = false }: SearchFor
   };
 
   return (
-    <form onSubmit={handleSearch} className="relative w-full max-w-2xl mx-auto">
+    <form onSubmit={handleSearch} className="relative mx-auto w-full max-w-2xl">
       <div className="relative flex items-center">
         <Search className="absolute left-4 h-5 w-5 text-ink-400" />
         <input
@@ -40,13 +40,13 @@ export function SearchForm({ initialQuery = "", isSearching = false }: SearchFor
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm kiếm thông tin tuyển sinh, ngành học, tin tức..."
-          className="w-full rounded-full border-2 border-line-200 bg-canvas py-3 pl-12 pr-12 text-body font-medium text-ink-950 outline-none transition-colors focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
+          className="w-full rounded-full border-2 border-line-200 bg-canvas py-3 pr-12 pl-12 text-body font-medium text-ink-950 transition-colors outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
         />
         {query && !isSearching && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-4 p-1 rounded-full text-ink-400 hover:text-ink-600 hover:bg-line-100 transition-colors"
+            className="absolute right-4 rounded-full p-1 text-ink-400 transition-colors hover:bg-line-100 hover:text-ink-600"
             aria-label="Xóa nội dung tìm kiếm"
           >
             <X className="h-4 w-4" />
@@ -54,7 +54,7 @@ export function SearchForm({ initialQuery = "", isSearching = false }: SearchFor
         )}
         {isSearching && (
           <div className="absolute right-4">
-            <Loader2 className="h-5 w-5 text-brand-500 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin text-brand-500" />
           </div>
         )}
       </div>

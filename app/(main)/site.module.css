@@ -1,0 +1,234 @@
+/* Public website theme; the admin layout does not carry this marker. */
+:global(body):has(.site) {
+  --site-navy: #00264d;
+  --site-deep: #001d3c;
+  --site-panel: #0b3258;
+  --site-gold: #e3be82;
+  --site-gold-dark: #b78744;
+  --site-text: #f8f5ef;
+  --site-muted: #c3cedb;
+  --site-line: #34516b;
+  --site-error: #ffb4b4;
+  --site-success: #92ddb5;
+  --site-warning: #f3cd87;
+  --site-nav-glass: #00264df2;
+  --color-academic-canvas: var(--site-navy);
+  --color-academic-paper: var(--site-deep);
+  --color-academic-elevated: var(--site-panel);
+  --color-academic-ink: var(--site-text);
+  --color-academic-muted: var(--site-muted);
+  --color-academic-rule: var(--site-line);
+  --color-academic-rule-strong: var(--site-gold-dark);
+  --color-academic-accent: var(--site-gold);
+  --color-academic-accent-strong: var(--site-gold);
+  --color-academic-on-accent: var(--site-deep);
+  --color-academic-focus: var(--site-gold);
+  --color-canvas: var(--site-navy);
+  --color-paper: var(--site-deep);
+  --color-elevated: var(--site-panel);
+  --color-ink-950: var(--site-text);
+  --color-ink-800: var(--site-text);
+  --color-ink-700: var(--site-muted);
+  --color-ink-600: var(--site-muted);
+  --color-ink-400: var(--site-muted);
+  --color-brand-700: var(--site-gold);
+  --color-line-100: var(--site-line);
+  --color-line-200: var(--site-line);
+  --color-error: var(--site-error);
+  background: var(--site-navy);
+  color: var(--site-text);
+}
+
+.site {
+  min-width: 0;
+}
+
+:global(body):has(.site) :global(header:not(main header)),
+:global(body):has(.site) :global([class~="bg-canvas"]),
+:global(body):has(.site) :global([class~="bg-ink-950"]) {
+  background-color: var(--site-navy);
+}
+
+:global(body):has(.site) :global([class~="bg-paper"]),
+:global(body):has(.site) :global([class~="bg-brand-50"]) {
+  background-color: var(--site-deep);
+}
+
+:global(body):has(.site) :global([class~="bg-elevated"]),
+:global(body):has(.site) :global([class~="bg-brand-100"]),
+:global(body):has(.site) :global([class~="bg-white"]) {
+  background-color: var(--site-panel);
+}
+
+:global(body):has(.site) :global([class~="bg-line-200"]) {
+  background-color: var(--site-line);
+}
+
+:global(body):has(.site) :global([class*="text-ink-"]) {
+  color: var(--site-text);
+}
+
+:global(body):has(.site) .site :global([class*="text-ink-"]) {
+  color: var(--site-text) !important;
+}
+
+:global(body):has(.site) :global([class~="text-ink-600"]),
+:global(body):has(.site) :global([class~="text-ink-400"]) {
+  color: var(--site-muted);
+}
+
+:global(body):has(.site) .site :global([class~="text-ink-600"]),
+:global(body):has(.site) .site :global([class~="text-ink-500"]),
+:global(body):has(.site) .site :global([class~="text-ink-400"]) {
+  color: var(--site-muted) !important;
+}
+
+:global(body):has(.site) :global(.text-ink-950),
+:global(body):has(.site) :global(.text-ink-800),
+:global(body):has(.site) :global(.text-ink-700),
+:global(body):has(.site) :global(.text-ink-600),
+:global(body):has(.site) :global(.text-ink-500),
+:global(body):has(.site) :global(.text-ink-400) {
+  color: var(--site-text) !important;
+}
+
+:global(body):has(.site) :global(h1),
+:global(body):has(.site) :global(h2),
+:global(body):has(.site) :global(h3),
+:global(body):has(.site) :global([class*="text-brand-"]),
+:global(body):has(.site) :global([class~="text-info"]),
+:global(body):has(.site) :global(header nav button),
+:global(body):has(.site) :global(header nav a) {
+  color: var(--site-gold);
+}
+
+:global(body):has(.site) :global([class*="border-line-"]) {
+  border-color: var(--site-line);
+}
+
+:global(body):has(.site) :global(a[class~="bg-brand-500"]),
+:global(body):has(.site) :global(a[class~="bg-brand-700"]),
+:global(body):has(.site) :global(button[class~="bg-brand-500"]),
+:global(body):has(.site) :global(button[class~="bg-brand-700"]),
+:global(body):has(.site) :global(button[class~="bg-amber-500"]),
+:global(body):has(.site) :global(header a[class~="bg-white"]) {
+  background-color: var(--site-gold);
+  color: var(--site-deep);
+}
+
+:global(body):has(.site) :global(a[class~="bg-brand-500"]:hover),
+:global(body):has(.site) :global(button[class~="bg-brand-500"]:hover) {
+  background-color: var(--site-gold-dark);
+}
+
+:global(body):has(.site) :global(footer > div:last-child) {
+  background-color: var(--site-deep);
+}
+
+:global(body):has(.site) :global(:focus-visible) {
+  outline-color: var(--site-gold);
+}
+
+/* Readable feedback and fixed mobile navigation on the dark canvas. */
+:global(body):has(.site) :global(.text-error) {
+  color: var(--site-error);
+}
+:global(body):has(.site) :global([data-mobile-sticky-bar]) {
+  background-color: var(--site-nav-glass);
+}
+:global(body):has(.site) :global([data-mobile-sticky-bar] a:not([class~="bg-brand-700"])) {
+  color: var(--site-gold);
+  border-color: var(--site-gold);
+}
+.site :global(#homepage-title) {
+  font-size: clamp(2.25rem, 4.5vw, 4rem);
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.site :global(section h2:not(form h2, .prose-editorial h2)) {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.site :global(header:has(#why-topica-title)) {
+  max-width: 100%;
+  background: transparent;
+}
+.site :global(#legal-value-title) {
+  max-width: 18ch;
+}
+.site :global(h3) {
+  text-wrap: balance;
+}
+
+:global(body):has(.site) :global([class~="hover:bg-brand-50"]:hover) {
+  background-color: var(--site-panel);
+}
+:global(body):has(.site) :global([class~="border-error"]) {
+  border-color: var(--site-error);
+}
+:global(body):has(.site) :global(input:focus) {
+  border-color: var(--site-gold);
+}
+:global(body):has(.site) :global(input::placeholder) {
+  color: var(--site-muted);
+  opacity: 1;
+}
+
+:global(html):has(.site),
+:global(body):has(.site) {
+  overflow-x: clip;
+}
+
+.site :global([aria-roledescription="carousel"] [class~="bg-brand-400"]) {
+  background-color: var(--site-gold);
+}
+
+/* Translucent menus, skeletons and editorial content use the same surfaces. */
+:global(body):has(.site) :global([class~="bg-white/90"]),
+:global(body):has(.site) :global([class~="bg-canvas/95"]) {
+  background-color: var(--site-nav-glass);
+}
+.site :global([class~="bg-line-100"]) {
+  background-color: var(--site-line);
+}
+.site :global(.prose-editorial),
+.site :global(.prose-editorial strong),
+.site :global(.prose-editorial th) {
+  color: var(--site-text);
+}
+.site :global(.prose-editorial h4),
+.site :global(.prose-editorial a) {
+  color: var(--site-gold);
+}
+.site :global(select),
+.site :global(textarea) {
+  color: var(--site-text);
+  background-color: var(--site-panel);
+}
+.site :global([class~="bg-[var(--color-academic-ink)]"]) {
+  background-color: var(--site-deep);
+  --color-academic-on-accent: var(--site-text);
+}
+.site :global([class~="bg-brand-500/95"]),
+.site :global([class~="bg-brand-800"]) {
+  background-color: var(--site-gold);
+  color: var(--site-deep);
+}
+.site :global([class~="bg-brand-500/95"] h2),
+.site :global([class~="bg-brand-500/95"] h3) {
+  color: var(--site-deep);
+}
+
+.site :global(main h1:not(#homepage-title)) {
+  font-size: clamp(2.25rem, 4.5vw, 4rem);
+  line-height: 1.12;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.site :global([class~="text-success"]) {
+  color: var(--site-success);
+}
+.site :global([class~="text-warning"]) {
+  color: var(--site-warning);
+}

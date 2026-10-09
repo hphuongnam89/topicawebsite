@@ -14,6 +14,7 @@ import { QuickActionCard } from "./QuickActionCard";
 import { AdmissionAnnouncementCard } from "./AdmissionAnnouncementCard";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { GraduationCap, ClipboardList, FileText, Banknote, HelpCircle, Phone } from "lucide-react";
+import { isPublicClaimApproved } from "@/CONTENT_SOURCE_OF_TRUTH";
 
 export interface AdmissionHubProps {
   page: CmsPage;
@@ -67,8 +68,9 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
     },
     {
       question: "Topica có các chương trình học bổng nào cho tân sinh viên?",
-      answer:
-        "Thông báo tuyển sinh năm 2026 nêu các mức hỗ trợ gồm Talent 30%, Leadership 20%, Cooperation 40%, Future 5% và 50% dành cho tu sĩ. Mỗi chương trình có điều kiện áp dụng riêng và cần được xác nhận theo hồ sơ.",
+      answer: isPublicClaimApproved("scholarship.talent-30")
+        ? "Thông báo hiện hành có thể gồm nhiều mức hỗ trợ như Talent; mỗi chương trình có điều kiện áp dụng riêng và cần được xác nhận theo hồ sơ."
+        : "Chính sách học bổng thay đổi theo từng thông báo; vui lòng gửi hồ sơ để được xác nhận mức áp dụng.",
     },
     {
       question: "Thời gian nhận hồ sơ xét tuyển là khi nào?",
@@ -92,7 +94,9 @@ export function AdmissionHub({ page }: AdmissionHubProps) {
               <span className="text-brand-400 mb-4 inline-block rounded-full border border-brand-500/30 px-3 py-1 text-xs font-semibold tracking-wider uppercase">
                 Tuyển sinh năm 2026
               </span>
-              <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
+              <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">
+                Tuyển sinh
+              </h1>
               <p className="text-ink-200 mx-auto mb-10 max-w-2xl text-body-lg">
                 {page.excerpt ||
                   "Chương trình đại học từ xa qua hệ thống học tập trực tuyến, phù hợp với người đang đi làm và cần chủ động thời gian học."}

@@ -65,7 +65,7 @@ export function FAQHub({ categories }: FAQHubProps) {
               <button
                 onClick={() => setActiveCategory("all")}
                 className={cn(
-                  "rounded-full border px-4 py-2 text-body-sm font-medium transition-colors cursor-pointer",
+                  "cursor-pointer rounded-full border px-4 py-2 text-body-sm font-medium transition-colors",
                   activeCategory === "all"
                     ? "border-brand-500 bg-brand-500 text-white"
                     : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-700",
@@ -78,7 +78,7 @@ export function FAQHub({ categories }: FAQHubProps) {
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   className={cn(
-                    "rounded-full border px-4 py-2 text-body-sm font-medium transition-colors cursor-pointer",
+                    "cursor-pointer rounded-full border px-4 py-2 text-body-sm font-medium transition-colors",
                     activeCategory === cat.id
                       ? "border-brand-500 bg-brand-500 text-white"
                       : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-700",

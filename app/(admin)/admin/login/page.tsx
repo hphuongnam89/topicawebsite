@@ -63,7 +63,11 @@ export default function AdminLoginPage() {
         {/* Login Card Form */}
         <div className="rounded-2xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur-xl">
           {error && (
-            <div role="alert" aria-live="assertive" className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-700">
+            <div
+              role="alert"
+              aria-live="assertive"
+              className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-700"
+            >
               <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
               <span>{error}</span>
             </div>
@@ -71,7 +75,10 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="admin-username" className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
+              <label
+                htmlFor="admin-username"
+                className="text-ink-900 mb-1.5 block text-body-sm font-semibold"
+              >
                 Tên đăng nhập
               </label>
               <div className="relative">
@@ -93,7 +100,10 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label htmlFor="admin-password" className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
+              <label
+                htmlFor="admin-password"
+                className="text-ink-900 mb-1.5 block text-body-sm font-semibold"
+              >
                 Mật khẩu
               </label>
               <div className="relative">
@@ -117,7 +127,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-700 font-semibold text-white shadow-md shadow-brand-700/25 transition-all hover:bg-brand-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-brand-700 font-semibold text-ink-950 shadow-md shadow-brand-700/25 transition-all hover:bg-brand-800 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {loading ? (
                 <>

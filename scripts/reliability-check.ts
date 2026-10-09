@@ -315,7 +315,10 @@ async function main() {
         const response = await hitPost(
           new Request("http://localhost/api/public/hit", {
             method: "POST",
-            headers: { "x-topica-client-ip": `10.1.0.${i}` },
+            headers: {
+              "x-topica-client-ip": `10.1.0.${i}`,
+              "x-topica-analytics-consent": "granted",
+            },
             body: JSON.stringify({ path: "/lien-he/?campaign=x" }),
           }),
         );

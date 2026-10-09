@@ -1,13 +1,7 @@
 const facilities = [
-  [
-    "TP. Hồ Chí Minh",
-    "104–106–108 Nguyễn Văn Lượng, Phường Gò Vấp, TP. Hồ Chí Minh",
-  ],
+  ["TP. Hồ Chí Minh", "104–106–108 Nguyễn Văn Lượng, Phường Gò Vấp, TP. Hồ Chí Minh"],
   ["Hà Nội", "27 Lê Văn Lương, Thanh Xuân, Hà Nội"],
-  [
-    "TP. Đà Nẵng",
-    "Lô A2-15, Khu E mở rộng, Trần Nam Trung, Phường Hòa Xuân, TP. Đà Nẵng",
-  ],
+  ["TP. Đà Nẵng", "Lô A2-15, Khu E mở rộng, Trần Nam Trung, Phường Hòa Xuân, TP. Đà Nẵng"],
   ["TP. Huế", "28 Nguyễn Tri Phương, Phường Thuận Hóa, TP. Huế"],
   [
     "TP. Hải Phòng",
@@ -20,7 +14,7 @@ export function FacilitiesDirectory() {
   return (
     <div className="space-y-8">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="font-sans text-body-lg text-ink-700">
+        <p className="text-ink-700 font-sans text-body-lg">
           Mạng lưới cơ sở hỗ trợ học tập và tư vấn tuyển sinh trên toàn quốc.
         </p>
       </div>
@@ -34,7 +28,7 @@ export function FacilitiesDirectory() {
               ◉
             </div>
             <h2 className="font-display text-xl font-semibold text-ink-950">{city}</h2>
-            <p className="mt-3 font-sans text-body text-ink-700">{address}</p>
+            <p className="text-ink-700 mt-3 font-sans text-body">{address}</p>
           </article>
         ))}
       </div>

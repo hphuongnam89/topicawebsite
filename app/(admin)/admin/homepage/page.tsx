@@ -45,8 +45,10 @@ interface TestimonialItem {
 const DEFAULT_HERO: HeroData = {
   badge: "Trực thuộc Trường Đại học Phú Xuân — Thành viên EQuest",
   title: "HỌC CHỦ ĐỘNG —\nKIẾN TẠO TƯƠNG LAI",
-  description: "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
-  bgImage: "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
+  description:
+    "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
+  bgImage:
+    "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
   ctaPrimaryText: "Đăng ký xét tuyển",
   ctaPrimaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
   ctaSecondaryText: "Xem ngành học",
@@ -68,7 +70,8 @@ const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
     id: "t1",
     name: "Nguyễn Văn A",
     role: "Cựu sinh viên",
-    quote: "Chương trình đào tạo tại Topica rất thực tiễn, giúp tôi tự tin áp dụng vào công việc ngay sau khi tốt nghiệp.",
+    quote:
+      "Chương trình đào tạo tại Topica rất thực tiễn, giúp tôi tự tin áp dụng vào công việc ngay sau khi tốt nghiệp.",
     program: "Công nghệ thông tin",
   },
   {
@@ -82,7 +85,8 @@ const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
     id: "t3",
     name: "Lê Văn C",
     role: "Trưởng phòng Marketing",
-    quote: "Môi trường học tập trực tuyến linh hoạt đã giúp tôi cân bằng giữa công việc và việc học.",
+    quote:
+      "Môi trường học tập trực tuyến linh hoạt đã giúp tôi cân bằng giữa công việc và việc học.",
     program: "Ngôn ngữ Anh",
   },
   {
@@ -128,8 +132,6 @@ export default function AdminHomepageManager() {
       await fetchHomepageData();
     })();
   }, []);
-
-  
 
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -189,7 +191,7 @@ export default function AdminHomepageManager() {
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <div className="flex items-center gap-3 text-ink-500">
+        <div className="text-ink-500 flex items-center gap-3">
           <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
           <span>Đang tải cấu hình trang chủ...</span>
         </div>
@@ -198,7 +200,7 @@ export default function AdminHomepageManager() {
   }
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -208,7 +210,7 @@ export default function AdminHomepageManager() {
               Cấu hình Toàn diện Trang Chủ
             </h1>
           </div>
-          <p className="mt-1 text-body-sm text-ink-500">
+          <p className="text-ink-500 mt-1 text-body-sm">
             Tùy biến Hero Banner, các số liệu tin cậy và đánh giá sinh viên trên trang chủ.
           </p>
         </div>
@@ -217,7 +219,7 @@ export default function AdminHomepageManager() {
           type="button"
           onClick={() => handleSave()}
           disabled={saving}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
         >
           {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           <span>{saving ? "Đang lưu..." : "Lưu tất cả thay đổi"}</span>
@@ -228,10 +230,10 @@ export default function AdminHomepageManager() {
         <div
           role={message.type === "error" ? "alert" : "status"}
           aria-live="polite"
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -244,13 +246,13 @@ export default function AdminHomepageManager() {
       )}
 
       {/* Section Tabs Switcher */}
-      <div className="flex border-b border-line-200 gap-2">
+      <div className="flex gap-2 border-b border-line-200">
         <button
           onClick={() => setActiveTab("hero")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "hero"
               ? "border-brand-700 text-brand-700"
-              : "border-transparent text-ink-500 hover:text-ink-900"
+              : "text-ink-500 hover:text-ink-900 border-transparent"
           }`}
         >
           <ImageIcon className="h-4 w-4" />
@@ -259,10 +261,10 @@ export default function AdminHomepageManager() {
 
         <button
           onClick={() => setActiveTab("trust")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "trust"
               ? "border-brand-700 text-brand-700"
-              : "border-transparent text-ink-500 hover:text-ink-900"
+              : "text-ink-500 hover:text-ink-900 border-transparent"
           }`}
         >
           <Award className="h-4 w-4" />
@@ -271,10 +273,10 @@ export default function AdminHomepageManager() {
 
         <button
           onClick={() => setActiveTab("testimonials")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "testimonials"
               ? "border-brand-700 text-brand-700"
-              : "border-transparent text-ink-500 hover:text-ink-900"
+              : "text-ink-500 hover:text-ink-900 border-transparent"
           }`}
         >
           <MessageSquare className="h-4 w-4" />
@@ -287,17 +289,19 @@ export default function AdminHomepageManager() {
         <div className="space-y-6">
           {/* Live Preview Card */}
           <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Eye className="h-5 w-5 text-brand-700" />
-                <h2 className="font-display text-lg font-bold text-ink-950">Xem trước Trực tiếp (Live Preview)</h2>
+                <h2 className="font-display text-lg font-bold text-ink-950">
+                  Xem trước Trực tiếp (Live Preview)
+                </h2>
               </div>
               <span className="rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-800">
                 Tự động cập nhật khi gõ
               </span>
             </div>
 
-            <div className="relative overflow-hidden rounded-xl border border-slate-700 bg-slate-950 text-white min-h-[340px] p-6 lg:p-10 flex items-center">
+            <div className="relative flex min-h-[340px] items-center overflow-hidden rounded-xl border border-slate-700 bg-slate-950 p-6 text-white lg:p-10">
               <div className="absolute inset-0 z-0">
                 {hero.bgImage ? (
                   <img
@@ -313,11 +317,11 @@ export default function AdminHomepageManager() {
 
               <div className="relative z-10 max-w-xl space-y-4">
                 {hero.badge && (
-                  <div className="inline-block rounded-full bg-white/10 border border-brand-300/30 px-3.5 py-1 text-xs font-medium text-brand-300 backdrop-blur-sm">
+                  <div className="inline-block rounded-full border border-brand-300/30 bg-white/10 px-3.5 py-1 text-xs font-medium text-brand-300 backdrop-blur-sm">
                     {hero.badge}
                   </div>
                 )}
-                <h2 className="font-display text-2xl font-bold uppercase sm:text-3xl lg:text-4xl text-white whitespace-pre-line leading-tight">
+                <h2 className="font-display text-2xl leading-tight font-bold whitespace-pre-line text-white uppercase sm:text-3xl lg:text-4xl">
                   {hero.title || "TIÊU ĐỀ BANNER"}
                 </h2>
                 <p className="text-body-sm text-white/80">
@@ -342,14 +346,14 @@ export default function AdminHomepageManager() {
           {/* Form */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <Sparkles className="h-4 w-4 text-brand-700" />
                   <span>Nội dung Tiêu đề & Thông điệp</span>
                 </h3>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                     Badge / Nhãn phụ
                   </label>
                   <input
@@ -361,7 +365,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                     Tiêu đề chính (H1) <span className="text-error">*</span>
                   </label>
                   <textarea
@@ -374,7 +378,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                     Đoạn văn mô tả
                   </label>
                   <textarea
@@ -387,15 +391,15 @@ export default function AdminHomepageManager() {
               </div>
 
               {/* Buttons */}
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <Link2 className="h-4 w-4 text-brand-700" />
                   <span>Các Nút Hành Động (CTA)</span>
                 </h3>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                       Nút chính: Tên nút
                     </label>
                     <input
@@ -406,7 +410,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                       Nút chính: Đường dẫn link
                     </label>
                     <input
@@ -417,7 +421,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                       Nút phụ: Tên nút
                     </label>
                     <input
@@ -428,7 +432,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="text-ink-900 mb-1.5 block text-body-sm font-semibold">
                       Nút phụ: Đường dẫn link
                     </label>
                     <input
@@ -444,13 +448,13 @@ export default function AdminHomepageManager() {
 
             {/* Right: Upload Image */}
             <div className="space-y-6">
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <ImageIcon className="h-4 w-4 text-brand-700" />
                   <span>Ảnh Nền Banner</span>
                 </h3>
 
-                <div className="overflow-hidden rounded-lg border border-line-200 aspect-video relative bg-slate-100">
+                <div className="relative aspect-video overflow-hidden rounded-lg border border-line-200 bg-slate-100">
                   {hero.bgImage ? (
                     <img src={hero.bgImage} alt="" className="h-full w-full object-cover" />
                   ) : (
@@ -471,14 +475,18 @@ export default function AdminHomepageManager() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 hover:bg-slate-100 transition-colors"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 transition-colors hover:bg-slate-100"
                 >
-                  {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  {uploading ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
                   <span>{uploading ? "Đang tải lên..." : "Tải ảnh từ máy tính"}</span>
                 </button>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">
+                  <label className="text-ink-900 mb-1 block text-xs font-semibold">
                     Hoặc nhập URL ảnh
                   </label>
                   <input
@@ -492,7 +500,7 @@ export default function AdminHomepageManager() {
 
               {/* Form Toggle */}
               <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs">
-                <label className="flex items-center gap-3 cursor-pointer">
+                <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
                     checked={hero.showLeadForm}
@@ -500,10 +508,10 @@ export default function AdminHomepageManager() {
                     className="h-5 w-5 rounded border-line-200 text-brand-700 focus:ring-brand-500"
                   />
                   <div>
-                    <span className="text-body-sm font-semibold text-ink-900">
+                    <span className="text-ink-900 text-body-sm font-semibold">
                       Hiển thị Form Tư vấn
                     </span>
-                    <p className="text-xs text-ink-500">
+                    <p className="text-ink-500 text-xs">
                       Form xuất hiện trực tiếp bên cạnh Hero Banner.
                     </p>
                   </div>
@@ -516,13 +524,13 @@ export default function AdminHomepageManager() {
 
       {/* TAB 2: TRUST HIGHLIGHTS */}
       {activeTab === "trust" && (
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-6">
+        <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between border-b border-line-100 pb-3">
             <div>
               <h2 className="font-display text-base font-bold text-ink-950">
                 Các Điểm Nhấn Tin Cậy (Trust Highlights)
               </h2>
-              <p className="text-xs text-ink-500">
+              <p className="text-ink-500 text-xs">
                 Xuất hiện ngay dưới Hero Banner để tăng độ uy tín với người học.
               </p>
             </div>
@@ -538,8 +546,11 @@ export default function AdminHomepageManager() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trustItems.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-3 rounded-lg border border-line-200 p-3 bg-slate-50">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700 text-xs">
+              <div
+                key={idx}
+                className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-3"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">
                   {idx + 1}
                 </div>
                 <input
@@ -555,7 +566,7 @@ export default function AdminHomepageManager() {
                 <button
                   type="button"
                   onClick={() => setTrustItems(trustItems.filter((_, i) => i !== idx))}
-                  className="text-ink-400 hover:text-error p-1"
+                  className="p-1 text-ink-400 hover:text-error"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -567,13 +578,13 @@ export default function AdminHomepageManager() {
 
       {/* TAB 3: TESTIMONIALS */}
       {activeTab === "testimonials" && (
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-6">
+        <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between border-b border-line-100 pb-3">
             <div>
               <h2 className="font-display text-base font-bold text-ink-950">
                 Cảm Nhận Học Viên & Cựu Sinh Viên
               </h2>
-              <p className="text-xs text-ink-500">
+              <p className="text-ink-500 text-xs">
                 Đánh giá chân thực từ người học giúp gia tăng tỷ lệ đăng ký tư vấn.
               </p>
             </div>
@@ -600,7 +611,10 @@ export default function AdminHomepageManager() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {testimonials.map((t, idx) => (
-              <div key={t.id} className="relative rounded-xl border border-line-200 p-5 bg-slate-50/50 space-y-3">
+              <div
+                key={t.id}
+                className="relative space-y-3 rounded-xl border border-line-200 bg-slate-50/50 p-5"
+              >
                 <div className="flex items-center justify-between">
                   <span className="rounded bg-brand-100 px-2 py-0.5 text-xs font-bold text-brand-800">
                     Đánh giá #{idx + 1}
@@ -616,7 +630,7 @@ export default function AdminHomepageManager() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-ink-900 mb-1">Họ tên</label>
+                    <label className="text-ink-900 mb-1 block text-xs font-semibold">Họ tên</label>
                     <input
                       type="text"
                       value={t.name}
@@ -629,7 +643,9 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-ink-900 mb-1">Chức danh / Vai trò</label>
+                    <label className="text-ink-900 mb-1 block text-xs font-semibold">
+                      Chức danh / Vai trò
+                    </label>
                     <input
                       type="text"
                       value={t.role}
@@ -644,7 +660,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">Ngành học</label>
+                  <label className="text-ink-900 mb-1 block text-xs font-semibold">Ngành học</label>
                   <input
                     type="text"
                     value={t.program}
@@ -658,7 +674,9 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">Trích dẫn cảm nhận</label>
+                  <label className="text-ink-900 mb-1 block text-xs font-semibold">
+                    Trích dẫn cảm nhận
+                  </label>
                   <textarea
                     rows={3}
                     value={t.quote}

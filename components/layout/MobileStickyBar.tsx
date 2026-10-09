@@ -25,7 +25,7 @@ export function MobileStickyBar() {
     <div
       data-mobile-sticky-bar
       className={cn(
-        "fixed right-0 bottom-0 left-0 z-40 border-t border-line-200 bg-canvas/95 pb-safe-area backdrop-blur-md transition-transform duration-300 lg:hidden",
+        "pb-safe-area fixed right-0 bottom-0 left-0 z-40 border-t border-line-200 bg-canvas/95 backdrop-blur-md transition-transform duration-300 lg:hidden",
         visible ? "translate-y-0" : "translate-y-full",
       )}
     >

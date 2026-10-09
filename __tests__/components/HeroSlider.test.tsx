@@ -9,6 +9,7 @@ describe("HeroSlider", () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
   });
 
   test("renders all 3 full width slides and navigation dots", () => {
@@ -19,36 +20,59 @@ describe("HeroSlider", () => {
 
     // Check slide 1 content (Heading & Form)
     expect(screen.getByRole("heading", { name: /Hoàn thiện bằng đại học/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Nhận tư vấn theo hồ sơ của bạn" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Nhận tư vấn theo hồ sơ của bạn" }),
+    ).toBeInTheDocument();
 
     // Check navigation buttons
     expect(screen.getByRole("button", { name: "Slide trước" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Slide tiếp theo" })).toBeInTheDocument();
 
     // Check 3 dots tabs
-    expect(screen.getByRole("tab", { name: /Đăng ký tư vấn/i })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tab", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute("aria-selected", "false");
-    expect(screen.getByRole("tab", { name: /Học bổng QTKD 30%/i })).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByRole("button", { name: /Đăng ký tư vấn/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: /Học bổng QTKD 30%/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
   });
 
   test("clicking navigation dots switches slides", () => {
     render(<HeroSlider />);
 
     // Click on slide 2 (Học bổng QTKD 30%)
-    fireEvent.click(screen.getByRole("tab", { name: /Học bổng QTKD 30%/i }));
-    expect(screen.getByRole("tab", { name: /Học bổng QTKD 30%/i })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tab", { name: /Đăng ký tư vấn/i })).toHaveAttribute("aria-selected", "false");
+    fireEvent.click(screen.getByRole("button", { name: /Học bổng QTKD 30%/i }));
+    expect(screen.getByRole("button", { name: /Học bổng QTKD 30%/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: /Đăng ký tư vấn/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
 
     // Click on slide 1 (Tuyển sinh mới nhất)
-    fireEvent.click(screen.getByRole("tab", { name: /Tuyển sinh mới nhất/i }));
-    expect(screen.getByRole("tab", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(screen.getByRole("button", { name: /Tuyển sinh mới nhất/i }));
+    expect(screen.getByRole("button", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   test("auto advances slide every 2 seconds", () => {
     render(<HeroSlider />);
 
     // Initially on slide 0
-    expect(screen.getByRole("tab", { name: /Đăng ký tư vấn/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Đăng ký tư vấn/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
 
     // Fast-forward 2 seconds
     act(() => {
@@ -56,7 +80,10 @@ describe("HeroSlider", () => {
     });
 
     // Should be on slide 1
-    expect(screen.getByRole("tab", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
 
     // Fast-forward another 2 seconds
     act(() => {
@@ -64,14 +91,20 @@ describe("HeroSlider", () => {
     });
 
     // Should be on slide 2
-    expect(screen.getByRole("tab", { name: /Học bổng QTKD 30%/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Học bổng QTKD 30%/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
 
     // Fast-forward another 2 seconds (loop back to slide 0)
     act(() => {
       vi.advanceTimersByTime(2000);
     });
 
-    expect(screen.getByRole("tab", { name: /Đăng ký tư vấn/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Đăng ký tư vấn/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   test("pauses auto advance when hovered", () => {
@@ -88,7 +121,10 @@ describe("HeroSlider", () => {
     });
 
     // Should still be on slide 0
-    expect(screen.getByRole("tab", { name: /Đăng ký tư vấn/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Đăng ký tư vấn/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
 
     // Leave mouse
     fireEvent.mouseLeave(slider);
@@ -99,6 +135,71 @@ describe("HeroSlider", () => {
     });
 
     // Now it advances
-    expect(screen.getByRole("tab", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("button", { name: /Tuyển sinh mới nhất/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+  test("keeps autoplay paused while a form field is focused, even after mouse leaves", () => {
+    render(<HeroSlider />);
+    const slider = screen.getByRole("region", { name: /Hero banner carousel/i });
+    fireEvent.focus(screen.getByPlaceholderText("Nhập họ tên của bạn"));
+    fireEvent.mouseLeave(slider);
+    act(() => vi.advanceTimersByTime(4000));
+    expect(screen.getByRole("button", { name: /Chuyển đến: Đăng ký tư vấn/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  test("honors reduced motion and explicit stop", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+    );
+    render(<HeroSlider />);
+    act(() => vi.advanceTimersByTime(4000));
+    expect(screen.getByRole("button", { name: /Chuyển đến: Đăng ký tư vấn/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Dừng tự động chuyển slide" }));
+    expect(screen.getByRole("button", { name: "Bật tự động chuyển slide" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  test("makes inactive slides inert and opens the form from another slide", () => {
+    HTMLElement.prototype.scrollIntoView = vi.fn();
+    render(<HeroSlider />);
+    fireEvent.click(screen.getByRole("button", { name: /Chuyển đến: Tuyển sinh mới nhất/ }));
+    expect(
+      screen.queryByRole("heading", { name: /Hoàn thiện bằng đại học/ }),
+    ).not.toBeInTheDocument();
+    expect(document.querySelector('[aria-label="1 of 3: Đăng ký tư vấn"]')).toHaveAttribute(
+      "inert",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Đăng ký xét tuyển ngay" }));
+    expect(screen.getByPlaceholderText("Nhập họ tên của bạn")).toHaveFocus();
+    expect(document.querySelector('[aria-label="1 of 3: Đăng ký tư vấn"]')).not.toHaveAttribute(
+      "inert",
+    );
+    delete (HTMLElement.prototype as Partial<HTMLElement>).scrollIntoView;
+  });
+  test("explicit stop survives timer ticks and autoplay can be resumed", () => {
+    render(<HeroSlider />);
+    fireEvent.click(screen.getByRole("button", { name: "Dừng tự động chuyển slide" }));
+    act(() => vi.advanceTimersByTime(4000));
+    expect(screen.getByRole("button", { name: /Chuyển đến: Đăng ký tư vấn/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Bật tự động chuyển slide" }));
+    act(() => vi.advanceTimersByTime(2000));
+    expect(screen.getByRole("button", { name: /Chuyển đến: Tuyển sinh mới nhất/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 });

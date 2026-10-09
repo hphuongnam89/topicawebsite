@@ -1,14 +1,7 @@
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import {
-  GraduationCap,
-  Globe,
-  Laptop,
-  Shield,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { GraduationCap, Globe, Laptop, Shield, Users, type LucideIcon } from "lucide-react";
 
 /** Claims mapped to the official source audit on 2026-09-03. */
 const trustItems = [
@@ -56,10 +49,7 @@ export function TrustSection({ data }: TrustSectionProps) {
   const items = data && data.length > 0 ? data : trustItems;
 
   return (
-    <section
-      className="border-y border-line-200 bg-canvas py-6 sm:py-8"
-      aria-label="Dấu ấn Topica"
-    >
+    <section className="border-y border-line-200 bg-canvas py-6 sm:py-8" aria-label="Dấu ấn Topica">
       <Container>
         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line-200 bg-line-200 sm:grid-cols-3 lg:grid-cols-5">
           {items.map((item, index) => {
@@ -81,12 +71,7 @@ export function TrustSection({ data }: TrustSectionProps) {
             );
 
             return (
-              <ScrollReveal
-                key={index}
-                variant="fadeUp"
-                delay={delay}
-                className="min-w-0 bg-paper"
-              >
+              <ScrollReveal key={index} variant="fadeUp" delay={delay} className="min-w-0 bg-paper">
                 {item.sourceUrl ? (
                   <a
                     href={item.sourceUrl}

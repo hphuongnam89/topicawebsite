@@ -84,6 +84,7 @@ export interface PaginatedArticles {
 }
 
 export interface CmsService {
+  getPages(): Promise<CmsPage[]>;
   getPageBySlug(slug: string): Promise<CmsPage | null>;
   getPageByPath(path: string): Promise<CmsPage | null>;
   getArticles(params?: ArticleQuery): Promise<PaginatedArticles>;

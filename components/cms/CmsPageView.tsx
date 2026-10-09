@@ -30,7 +30,9 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
         ]}
       />
 
-      <section className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}>
+      <section
+        className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}
+      >
         <Container size="default">
           {page.featuredImage && (
             <ScrollReveal variant="imageReveal">

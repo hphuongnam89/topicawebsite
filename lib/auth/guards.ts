@@ -30,7 +30,7 @@ export async function requireRole(roles: UserRole[]): Promise<AuthResult> {
 export async function requirePermission(
   resource: ResourceKind,
   action: Action,
-  isOwner = false
+  isOwner = false,
 ): Promise<AuthResult> {
   const result = await requireUser();
   if ("response" in result) return result;

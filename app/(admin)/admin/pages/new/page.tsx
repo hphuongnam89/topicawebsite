@@ -10,7 +10,7 @@ export default async function NewPagePage() {
   }
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <PageEditorForm isEdit={false} />
     </div>
   );

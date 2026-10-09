@@ -29,7 +29,11 @@ export async function NewsPreview() {
         {featuredArticle ? (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="h-full">
-              <ArticleCard article={featuredArticle} variant="homepage-featured" className="h-full" />
+              <ArticleCard
+                article={featuredArticle}
+                variant="homepage-featured"
+                className="h-full"
+              />
             </div>
             <div className="flex flex-col gap-4">
               {regularArticles.map((article) => (

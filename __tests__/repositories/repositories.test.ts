@@ -126,25 +126,27 @@ describe("Repositories Unit Tests", () => {
   });
 });
 
-  describe("ContentRepository Optimistic Locking", () => {
-    it("should reject createRevision if expectedRevisionNo does not match current max_no", async () => {
-      // Mock db returns max_no = 5
-      queryMock.mockResolvedValueOnce({ rows: [{ max_no: 5 }] });
-      
-      await expect(
-        contentRepository.createRevision("content-1", { title: "Test" }, 4) // Expected 4, but it is 5
-      ).rejects.toThrow("Conflict: Content has been modified by another user. Optimistic lock failed.");
-    });
-    
-    it("should accept createRevision if expectedRevisionNo matches current max_no", async () => {
-      // max_no = 5
-      queryMock.mockResolvedValueOnce({ rows: [{ max_no: 5 }] });
-      // Insert revision
-      queryMock.mockResolvedValueOnce({ rows: [{ id: "rev-2", revision_no: 6 }] });
-      // Update draft
-      queryMock.mockResolvedValueOnce({});
-      
-      const rev = await contentRepository.createRevision("content-1", { title: "Test" }, 5);
-      expect(rev.revision_no).toBe(6);
-    });
+describe("ContentRepository Optimistic Locking", () => {
+  it("should reject createRevision if expectedRevisionNo does not match current max_no", async () => {
+    // Mock db returns max_no = 5
+    queryMock.mockResolvedValueOnce({ rows: [{ max_no: 5 }] });
+
+    await expect(
+      contentRepository.createRevision("content-1", { title: "Test" }, 4), // Expected 4, but it is 5
+    ).rejects.toThrow(
+      "Conflict: Content has been modified by another user. Optimistic lock failed.",
+    );
   });
+
+  it("should accept createRevision if expectedRevisionNo matches current max_no", async () => {
+    // max_no = 5
+    queryMock.mockResolvedValueOnce({ rows: [{ max_no: 5 }] });
+    // Insert revision
+    queryMock.mockResolvedValueOnce({ rows: [{ id: "rev-2", revision_no: 6 }] });
+    // Update draft
+    queryMock.mockResolvedValueOnce({});
+
+    const rev = await contentRepository.createRevision("content-1", { title: "Test" }, 5);
+    expect(rev.revision_no).toBe(6);
+  });
+});

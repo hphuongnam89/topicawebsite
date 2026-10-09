@@ -1,9 +1,12 @@
+import { isPublicClaimApproved } from "@/CONTENT_SOURCE_OF_TRUTH";
+
 export type EvidenceStatus = "verified" | "needs_confirmation" | "omitted";
 
 export type HomepageFact = {
   label: string;
   value: string;
   status: EvidenceStatus;
+  claimId?: string;
   sourceUrl?: string;
 };
 
@@ -25,12 +28,14 @@ export const homepageContent = {
       label: "Đối tượng",
       value: "THPT hoặc tương đương; người đã có văn bằng phù hợp",
       status: "verified",
+      claimId: "admissions.audience",
       sourceUrl: "https://topicauni.edu.vn/thong-tin-tuyen-sinh-nam-2026/",
     },
     {
       label: "Hình thức",
       value: "Đào tạo từ xa · E-learning qua LMS",
       status: "verified",
+      claimId: "delivery.distance",
       sourceUrl:
         "https://topicauni.edu.vn/thong-bao-tuyen-sinh-dai-hoc-chinh-quy-hinh-thuc-tu-xa-pxuni-elearning-nam-2026-dot-2/",
     },
@@ -38,6 +43,7 @@ export const homepageContent = {
       label: "Học phí tham khảo",
       value: "600.000đ/tín chỉ · theo thông báo 2026 – đợt 2",
       status: "verified",
+      claimId: "tuition.per-credit",
       sourceUrl:
         "https://topicauni.edu.vn/thong-bao-tuyen-sinh-dai-hoc-chinh-quy-hinh-thuc-tu-xa-pxuni-elearning-nam-2026-dot-2/",
     },
@@ -45,12 +51,14 @@ export const homepageContent = {
       label: "Học bổng Talent",
       value: "Giảm 30% toàn khóa · áp dụng theo điều kiện thông báo",
       status: "verified",
+      claimId: "scholarship.talent-30",
       sourceUrl: "https://topicauni.edu.vn/hoc-phi/",
     },
     {
       label: "Văn bằng",
       value: "Do Trường Đại học Phú Xuân cấp",
       status: "verified",
+      claimId: "degree.issuer",
       sourceUrl: "https://topicauni.edu.vn/",
     },
   ] satisfies readonly HomepageFact[],
@@ -129,5 +137,5 @@ export const homepageContent = {
 } as const;
 
 export const verifiedHomepageFacts: readonly HomepageFact[] = homepageContent.facts.filter(
-  (fact) => fact.status === "verified",
+  (fact) => fact.status === "verified" && (!fact.claimId || isPublicClaimApproved(fact.claimId)),
 );

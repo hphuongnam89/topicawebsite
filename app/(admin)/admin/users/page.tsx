@@ -1,16 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Users,
-  PlusCircle,
-  Edit,
-  Trash2,
-  RefreshCw,
-  Shield,
-  ShieldCheck,
-  X
-} from "lucide-react";
+import { Users, PlusCircle, Edit, Trash2, RefreshCw, Shield, ShieldCheck, X } from "lucide-react";
 
 interface UserItem {
   id: string;
@@ -25,13 +16,13 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     id: "",
     username: "",
     password: "",
     name: "",
-    role: "editor"
+    role: "editor",
   });
 
   const [saving, setSaving] = useState(false);
@@ -67,12 +58,12 @@ export default function AdminUsersPage() {
 
   const handleOpenEdit = (user: UserItem) => {
     setIsEditMode(true);
-    setFormData({ 
-      id: user.id, 
-      username: user.username, 
+    setFormData({
+      id: user.id,
+      username: user.username,
       password: "", // empty password means no change
-      name: user.name, 
-      role: user.role 
+      name: user.name,
+      role: user.role,
     });
     setError(null);
     setIsModalOpen(true);
@@ -83,17 +74,17 @@ export default function AdminUsersPage() {
       alert("Bạn không thể xóa tài khoản Quản trị viên gốc.");
       return;
     }
-    
+
     if (!window.confirm(`Bạn có chắc chắn muốn xóa người dùng "${username}"?`)) {
       return;
     }
-    
+
     try {
       const res = await fetch(`/api/admin/users?id=${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
         setUsers((prev) => prev.filter((u) => u.id !== id));
       } else {
@@ -134,21 +125,21 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-5xl mx-auto space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl flex items-center gap-3">
+          <h1 className="flex items-center gap-3 font-display text-2xl font-bold text-ink-950 sm:text-3xl">
             <Users className="h-8 w-8 text-brand-700" />
             Quản lý Tài khoản (Users)
           </h1>
-          <p className="mt-1 text-body-sm text-ink-500">
+          <p className="text-ink-500 mt-1 text-body-sm">
             Quản lý quyền truy cập Admin và Biên tập viên của hệ thống
           </p>
         </div>
         <button
           onClick={handleOpenNew}
-          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 transition-all"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
         >
           <PlusCircle className="h-4 w-4" />
           <span>Thêm người dùng</span>
@@ -159,18 +150,20 @@ export default function AdminUsersPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="admin-data-table w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="text-ink-500 border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase">
               <tr>
                 <th className="px-6 py-3.5">Người dùng</th>
                 <th className="px-4 py-3.5">Vai trò</th>
-                  <th className="px-4 py-3.5 hidden sm:table-cell">Ngày tạo</th>
-                  <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
-                </tr>
+                <th className="hidden px-4 py-3.5 sm:table-cell">Ngày tạo</th>
+                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-3.5 text-right shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                  Thao tác
+                </th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="py-12 text-center text-ink-500">
+                  <td colSpan={4} className="text-ink-500 py-12 text-center">
                     <div className="flex items-center justify-center gap-2">
                       <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
                       <span>Đang tải danh sách...</span>
@@ -179,17 +172,17 @@ export default function AdminUsersPage() {
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-12 text-center text-ink-500">
+                  <td colSpan={4} className="text-ink-500 py-12 text-center">
                     Chưa có tài khoản nào.
                   </td>
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={user.id} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-semibold text-ink-950">{user.name}</span>
-                        <span className="text-xs text-ink-500">@{user.username}</span>
+                        <span className="text-ink-500 text-xs">@{user.username}</span>
                       </div>
                     </td>
 
@@ -201,20 +194,24 @@ export default function AdminUsersPage() {
                             : "bg-slate-100 text-slate-700"
                         }`}
                       >
-                        {user.role === "admin" ? <ShieldCheck className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
+                        {user.role === "admin" ? (
+                          <ShieldCheck className="h-3 w-3" />
+                        ) : (
+                          <Shield className="h-3 w-3" />
+                        )}
                         {user.role === "admin" ? "Quản trị viên" : "Biên tập viên"}
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden sm:table-cell">
+                    <td className="text-ink-500 hidden px-4 py-4 text-xs whitespace-nowrap sm:table-cell">
                       {new Date(user.created_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                    <td className="sticky right-0 z-10 bg-white px-6 py-4 text-right whitespace-nowrap shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(user)}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-slate-100 hover:text-brand-700 transition-colors"
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-100 hover:text-brand-700"
                           title="Chỉnh sửa"
                         >
                           <Edit className="h-4 w-4" />
@@ -222,7 +219,7 @@ export default function AdminUsersPage() {
                         {user.id !== "admin_root" && (
                           <button
                             onClick={() => handleDelete(user.id, user.username)}
-                            className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                            className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                             title="Xóa người dùng"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -240,21 +237,21 @@ export default function AdminUsersPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-line-200 bg-white shadow-xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-2xl border border-line-200 bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
               <h2 className="font-display text-lg font-bold text-ink-950">
                 {isEditMode ? "Chỉnh sửa Tài khoản" : "Thêm Tài khoản mới"}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-full p-1.5 text-ink-500 hover:bg-slate-100 transition-colors"
+                className="text-ink-500 rounded-full p-1.5 transition-colors hover:bg-slate-100"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 p-6">
               {error && (
                 <div role="alert" className="rounded-lg bg-error/10 p-3 text-sm text-error">
                   {error}
@@ -262,7 +259,9 @@ export default function AdminUsersPage() {
               )}
 
               <div className="space-y-1">
-                <label htmlFor="user-name" className="text-sm font-semibold text-ink-950">Họ và tên</label>
+                <label htmlFor="user-name" className="text-sm font-semibold text-ink-950">
+                  Họ và tên
+                </label>
                 <input
                   id="user-name"
                   type="text"
@@ -274,7 +273,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="user-username" className="text-sm font-semibold text-ink-950">Tên đăng nhập</label>
+                <label htmlFor="user-username" className="text-sm font-semibold text-ink-950">
+                  Tên đăng nhập
+                </label>
                 <input
                   id="user-username"
                   type="text"
@@ -282,7 +283,7 @@ export default function AdminUsersPage() {
                   disabled={isEditMode} // Cannot change username after creation
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-sm text-ink-950 focus:border-brand-600 focus:outline-none disabled:bg-slate-100 disabled:text-ink-500"
+                  className="disabled:text-ink-500 h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-sm text-ink-950 focus:border-brand-600 focus:outline-none disabled:bg-slate-100"
                 />
               </div>
 
@@ -302,7 +303,9 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="space-y-1">
-                <label htmlFor="user-role" className="text-sm font-semibold text-ink-950">Phân quyền</label>
+                <label htmlFor="user-role" className="text-sm font-semibold text-ink-950">
+                  Phân quyền
+                </label>
                 <select
                   id="user-role"
                   value={formData.role}
@@ -315,20 +318,20 @@ export default function AdminUsersPage() {
                 </select>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-700 hover:bg-slate-100 transition-colors"
+                  className="text-ink-700 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-slate-100"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+                  className="inline-flex items-center justify-center rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
                 >
-                  {saving ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+                  {saving ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : null}
                   Lưu tài khoản
                 </button>
               </div>

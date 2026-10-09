@@ -109,10 +109,10 @@ export class ContentRepository {
       const revision = revRes.rows[0] as ContentRevisionRecord;
 
       // 3. Gán draft_revision_id vào Content Item
-      await db.query(
-        `UPDATE content_items SET draft_revision_id = $1 WHERE id = $2`,
-        [revision.id, item.id],
-      );
+      await db.query(`UPDATE content_items SET draft_revision_id = $1 WHERE id = $2`, [
+        revision.id,
+        item.id,
+      ]);
       item.draft_revision_id = revision.id;
 
       return { item, revision };
@@ -125,7 +125,7 @@ export class ContentRepository {
   async createRevision(
     contentId: string,
     input: CreateRevisionInput,
-    expectedRevisionNo?: number
+    expectedRevisionNo?: number,
   ): Promise<ContentRevisionRecord> {
     return transaction(async () => {
       const db = getDb();
@@ -136,11 +136,13 @@ export class ContentRepository {
         [contentId],
       );
       const currentMaxNo = maxRes.rows[0]?.max_no || 0;
-      
+
       if (expectedRevisionNo !== undefined && currentMaxNo !== expectedRevisionNo) {
-        throw new Error("Conflict: Content has been modified by another user. Optimistic lock failed.");
+        throw new Error(
+          "Conflict: Content has been modified by another user. Optimistic lock failed.",
+        );
       }
-      
+
       const nextNo = currentMaxNo + 1;
 
       // Tạo revision mới
@@ -181,11 +183,7 @@ export class ContentRepository {
   /**
    * Xuất bản (Publish) một revision cụ thể
    */
-  async publishRevision(
-    contentId: string,
-    revisionId: string,
-    actorId?: string,
-  ): Promise<boolean> {
+  async publishRevision(contentId: string, revisionId: string, actorId?: string): Promise<boolean> {
     return transaction(async () => {
       const db = getDb();
 
@@ -295,12 +293,14 @@ export class ContentRepository {
   /**
    * Danh sách nội dung cho Admin Panel với bộ lọc và phân trang
    */
-  async list(filter: {
-    kind?: ContentKind;
-    locale?: Locale;
-    limit?: number;
-    offset?: number;
-  } = {}): Promise<{ items: ContentItemRecord[]; total: number }> {
+  async list(
+    filter: {
+      kind?: ContentKind;
+      locale?: Locale;
+      limit?: number;
+      offset?: number;
+    } = {},
+  ): Promise<{ items: ContentItemRecord[]; total: number }> {
     const db = getDb();
     const { kind, locale = "vi", limit = 20, offset = 0 } = filter;
 
@@ -314,7 +314,10 @@ export class ContentRepository {
 
     const where = `WHERE ${conditions.join(" AND ")}`;
 
-    const countRes = await db.query(`SELECT COUNT(*)::int as count FROM content_items ${where}`, params);
+    const countRes = await db.query(
+      `SELECT COUNT(*)::int as count FROM content_items ${where}`,
+      params,
+    );
     const total = countRes.rows[0]?.count || 0;
 
     params.push(limit);

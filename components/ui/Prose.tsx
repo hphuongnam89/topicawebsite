@@ -16,20 +16,10 @@ export interface ProseProps extends React.HTMLAttributes<HTMLDivElement> {
  * Can be used either with `html` prop (dangerouslySetInnerHTML) or with children.
  */
 export function Prose({ html, wide = false, className, children, ...props }: ProseProps) {
-  const classes = cn(
-    "prose-editorial",
-    !wide && "max-w-[var(--width-measure)]",
-    className,
-  );
+  const classes = cn("prose-editorial", !wide && "max-w-[var(--width-measure)]", className);
 
   if (html) {
-    return (
-      <div
-        className={classes}
-        dangerouslySetInnerHTML={{ __html: html }}
-        {...props}
-      />
-    );
+    return <div className={classes} dangerouslySetInnerHTML={{ __html: html }} {...props} />;
   }
 
   return (

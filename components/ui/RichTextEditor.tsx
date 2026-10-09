@@ -47,14 +47,15 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-brand-600 underline',
+          class: "text-brand-600 underline",
         },
       }),
     ],
     content: value,
     editorProps: {
       attributes: {
-        class: "prose prose-sm sm:prose-base focus:outline-none max-w-none min-h-[350px] p-4 bg-white",
+        class:
+          "prose prose-sm sm:prose-base focus:outline-none max-w-none min-h-[350px] p-4 bg-white",
       },
     },
     onUpdate: ({ editor }) => {
@@ -99,14 +100,14 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
 
   if (!editor) {
     return (
-      <div className="w-full border border-line-200 rounded-lg min-h-[350px] bg-slate-50 flex items-center justify-center">
+      <div className="flex min-h-[350px] w-full items-center justify-center rounded-lg border border-line-200 bg-slate-50">
         <RefreshCw className="h-6 w-6 animate-spin text-brand-600" />
       </div>
     );
   }
 
   return (
-    <div className="border border-line-200 rounded-lg overflow-hidden flex flex-col bg-white">
+    <div className="flex flex-col overflow-hidden rounded-lg border border-line-200 bg-white">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 border-b border-line-200 bg-slate-50 p-2">
         <ToolbarButton
@@ -121,7 +122,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
           icon={<Heading3 className="h-4 w-4" />}
           title="Tiêu đề 3"
         />
-        <div className="w-px h-5 bg-line-200 mx-1"></div>
+        <div className="mx-1 h-5 w-px bg-line-200"></div>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           isActive={editor.isActive("bold")}
@@ -140,7 +141,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
           icon={<Strikethrough className="h-4 w-4" />}
           title="Gạch ngang"
         />
-        <div className="w-px h-5 bg-line-200 mx-1"></div>
+        <div className="mx-1 h-5 w-px bg-line-200"></div>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           isActive={editor.isActive("bulletList")}
@@ -159,7 +160,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
           icon={<Quote className="h-4 w-4" />}
           title="Trích dẫn"
         />
-        <div className="w-px h-5 bg-line-200 mx-1"></div>
+        <div className="mx-1 h-5 w-px bg-line-200"></div>
         <ToolbarButton
           onClick={setLink}
           isActive={editor.isActive("link")}
@@ -173,7 +174,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
             title="Bỏ liên kết"
           />
         )}
-        <div className="w-px h-5 bg-line-200 mx-1"></div>
+        <div className="mx-1 h-5 w-px bg-line-200"></div>
         <input
           type="file"
           ref={fileInputRef}
@@ -185,7 +186,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="p-1.5 rounded-md text-ink-600 hover:bg-slate-200 hover:text-ink-950 transition-colors disabled:opacity-50"
+          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-200 hover:text-ink-950 disabled:opacity-50"
           title="Chèn ảnh"
         >
           {uploading ? (
@@ -210,7 +211,7 @@ export function RichTextEditor({ value, onChange, onUploadImage }: RichTextEdito
       </div>
 
       {/* Editor Content Area */}
-      <div className="flex-1 overflow-y-auto cursor-text" onClick={() => editor.commands.focus()}>
+      <div className="flex-1 cursor-text overflow-y-auto" onClick={() => editor.commands.focus()}>
         <EditorContent editor={editor} />
       </div>
     </div>
@@ -236,11 +237,11 @@ function ToolbarButton({
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className={`p-1.5 rounded-md transition-colors ${
+      className={`rounded-md p-1.5 transition-colors ${
         isActive
           ? "bg-brand-100 text-brand-700"
           : "text-ink-600 hover:bg-slate-200 hover:text-ink-950"
-      } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
     >
       {icon}
     </button>

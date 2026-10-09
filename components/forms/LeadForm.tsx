@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 import { leadFormSchema, type LeadFormData, type LeadFormErrors } from "@/lib/form-schema";
 import { homepageContent } from "@/data/homepage-content";
 import { trackEvent } from "@/lib/analytics";
+import { PRIVACY_NOTICE_VERSION } from "@/lib/privacy-policy";
 
 type FormStatus = "idle" | "validating" | "submitting" | "success" | "error";
 type LeadFormProps = {
@@ -37,16 +38,24 @@ function getAttribution(): Record<
     device_type: "",
   };
   if (typeof window === "undefined") return empty;
-  const values = Object.fromEntries(
-    attributionKeys.map((key) => [
-      key,
-      new URLSearchParams(window.location.search).get(`utm_${key}`) ||
-        sessionStorage.getItem(`utm_${key}`) ||
-        "",
-    ]),
-  ) as Record<AttributionKey, string>;
-  for (const key of attributionKeys)
-    if (values[key]) sessionStorage.setItem(`utm_${key}`, values[key]);
+  let values = Object.fromEntries(attributionKeys.map((key) => [key, ""])) as Record<
+    AttributionKey,
+    string
+  >;
+  try {
+    values = Object.fromEntries(
+      attributionKeys.map((key) => [
+        key,
+        new URLSearchParams(window.location.search).get(`utm_${key}`) ||
+          sessionStorage.getItem(`utm_${key}`) ||
+          "",
+      ]),
+    ) as Record<AttributionKey, string>;
+    for (const key of attributionKeys)
+      if (values[key]) sessionStorage.setItem(`utm_${key}`, values[key]);
+  } catch {
+    // Attribution is optional; restricted storage must never block lead submission.
+  }
   return {
     ...values,
     landing_page: window.location.pathname,
@@ -114,6 +123,7 @@ export function LeadForm({
             program_name: programName,
             program_direction: programDirection,
             notes: "Đăng ký nhận lộ trình và học phí.",
+            consent: result.data.consent,
             ...getAttribution(),
           }),
         });
@@ -167,15 +177,6 @@ export function LeadForm({
           </p>
         )}
       </div>
-      {(Object.keys(errors).length > 0 || globalError) && (
-        <div
-          className="mt-5 flex items-start gap-2 rounded-md bg-error/10 p-3 text-body-sm text-error"
-          role="alert"
-        >
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>{globalError || "Vui lòng kiểm tra lại thông tin."}</span>
-        </div>
-      )}
       <div className="mt-5 space-y-4">
         <div>
           <label htmlFor="fullName" className="block text-body-sm font-semibold">
@@ -193,11 +194,9 @@ export function LeadForm({
             aria-describedby={errors.fullName ? "fullName-error" : undefined}
             placeholder="Nhập họ tên của bạn"
           />
-          {errors.fullName && (
-            <p id="fullName-error" className="mt-1 text-body-sm text-error">
-              {errors.fullName}
-            </p>
-          )}
+          <p id="fullName-error" aria-live="polite" className="mt-1 text-body-sm text-error">
+            {errors.fullName || "\u00a0"}
+          </p>
         </div>
         <div>
           <label htmlFor="phone" className="block text-body-sm font-semibold">
@@ -217,11 +216,9 @@ export function LeadForm({
             aria-describedby={errors.phone ? "phone-error" : undefined}
             placeholder="VD: 0912 345 678"
           />
-          {errors.phone && (
-            <p id="phone-error" className="mt-1 text-body-sm text-error">
-              {errors.phone}
-            </p>
-          )}
+          <p id="phone-error" aria-live="polite" className="mt-1 text-body-sm text-error">
+            {errors.phone || "\u00a0"}
+          </p>
         </div>
         <div className="flex items-start gap-3">
           <input
@@ -243,14 +240,13 @@ export function LeadForm({
               className="font-semibold text-info underline underline-offset-2"
             >
               Chính sách bảo mật
-            </a>
+            </a>{" "}
+            (phiên bản {PRIVACY_NOTICE_VERSION})
           </label>
         </div>
-        {errors.consent && (
-          <p id="consent-error" className="text-body-sm text-error">
-            {errors.consent}
-          </p>
-        )}
+        <p id="consent-error" aria-live="polite" className="min-h-11 text-body-sm text-error">
+          {errors.consent || "\u00a0"}
+        </p>
       </div>
       <button
         type="submit"
@@ -258,10 +254,21 @@ export function LeadForm({
         className="mt-5 inline-flex h-12 w-full items-center justify-center rounded-sm bg-brand-700 px-5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info disabled:cursor-not-allowed disabled:opacity-60"
       >
         {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
-        {status === "submitting" ? "Đang gửi thông tin…" : homepageContent.hero.primaryCta}
+        {status === "submitting" ? (
+          "Đang gửi thông tin…"
+        ) : (
+          <>
+            <span className="sm:hidden">Nhận tư vấn</span>
+            <span className="hidden sm:inline">{homepageContent.hero.primaryCta}</span>
+          </>
+        )}
       </button>
-      <p className="mt-3 text-center text-[0.75rem] text-ink-600">
-        Thông tin chỉ dùng cho mục đích tư vấn tuyển sinh. {responseTime}
+      <p
+        role={globalError ? "alert" : undefined}
+        aria-live="polite"
+        className={`mt-3 min-h-[4.5rem] text-center text-[0.75rem] sm:min-h-11 ${globalError ? "text-error" : "text-ink-600"}`}
+      >
+        {globalError || `Thông tin chỉ dùng cho mục đích tư vấn tuyển sinh. ${responseTime}`}
       </p>
     </form>
   );

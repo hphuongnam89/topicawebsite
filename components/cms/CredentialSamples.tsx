@@ -15,7 +15,7 @@ export function CredentialSamples() {
   return (
     <div className="space-y-8">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="font-sans text-body-lg text-ink-700">
+        <p className="text-ink-700 font-sans text-body-lg">
           Mẫu phôi bằng và mẫu bảng điểm áp dụng cho phương thức đào tạo từ xa.
         </p>
       </div>

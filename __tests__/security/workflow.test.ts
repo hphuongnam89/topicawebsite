@@ -19,7 +19,12 @@ vi.mock("@/lib/db/connection", () => {
 
 // Mock Session User
 const mockAdmin = { id: "1", username: "admin", name: "Admin", role: "admin" as const };
-const mockContributor = { id: "2", username: "contributor", name: "Cont", role: "contributor" as const };
+const mockContributor = {
+  id: "2",
+  username: "contributor",
+  name: "Cont",
+  role: "contributor" as const,
+};
 
 const db = getDb();
 const queryMock = (db as any).query;
@@ -43,10 +48,10 @@ describe("Workflow State Machine", () => {
 
   test("transition throws error if role forbidden", async () => {
     queryMock.mockResolvedValueOnce({ rowCount: 0, rows: [] }); // current state: draft
-    
+
     // Contributor tries to publish (draft -> published)
     await expect(
-      workflowService.transition("content-1", "rev-1", mockContributor, "published")
+      workflowService.transition("content-1", "rev-1", mockContributor, "published"),
     ).rejects.toThrow(/Forbidden: Role contributor cannot transition from draft to published/);
   });
 
@@ -55,16 +60,17 @@ describe("Workflow State Machine", () => {
     queryMock.mockResolvedValueOnce({ rowCount: 1, rows: [{ id: "rev-1" }] }); // revision check pass
     queryMock.mockResolvedValueOnce({}); // insert event
     queryMock.mockResolvedValueOnce({}); // update content items
-    
+
     // Admin tries to publish (approved -> published)
     const result = await workflowService.transition("content-1", "rev-1", mockAdmin, "published");
     expect(result).toBe(true);
     expect(queryMock).toHaveBeenCalledTimes(4);
-    
+
     // check if it updated published_revision_id
-    expect(queryMock).toHaveBeenNthCalledWith(4, 
+    expect(queryMock).toHaveBeenNthCalledWith(
+      4,
       expect.stringContaining("UPDATE content_items SET published_revision_id = $1"),
-      ["rev-1", "content-1"]
+      ["rev-1", "content-1"],
     );
   });
 });

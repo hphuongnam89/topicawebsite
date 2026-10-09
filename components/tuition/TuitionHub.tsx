@@ -90,8 +90,8 @@ export function TuitionHub() {
                   mỗi tín chỉ
                 </p>
                 <p className="relative z-10 mt-6 border-t border-line-200 pt-5 text-body-sm text-ink-600">
-                  Lộ trình tăng học phí dự kiến không quá 10%/năm và thực hiện vào đầu học kỳ của năm
-                  học mới nếu có. Hãy xác nhận lại mức áp dụng cho khóa nhập học của bạn.
+                  Lộ trình tăng học phí dự kiến không quá 10%/năm và thực hiện vào đầu học kỳ của
+                  năm học mới nếu có. Hãy xác nhận lại mức áp dụng cho khóa nhập học của bạn.
                 </p>
               </div>
             </ScrollReveal>

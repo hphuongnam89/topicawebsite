@@ -30,19 +30,8 @@ export function Section({
   ...props
 }: SectionProps) {
   return (
-    <Component
-      className={cn(
-        "py-16 lg:py-24",
-        variantStyles[variant],
-        className,
-      )}
-      {...props}
-    >
-      {contained ? (
-        <Container size={containerSize}>{children}</Container>
-      ) : (
-        children
-      )}
+    <Component className={cn("py-16 lg:py-24", variantStyles[variant], className)} {...props}>
+      {contained ? <Container size={containerSize}>{children}</Container> : children}
     </Component>
   );
 }

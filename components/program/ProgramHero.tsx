@@ -41,74 +41,75 @@ export function ProgramHero({
       <Container className="grid min-h-[38rem] min-w-0 gap-0 px-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <ScrollReveal variant="slideInLeft" className="min-w-0">
           <div className="min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
-          <nav aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
-            <ol className="flex min-w-0 flex-wrap gap-x-2 gap-y-1">
-              <li>
-                <Link className="whitespace-nowrap underline-offset-4 hover:underline" href="/">
-                  Trang chủ
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link
-                  className="whitespace-nowrap underline-offset-4 hover:underline"
-                  href="/nganh-dao-tao/"
-                >
-                  Ngành đào tạo
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li aria-current="page" className="min-w-0 [overflow-wrap:anywhere] break-words">
-                {program.officialName}
-              </li>
-            </ol>
-          </nav>
+            <nav aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
+              <ol className="flex min-w-0 flex-wrap gap-x-2 gap-y-1">
+                <li>
+                  <Link className="whitespace-nowrap underline-offset-4 hover:underline" href="/">
+                    Trang chủ
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li>
+                  <Link
+                    className="whitespace-nowrap underline-offset-4 hover:underline"
+                    href="/nganh-dao-tao/"
+                  >
+                    Ngành đào tạo
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page" className="min-w-0 [overflow-wrap:anywhere] break-words">
+                  {program.officialName}
+                </li>
+              </ol>
+            </nav>
 
-          <p className="mb-4 text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-            {program.heroLabel}
-          </p>
-          <h1
-            className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.045em] break-words text-[var(--color-academic-ink)] sm:max-w-[14ch] ${
-              program.officialName.length >= 35
-                ? "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02]"
-                : "text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.98]"
-            }`}
-          >
-            {program.officialName}
-          </h1>
-          <p className="mt-4 text-lg font-semibold text-[var(--color-academic-accent-strong)] sm:text-xl">
-            {program.marketingLabel}
-          </p>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--color-academic-muted)] sm:text-lg">
-            {program.summary}
-          </p>
-          <p className="mt-4 max-w-2xl text-sm leading-6 font-medium text-[var(--color-academic-ink)] sm:text-base">
-            {audience}
-          </p>
+            <p className="mb-4 text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
+              {program.heroLabel}
+            </p>
+            <h1
+              className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.045em] break-words text-[var(--color-academic-ink)] sm:max-w-[14ch] ${
+                program.officialName.length >= 35
+                  ? "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02]"
+                  : "text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.98]"
+              }`}
+            >
+              {program.officialName}
+            </h1>
+            <p className="mt-4 text-lg font-semibold text-[var(--color-academic-accent-strong)] sm:text-xl">
+              {program.marketingLabel}
+            </p>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--color-academic-muted)] sm:text-lg">
+              {program.summary}
+            </p>
+            <p className="mt-4 max-w-2xl text-sm leading-6 font-medium text-[var(--color-academic-ink)] sm:text-base">
+              {audience}
+            </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <ButtonLink
-              href="#program-consultation-form"
-              data-track="eligibility_click"
-              size="lg"
-              rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-              className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
-            >
-              Kiểm tra điều kiện & nhận lộ trình
-            </ButtonLink>
-            <ButtonLink
-              href={showAcademicDetails ? "#chuong-trinh" : "#thong-tin-tuyen-sinh"}
-              data-track="program_cta_click"
-              size="lg"
-              variant="secondary"
-              rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
-              className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
-            >
-              {showAcademicDetails ? "Xem chương trình" : "Xem thông tin tuyển sinh"}
-            </ButtonLink>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ButtonLink
+                href="#program-consultation-form"
+                data-track="eligibility_click"
+                size="lg"
+                rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
+              >
+                <span className="sm:hidden">Kiểm tra hồ sơ</span>
+                <span className="hidden sm:inline">Kiểm tra điều kiện & nhận lộ trình</span>
+              </ButtonLink>
+              <ButtonLink
+                href={showAcademicDetails ? "#chuong-trinh" : "#thong-tin-tuyen-sinh"}
+                data-track="program_cta_click"
+                size="lg"
+                variant="secondary"
+                rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
+                className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+              >
+                {showAcademicDetails ? "Xem chương trình" : "Xem thông tin tuyển sinh"}
+              </ButtonLink>
+            </div>
           </div>
-        </div>
-      </ScrollReveal>
+        </ScrollReveal>
 
         <ScrollReveal variant="slideInRight" delay={0.06} className="min-w-0">
           <div className="relative h-full min-w-0 border-t border-[var(--color-academic-rule)] bg-[var(--color-academic-paper)] px-[var(--academic-gutter)] py-12 lg:border-t-0 lg:border-l lg:pt-12 lg:pb-16">

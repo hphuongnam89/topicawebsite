@@ -47,7 +47,11 @@ export async function migrateDatabase(seed = true): Promise<void> {
         await client.query("BEGIN");
         await client.query("SELECT pg_advisory_xact_lock(741862901)");
         const schema = process.env.DATABASE_SCHEMA || "topica_runtime";
+        if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(schema)) {
+          throw new Error("DATABASE_SCHEMA must be a valid PostgreSQL identifier");
+        }
         await client.query(`CREATE SCHEMA IF NOT EXISTS "${schema}"`);
+        await client.query(`SET LOCAL search_path TO "${schema}"`);
         await client.query(
           "CREATE TABLE IF NOT EXISTS schema_migrations (version TEXT PRIMARY KEY, applied_at TEXT NOT NULL)",
         );

@@ -27,7 +27,10 @@ export default function AdminAccountPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [passwordMessage, setPasswordMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   // User management state
   const [users, setUsers] = useState<UserItem[]>([]);
@@ -37,7 +40,10 @@ export default function AdminAccountPage() {
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserRole, setNewUserRole] = useState("editor");
   const [creatingUser, setCreatingUser] = useState(false);
-  const [userMessage, setUserMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [userMessage, setUserMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -59,8 +65,6 @@ export default function AdminAccountPage() {
       await fetchUsers();
     })();
   }, []);
-
-  
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +149,7 @@ export default function AdminAccountPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+    <div className="mx-auto max-w-7xl space-y-8 p-6 lg:p-10">
       {/* Header */}
       <div>
         <div className="flex items-center gap-2">
@@ -154,25 +158,25 @@ export default function AdminAccountPage() {
             Tài khoản & Bảo mật
           </h1>
         </div>
-        <p className="mt-1 text-body-sm text-ink-500">
+        <p className="text-ink-500 mt-1 text-body-sm">
           Đổi mật khẩu tài khoản quản trị và phân quyền thành viên trong hệ thống.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Change Password Card */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <KeyRound className="h-4 w-4 text-brand-700" />
             <span>Đổi Mật Khẩu Cá Nhân</span>
           </h2>
 
           {passwordMessage && (
             <div
-              className={`flex items-start gap-3 rounded-lg p-3.5 text-body-sm border ${
+              className={`flex items-start gap-3 rounded-lg border p-3.5 text-body-sm ${
                 passwordMessage.type === "success"
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                  : "bg-red-50 text-red-800 border-red-200"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "border-red-200 bg-red-50 text-red-800"
               }`}
             >
               {passwordMessage.type === "success" ? (
@@ -186,7 +190,7 @@ export default function AdminAccountPage() {
 
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                 Mật khẩu hiện tại <span className="text-error">*</span>
               </label>
               <input
@@ -200,7 +204,7 @@ export default function AdminAccountPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                 Mật khẩu mới <span className="text-error">*</span>
               </label>
               <input
@@ -214,7 +218,7 @@ export default function AdminAccountPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                 Xác nhận mật khẩu mới <span className="text-error">*</span>
               </label>
               <input
@@ -230,27 +234,31 @@ export default function AdminAccountPage() {
             <button
               type="submit"
               disabled={passwordLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white hover:bg-brand-800 disabled:opacity-70 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-70"
             >
-              {passwordLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
+              {passwordLoading ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <Lock className="h-4 w-4" />
+              )}
               <span>{passwordLoading ? "Đang cập nhật..." : "Cập nhật mật khẩu"}</span>
             </button>
           </form>
         </div>
 
         {/* Create Sub-Account Form */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-5">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+        <div className="space-y-5 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             <UserPlus className="h-4 w-4 text-brand-700" />
             <span>Thêm Tài Khoản Thành Viên / Biên Tập Viên</span>
           </h2>
 
           {userMessage && (
             <div
-              className={`flex items-start gap-3 rounded-lg p-3.5 text-body-sm border ${
+              className={`flex items-start gap-3 rounded-lg border p-3.5 text-body-sm ${
                 userMessage.type === "success"
-                  ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                  : "bg-red-50 text-red-800 border-red-200"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "border-red-200 bg-red-50 text-red-800"
               }`}
             >
               {userMessage.type === "success" ? (
@@ -264,7 +272,7 @@ export default function AdminAccountPage() {
 
           <form onSubmit={handleCreateUser} className="space-y-4">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                 Họ và tên nhân viên <span className="text-error">*</span>
               </label>
               <input
@@ -279,7 +287,7 @@ export default function AdminAccountPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+                <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                   Username <span className="text-error">*</span>
                 </label>
                 <input
@@ -293,7 +301,7 @@ export default function AdminAccountPage() {
               </div>
 
               <div>
-                <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+                <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                   Vai trò (Role)
                 </label>
                 <select
@@ -308,7 +316,7 @@ export default function AdminAccountPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="text-ink-900 mb-1 block text-body-sm font-semibold">
                 Mật khẩu khởi tạo <span className="text-error">*</span>
               </label>
               <input
@@ -324,9 +332,13 @@ export default function AdminAccountPage() {
             <button
               type="submit"
               disabled={creatingUser}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white hover:bg-brand-800 disabled:opacity-70 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-70"
             >
-              {creatingUser ? <RefreshCw className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
+              {creatingUser ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <UserPlus className="h-4 w-4" />
+              )}
               <span>{creatingUser ? "Đang tạo..." : "Tạo tài khoản mới"}</span>
             </button>
           </form>
@@ -334,8 +346,8 @@ export default function AdminAccountPage() {
       </div>
 
       {/* Users List Table */}
-      <div className="rounded-xl border border-line-200 bg-white shadow-xs overflow-hidden">
-        <div className="border-b border-line-200 bg-slate-50 px-6 py-4 flex items-center gap-2">
+      <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
+        <div className="flex items-center gap-2 border-b border-line-200 bg-slate-50 px-6 py-4">
           <Users className="h-5 w-5 text-brand-700" />
           <h2 className="font-display text-base font-bold text-ink-950">
             Danh sách Tài khoản Quản trị ({users.length})
@@ -344,7 +356,7 @@ export default function AdminAccountPage() {
 
         <div className="overflow-x-auto">
           <table className="admin-data-table w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50/50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="text-ink-500 border-b border-line-200 bg-slate-50/50 text-xs font-semibold uppercase">
               <tr>
                 <th className="px-6 py-3.5">Họ tên & Username</th>
                 <th className="px-4 py-3.5">Vai trò</th>
@@ -355,16 +367,16 @@ export default function AdminAccountPage() {
             <tbody className="divide-y divide-line-100">
               {usersLoading ? (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-ink-500">
-                    <RefreshCw className="h-5 w-5 animate-spin mx-auto text-brand-700" />
+                  <td colSpan={4} className="text-ink-500 py-8 text-center">
+                    <RefreshCw className="mx-auto h-5 w-5 animate-spin text-brand-700" />
                   </td>
                 </tr>
               ) : (
                 users.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={u.id} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="font-semibold text-ink-950">{u.name}</div>
-                      <div className="text-xs text-ink-500">@{u.username}</div>
+                      <div className="text-ink-500 text-xs">@{u.username}</div>
                     </td>
                     <td className="px-4 py-4">
                       <span
@@ -377,20 +389,20 @@ export default function AdminAccountPage() {
                         {u.role === "admin" ? "Quản trị viên" : "Biên tập viên"}
                       </span>
                     </td>
-                    <td className="px-4 py-4 text-xs text-ink-500">
+                    <td className="text-ink-500 px-4 py-4 text-xs">
                       {new Date(u.created_at).toLocaleDateString("vi-VN")}
                     </td>
                     <td className="px-6 py-4 text-right">
                       {u.id !== "admin_root" ? (
                         <button
                           onClick={() => handleDeleteUser(u.id, u.username)}
-                          className="rounded p-1.5 text-ink-500 hover:bg-red-50 hover:text-error transition-colors"
+                          className="text-ink-500 rounded p-1.5 transition-colors hover:bg-red-50 hover:text-error"
                           title="Xóa tài khoản"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       ) : (
-                        <span className="text-xs text-ink-400 font-medium">Mặc định</span>
+                        <span className="text-xs font-medium text-ink-400">Mặc định</span>
                       )}
                     </td>
                   </tr>

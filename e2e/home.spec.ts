@@ -21,7 +21,7 @@ test.describe("Homepage", () => {
     await page.goto("/");
     await page
       .locator("form")
-      .getByRole("button", { name: /Kiểm tra điều kiện & nhận lộ trình/ })
+      .getByRole("button", { name: /Kiểm tra điều kiện|Nhận tư vấn/ })
       .click();
 
     await expect(page.locator("#fullName-error")).toContainText("Vui lòng nhập họ tên");

@@ -2,7 +2,7 @@ import { Mail, Phone } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { HeroSlider } from "@/components/sections/HeroSlider";
 import { contactInfo } from "@/data/campuses";
-import { homepageContent } from "@/data/homepage-content";
+import { homepageContent, verifiedHomepageFacts } from "@/data/homepage-content";
 import { DecisionStrip } from "@/components/sections/DecisionStrip";
 import { FitCheckSection } from "@/components/sections/FitCheckSection";
 import { LegalValueSection } from "@/components/sections/LegalValueSection";
@@ -55,7 +55,7 @@ export function Homepage() {
   return (
     <>
       <Hero />
-      <DecisionStrip facts={homepageContent.facts} />
+      <DecisionStrip facts={verifiedHomepageFacts} />
       <FitCheckSection />
       <ProgramsSection />
       <WhyTopicaSection />

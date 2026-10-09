@@ -14,12 +14,18 @@ export function SearchResultCard({ article, query, className }: SearchResultCard
   // Highlight search term in title
   const highlightQuery = (text: string, term?: string) => {
     if (!term || term.trim() === "") return text;
-    
+
     try {
-      const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
       const parts = text.split(regex);
-      return parts.map((part, i) => 
-        regex.test(part) ? <mark key={i} className="bg-brand-500/20 text-brand-700 font-semibold px-0.5 rounded">{part}</mark> : part
+      return parts.map((part, i) =>
+        regex.test(part) ? (
+          <mark key={i} className="rounded bg-brand-500/20 px-0.5 font-semibold text-brand-700">
+            {part}
+          </mark>
+        ) : (
+          part
+        ),
       );
     } catch {
       return text;
@@ -27,11 +33,16 @@ export function SearchResultCard({ article, query, className }: SearchResultCard
   };
 
   return (
-    <article className={cn("group flex flex-col sm:flex-row gap-4 sm:gap-6 py-6 border-b border-line-200 last:border-0", className)}>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-3 mb-2 text-body-sm">
+    <article
+      className={cn(
+        "group flex flex-col gap-4 border-b border-line-200 py-6 last:border-0 sm:flex-row sm:gap-6",
+        className,
+      )}
+    >
+      <div className="min-w-0 flex-1">
+        <div className="mb-2 flex items-center gap-3 text-body-sm">
           {article.category && (
-            <span className="font-semibold text-brand-700 uppercase tracking-wider">
+            <span className="font-semibold tracking-wider text-brand-700 uppercase">
               {article.category.title}
             </span>
           )}
@@ -44,15 +55,15 @@ export function SearchResultCard({ article, query, className }: SearchResultCard
             </>
           )}
         </div>
-        
-        <h3 className="text-h4 font-display font-bold text-ink-950 mb-2 group-hover:text-brand-700 transition-colors">
+
+        <h3 className="text-h4 mb-2 font-display font-bold text-ink-950 transition-colors group-hover:text-brand-700">
           <Link href={`/tin-tuc/${article.slug}`}>
             <span className="absolute inset-0" aria-hidden="true" />
             {highlightQuery(article.title, query)}
           </Link>
         </h3>
-        
-        <p className="text-body-sm text-ink-600 line-clamp-2">
+
+        <p className="line-clamp-2 text-body-sm text-ink-600">
           {highlightQuery(article.excerpt, query)}
         </p>
       </div>

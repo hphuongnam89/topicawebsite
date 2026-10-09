@@ -31,7 +31,8 @@ export const campuses: readonly Campus[] = [
   },
   {
     city: "TP. Hải Phòng",
-    address: "Đường 4, số 99 Võ Nguyên Giáp, Khu đô thị ven sông Lạch Tray Waterfront, TP. Hải Phòng",
+    address:
+      "Đường 4, số 99 Võ Nguyên Giáp, Khu đô thị ven sông Lạch Tray Waterfront, TP. Hải Phòng",
   },
   {
     city: "TP. Cần Thơ",

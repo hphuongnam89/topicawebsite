@@ -51,8 +51,6 @@ export default function AdminMediaPage() {
     })();
   }, []);
 
-  
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -112,7 +110,7 @@ export default function AdminMediaPage() {
   };
 
   const filteredMedia = media.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const formatBytes = (bytes: number) => {
@@ -124,7 +122,7 @@ export default function AdminMediaPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -134,7 +132,7 @@ export default function AdminMediaPage() {
               Thư viện Hình ảnh & Media
             </h1>
           </div>
-          <p className="mt-1 text-body-sm text-ink-500">
+          <p className="text-ink-500 mt-1 text-body-sm">
             Quản lý toàn bộ hình ảnh và tệp tải lên phục vụ bài viết và các khối trang chủ.
           </p>
         </div>
@@ -151,9 +149,13 @@ export default function AdminMediaPage() {
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
           >
-            {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {uploading ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
             <span>{uploading ? "Đang tải lên..." : "Tải ảnh mới"}</span>
           </button>
         </div>
@@ -163,10 +165,10 @@ export default function AdminMediaPage() {
         <div
           role={message.type === "error" ? "alert" : "status"}
           aria-live="polite"
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -180,30 +182,32 @@ export default function AdminMediaPage() {
 
       {/* Search Bar */}
       <div className="relative max-w-md">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+        <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-ink-400" />
         <input
           aria-label="Tìm kiếm"
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Tìm theo tên file..."
-          className="h-10 w-full rounded-lg border border-line-200 bg-white pl-9 pr-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
+          className="h-10 w-full rounded-lg border border-line-200 bg-white pr-3 pl-9 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
         />
       </div>
 
       {/* Media Grid */}
       {loading ? (
         <div className="flex h-64 items-center justify-center">
-          <div className="flex items-center gap-2 text-ink-500">
+          <div className="text-ink-500 flex items-center gap-2">
             <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
             <span>Đang tải thư viện media...</span>
           </div>
         </div>
       ) : filteredMedia.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-line-300 bg-white p-12 text-center text-ink-500">
-          <ImageIcon className="mx-auto h-12 w-12 text-ink-300 mb-3" />
+        <div className="border-line-300 text-ink-500 rounded-xl border border-dashed bg-white p-12 text-center">
+          <ImageIcon className="text-ink-300 mx-auto mb-3 h-12 w-12" />
           <p className="font-semibold text-ink-800">Chưa có hình ảnh nào trong thư viện.</p>
-          <p className="text-xs text-ink-400 mt-1">Bấm &quot;Tải ảnh mới&quot; để thêm hình ảnh vào hệ thống.</p>
+          <p className="mt-1 text-xs text-ink-400">
+            Bấm &quot;Tải ảnh mới&quot; để thêm hình ảnh vào hệ thống.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -212,16 +216,16 @@ export default function AdminMediaPage() {
               key={item.name}
               className="group relative overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs transition-all hover:border-brand-300 hover:shadow-md"
             >
-              <div className="aspect-square w-full overflow-hidden bg-slate-100 relative">
+              <div className="relative aspect-square w-full overflow-hidden bg-slate-100">
                 <img
                   src={item.url}
                   alt={item.name}
-                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
 
               <div className="p-3">
-                <p className="truncate text-xs font-semibold text-ink-900" title={item.name}>
+                <p className="text-ink-900 truncate text-xs font-semibold" title={item.name}>
                   {item.name}
                 </p>
                 <div className="mt-1 flex items-center justify-between text-[11px] text-ink-400">
@@ -232,7 +236,7 @@ export default function AdminMediaPage() {
                 <div className="mt-2.5 flex items-center gap-2 border-t border-line-100 pt-2">
                   <button
                     onClick={() => handleCopy(item.url)}
-                    className="flex flex-1 items-center justify-center gap-1 rounded bg-slate-100 py-1 text-[11px] font-medium text-ink-700 hover:bg-slate-200 transition-colors"
+                    className="text-ink-700 flex flex-1 items-center justify-center gap-1 rounded bg-slate-100 py-1 text-[11px] font-medium transition-colors hover:bg-slate-200"
                   >
                     {copiedUrl === item.url ? (
                       <>
@@ -249,7 +253,7 @@ export default function AdminMediaPage() {
                   <button
                     onClick={() => handleDelete(item.name)}
                     disabled={deletingName === item.name}
-                    className="rounded p-1 text-ink-500 hover:bg-red-50 hover:text-error transition-colors"
+                    className="text-ink-500 rounded p-1 transition-colors hover:bg-red-50 hover:text-error"
                     title="Xóa ảnh"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

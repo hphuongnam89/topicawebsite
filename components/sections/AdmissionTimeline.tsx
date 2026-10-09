@@ -69,7 +69,7 @@ export function AdmissionTimeline() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-brand-200 bg-brand-50/70 px-5 py-6 text-center lg:mt-16 sm:px-8 sm:py-7">
+        <div className="border-brand-200 mx-auto mt-12 max-w-2xl rounded-xl border bg-brand-50/70 px-5 py-6 text-center sm:px-8 sm:py-7 lg:mt-16">
           <p className="text-body-sm font-semibold text-brand-800">
             Sẵn sàng bắt đầu lộ trình của bạn?
           </p>

@@ -70,7 +70,7 @@ describe("auth guards", () => {
   test("requirePermission allows authorized action", async () => {
     const mockUser = { id: "1", username: "editor", name: "Editor", role: "editor" as const };
     vi.mocked(getCurrentUser).mockResolvedValueOnce(mockUser);
-    
+
     // editor can create article according to policy
     const result = await requirePermission("article", "create");
     expect("user" in result).toBe(true);
@@ -79,7 +79,7 @@ describe("auth guards", () => {
   test("requirePermission denies unauthorized action", async () => {
     const mockUser = { id: "1", username: "editor", name: "Editor", role: "editor" as const };
     vi.mocked(getCurrentUser).mockResolvedValueOnce(mockUser);
-    
+
     // editor cannot publish article
     const result = await requirePermission("article", "publish");
     expect("response" in result).toBe(true);
