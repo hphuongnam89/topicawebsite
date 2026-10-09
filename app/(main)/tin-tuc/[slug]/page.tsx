@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         canonical:
           article.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${article.slug}`,
       },
+      robots: article.seo?.noIndex ? { index: false, follow: false } : undefined,
     };
   }
 

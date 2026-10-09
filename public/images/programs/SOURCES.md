@@ -9,3 +9,10 @@ Các ảnh bên dưới là ảnh minh họa, không phải bằng chứng học
 - `ngon-ngu-trung.jpg`: https://images.unsplash.com/photo-1543002588-bfa74002ed7e
 
 Ảnh được lưu cục bộ ở kích thước tối đa 1.200 px để tránh phụ thuộc vào máy chủ ảnh bên ngoài khi website hiển thị card ngành.
+
+## Provenance / license
+
+Owner: Topica content team. Capture date: 2026-10-08. The Unsplash source pages
+are recorded above for attribution and license review; confirm the applicable
+Unsplash license and retain the download receipt before using an image in paid
+campaigns or other redistribution. These files are illustrative assets only.

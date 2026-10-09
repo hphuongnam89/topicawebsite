@@ -24,6 +24,19 @@ export type AnalyticsEventName =
   | "scroll_depth_75"
   | "scroll_depth_90";
 
+export const ANALYTICS_CONSENT_KEY = "topica_analytics_consent";
+export type AnalyticsConsentState = "granted" | "denied" | null;
+
+export function getAnalyticsConsent(): AnalyticsConsentState {
+  if (typeof window === "undefined") return null;
+  try {
+    const value = window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
+    return value === "granted" || value === "denied" ? value : null;
+  } catch {
+    return "denied";
+  }
+}
+
 export function trackEvent(
   name: AnalyticsEventName,
   properties: Record<string, string | number> = {},
@@ -31,7 +44,7 @@ export function trackEvent(
   if (typeof window === "undefined") return;
   let consent = "denied";
   try {
-    consent = window.localStorage.getItem("topica_analytics_consent") || "denied";
+    consent = getAnalyticsConsent() || "denied";
   } catch {
     return;
   }
@@ -60,7 +73,10 @@ export function trackEvent(
   dataLayer?.push({ event: name, ...safeProperties });
   void fetch("/api/public/event", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-Topica-Analytics-Consent": "granted",
+    },
     body: JSON.stringify({
       name,
       event_id: eventId,
@@ -76,7 +92,11 @@ export function trackEvent(
 
 export function setAnalyticsConsent(granted: boolean): void {
   try {
-    window.localStorage.setItem("topica_analytics_consent", granted ? "granted" : "denied");
+    window.localStorage.setItem(ANALYTICS_CONSENT_KEY, granted ? "granted" : "denied");
+    if (!granted) window.sessionStorage.removeItem("topica_analytics_session");
+    window.dispatchEvent(
+      new CustomEvent("topica:analytics-consent", { detail: granted ? "granted" : "denied" }),
+    );
   } catch {
     // Restricted storage keeps analytics disabled.
   }

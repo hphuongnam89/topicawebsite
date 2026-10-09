@@ -41,6 +41,14 @@ export type ClaimAudit = {
   note: string;
 };
 
+export type ClaimRegistryMeta = {
+  owner: string;
+  evidenceVersion: string;
+  effectiveFrom: string;
+  effectiveUntil: string | null;
+  approvalStatus: "approved" | "blocked";
+};
+
 export const auditCheckedAt = "2026-09-03";
 
 export const officialSources = {
@@ -329,6 +337,28 @@ export const contentSourceOfTruth = [
   },
 ] as const satisfies readonly ClaimAudit[];
 
+export const claimRegistryMeta: Readonly<Record<string, ClaimRegistryMeta>> = Object.fromEntries(
+  contentSourceOfTruth.map((item) => [
+    item.id,
+    {
+      owner: "content-governance",
+      evidenceVersion: auditCheckedAt,
+      effectiveFrom: auditCheckedAt,
+      effectiveUntil: null,
+      approvalStatus: item.approvedForPublic ? "approved" : "blocked",
+    },
+  ]),
+);
+
+export function getPublicClaim(id: string): ClaimAudit | null {
+  const item = contentSourceOfTruth.find((claim) => claim.id === id);
+  const meta = claimRegistryMeta[id];
+  if (!item || !meta || meta.approvalStatus !== "approved") return null;
+  const now = new Date().toISOString().slice(0, 10);
+  if (meta.effectiveFrom > now || (meta.effectiveUntil && meta.effectiveUntil < now)) return null;
+  return item;
+}
+
 export function isPublicClaimApproved(id: string): boolean {
-  return contentSourceOfTruth.some((item) => item.id === id && item.approvedForPublic);
+  return getPublicClaim(id) !== null;
 }

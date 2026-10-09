@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { trackEvent, type AnalyticsEventName } from "@/lib/analytics";
+import { getAnalyticsConsent, trackEvent, type AnalyticsEventName } from "@/lib/analytics";
 
 function TrackerLogic() {
   const pathname = usePathname();
@@ -17,11 +17,13 @@ function TrackerLogic() {
     // Report page view
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
 
+    if (getAnalyticsConsent() !== "granted") return;
     trackEvent("page_view", { path: pathname });
     fetch("/api/public/hit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Topica-Analytics-Consent": "granted",
       },
       body: JSON.stringify({ path: url }),
       // use keepalive to ensure request completes even if user navigates away

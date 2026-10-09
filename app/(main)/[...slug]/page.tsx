@@ -59,6 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       alternates: {
         canonical: page.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/${path}`,
       },
+      robots: page.seo?.noIndex ? { index: false, follow: false } : undefined,
     };
   }
 
