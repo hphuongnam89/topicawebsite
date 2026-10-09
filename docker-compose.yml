@@ -67,6 +67,9 @@ services:
       LEAD_RETENTION_DAYS: ${LEAD_RETENTION_DAYS:?LEAD_RETENTION_DAYS is required}
       ANALYTICS_RETENTION_DAYS: ${ANALYTICS_RETENTION_DAYS:?ANALYTICS_RETENTION_DAYS is required}
       RETENTION_ALERT_WEBHOOK: ${RETENTION_ALERT_WEBHOOK:-}
+      RETENTION_AUDIT_LOG: ${RETENTION_AUDIT_LOG:-/app/data/retention-audit.jsonl}
+    volumes:
+      - topica-runtime-data:/app/data
     depends_on:
       schema-migrate: { condition: service_completed_successfully }
     restart: always
@@ -79,3 +82,4 @@ networks:
 volumes:
   topica-postgres:
   topica-uploads:
+  topica-runtime-data:

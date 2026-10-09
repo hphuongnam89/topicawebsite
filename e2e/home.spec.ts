@@ -52,6 +52,18 @@ test.describe("Homepage", () => {
     expect(analyticsRequests).toEqual([]);
   });
 
+  test("keyboard focus reaches the lead form and consent controls", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Từ chối" }).focus();
+    await expect(page.getByRole("button", { name: "Từ chối" })).toBeFocused();
+    await page.getByRole("button", { name: "Cho phép" }).focus();
+    await expect(page.getByRole("button", { name: "Cho phép" })).toBeFocused();
+    await page.getByRole("button", { name: "Cho phép" }).click();
+    await expect(page.getByLabel(/Họ tên/)).toBeVisible();
+    await expect(page.getByLabel(/Họ tên/)).toBeEnabled();
+  });
+
   test("desktop navigation exposes its mega menu", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "chromium", "Desktop navigation only");
 

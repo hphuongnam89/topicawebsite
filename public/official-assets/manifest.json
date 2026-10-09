@@ -1,0 +1,20 @@
+{
+  "version": "2026-10-09",
+  "owner": "content-governance",
+  "assets": [
+    {
+      "path": "/official-assets/mau-bang-diem.png",
+      "sourceUrl": "https://topicauni.edu.vn/",
+      "licenseOrConsent": "official-public-source",
+      "capturedAt": "2026-10-09",
+      "approvalStatus": "approved"
+    },
+    {
+      "path": "/official-assets/mau-phoi-bang.png",
+      "sourceUrl": "https://topicauni.edu.vn/",
+      "licenseOrConsent": "official-public-source",
+      "capturedAt": "2026-10-09",
+      "approvalStatus": "approved"
+    }
+  ]
+}
