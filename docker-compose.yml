@@ -59,6 +59,17 @@ services:
     depends_on:
       schema-migrate: { condition: service_completed_successfully }
     restart: always
+  retention-scheduler:
+    <<: *app
+    command: ["node", "--conditions=react-server", "dist/retention-scheduler.mjs"]
+    environment:
+      <<: *app-env
+      LEAD_RETENTION_DAYS: ${LEAD_RETENTION_DAYS:?LEAD_RETENTION_DAYS is required}
+      ANALYTICS_RETENTION_DAYS: ${ANALYTICS_RETENTION_DAYS:?ANALYTICS_RETENTION_DAYS is required}
+      RETENTION_ALERT_WEBHOOK: ${RETENTION_ALERT_WEBHOOK:-}
+    depends_on:
+      schema-migrate: { condition: service_completed_successfully }
+    restart: always
 
 networks:
   frontend:

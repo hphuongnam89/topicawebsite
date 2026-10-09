@@ -45,6 +45,8 @@ const eventSchema = z.object({
 export async function POST(request: Request) {
     try {
         const body = await readJsonBody(request, MAX_BODY_BYTES);
+        if (request.headers.get("x-topica-analytics-consent") !== "granted")
+            return new NextResponse(null, { status: 204, headers: { "Cache-Control": "no-store" } });
         const client = getRateLimitKey(request);
         if (await consumeRateLimit(`event:${client.key}`, { limit: 240, windowMs: 60 * 60 * 1000 }) !== null) {
             return new NextResponse(null, { status: 204, headers: { "Cache-Control": "no-store" } });

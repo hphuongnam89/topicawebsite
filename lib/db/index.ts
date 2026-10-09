@@ -764,3 +764,29 @@ export async function getAnalyticsStats(days: number = 7): Promise<{
     topPages,
   };
 }
+
+export async function getLeadFunnelStats(): Promise<{
+  total: number;
+  byStatus: Record<string, number>;
+  delivery: { pending: number; failed: number; sent: number };
+}> {
+  const db = getDb();
+  const rows = (await db
+    .prepare("SELECT status, COUNT(*)::int AS count FROM leads GROUP BY status")
+    .all()) as { status: string; count: number }[];
+  const deliveryRows = (await db
+    .prepare(
+      "SELECT status, COUNT(*)::int AS count FROM lead_deliveries WHERE channel = 'telegram' GROUP BY status",
+    )
+    .all()) as { status: string; count: number }[];
+  const byStatus = Object.fromEntries(rows.map((row) => [row.status, row.count]));
+  const delivery = { pending: 0, failed: 0, sent: 0 };
+  for (const row of deliveryRows) {
+    if (row.status in delivery) delivery[row.status as keyof typeof delivery] = row.count;
+  }
+  return {
+    total: Object.values(byStatus).reduce((sum, count) => sum + count, 0),
+    byStatus,
+    delivery,
+  };
+}

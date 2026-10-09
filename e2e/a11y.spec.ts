@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 test("core pages have no serious accessibility violations", async ({ page }) => {
-  for (const path of ["/", "/tin-tuc/", "/en/"]) {
+  for (const path of ["/", "/tuyen-sinh/", "/lien-he/", "/admin/login", "/tin-tuc/", "/en/"]) {
     await page.goto(path);
     const results = await new AxeBuilder({ page }).analyze();
     const serious = results.violations.filter((violation) =>

@@ -1,7 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getLeads, getArticles, getCategories, getAnalyticsStats } from "@/lib/db";
+import {
+  getLeads,
+  getArticles,
+  getCategories,
+  getAnalyticsStats,
+  getLeadFunnelStats,
+} from "@/lib/db";
 import { redirect } from "next/navigation";
 import {
   Users,
@@ -26,6 +32,7 @@ export default async function AdminDashboardPage() {
   const categories = await getCategories();
   const newLeadsCount = (await getLeads({ status: "new" })).total;
   const analytics = await getAnalyticsStats(7); // Last 7 days
+  const funnel = await getLeadFunnelStats();
   const statCards = [
     {
       title: "Lượt truy cập",
@@ -90,6 +97,30 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+      <section
+        aria-labelledby="lead-funnel-title"
+        className="rounded-xl border border-line-200 bg-white p-6 shadow-sm"
+      >
+        <h2 id="lead-funnel-title" className="font-display text-xl font-bold text-ink-950">
+          Funnel lead từ cơ sở dữ liệu
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-4">
+          {[
+            ["Tổng lead", funnel.total],
+            ["Mới", funnel.byStatus.new ?? 0],
+            ["Đã liên hệ", funnel.byStatus.contacted ?? 0],
+            ["Đã tư vấn", funnel.byStatus.consulted ?? 0],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-lg bg-paper p-4">
+              <p className="text-ink-500 text-sm">{label}</p>
+              <p className="mt-1 text-2xl font-bold text-ink-950">{value}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-ink-500 mt-3 text-xs">
+          Nguồn chính thức: bảng leads; sự kiện client không được dùng để đếm chuyển đổi.
+        </p>
+      </section>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

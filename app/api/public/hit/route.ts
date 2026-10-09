@@ -9,6 +9,8 @@ const MAX_BODY_BYTES = 2 * 1024;
 export async function POST(request: Request) {
     try {
         const body = await readJsonBody(request, MAX_BODY_BYTES);
+        if (request.headers.get("x-topica-analytics-consent") !== "granted")
+            return new NextResponse(null, { status: 204, headers: { "Cache-Control": "no-store" } });
         const client = getRateLimitKey(request);
         if (await consumeRateLimit(`hit:${client.key}`, { limit: MAX_HITS, windowMs: WINDOW_MS }) !== null) {
             // Page-view analytics is non-critical; keep the abuse limit without surfacing

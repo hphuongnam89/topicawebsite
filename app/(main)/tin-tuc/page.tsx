@@ -21,13 +21,15 @@ export async function generateMetadata({ searchParams }: Props) {
   const queryString = query.toString();
   if (queryString) url += `?${queryString}`;
 
+  const isFiltered = Boolean(category || page || resolvedParams.q);
   return {
     title: "Tin tức & Sự kiện",
     description:
       "Cập nhật những tin tức, sự kiện và thông báo mới nhất từ Viện Đào tạo Quốc tế Topica.",
     alternates: {
-      canonical: url,
+      canonical: `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc`,
     },
+    robots: isFiltered ? { index: false, follow: true } : undefined,
   };
 }
 
