@@ -35,7 +35,7 @@ export function DocumentCard({
       )}
     >
       {/* Icon */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-800">
         <FileText className="h-5 w-5" aria-hidden="true" />
       </div>
 
@@ -56,7 +56,7 @@ export function DocumentCard({
             href={viewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-brand-500 hover:text-brand-700"
+            className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
             aria-label={`Xem tài liệu: ${title}`}
           >
             <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -67,7 +67,7 @@ export function DocumentCard({
           <a
             href={downloadUrl}
             download
-            className="flex h-9 items-center gap-1.5 rounded-md bg-brand-700 px-3 text-body-sm font-medium text-white transition-colors hover:bg-brand-800"
+            className="flex h-9 items-center gap-1.5 rounded-md bg-navy-900 px-3 text-body-sm font-medium text-white transition-colors hover:bg-navy-800"
             aria-label={`Tải xuống: ${title}`}
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />

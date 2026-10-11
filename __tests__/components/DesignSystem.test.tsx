@@ -14,6 +14,8 @@ import {
   EmptyState,
   Skeleton,
   SkeletonText,
+  DocumentCard,
+  Pagination,
 } from "@/components/ui";
 
 describe("Design System Components (Phase 3)", () => {
@@ -114,6 +116,42 @@ describe("Design System Components (Phase 3)", () => {
       const el = container.firstChild as HTMLElement;
       expect(el).toHaveAttribute("aria-hidden", "true");
       expect(el.className).toContain("animate-pulse");
+    });
+  });
+
+  describe("DocumentCard Component", () => {
+    test("renders academic document card with title, type and date", () => {
+      render(
+        <DocumentCard
+          title="Quy chế đào tạo từ xa trình độ đại học"
+          type="Quy chế đào tạo"
+          date="Ban hành: 10/01/2026"
+          fileSize="1.5 MB PDF"
+          viewUrl="/chat-luong-dao-tao"
+          downloadUrl="/files/quy-che.pdf"
+        />,
+      );
+      expect(screen.getByText("Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
+      expect(screen.getByText("Quy chế đào tạo")).toBeInTheDocument();
+      expect(screen.getByText("Ban hành: 10/01/2026")).toBeInTheDocument();
+      expect(screen.getByLabelText("Xem tài liệu: Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
+      expect(screen.getByLabelText("Tải xuống: Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
+    });
+  });
+
+  describe("Pagination Component", () => {
+    test("renders navigation controls with active page and page links", () => {
+      render(
+        <Pagination
+          currentPage={2}
+          totalPages={5}
+          baseUrl="/tin-tuc"
+        />,
+      );
+      expect(screen.getByRole("navigation", { name: "Điều hướng trang" })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "2" })).toHaveAttribute("aria-current", "page");
+      expect(screen.getByRole("link", { name: "Trang trước" })).toHaveAttribute("href", "/tin-tuc?page=1");
+      expect(screen.getByRole("link", { name: "Trang tiếp theo" })).toHaveAttribute("href", "/tin-tuc?page=3");
     });
   });
 });

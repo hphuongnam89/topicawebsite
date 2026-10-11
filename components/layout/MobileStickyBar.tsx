@@ -33,7 +33,7 @@ export function MobileStickyBar() {
       <div className="flex items-center gap-3 px-4 py-3">
         <ButtonLink
           href="/lien-he/"
-          variant="secondary"
+          variant="outline"
           size="sm"
           className="flex-1"
         >
@@ -41,9 +41,9 @@ export function MobileStickyBar() {
         </ButtonLink>
         <ButtonLink
           href="https://www.tuyensinh.topicauni.edu.vn/"
-          variant="primary"
+          variant="accent"
           size="sm"
-          className="flex-1"
+          className="flex-1 font-bold"
           external
         >
           Đăng ký xét tuyển

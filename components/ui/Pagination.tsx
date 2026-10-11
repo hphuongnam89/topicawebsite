@@ -94,10 +94,10 @@ function PaginationItem({ page, current, href }: { page: number; current: boolea
       href={href}
       aria-current={current ? "page" : undefined}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-lg border text-body-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 sm:h-10 sm:w-10 sm:text-body",
+        "flex h-9 w-9 items-center justify-center rounded-lg border text-body-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500 sm:h-10 sm:w-10 sm:text-body",
         current
-          ? "border-brand-500 bg-brand-500 font-bold text-white"
-          : "border-line-200 bg-canvas font-medium text-ink-600 hover:border-brand-500 hover:text-brand-700",
+          ? "border-navy-900 bg-navy-900 font-bold text-white shadow-xs"
+          : "border-line-200 bg-canvas font-medium text-ink-600 hover:border-navy-500 hover:text-navy-900",
       )}
     >
       {page}
@@ -142,7 +142,7 @@ function PaginationNavButton({
     <Link
       href={href}
       aria-label={label}
-      className="flex h-9 w-9 items-center justify-center rounded-lg border border-line-200 bg-canvas text-ink-600 transition-colors hover:border-brand-500 hover:text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 sm:h-10 sm:w-10"
+      className="flex h-9 w-9 items-center justify-center rounded-lg border border-line-200 bg-canvas text-ink-600 transition-colors hover:border-navy-500 hover:text-navy-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500 sm:h-10 sm:w-10"
     >
       <Icon className="h-5 w-5" />
     </Link>

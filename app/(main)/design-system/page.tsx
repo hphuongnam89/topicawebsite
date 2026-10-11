@@ -27,6 +27,8 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
+  DocumentCard,
+  Pagination,
 } from "@/components/ui";
 import { CheckCircle2, Award, BookOpen, Clock, ShieldCheck, Mail, User } from "lucide-react";
 
@@ -310,7 +312,7 @@ export default function DesignSystemPage() {
                 </div>
               </CardContent>
               <CardFooter className="justify-between border-t border-line-100 pt-4">
-                <span className="font-semibold text-navy-900">450.000 đ / tín chỉ</span>
+                <span className="font-semibold text-navy-900">850.000 đ / tín chỉ</span>
                 <ButtonLink href="/nganh-dao-tao/cong-nghe-thong-tin/" variant="outline" size="sm">
                   Xem chi tiết
                 </ButtonLink>
@@ -361,6 +363,51 @@ export default function DesignSystemPage() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+          </div>
+        </section>
+
+        {/* 9. DOCUMENT CARD */}
+        <section aria-labelledby="document-heading" className="space-y-6">
+          <SectionHeading
+            id="document-heading"
+            title="9. Thẻ tài liệu pháp lý & Quy chế (DocumentCard)"
+            subtitle="Chuẩn hóa hiển thị văn bản công khai, quyết định mở ngành và đề án tuyển sinh."
+          />
+
+          <div className="space-y-3 max-w-3xl">
+            <DocumentCard
+              title="Thông tư 27/2019/TT-BGDĐT quy định về nội dung chính ghi trên văn bằng và phụ lục văn bằng"
+              type="Quy định pháp lý"
+              date="Ban hành: 30/12/2019"
+              fileSize="1.8 MB PDF"
+              viewUrl="/chat-luong-dao-tao/"
+              downloadUrl="#"
+            />
+            <DocumentCard
+              title="Quyết định ban hành Đề án tuyển sinh Đại học từ xa năm 2026 - Trường Đại học Phú Xuân"
+              type="Đề án tuyển sinh"
+              date="Ban hành: 15/01/2026"
+              fileSize="3.2 MB PDF"
+              viewUrl="/tuyen-sinh/"
+              downloadUrl="#"
+            />
+          </div>
+        </section>
+
+        {/* 10. PAGINATION */}
+        <section aria-labelledby="pagination-heading" className="space-y-6">
+          <SectionHeading
+            id="pagination-heading"
+            title="10. Điều hướng phân trang (Pagination)"
+            subtitle="Phân trang tối ưu khả năng tiếp cận và thân thiện với thao tác chạm di động."
+          />
+
+          <div className="rounded-xl border border-line-200 bg-canvas p-6 max-w-3xl flex justify-center">
+            <Pagination
+              currentPage={2}
+              totalPages={5}
+              baseUrl="/tin-tuc"
+            />
           </div>
         </section>
       </Container>
