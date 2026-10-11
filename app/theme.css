@@ -3,6 +3,7 @@
 
   --font-sans: var(--font-be-vietnam-pro);
   --font-display: var(--font-lora);
+  --font-serif: var(--font-lora);
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;

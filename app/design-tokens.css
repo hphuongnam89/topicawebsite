@@ -1,12 +1,14 @@
 /* 
  * Topica Design Tokens - Navy & Gold Theme
- * Inspired by PXU system (assessment.pxu.edu.vn, elib.pxu.edu.vn)
- * Primary: Navy #00264D, Accent: Gold #B78744
+ * Based on PXU System & Ke-hoach-hoan-thien-website-topica.md Phase 3
+ * Primary: Navy #00264D, Secondary: #16466B, Accent: Gold #B78744
+ * Surfaces: Canvas #FFFFFF, Subtle #F3F6FA, Paper #F7F5F1
+ * Ink: #11100E, Body: #243447, Muted: #625E58
  */
 
 @theme inline {
   /* ============================================
-     COLOR PALETTE - NAVY (Primary)
+     COLOR PALETTE - NAVY (Primary Academic)
      ============================================ */
   --color-navy-950: #001a3d;
   --color-navy-900: #00264d;  /* Main brand navy from PXU */
@@ -20,25 +22,54 @@
   --color-navy-100: #dce8f5;
   --color-navy-50: #eef3f9;
 
+  /* Secondary Navy & Blue from Phase 3 plan */
+  --color-navy-secondary: #16466b;
+  --color-navy-deep: #00264d;
+
   /* ============================================
-     COLOR PALETTE - GOLD (Accent)
+     COLOR PALETTE - GOLD (Accent Academic)
      ============================================ */
   --color-gold-950: #422f14;
   --color-gold-900: #6b4f28;
   --color-gold-800: #8a6226;
   --color-gold-700: #9a6f33;  /* Dark gold for text on light bg - AA compliant */
   --color-gold-600: #a97d3d;
-  --color-gold-500: #b78744;  /* Brand gold from current logo */
+  --color-gold-500: #b78744;  /* Brand gold from logo */
   --color-gold-400: #c49f63;
   --color-gold-300: #d8b67c;
   --color-gold-200: #e8d1a8;
   --color-gold-100: #f6eddd;
   --color-gold-50: #fbf8f3;
 
-  --color-line-300: #c8c3ba;
+  /* ============================================
+     SURFACES & BACKGROUNDS
+     ============================================ */
+  --color-canvas: #ffffff;
+  --color-surface-subtle: #f3f6fa;
+  --color-paper: #f7f5f1;
+  --color-paper-blue: #f3f6fa;
+  --color-elevated: #fffdf9;
   --color-cream: #fbf8f3;
 
-  /* Semantic mappings */
+  /* ============================================
+     TEXT & INK
+     ============================================ */
+  --color-ink-950: #11100e;
+  --color-ink-800: #292620;
+  --color-ink-body: #243447;  /* High-legibility body ink for long texts */
+  --color-ink-600: #625e58;  /* Muted secondary descriptions */
+  --color-ink-400: #8996a0;  /* Placeholders & hairline borders */
+
+  /* ============================================
+     DIVIDERS & LINES
+     ============================================ */
+  --color-line-100: #ece8e1;
+  --color-line-200: #ddd8cf;
+  --color-line-300: #c8c3ba;
+
+  /* ============================================
+     SEMANTIC MAPPINGS
+     ============================================ */
   --color-primary: #00264d;
   --color-primary-hover: #0a3566;
   --color-primary-light: #eef3f9;
@@ -47,6 +78,29 @@
   --color-accent-hover: #a97d3d;
   --color-accent-dark: #9a6f33;
   --color-accent-light: #f6eddd;
+
+  --color-info: #16466b;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-error: #b91c1c;
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  --font-sans: var(--font-be-vietnam-pro), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-lora), Georgia, serif;
+  --font-display: var(--font-lora), Georgia, serif;
+
+  /* ============================================
+     ELEVATION SHADOWS
+     ============================================ */
+  --shadow-xs: 0 1px 2px rgb(0 38 77 / 5%);
+  --shadow-sm: 0 4px 12px -2px rgb(0 38 77 / 8%);
+  --shadow-md: 0 12px 24px -4px rgb(0 38 77 / 10%);
+  --shadow-lg: 0 20px 32px -8px rgb(0 38 77 / 12%);
+  --shadow-card: 0 2px 8px -2px rgba(0, 38, 77, 0.06), 0 1px 4px -1px rgba(0, 38, 77, 0.04);
+  --shadow-card-hover: 0 12px 24px -6px rgba(0, 38, 77, 0.12), 0 4px 8px -2px rgba(0, 38, 77, 0.06);
+  --shadow-dropdown: 0 16px 36px -6px rgb(0 38 77 / 16%);
 }
 
 :root {
@@ -70,6 +124,11 @@
   --height-control: 3rem;
   --height-control-lg: 3.5rem;
 
+  /* Micro-radii */
+  --radius-card: 0.5rem;
+  --radius-button: 0.375rem;
+  --radius-input: 0.375rem;
+
   /* Z-INDEX SCALE */
   --z-base: 0;
   --z-dropdown: 10;
@@ -80,4 +139,20 @@
   --z-popover: 60;
   --z-toast: 70;
   --z-tooltip: 80;
+
+  /* Transitions */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,0 +1,74 @@
+import * as React from "react";
+import { AlertCircle } from "lucide-react";
+import { cn } from "./cn";
+
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label: string;
+  error?: string;
+  helperText?: string;
+  id: string;
+}
+
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    {
+      className,
+      label,
+      error,
+      helperText,
+      id,
+      required,
+      disabled,
+      rows = 4,
+      ...props
+    },
+    ref,
+  ) => {
+    const errorId = `${id}-error`;
+    const helperId = `${id}-helper`;
+    const isInvalid = !!error;
+
+    return (
+      <div className={className}>
+        <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
+          {label}
+          {required && <span className="ml-1 text-error" aria-hidden="true">*</span>}
+        </label>
+        <div className="relative">
+          <textarea
+            id={id}
+            ref={ref}
+            rows={rows}
+            required={required}
+            disabled={disabled}
+            aria-invalid={isInvalid}
+            aria-describedby={isInvalid ? errorId : helperText ? helperId : undefined}
+            className={cn(
+              "w-full rounded-md border bg-canvas p-4 text-body text-ink-800 transition-colors",
+              "focus:outline-2 focus:outline-offset-2 focus:outline-navy-700",
+              isInvalid
+                ? "border-error text-error hover:border-error focus:border-error focus:outline-error"
+                : "border-line-200 hover:border-navy-500 focus:border-navy-900",
+              disabled && "cursor-not-allowed bg-paper text-ink-400 border-line-200",
+            )}
+            {...props}
+          />
+        </div>
+        {error && (
+          <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>{error}</span>
+          </div>
+        )}
+        {!error && helperText && (
+          <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  },
+);
+
+Textarea.displayName = "Textarea";

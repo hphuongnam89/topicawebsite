@@ -3,7 +3,17 @@ import Link from "next/link";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "./cn";
 
-export type ButtonVariant = "primary" | "secondary" | "tertiary" | "destructive" | "icon";
+export type ButtonVariant =
+  | "primary"
+  | "navy"
+  | "accent"
+  | "gold"
+  | "secondary"
+  | "outline"
+  | "tertiary"
+  | "ghost"
+  | "destructive"
+  | "icon";
 export type ButtonSize = "sm" | "default" | "lg";
 
 interface ButtonStyleOptions {
@@ -22,20 +32,35 @@ export function buttonStyles({
   className,
 }: ButtonStyleOptions = {}): string {
   const variants: Record<ButtonVariant, string> = {
-    primary: "bg-gold-500 text-navy-900 hover:bg-gold-600 active:translate-y-px font-semibold",
-    secondary: "border-2 border-navy-900 bg-transparent text-navy-900 hover:bg-navy-50",
-    tertiary: "text-navy-900 hover:text-gold-700 underline-offset-4 hover:underline",
-    destructive: "bg-error text-white hover:bg-error/90",
-    icon: "bg-transparent text-navy-900 hover:bg-navy-50",
+    primary:
+      "bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-950 active:translate-y-px font-semibold shadow-xs focus-visible:outline-navy-900",
+    navy:
+      "bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-950 active:translate-y-px font-semibold shadow-xs focus-visible:outline-navy-900",
+    accent:
+      "bg-gold-500 text-navy-950 hover:bg-gold-600 active:bg-gold-700 active:translate-y-px font-semibold shadow-xs focus-visible:outline-gold-500",
+    gold:
+      "bg-gold-500 text-navy-950 hover:bg-gold-600 active:bg-gold-700 active:translate-y-px font-semibold shadow-xs focus-visible:outline-gold-500",
+    secondary:
+      "border-2 border-navy-900 bg-transparent text-navy-900 hover:bg-navy-50 active:translate-y-px font-semibold focus-visible:outline-navy-900",
+    outline:
+      "border border-line-200 bg-canvas text-ink-800 hover:border-navy-700 hover:bg-paper active:translate-y-px font-medium focus-visible:outline-navy-900",
+    tertiary:
+      "text-navy-900 hover:text-gold-700 underline-offset-4 hover:underline font-medium focus-visible:outline-navy-900",
+    ghost:
+      "bg-transparent text-navy-900 hover:bg-navy-50 hover:text-navy-900 font-medium focus-visible:outline-navy-900",
+    destructive:
+      "bg-error text-white hover:bg-error/90 active:bg-error/95 font-semibold focus-visible:outline-error",
+    icon:
+      "bg-transparent text-navy-900 hover:bg-navy-50 focus-visible:outline-navy-900",
   };
   const sizes: Record<ButtonSize, string> = {
-    sm: variant === "icon" ? "h-10 w-10 p-0" : "h-10 px-4 text-body-sm",
-    default: variant === "icon" ? "h-12 w-12 p-0" : "h-12 px-5 text-body-sm",
-    lg: variant === "icon" ? "h-[52px] w-[52px] p-0" : "h-[52px] px-6 text-body",
+    sm: variant === "icon" ? "h-9 w-9 p-0" : "h-9 px-4 text-body-sm",
+    default: variant === "icon" ? "h-11 w-11 p-0" : "h-11 px-5 text-body-sm",
+    lg: variant === "icon" ? "h-12 w-12 p-0" : "h-12 px-6 text-body",
   };
 
   return cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-sans transition-[color,background-color,border-color,transform,opacity] duration-[var(--duration-base)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-sans transition-[color,background-color,border-color,transform,opacity,box-shadow] duration-[var(--duration-base)] focus-visible:outline-2 focus-visible:outline-offset-2",
     variant === "tertiary" && "group",
     variants[variant],
     sizes[size],

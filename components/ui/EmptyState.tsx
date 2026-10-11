@@ -1,0 +1,63 @@
+import * as React from "react";
+import { SearchX } from "lucide-react";
+import { cn } from "./cn";
+import { ButtonLink } from "./Button";
+
+export interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
+  actionHref?: string;
+  actionLabel?: string;
+  secondaryActionHref?: string;
+  secondaryActionLabel?: string;
+}
+
+export function EmptyState({
+  icon,
+  title,
+  description,
+  actionHref = "/nganh-dao-tao/",
+  actionLabel = "Khám phá các ngành đào tạo",
+  secondaryActionHref = "/",
+  secondaryActionLabel = "Về trang chủ",
+  className,
+  ...props
+}: EmptyStateProps) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center rounded-xl border border-dashed border-line-200 bg-surface-subtle p-8 text-center sm:p-12",
+        className,
+      )}
+      role="status"
+      {...props}
+    >
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-paper text-navy-800 shadow-xs mb-4">
+        {icon || <SearchX className="h-7 w-7 text-navy-800" aria-hidden="true" />}
+      </div>
+      <h3 className="font-serif text-h3 font-bold text-ink-950 sm:text-2xl">
+        {title}
+      </h3>
+      {description && (
+        <p className="mt-2 max-w-md text-body-sm text-ink-600 leading-relaxed sm:text-body">
+          {description}
+        </p>
+      )}
+      {(actionHref || secondaryActionHref) && (
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          {actionHref && actionLabel && (
+            <ButtonLink href={actionHref} variant="primary" size="default">
+              {actionLabel}
+            </ButtonLink>
+          )}
+          {secondaryActionHref && secondaryActionLabel && (
+            <ButtonLink href={secondaryActionHref} variant="outline" size="default">
+              {secondaryActionLabel}
+            </ButtonLink>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,78 @@
+"use client";
+
+import * as React from "react";
+import Image, { ImageProps } from "next/image";
+import { GraduationCap } from "lucide-react";
+import { cn } from "./cn";
+
+export interface ImageWithFallbackProps extends Omit<ImageProps, "onError"> {
+  fallbackSrc?: string;
+  fallbackText?: string;
+  aspectRatio?: "16/9" | "4/3" | "1/1" | "auto";
+  containerClassName?: string;
+}
+
+export function ImageWithFallback({
+  src,
+  alt,
+  fallbackSrc,
+  fallbackText = "Topica Uni",
+  aspectRatio = "auto",
+  containerClassName,
+  className,
+  ...props
+}: ImageWithFallbackProps) {
+  const [error, setError] = React.useState(false);
+
+  const aspectClass = {
+    "16/9": "aspect-[16/9]",
+    "4/3": "aspect-[4/3]",
+    "1/1": "aspect-square",
+    auto: "",
+  }[aspectRatio];
+
+  if (!src || error) {
+    if (fallbackSrc) {
+      return (
+        <div className={cn("relative overflow-hidden", aspectClass, containerClassName)}>
+          <Image
+            src={fallbackSrc}
+            alt={alt}
+            className={className}
+            onError={() => setError(true)}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={cn(
+          "flex h-full w-full flex-col items-center justify-center bg-surface-subtle border border-line-200 text-ink-600 p-4 text-center",
+          aspectClass,
+          containerClassName,
+        )}
+        role="img"
+        aria-label={alt}
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-paper text-navy-800 shadow-xs mb-2">
+          <GraduationCap className="h-6 w-6 text-navy-800" aria-hidden="true" />
+        </div>
+        <span className="text-body-sm font-medium text-ink-700">{fallbackText}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("relative overflow-hidden", aspectClass, containerClassName)}>
+      <Image
+        src={src}
+        alt={alt}
+        className={className}
+        onError={() => setError(true)}
+        {...props}
+      />
+    </div>
+  );
+}

@@ -223,6 +223,7 @@ export function Header() {
               <ButtonLink
                 href={applyAction.href}
                 external={applyAction.external}
+                variant="accent"
                 size="default"
                 className="hidden sm:inline-flex"
               >

@@ -23,7 +23,7 @@ export function AdmissionCTA() {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
-            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="primary" external>
+            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="accent" external>
               Đăng ký xét tuyển
             </ButtonLink>
             <ButtonLink

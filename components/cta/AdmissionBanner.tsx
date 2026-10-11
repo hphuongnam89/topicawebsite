@@ -38,7 +38,7 @@ export function AdmissionBanner({
           <h2 className="mb-6 font-display text-display md:text-h1">{heading}</h2>
           <p className="mb-8 text-body-lg opacity-90">{description}</p>
           <div className="flex w-full flex-col justify-center gap-4 sm:w-auto sm:flex-row">
-            <ButtonLink href={primaryHref} variant={isDark ? "primary" : "secondary"} size="lg">
+            <ButtonLink href={primaryHref} variant={isDark ? "accent" : "primary"} size="lg">
               {primaryLabel}
             </ButtonLink>
             {secondaryHref && secondaryLabel && (
