@@ -22,11 +22,11 @@ export function buttonStyles({
   className,
 }: ButtonStyleOptions = {}): string {
   const variants: Record<ButtonVariant, string> = {
-    primary: "bg-brand-700 text-white hover:bg-brand-800 active:translate-y-px",
-    secondary: "border border-ink-950 bg-transparent text-ink-950 hover:bg-brand-50",
-    tertiary: "text-ink-950 hover:text-brand-700",
+    primary: "bg-gold-500 text-navy-900 hover:bg-gold-600 active:translate-y-px font-semibold",
+    secondary: "border-2 border-navy-900 bg-transparent text-navy-900 hover:bg-navy-50",
+    tertiary: "text-navy-900 hover:text-gold-700 underline-offset-4 hover:underline",
     destructive: "bg-error text-white hover:bg-error/90",
-    icon: "bg-transparent text-ink-950 hover:bg-brand-50",
+    icon: "bg-transparent text-navy-900 hover:bg-navy-50",
   };
   const sizes: Record<ButtonSize, string> = {
     sm: variant === "icon" ? "h-10 w-10 p-0" : "h-10 px-4 text-body-sm",
@@ -35,7 +35,7 @@ export function buttonStyles({
   };
 
   return cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-sans font-semibold transition-[color,background-color,border-color,transform,opacity] duration-[var(--duration-base)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-sans transition-[color,background-color,border-color,transform,opacity] duration-[var(--duration-base)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500",
     variant === "tertiary" && "group",
     variants[variant],
     sizes[size],

@@ -58,15 +58,15 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="flex w-full flex-col border-t-4 border-brand-500" role="contentinfo">
+    <footer className="flex w-full flex-col border-t-4 border-gold-500" role="contentinfo">
       {/* Main footer */}
-      <div className="bg-canvas text-ink-800">
+      <div className="bg-paper text-ink-800">
         <Container className="py-12 sm:py-16">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
             {/* Footer link groups */}
             {footerGroups.map((group) => (
               <div key={group.title}>
-                <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-brand-700 uppercase">
+                <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
                   {group.title}
                 </h2>
                 <ul className="space-y-2.5">
@@ -74,7 +74,7 @@ export function Footer() {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-body-sm whitespace-nowrap text-ink-600 transition-colors duration-[var(--duration-base)] hover:text-brand-700"
+                        className="text-body-sm whitespace-nowrap text-ink-600 transition-colors duration-[var(--duration-base)] hover:text-gold-700"
                         {...(link.href.startsWith("http")
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
@@ -89,13 +89,13 @@ export function Footer() {
 
             {/* Contact section */}
             <div className="lg:col-span-2">
-              <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-brand-700 uppercase">
+              <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
                 Liên hệ
               </h2>
               <ul className="space-y-4">
                 {campuses.map((campus) => (
                   <li key={campus.city} className="flex gap-2.5">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" />
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
                     <p className="text-body-sm text-ink-600">
                       <span className="font-medium text-ink-950">{campus.city}: </span>
                       {campus.address}
@@ -105,10 +105,10 @@ export function Footer() {
 
                 {contactInfo.phone && (
                   <li className="flex items-center gap-2.5">
-                    <Phone className="h-4 w-4 shrink-0 text-brand-700" />
+                    <Phone className="h-4 w-4 shrink-0 text-gold-600" />
                     <a
                       href={`tel:${contactInfo.phone.replace(/\./g, "")}`}
-                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-brand-700"
+                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-gold-700"
                     >
                       {contactInfo.phone}
                     </a>
@@ -117,10 +117,10 @@ export function Footer() {
 
                 {contactInfo.email && (
                   <li className="flex items-center gap-2.5">
-                    <Mail className="h-4 w-4 shrink-0 text-brand-700" />
+                    <Mail className="h-4 w-4 shrink-0 text-gold-600" />
                     <a
                       href={`mailto:${contactInfo.email}`}
-                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-brand-700"
+                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-gold-700"
                     >
                       {contactInfo.email}
                     </a>
@@ -133,16 +133,16 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/20 bg-brand-500 text-white">
+      <div className="border-t border-navy-800 bg-navy-900 text-white">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-center sm:flex-row sm:text-left">
           {/* Logo */}
-          <div className="w-[180px] overflow-hidden">
+          <div className="flex h-12 w-[180px] items-center justify-center rounded-lg bg-gold-500 p-2">
             <Image
               src="/topica-logo.png"
               alt="Topica"
               width={256}
               height={86}
-              className="h-auto w-full object-contain"
+              className="max-h-8 w-auto object-contain"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function Footer() {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white/80 transition-colors duration-[var(--duration-base)] hover:bg-white hover:text-brand-500"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors duration-[var(--duration-base)] hover:bg-gold-500 hover:text-navy-900 hover:border-gold-500"
               >
                 <SocialIcon type={social.icon} />
               </a>

@@ -66,7 +66,7 @@ export function FloatingActions() {
         onClick={scrollToTop}
         aria-label="Trở về đầu trang"
         className={cn(
-          "mt-2 flex h-12 w-12 items-center justify-center rounded-full border-2 border-brand-500 bg-white text-brand-500 shadow-md transition-[color,background-color,transform,opacity] hover:bg-brand-50 active:translate-y-px",
+          "mt-2 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold-500 bg-white text-gold-600 shadow-md transition-[color,background-color,transform,opacity] hover:bg-gold-50 hover:text-navy-900 active:translate-y-px",
           showTopBtn ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-8 opacity-0",
         )}
       >

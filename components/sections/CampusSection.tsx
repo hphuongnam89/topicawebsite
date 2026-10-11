@@ -19,11 +19,11 @@ export function CampusSection() {
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {campuses.map((campus, index) => (
             <ScrollReveal key={campus.city} delay={index * 0.1}>
-              <article className="flex h-full flex-col rounded-lg border border-line-200 bg-canvas p-5 transition-[border-color,box-shadow] hover:border-brand-300 hover:shadow-sm sm:p-6">
+              <article className="flex h-full flex-col rounded-lg border border-line-200 bg-canvas p-5 transition-all hover:border-gold-400 hover:shadow-md sm:p-6">
                 <h3 className="font-sans text-body-lg font-bold text-ink-950">{campus.city}</h3>
 
                 <div className="mt-2 flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-500" />
                   <span className="text-body-sm text-ink-600">{campus.address}</span>
                 </div>
               </article>
@@ -34,19 +34,19 @@ export function CampusSection() {
         {/* Shared contact info — verified from topicauni.edu.vn footer */}
         <div className="mt-8 flex flex-col items-center justify-center gap-4 text-body-sm text-ink-600 sm:flex-row sm:flex-wrap sm:gap-6">
           <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-brand-500" />
+            <Phone className="h-4 w-4 text-gold-500" />
             <a
               href={`tel:${contactInfo.phone}`}
-              className="rounded-sm transition-colors hover:text-brand-600 focus-visible:outline-brand-500"
+              className="rounded-sm transition-colors hover:text-navy-900 focus-visible:outline-navy-500"
             >
               {contactInfo.phone}
             </a>
           </div>
           <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-brand-500" />
+            <Mail className="h-4 w-4 text-gold-500" />
             <a
               href={`mailto:${contactInfo.email}`}
-              className="rounded-sm transition-colors hover:text-brand-600 focus-visible:outline-brand-500"
+              className="rounded-sm transition-colors hover:text-navy-900 focus-visible:outline-navy-500"
             >
               {contactInfo.email}
             </a>

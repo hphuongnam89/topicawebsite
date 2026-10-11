@@ -30,7 +30,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-brand-300">
+              <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-gold-400">
                 T
               </div>
             )}
@@ -38,11 +38,11 @@ export function ArticleCard({ article, variant = "default", className }: Article
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-4 text-body-sm text-ink-600">
               {article.category && (
-                <span className="font-semibold text-brand-700">{article.category.title}</span>
+                <span className="font-semibold text-gold-700">{article.category.title}</span>
               )}
               {publishedDate && <span>{publishedDate}</span>}
             </div>
-            <h2 className="mt-4 font-display text-h2 text-ink-950 transition-colors group-hover:text-brand-700">
+            <h2 className="mt-4 font-display text-h2 text-ink-950 transition-colors group-hover:text-gold-700">
               {article.title}
             </h2>
             <p className="mt-4 line-clamp-3 text-body-lg text-ink-600">{article.excerpt}</p>
@@ -69,7 +69,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-brand-300">
+              <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-gold-400">
                 T
               </div>
             )}
@@ -77,11 +77,11 @@ export function ArticleCard({ article, variant = "default", className }: Article
           <div className="flex flex-1 flex-col p-6 md:p-8">
             <div className="mb-4 flex items-center gap-4 text-body-sm text-ink-600">
               {article.category && (
-                <span className="font-semibold text-brand-700">{article.category.title}</span>
+                <span className="font-semibold text-gold-700">{article.category.title}</span>
               )}
               {publishedDate && <span>{publishedDate}</span>}
             </div>
-            <h2 className="line-clamp-3 font-display text-h3 text-ink-950 transition-colors group-hover:text-brand-700">
+            <h2 className="line-clamp-3 font-display text-h3 text-ink-950 transition-colors group-hover:text-gold-700">
               {article.title}
             </h2>
             <p className="mt-4 line-clamp-3 flex-1 text-body-lg text-ink-600">{article.excerpt}</p>
@@ -110,7 +110,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center font-display text-xl text-brand-300">
+            <div className="flex h-full w-full items-center justify-center font-display text-xl text-gold-400">
               T
             </div>
           )}
@@ -118,11 +118,11 @@ export function ArticleCard({ article, variant = "default", className }: Article
         <div className="flex flex-col py-1">
           <div className="mb-2 flex items-center gap-3 text-body-sm text-ink-600">
             {article.category && (
-              <span className="font-semibold text-brand-700">{article.category.title}</span>
+              <span className="font-semibold text-gold-700">{article.category.title}</span>
             )}
             {publishedDate && <span className="hidden md:inline">{publishedDate}</span>}
           </div>
-          <h3 className="line-clamp-2 font-display text-body-lg font-bold text-ink-950 transition-colors group-hover:text-brand-700">
+          <h3 className="line-clamp-2 font-display text-body-lg font-bold text-ink-950 transition-colors group-hover:text-gold-700">
             {article.title}
           </h3>
         </div>
@@ -139,7 +139,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
         <div className="text-ink-500 flex items-center gap-2 text-body-sm">
           {publishedDate && <time>{publishedDate}</time>}
         </div>
-        <h3 className="text-ink-900 line-clamp-2 font-bold transition-colors group-hover:text-brand-700">
+        <h3 className="text-ink-900 line-clamp-2 font-bold transition-colors group-hover:text-gold-700">
           {article.title}
         </h3>
       </Link>
@@ -160,7 +160,7 @@ export function ArticleCard({ article, variant = "default", className }: Article
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center font-display text-[3rem] text-brand-300">
+            <div className="flex h-full w-full items-center justify-center font-display text-[3rem] text-gold-400">
               T
             </div>
           )}
@@ -168,11 +168,11 @@ export function ArticleCard({ article, variant = "default", className }: Article
         <div className="flex flex-1 flex-col p-6">
           <div className="mb-3 flex items-center gap-3 text-body-sm text-ink-600">
             {article.category && (
-              <span className="font-semibold text-brand-700">{article.category.title}</span>
+              <span className="font-semibold text-gold-700">{article.category.title}</span>
             )}
             {publishedDate && <span>{publishedDate}</span>}
           </div>
-          <h3 className="text-h4 line-clamp-2 font-display font-bold text-ink-950 transition-colors group-hover:text-brand-700">
+          <h3 className="text-h4 line-clamp-2 font-display font-bold text-ink-950 transition-colors group-hover:text-gold-700">
             {article.title}
           </h3>
           <p className="mt-3 line-clamp-2 flex-1 text-body text-ink-600">{article.excerpt}</p>

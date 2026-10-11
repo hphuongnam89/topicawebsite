@@ -84,8 +84,8 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                 key={testimonial.id}
                 className="w-[85vw] max-w-[350px] min-w-[280px] shrink-0 snap-center sm:w-[350px]"
               >
-                <div className="flex h-full flex-col rounded-lg border border-line-200 bg-paper p-6">
-                  <div className="font-display text-[3rem] leading-none text-brand-300">&quot;</div>
+                <div className="flex h-full flex-col rounded-lg border border-line-200 bg-paper p-6 transition-all hover:border-gold-300 hover:shadow-md">
+                  <div className="font-display text-[3rem] leading-none text-gold-500">&quot;</div>
                   <p className="mt-2 flex-grow text-body text-ink-800">{testimonial.quote}</p>
 
                   <div className="mt-6 flex items-center gap-4">
@@ -95,10 +95,10 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                         alt={testimonial.name}
                         width={48}
                         height={48}
-                        className="h-12 w-12 rounded-full object-cover"
+                        className="h-12 w-12 rounded-full object-cover ring-2 ring-gold-200"
                       />
                     ) : (
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 font-semibold text-brand-700">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold-100 font-semibold text-navy-900">
                         {testimonial.name.charAt(0)}
                       </div>
                     )}
@@ -106,7 +106,7 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                       <div className="font-semibold text-ink-950">{testimonial.name}</div>
                       <div className="text-body-sm text-ink-600">{testimonial.role}</div>
                       {testimonial.program && (
-                        <div className="text-body-sm text-brand-700">{testimonial.program}</div>
+                        <div className="text-body-sm font-medium text-gold-700">{testimonial.program}</div>
                       )}
                     </div>
                   </div>
@@ -117,7 +117,7 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
           <button
             onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
-            className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
+            className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-navy-500 sm:flex"
             disabled={activeIndex === 0}
             aria-label="Chia sẻ trước"
           >
@@ -126,7 +126,7 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
           <button
             onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
-            className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-brand-300 hover:bg-brand-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-brand-500 sm:flex"
+            className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-navy-500 sm:flex"
             disabled={activeIndex === items.length - 1}
             aria-label="Chia sẻ tiếp theo"
           >
@@ -139,14 +139,14 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
             <button
               key={index}
               onClick={() => scrollToIndex(index)}
-              className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-brand-500"
+              className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-navy-500"
               aria-label={`Xem chia sẻ ${index + 1}`}
               aria-current={index === activeIndex ? "true" : undefined}
             >
               <span
                 className={cn(
                   "h-2 w-2 rounded-full transition-[width,background-color]",
-                  index === activeIndex ? "w-6 bg-brand-700" : "bg-line-200",
+                  index === activeIndex ? "w-6 bg-navy-900" : "bg-line-200",
                 )}
               />
             </button>

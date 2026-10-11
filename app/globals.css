@@ -1,12 +1,12 @@
-/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
- * genre: editorial/academic · tone: precise, warm, trustworthy · anchor: warm gold
- * macrostructure: long-form institutional landing (preserved) · theme: Topica academic
- * nav: N11 existing · footer: institutional directory · contrast: pass (40–41)
- * honest: pass (46) · tokens: pass (48) · responsive/mobile: pass (34, 49–57)
+/* 
+ * Topica Edu - Navy & Gold Theme
+ * Inspired by PXU system design
+ * Primary: Navy #00264D, Accent: Gold #B78744
  */
 @import "tailwindcss";
 @import "../tokens.css";
 @import "./theme.css";
+@import "./design-tokens.css";
 
 @layer base {
   *,
@@ -31,7 +31,7 @@
     margin: 0;
     background: var(--color-canvas);
     color: var(--color-ink-800);
-    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    font-family: var(--font-sans);
     letter-spacing: 0;
   }
 
@@ -40,7 +40,7 @@
   h3 {
     min-width: 0;
     color: var(--color-ink-950);
-    font-family: var(--font-lora), Georgia, serif;
+    font-family: var(--font-serif);
     font-style: normal;
     letter-spacing: 0;
     overflow-wrap: anywhere;
@@ -51,7 +51,7 @@
   h6 {
     min-width: 0;
     color: var(--color-ink-950);
-    font-family: var(--font-be-vietnam-pro), Arial, sans-serif;
+    font-family: var(--font-sans);
     font-style: normal;
     letter-spacing: 0;
     overflow-wrap: anywhere;
@@ -71,12 +71,12 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-info);
+    outline: 2px solid var(--color-navy-500);
     outline-offset: 2px;
   }
 
   ::selection {
-    background: var(--color-brand-100);
+    background: var(--color-gold-100);
     color: var(--color-ink-950);
   }
 }
@@ -473,12 +473,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
+  *:not(.animate-marquee, .animate-marquee *),
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
@@ -488,14 +486,17 @@
     transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite !important;
+  will-change: transform;
 }
 
 .animate-marquee:hover {
-  animation-play-state: paused;
+  animation-play-state: paused !important;
 }

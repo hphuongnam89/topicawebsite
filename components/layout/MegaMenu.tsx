@@ -54,14 +54,14 @@ export function MegaMenu({ columns, onClose, onMouseEnter, onMouseLeave }: MegaM
         onMouseLeave={onMouseLeave}
         onKeyDown={handleKeyDown}
         role="menu"
-        className="absolute top-full left-1/2 z-50 mt-1 w-max max-w-[640px] min-w-[280px] -translate-x-1/2 rounded-lg border border-line-200 bg-canvas p-5 shadow-sm"
+        className="absolute top-full left-1/2 z-50 mt-1 w-max max-w-[680px] min-w-[300px] -translate-x-1/2 rounded-xl border border-line-200 bg-white p-6 shadow-xl ring-1 ring-black/5"
       >
         <div
           className={`grid gap-8 ${columns.length > 2 ? "grid-cols-3" : columns.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}
         >
           {columns.map((column) => (
             <div key={column.heading}>
-              <h3 className="mb-3 text-[11px] font-bold tracking-wide text-ink-400 uppercase">
+              <h3 className="mb-3 text-[12px] font-bold tracking-wider text-gold-700 uppercase">
                 {column.heading}
               </h3>
               <ul className="space-y-0.5" role="none">
@@ -72,7 +72,7 @@ export function MegaMenu({ columns, onClose, onMouseEnter, onMouseLeave }: MegaM
                         href={item.href}
                         role="menuitem"
                         onClick={onClose}
-                        className="block rounded-md px-2.5 py-2 text-body-sm text-ink-800 transition-colors duration-[var(--duration-base)] hover:bg-brand-50 hover:text-brand-700"
+                        className="block rounded-md px-2.5 py-2 text-body-sm text-ink-800 transition-colors duration-[var(--duration-base)] hover:bg-navy-50 hover:text-navy-900 font-medium"
                       >
                         {item.label}
                       </Link>

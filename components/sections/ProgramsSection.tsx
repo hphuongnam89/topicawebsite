@@ -24,12 +24,12 @@ export function ProgramsSection() {
             <ScrollReveal key={program.slug} delay={index * 0.05}>
               <Link
                 href={program.href}
-                className="group block h-full rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-500"
+                className="group block h-full rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy-500"
                 aria-label={`Tìm hiểu chương trình ${program.name}`}
               >
-                <Card className="flex h-full flex-col overflow-hidden border-line-200 transition-[border-color,box-shadow,transform] duration-[var(--duration-base)] group-hover:border-brand-300 group-focus-visible:-translate-y-0.5 group-focus-visible:border-brand-500 group-focus-visible:shadow-sm motion-reduce:transform-none">
+                <Card className="flex h-full flex-col overflow-hidden border-line-200 transition-[border-color,box-shadow,transform] duration-[var(--duration-base)] group-hover:border-gold-400 group-hover:shadow-md group-focus-visible:-translate-y-0.5 group-focus-visible:border-navy-500 group-focus-visible:shadow-sm motion-reduce:transform-none">
                   <CardMedia aspect="aspect-[4/3]">
-                    <div className="relative h-full w-full overflow-hidden bg-brand-50">
+                    <div className="relative h-full w-full overflow-hidden bg-navy-50">
                       <Image
                         src={program.image}
                         alt={program.name}

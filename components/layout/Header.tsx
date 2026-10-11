@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, Phone, Mail } from "lucide-react";
 import { primaryNav, actionItems } from "@/data/navigation";
 import { cn } from "@/components/ui/cn";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -27,7 +27,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mega menu on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -40,7 +39,6 @@ export function Header() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Close mega menu when clicking outside header
   useEffect(() => {
     if (!openMenuId && !searchOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
@@ -86,7 +84,7 @@ export function Header() {
       {/* Skip link */}
       <a
         href="#main-content"
-        className="fixed top-4 left-4 z-[100] -translate-y-20 rounded-md bg-brand-700 px-4 py-2 text-body-sm font-semibold text-white transition-transform focus:translate-y-0"
+        className="fixed top-4 left-4 z-[100] -translate-y-20 rounded-md bg-navy-900 px-4 py-2 text-body-sm font-semibold text-white transition-transform focus:translate-y-0"
       >
         Chuyển đến nội dung chính
       </a>
@@ -94,37 +92,66 @@ export function Header() {
       <header
         ref={headerRef}
         className={cn(
-          "fixed top-0 right-0 left-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow] duration-[var(--duration-slow)]",
-          scrolled
-            ? "border-brand-600 bg-brand-500/95 shadow-sm backdrop-blur-md"
-            : "border-transparent bg-brand-500",
+          "fixed top-0 right-0 left-0 z-50 w-full transition-[background-color,border-color,box-shadow] duration-[var(--duration-slow)]",
+          "bg-navy-900 text-white"
         )}
       >
+        {/* Utility Bar */}
+        <div className="border-b border-white/10">
+          <div className="mx-auto flex max-w-[var(--width-container)] items-center justify-between px-4 py-2 text-xs sm:px-6 lg:px-8">
+            <div className="flex items-center gap-4">
+              <a
+                href="tel:+84123456789"
+                className="flex items-center gap-1.5 text-white/75 transition-colors hover:text-white"
+              >
+                <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Hotline: 0123 456 789</span>
+              </a>
+              <a
+                href="mailto:info@topica.edu.vn"
+                className="flex items-center gap-1.5 text-white/75 transition-colors hover:text-white"
+              >
+                <Mail className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">info@topica.edu.vn</span>
+              </a>
+            </div>
+            <div className="flex items-center gap-3 text-white/75">
+              <Link href="/tuyen-sinh" className="transition-colors hover:text-white">
+                Thông tin tuyển sinh
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Navigation */}
         <div
           className={cn(
             "mx-auto flex max-w-[var(--width-container)] items-center justify-between px-4 transition-[height] duration-[var(--duration-slow)] sm:px-6 lg:px-8",
-            scrolled
-              ? "h-[var(--height-header-compact)]"
-              : "h-[var(--height-header-compact)] lg:h-[var(--height-header)]",
+            scrolled ? "h-16" : "h-20"
           )}
         >
           {/* Logo */}
           <Link
             href="/"
-            className="relative shrink-0 transition-[width,height] duration-[var(--duration-slow)]"
+            className="relative shrink-0 transition-all duration-[var(--duration-slow)]"
             aria-label="Topica - Trang chủ"
           >
-            <Image
-              src="/topica-logo.png"
-              alt="Viện Đào tạo Quốc tế Topica"
-              width={256}
-              height={86}
-              priority
-              className={cn(
-                "w-auto object-contain transition-[height] duration-[var(--duration-slow)]",
-                scrolled ? "h-10" : "h-14 lg:h-16",
-              )}
-            />
+            <div className={cn(
+              "flex items-center justify-center rounded-lg bg-gold-500 p-2 transition-all duration-[var(--duration-slow)]",
+              scrolled ? "h-12" : "h-14"
+            )}>
+              <Image
+                src="/topica-logo.png"
+                alt="Viện Đào tạo Quốc tế Topica"
+                width={180}
+                height={60}
+                priority
+                className={cn(
+                  "h-auto w-auto object-contain transition-all duration-[var(--duration-slow)]",
+                  scrolled ? "max-h-8" : "max-h-10"
+                )}
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -141,10 +168,10 @@ export function Header() {
                   aria-expanded={openMenuId === group.id}
                   aria-haspopup="true"
                   className={cn(
-                    "rounded-md px-4 py-2.5 text-[15px] leading-5 font-semibold transition-colors duration-[var(--duration-base)]",
+                    "rounded-md px-4 py-2.5 text-[15px] font-semibold leading-5 transition-colors duration-[var(--duration-base)]",
                     openMenuId === group.id
-                      ? "bg-black/10 text-white"
-                      : "text-white/95 hover:bg-black/10 hover:text-white",
+                      ? "bg-white/10 text-white"
+                      : "text-white/90 hover:bg-white/10 hover:text-white"
                   )}
                 >
                   {group.label}
@@ -170,7 +197,7 @@ export function Header() {
               aria-label="Tìm kiếm"
               aria-expanded={searchOpen}
               aria-controls="header-search"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors duration-[var(--duration-base)] hover:bg-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-white transition-colors duration-[var(--duration-base)] hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {searchOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -184,7 +211,7 @@ export function Header() {
                 href={applyAction.href}
                 external={applyAction.external}
                 size="default"
-                className="hidden bg-white text-brand-700 shadow-sm hover:bg-white/90 sm:inline-flex"
+                className="hidden sm:inline-flex"
               >
                 {applyAction.label}
               </ButtonLink>
@@ -197,7 +224,7 @@ export function Header() {
               onClick={() => setMobileOpen(true)}
               aria-label="Mở menu"
               aria-expanded={mobileOpen}
-              className="text-white hover:bg-black/10 hover:text-white xl:hidden"
+              className="bg-white/10 text-white hover:bg-white/20 hover:text-white xl:hidden"
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -208,7 +235,7 @@ export function Header() {
               id="header-search"
               action="/tim-kiem/"
               role="search"
-              className="absolute top-full right-4 left-4 z-20 mt-2 flex items-center gap-2 rounded-lg border border-brand-300 bg-canvas p-2 shadow-md sm:left-auto sm:w-80"
+              className="absolute top-full right-4 left-4 z-20 mt-2 flex items-center gap-2 rounded-lg border border-navy-700 bg-white p-2 shadow-lg sm:left-auto sm:w-80"
             >
               <label htmlFor="header-search-input" className="sr-only">
                 Từ khóa tìm kiếm
@@ -219,12 +246,12 @@ export function Header() {
                 type="search"
                 autoFocus
                 placeholder="Bạn muốn tìm gì?"
-                className="min-w-0 flex-1 rounded-md border border-line-200 bg-white px-3 py-2 text-body-sm text-ink-950 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                className="min-w-0 flex-1 rounded-md border border-line-200 bg-white px-3 py-2 text-body-sm text-ink-950 outline-none focus:border-navy-500 focus:ring-2 focus:ring-navy-500/20"
               />
               <button
                 type="submit"
                 aria-label="Tìm kiếm"
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-700 text-white transition-colors hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gold-500 text-navy-900 transition-colors hover:bg-gold-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500"
               >
                 <Search className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -233,13 +260,11 @@ export function Header() {
         </div>
       </header>
 
-      {/* Header spacer to prevent content jumping under fixed header */}
+      {/* Header spacer */}
       <div
         className={cn(
           "transition-[height] duration-[var(--duration-slow)]",
-          scrolled
-            ? "h-[var(--height-header-compact)]"
-            : "h-[var(--height-header-compact)] lg:h-[var(--height-header)]",
+          scrolled ? "h-[calc(2rem+4rem)]" : "h-[calc(2rem+5rem)]"
         )}
         aria-hidden="true"
       />

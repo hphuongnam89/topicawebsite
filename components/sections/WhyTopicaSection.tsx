@@ -88,7 +88,7 @@ function SectionHeader() {
   return (
     <header className="max-w-4xl pb-12 lg:pb-16">
       <ScrollReveal>
-        <p className="text-body-sm font-semibold tracking-[0.12em] text-brand-700 uppercase">
+        <p className="text-body-sm font-semibold tracking-[0.12em] text-gold-700 uppercase">
           Lý do để bạn tự tin bắt đầu
         </p>
       </ScrollReveal>
@@ -98,7 +98,7 @@ function SectionHeader() {
           className="mt-5 font-display text-[clamp(2.125rem,5vw,4rem)] leading-[1.12] font-semibold tracking-[-0.025em] text-ink-950"
         >
           <span className="block">Học linh hoạt hôm nay.</span>
-          <span className="block text-brand-800">Vững vàng sự nghiệp ngày mai.</span>
+          <span className="block text-navy-900">Vững vàng sự nghiệp ngày mai.</span>
         </h2>
       </ScrollReveal>
       <ScrollReveal delay={0.18}>
@@ -120,7 +120,7 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
       >
         {learningSteps.map((step, index) => (
           <li key={step} className="relative min-w-0">
-            <span className="block text-body-sm font-semibold text-brand-700">
+            <span className="block text-body-sm font-semibold text-navy-900">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span className="mt-1 block text-body-sm font-medium text-ink-800">{step}</span>
@@ -139,7 +139,7 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
   if (visual === "transparent-value") {
     return (
       <div className="mt-8 flex items-start gap-3 border-t border-line-200 pt-5">
-        <BadgeCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-brand-700" />
+        <BadgeCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
         <p className="text-body-sm text-ink-600">
           Thông tin công nhận và điều kiện chương trình được công khai minh bạch.
         </p>
@@ -151,12 +151,12 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
     <div aria-hidden="true" className="mt-8 space-y-4 border-t border-line-200 pt-5">
       {["Học liệu số", "Theo dõi tiến độ", "Hỗ trợ kỹ thuật"].map((label, index) => (
         <div key={label} className="flex items-center gap-3">
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-800">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-100 text-navy-900">
             <Check className="h-3.5 w-3.5" />
           </span>
           <span className="text-body-sm font-medium text-ink-800">{label}</span>
           <span className="h-px flex-1 bg-line-200" />
-          <span className="text-body-sm font-semibold text-brand-700">0{index + 1}</span>
+          <span className="text-body-sm font-semibold text-navy-900">0{index + 1}</span>
         </div>
       ))}
     </div>
@@ -169,11 +169,11 @@ export function BenefitCard({ item, index }: { item: BenefitItem; index: number 
   return (
     <ScrollReveal
       delay={0.08 + index * 0.1}
-      className={`${item.className} group min-w-0 rounded-[1.5rem] border border-line-200 bg-elevated p-6 shadow-xs transition-[transform,box-shadow,border-color] duration-[var(--duration-base)] motion-reduce:transform-none motion-reduce:transition-none sm:p-8 lg:p-10 [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:border-brand-300 [@media(hover:hover)]:hover:shadow-sm`}
+      className={`${item.className} group min-w-0 rounded-[1.5rem] border border-line-200 bg-elevated p-6 shadow-xs transition-[transform,box-shadow,border-color] duration-[var(--duration-base)] motion-reduce:transform-none motion-reduce:transition-none sm:p-8 lg:p-10 [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:border-gold-300 [@media(hover:hover)]:hover:shadow-sm`}
     >
       <article className="flex h-full min-w-0 flex-col" aria-labelledby={`benefit-${index}`}>
         <div className="flex items-center gap-3">
-          <Icon aria-hidden="true" className="h-6 w-6 text-brand-700" strokeWidth={1.7} />
+          <Icon aria-hidden="true" className="h-6 w-6 text-navy-900" strokeWidth={1.7} />
           <p className="text-body-sm font-semibold tracking-[0.1em] text-ink-600 uppercase">
             {item.eyebrow}
           </p>
@@ -203,16 +203,16 @@ export function FeaturedSupportCard() {
   return (
     <ScrollReveal
       delay={0.2}
-      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-ink-950 p-6 text-white shadow-xs [background-image:radial-gradient(circle_at_85%_15%,rgba(196,145,61,0.16),transparent_34%)] sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
+      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-navy-950 p-6 text-white shadow-xs [background-image:radial-gradient(circle_at_85%_15%,rgba(183,135,68,0.22),transparent_34%)] sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
     >
       <article
         className="flex h-full min-h-[30rem] min-w-0 flex-col"
         aria-labelledby="support-title"
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-brand-300">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-gold-400">
           <UsersRound aria-hidden="true" className="h-6 w-6" strokeWidth={1.7} />
         </div>
-        <p className="mt-10 text-body-sm font-semibold tracking-[0.1em] text-brand-300 uppercase">
+        <p className="mt-10 text-body-sm font-semibold tracking-[0.1em] text-gold-400 uppercase">
           Không học một mình
         </p>
         <h3
@@ -237,7 +237,7 @@ export function FeaturedSupportCard() {
         </ul>
         <Link
           href="/gioi-thieu/"
-          className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-brand-300/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-300"
+          className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-gold-400/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400"
         >
           Gặp đội ngũ giảng viên và cố vấn
           <ArrowRight
@@ -290,7 +290,7 @@ export function ConsultationCTA() {
   return (
     <ScrollReveal delay={0.1}>
       <div
-        className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] bg-brand-100 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10"
+        className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] bg-navy-50 border border-navy-100 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10"
         aria-labelledby="consultation-cta-title"
       >
         <div className="min-w-0">
@@ -320,7 +320,7 @@ export function ConsultationCTA() {
           <ButtonLink
             href="/tuyen-sinh/"
             variant="tertiary"
-            className="h-auto min-h-11 px-0 underline decoration-line-200 underline-offset-8 hover:decoration-brand-700"
+            className="h-auto min-h-11 px-0 underline decoration-line-200 underline-offset-8 hover:decoration-gold-700"
           >
             Xem các chương trình đào tạo
           </ButtonLink>
@@ -332,7 +332,7 @@ export function ConsultationCTA() {
 
 export function WhyTopicaSection({ metrics }: WhyTopicaSectionProps) {
   return (
-    <section aria-labelledby="why-topica-title" className="bg-brand-50 py-20 lg:py-28">
+    <section aria-labelledby="why-topica-title" className="bg-paper py-20 lg:py-28">
       <Container>
         <SectionHeader />
         <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-12 lg:grid-rows-[minmax(18rem,auto)_minmax(18rem,auto)] lg:gap-6">

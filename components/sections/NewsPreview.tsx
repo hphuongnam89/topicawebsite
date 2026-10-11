@@ -20,7 +20,7 @@ export async function NewsPreview() {
           />
           <Link
             href="/tin-tuc/"
-            className="font-semibold text-brand-700 hover:text-brand-800 md:pb-2"
+            className="font-semibold text-navy-900 hover:text-gold-700 transition-colors md:pb-2"
           >
             Xem tất cả tin tức
           </Link>

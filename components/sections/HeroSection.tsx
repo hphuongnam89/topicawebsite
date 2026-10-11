@@ -68,7 +68,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                 className="homepage-enter mb-5"
                 style={{ "--enter-delay": "40ms" } as React.CSSProperties}
               >
-                <span className="inline-block rounded-full border border-brand-300/35 bg-ink-950/45 px-4 py-2 text-body-sm font-semibold text-brand-300 backdrop-blur-sm">
+                <span className="inline-block rounded-full border border-gold-400/40 bg-navy-950/60 px-4 py-2 text-body-sm font-semibold text-gold-300 backdrop-blur-sm">
                   {content.badge}
                 </span>
               </div>

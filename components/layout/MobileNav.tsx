@@ -102,13 +102,13 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             className="fixed top-0 right-0 bottom-0 z-[70] flex w-full max-w-[360px] flex-col bg-canvas shadow-md"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-line-100 px-4 py-3">
-              <span className="text-body-sm font-semibold text-ink-950">Menu</span>
+            <div className="flex items-center justify-between border-b border-line-100 px-4 py-3 bg-navy-900 text-white">
+              <span className="text-body-sm font-semibold text-white">Menu Điều Hướng</span>
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
                 aria-label="Đóng menu"
-                className="flex h-10 w-10 items-center justify-center rounded-md text-ink-800 transition-colors hover:bg-brand-50"
+                className="flex h-10 w-10 items-center justify-center rounded-md text-white/80 transition-colors hover:bg-white/10"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -126,7 +126,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                           onClick={() => toggleAccordion(group.id)}
                           aria-expanded={expandedId === group.id}
                           aria-controls={`mobile-nav-${group.id}`}
-                          className="flex w-full items-center justify-between rounded-md px-3 py-3 text-body font-semibold text-ink-950 transition-colors hover:bg-brand-50"
+                          className="flex w-full items-center justify-between rounded-md px-3 py-3 text-body font-semibold text-ink-950 transition-colors hover:bg-navy-50"
                         >
                           {group.label}
                           <ChevronDown
@@ -151,7 +151,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                               <div className="space-y-4 pt-1 pb-2 pl-3">
                                 {group.columns.map((column) => (
                                   <div key={column.heading}>
-                                    <p className="mb-1 px-3 text-[11px] font-bold tracking-wide text-ink-400 uppercase">
+                                    <p className="mb-1 px-3 text-[11px] font-bold tracking-wide text-gold-700 uppercase">
                                       {column.heading}
                                     </p>
                                     <ul className="space-y-0.5">
@@ -161,7 +161,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                                             <Link
                                               href={item.href}
                                               onClick={onClose}
-                                              className="block rounded-md px-3 py-2.5 text-body-sm text-ink-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                                              className="block rounded-md px-3 py-2.5 text-body-sm text-ink-700 transition-colors hover:bg-navy-50 hover:text-navy-900 font-medium"
                                             >
                                               {item.label}
                                             </Link>
@@ -180,7 +180,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                       <Link
                         href={group.href}
                         onClick={onClose}
-                        className="block rounded-md px-3 py-3 text-body font-semibold text-ink-950 transition-colors hover:bg-brand-50"
+                        className="block rounded-md px-3 py-3 text-body font-semibold text-ink-950 transition-colors hover:bg-navy-50"
                       >
                         {group.label}
                       </Link>

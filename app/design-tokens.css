@@ -1,0 +1,83 @@
+/* 
+ * Topica Design Tokens - Navy & Gold Theme
+ * Inspired by PXU system (assessment.pxu.edu.vn, elib.pxu.edu.vn)
+ * Primary: Navy #00264D, Accent: Gold #B78744
+ */
+
+@theme inline {
+  /* ============================================
+     COLOR PALETTE - NAVY (Primary)
+     ============================================ */
+  --color-navy-950: #001a3d;
+  --color-navy-900: #00264d;  /* Main brand navy from PXU */
+  --color-navy-800: #0a3566;
+  --color-navy-700: #134780;
+  --color-navy-600: #1d5999;
+  --color-navy-500: #2e6bb3;
+  --color-navy-400: #5a8ac7;
+  --color-navy-300: #8badd9;
+  --color-navy-200: #b8d0eb;
+  --color-navy-100: #dce8f5;
+  --color-navy-50: #eef3f9;
+
+  /* ============================================
+     COLOR PALETTE - GOLD (Accent)
+     ============================================ */
+  --color-gold-950: #422f14;
+  --color-gold-900: #6b4f28;
+  --color-gold-800: #8a6226;
+  --color-gold-700: #9a6f33;  /* Dark gold for text on light bg - AA compliant */
+  --color-gold-600: #a97d3d;
+  --color-gold-500: #b78744;  /* Brand gold from current logo */
+  --color-gold-400: #c49f63;
+  --color-gold-300: #d8b67c;
+  --color-gold-200: #e8d1a8;
+  --color-gold-100: #f6eddd;
+  --color-gold-50: #fbf8f3;
+
+  --color-line-300: #c8c3ba;
+  --color-cream: #fbf8f3;
+
+  /* Semantic mappings */
+  --color-primary: #00264d;
+  --color-primary-hover: #0a3566;
+  --color-primary-light: #eef3f9;
+
+  --color-accent: #b78744;
+  --color-accent-hover: #a97d3d;
+  --color-accent-dark: #9a6f33;
+  --color-accent-light: #f6eddd;
+}
+
+:root {
+  /* ============================================
+     SPACING & LAYOUT
+     ============================================ */
+  --spacing-unit: 0.25rem;
+  
+  /* Container & Grid */
+  --width-container: 77.5rem;
+  --width-measure: 47.5rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --section-space: clamp(4rem, 8vw, 7.5rem);
+  
+  /* Header Heights */
+  --height-header: 5rem;
+  --height-header-compact: 4rem;
+  
+  /* Control Heights */
+  --height-control-sm: 2.5rem;
+  --height-control: 3rem;
+  --height-control-lg: 3.5rem;
+
+  /* Z-INDEX SCALE */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
+}

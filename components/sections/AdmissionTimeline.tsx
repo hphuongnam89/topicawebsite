@@ -46,13 +46,13 @@ export function AdmissionTimeline() {
                         <div className="absolute top-12 bottom-[-2rem] left-6 -z-10 w-[2px] bg-line-200 lg:hidden" />
                       )}
 
-                      <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-700 font-bold text-white shadow-sm lg:mx-auto">
+                      <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-gold-400 bg-navy-900 font-bold text-white shadow-sm lg:mx-auto">
                         {index + 1}
                       </div>
 
                       <div className="flex-1 pt-2 lg:mt-3 lg:pt-0">
                         <div className="flex justify-start lg:justify-center">
-                          <IconComponent className="h-6 w-6 text-brand-500" />
+                          <IconComponent className="h-6 w-6 text-gold-500" />
                         </div>
                         <h3 className="mt-2 text-left font-semibold text-ink-950 lg:text-center">
                           {step.title}
@@ -69,8 +69,8 @@ export function AdmissionTimeline() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-brand-200 bg-brand-50/70 px-5 py-6 text-center lg:mt-16 sm:px-8 sm:py-7">
-          <p className="text-body-sm font-semibold text-brand-800">
+        <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-navy-100 bg-navy-50/70 px-5 py-6 text-center lg:mt-16 sm:px-8 sm:py-7">
+          <p className="text-body-sm font-semibold text-navy-900">
             Sẵn sàng bắt đầu lộ trình của bạn?
           </p>
           <ButtonLink

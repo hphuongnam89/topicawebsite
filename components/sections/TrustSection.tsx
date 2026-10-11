@@ -71,9 +71,9 @@ export function TrustSection({ data }: TrustSectionProps) {
                 key={index}
                 variant="fadeUp"
                 delay={delay}
-                className="flex min-w-0 items-center gap-3 rounded-lg border border-line-100 bg-canvas px-3 py-3 text-left transition-colors hover:border-brand-200 sm:px-4"
+                className="flex min-w-0 items-center gap-3 rounded-lg border border-line-100 bg-canvas px-3 py-3 text-left transition-all hover:border-gold-300 hover:shadow-sm sm:px-4"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-navy-50 text-navy-900">
                   <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
                 </div>
                 <p className="text-body-sm leading-snug font-semibold text-ink-800">{item.label}</p>
