@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { leadFormSchema, LeadFormData, LeadFormErrors } from "@/lib/form-schema";
 import { ZodError } from "zod";
@@ -102,11 +103,26 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
     return (
       <div className="flex flex-col items-center justify-center space-y-4 rounded-lg border border-line-200 bg-paper p-8 text-center shadow-sm">
         <CheckCircle className="h-12 w-12 text-success" />
-        <h3 className="font-display text-h3 text-ink-950">Đăng ký thành công!</h3>
-        <p className="text-body text-ink-600">
-          Cảm ơn bạn đã quan tâm. Chuyên viên tư vấn của Topica sẽ liên hệ với bạn trong thời gian
-          sớm nhất.
+        <h3 className="font-serif text-h3 font-bold text-ink-950">Gửi yêu cầu tư vấn thành công!</h3>
+        <p className="text-body text-ink-600 max-w-sm leading-relaxed">
+          Cảm ơn bạn đã quan tâm. Chuyên viên tư vấn tuyển sinh Topica sẽ liên hệ qua số điện thoại{" "}
+          <strong className="text-navy-900">{formData.phone}</strong> trong vòng 24 giờ làm việc.
         </p>
+        <p className="text-xs text-ink-400 italic">
+          (Lưu ý: Đây là xác nhận tiếp nhận thông tin tư vấn, không phải thông báo trúng tuyển chính thức).
+        </p>
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={() => {
+              setStatus("idle");
+              setFormData({ fullName: "", phone: "", email: "", program: "", educationLevel: "" });
+            }}
+            className="text-body-sm font-semibold text-navy-900 underline hover:text-navy-700 transition-colors"
+          >
+            Gửi yêu cầu tư vấn khác
+          </button>
+        </div>
       </div>
     );
   }
@@ -319,9 +335,13 @@ export function LeadForm({ onSubmit }: LeadFormProps) {
           />
           <label htmlFor="consent" className="text-body-sm text-ink-600">
             Tôi đồng ý với{" "}
-            <span className="font-medium text-info underline decoration-info/40 underline-offset-2">
+            <Link
+              href="/chinh-sach-bao-mat/"
+              target="_blank"
+              className="font-medium text-navy-800 underline decoration-navy-800/40 underline-offset-2 hover:text-navy-950 transition-colors"
+            >
               Chính sách bảo mật
-            </span>{" "}
+            </Link>{" "}
             và cho phép Topica liên hệ để tư vấn.
           </label>
         </div>
