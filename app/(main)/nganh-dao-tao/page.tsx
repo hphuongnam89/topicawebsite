@@ -159,7 +159,7 @@ export default function ProgramsDirectoryPage() {
                     </ButtonLink>
                     <ButtonLink
                       href="https://www.tuyensinh.topicauni.edu.vn/"
-                      variant="primary"
+                      variant="accent"
                       size="sm"
                       external
                     >

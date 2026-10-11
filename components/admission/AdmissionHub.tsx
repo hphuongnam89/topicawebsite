@@ -40,17 +40,17 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
     {
       question: "Topica có các chương trình học bổng nào cho tân sinh viên?",
       answer:
-        "Topica có nhiều loại học bổng cho tân sinh viên, bao gồm Học bổng Tài năng, Học bổng Khuyến học, và Học bổng Hỗ trợ tài chính. Giá trị học bổng có thể lên tới 100% học phí toàn khóa.",
+        "Topica và Trường Đại học Phú Xuân áp dụng nhiều gói học bổng cho tân sinh viên: Học bổng Tài năng (Talent Scholarship) giảm 30% học phí toàn khóa, Học bổng Khuyến học giảm 50% năm đầu, cùng chính sách Tiếp bước tương lai cho sinh viên vượt khó.",
     },
     {
       question: "Thời gian nhận hồ sơ xét tuyển là khi nào?",
       answer:
-        "Topica tổ chức nhiều đợt xét tuyển trong năm. Đợt 1 thường bắt đầu từ tháng 3 và kết thúc vào tháng 5. Bạn nên theo dõi thông báo trên website để cập nhật lịch chi tiết.",
+        "Nhà trường liên tục tiếp nhận hồ sơ xét tuyển theo các đợt trong năm. Đợt 1 mở từ tháng 3 và Đợt 2 mở vào tháng 7. Thí sinh có thể nộp hồ sơ trực tuyến và nhận kết quả xét tuyển nhanh chóng.",
     },
     {
       question: "Học phí tại Topica được đóng như thế nào?",
       answer:
-        "Học phí được đóng theo từng kỳ học (2 kỳ/năm). Sinh viên có thể chọn đóng qua chuyển khoản ngân hàng hoặc qua cổng thanh toán trực tuyến của trường.",
+        "Học phí áp dụng 600.000 đ / tín chỉ, thu theo số tín chỉ thực tế sinh viên đăng ký trong từng học kỳ (toàn khóa 9 học kỳ, ước tính ~8.400.000 đ / học kỳ). Sinh viên có thể thanh toán linh hoạt qua chuyển khoản hoặc tham gia chương trình trả góp 0% lãi suất.",
     },
   ];
 

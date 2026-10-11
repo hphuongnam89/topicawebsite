@@ -404,5 +404,6 @@ export const programDetails: ProgramDetail[] = [
 ];
 
 export function getProgramDetail(slug: string): ProgramDetail | undefined {
-  return programDetails.find((program) => program.slug === slug);
+  const normalized = slug.replace(/^nganh-dao-tao\//, "").replace(/^\/+|\/+$/g, "");
+  return programDetails.find((program) => program.slug === normalized || program.slug === slug);
 }
