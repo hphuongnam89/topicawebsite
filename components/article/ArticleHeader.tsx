@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { format } from "date-fns";
+import { formatDateVN } from "@/lib/date";
 import { cn } from "@/components/ui/cn";
 import type { Article } from "@/lib/cms/types";
 
@@ -38,14 +38,14 @@ export function ArticleHeader({ article, readingTime }: ArticleHeaderProps) {
         )}
 
         {publishedDate && (
-          <time dateTime={publishedDate}>{format(new Date(publishedDate), "dd/MM/yyyy")}</time>
+          <time dateTime={publishedDate}>{formatDateVN(publishedDate)}</time>
         )}
 
         {showUpdated && (
           <span className="text-ink-400">
             (Cập nhật:{" "}
             <time dateTime={article.updatedAt}>
-              {format(new Date(article.updatedAt), "dd/MM/yyyy")}
+              {formatDateVN(article.updatedAt)}
             </time>
             )
           </span>

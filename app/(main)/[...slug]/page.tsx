@@ -14,6 +14,14 @@ type Props = {
 
 export const revalidate = 300;
 
+const BLOCKED_SLUGS = new Set([
+  "cart",
+  "checkout",
+  "my-account",
+  "shop",
+  "classic-shop",
+]);
+
 function normalizePath(path: string): string {
   return `/${path.replace(/^\/+|\/+$/g, "")}`;
 }
@@ -25,6 +33,9 @@ function findHub(path: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  if (slug[0] && BLOCKED_SLUGS.has(slug[0].toLowerCase())) {
+    return {};
+  }
   const path = slug.join("/");
 
   const program = getProgramDetail(path);
@@ -73,6 +84,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CmsRoutePage({ params }: Props) {
   const { slug } = await params;
+  if (slug[0] && BLOCKED_SLUGS.has(slug[0].toLowerCase())) {
+    notFound();
+  }
   const path = slug.join("/");
 
   // Only programs with verified academic source data use the structured landing page.

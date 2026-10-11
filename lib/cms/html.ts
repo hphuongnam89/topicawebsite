@@ -70,8 +70,34 @@ function normalizeImageSrc(src?: string): string | undefined {
   return src;
 }
 
+export function stripWordPressShortcodes(value: string): string {
+  if (!value) return value;
+  return value
+    .replace(/\[\/?vc_[^\]]*\]/gi, "")
+    .replace(/\[\/?wpb_[^\]]*\]/gi, "")
+    .replace(/\[\/?contact-form-7[^\]]*\]/gi, "")
+    .replace(/\[\/?el_[^\]]*\]/gi, "");
+}
+
+export function cleanWordPressEntities(value: string): string {
+  if (!value) return value;
+  return value
+    .replace(/&#038;/g, "&")
+    .replace(/&#8211;/g, "–")
+    .replace(/&#8212;/g, "—")
+    .replace(/&#8216;/g, "‘")
+    .replace(/&#8217;/g, "’")
+    .replace(/&#8220;/g, "“")
+    .replace(/&#8221;/g, "”")
+    .replace(/&#8230;/g, "…")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&#(\d+);/g, (_match, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([\da-f]+);/gi, (_match, code) => String.fromCodePoint(parseInt(code, 16)));
+}
+
 export function sanitizeWordPressHtml(value: string): SanitizedHtml {
-  return sanitizeHtml(value, {
+  const preprocessed = cleanWordPressEntities(stripWordPressShortcodes(value || ""));
+  return sanitizeHtml(preprocessed, {
     allowedTags,
     allowedAttributes: {
       "*": ["class", "id", "aria-label", "aria-hidden", "role"],
@@ -110,9 +136,10 @@ export function sanitizeWordPressHtml(value: string): SanitizedHtml {
 }
 
 export function wordpressText(value: string): string {
-  return sanitizeHtml(value, { allowedTags: [], allowedAttributes: {} })
-    .replace(/&#(\d+);/g, (_match, code) => String.fromCodePoint(Number(code)))
-    .replace(/&#x([\da-f]+);/gi, (_match, code) => String.fromCodePoint(parseInt(code, 16)))
+  const preprocessed = stripWordPressShortcodes(value || "");
+  return cleanWordPressEntities(
+    sanitizeHtml(preprocessed, { allowedTags: [], allowedAttributes: {} })
+  )
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
@@ -121,3 +148,4 @@ export function wordpressText(value: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+

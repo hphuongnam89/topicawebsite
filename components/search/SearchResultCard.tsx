@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { format } from "date-fns";
+import { formatDateVN } from "@/lib/date";
 import { cn } from "@/components/ui/cn";
 import type { Article } from "@/lib/cms/types";
 
@@ -39,7 +39,7 @@ export function SearchResultCard({ article, query, className }: SearchResultCard
             <>
               {article.category && <span className="text-line-200">•</span>}
               <time className="text-ink-600" dateTime={article.publishedAt}>
-                {format(new Date(article.publishedAt), "dd/MM/yyyy")}
+                {formatDateVN(article.publishedAt)}
               </time>
             </>
           )}

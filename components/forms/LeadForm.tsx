@@ -10,9 +10,9 @@ interface LeadFormProps {
 }
 
 const programs = [
-  "Quản trị Kinh doanh - Marketing",
-  "Quản trị Dịch vụ Du lịch và Lữ hành",
-  "Công nghệ thông tin",
+  "Quản trị kinh doanh",
+  "Quản trị du lịch và lữ hành",
+  "Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số",
   "Ngôn ngữ Anh",
   "Ngôn ngữ Trung Quốc",
 ];

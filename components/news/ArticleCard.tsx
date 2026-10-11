@@ -1,7 +1,7 @@
 import { Article } from "@/lib/cms/types";
 import Image from "next/image";
 import Link from "next/link";
-import { format } from "date-fns";
+import { formatDateVN } from "@/lib/date";
 import { cn } from "@/lib/utils";
 
 type ArticleCardProps = {
@@ -11,9 +11,7 @@ type ArticleCardProps = {
 };
 
 export function ArticleCard({ article, variant = "default", className }: ArticleCardProps) {
-  const publishedDate = article.publishedAt
-    ? format(new Date(article.publishedAt), "dd/MM/yyyy")
-    : "";
+  const publishedDate = article.publishedAt ? formatDateVN(article.publishedAt) : "";
 
   if (variant === "featured") {
     return (

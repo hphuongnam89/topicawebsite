@@ -1,0 +1,1038 @@
+{
+  "results": [
+    {
+      "url": "/",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/"
+    },
+    {
+      "url": "/gioi-thieu",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/gioi-thieu",
+      "dbPage": "Giới thiệu"
+    },
+    {
+      "url": "/tuyen-sinh",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/tuyen-sinh",
+      "dbPage": "Tuyển sinh"
+    },
+    {
+      "url": "/tuyen-sinh/hoc-phi-hoc-bong",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/tuyen-sinh/hoc-phi-hoc-bong"
+    },
+    {
+      "url": "/tin-tuc",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/tin-tuc"
+    },
+    {
+      "url": "/lien-he",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/lien-he",
+      "dbPage": "Liên hệ"
+    },
+    {
+      "url": "/nhung-cau-hoi-thuong-gap",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/nhung-cau-hoi-thuong-gap",
+      "dbPage": "Những câu hỏi thường gặp"
+    },
+    {
+      "url": "/tim-kiem",
+      "httpStatus": 200,
+      "type": "static",
+      "label": "/tim-kiem"
+    },
+    {
+      "url": "/quan-tri-kinh-doanh-marketing",
+      "httpStatus": 200,
+      "type": "program",
+      "label": "quan-tri-kinh-doanh-marketing",
+      "dbPage": "Quản trị Kinh doanh – Marketing"
+    },
+    {
+      "url": "/quan-tri-dich-vu-du-lich-va-lu-hanh",
+      "httpStatus": 200,
+      "type": "program",
+      "label": "quan-tri-dich-vu-du-lich-va-lu-hanh",
+      "dbPage": "Quản trị Dịch vụ Du lịch và Lữ hành"
+    },
+    {
+      "url": "/cong-nghe-thong-tin",
+      "httpStatus": 200,
+      "type": "program",
+      "label": "cong-nghe-thong-tin",
+      "dbPage": "Công nghệ thông tin"
+    },
+    {
+      "url": "/ngon-ngu-anh",
+      "httpStatus": 200,
+      "type": "program",
+      "label": "ngon-ngu-anh",
+      "dbPage": "Ngôn ngữ Anh"
+    },
+    {
+      "url": "/ngon-ngu-trung-quoc",
+      "httpStatus": 200,
+      "type": "program",
+      "label": "ngon-ngu-trung-quoc",
+      "dbPage": "Ngôn ngữ Trung Quốc"
+    },
+    {
+      "url": "/gioi-thieu/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/"
+    },
+    {
+      "url": "/gioi-thieu/tap-doan-giao-duc-equest/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/tap-doan-giao-duc-equest/"
+    },
+    {
+      "url": "/gioi-thieu/lich-su-hinh-thanh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/lich-su-hinh-thanh/"
+    },
+    {
+      "url": "/gioi-thieu/tam-nhin-su-mang/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/tam-nhin-su-mang/"
+    },
+    {
+      "url": "/gioi-thieu/gia-tri-cot-loi-triet-ly-giao-duc/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/gia-tri-cot-loi-triet-ly-giao-duc/"
+    },
+    {
+      "url": "/gioi-thieu/co-cau-to-chuc/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/co-cau-to-chuc/"
+    },
+    {
+      "url": "/gioi-thieu/co-so-vat-chat/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/gioi-thieu/co-so-vat-chat/"
+    },
+    {
+      "url": "/nganh-dao-tao/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/nganh-dao-tao/"
+    },
+    {
+      "url": "/quan-tri-kinh-doanh-marketing/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/quan-tri-kinh-doanh-marketing/"
+    },
+    {
+      "url": "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/quan-tri-dich-vu-du-lich-va-lu-hanh/"
+    },
+    {
+      "url": "/cong-nghe-thong-tin/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/cong-nghe-thong-tin/"
+    },
+    {
+      "url": "/ngon-ngu-anh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/ngon-ngu-anh/"
+    },
+    {
+      "url": "/ngon-ngu-trung-quoc/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/ngon-ngu-trung-quoc/"
+    },
+    {
+      "url": "/tuyen-sinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tuyen-sinh/"
+    },
+    {
+      "url": "/thong-tin-tuyen-sinh-nam-2026/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/thong-tin-tuyen-sinh-nam-2026/"
+    },
+    {
+      "url": "/thong-bao-tuyen-sinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/thong-bao-tuyen-sinh/"
+    },
+    {
+      "url": "/tuyen-sinh/de-an-tuyen-sinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tuyen-sinh/de-an-tuyen-sinh/"
+    },
+    {
+      "url": "/tuyen-sinh/quy-che-tuyen-sinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tuyen-sinh/quy-che-tuyen-sinh/"
+    },
+    {
+      "url": "/tuyen-sinh/hoc-phi-hoc-bong/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tuyen-sinh/hoc-phi-hoc-bong/"
+    },
+    {
+      "url": "/thoi-gian-dao-tao/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/thoi-gian-dao-tao/"
+    },
+    {
+      "url": "/van-bang-hai/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/van-bang-hai/"
+    },
+    {
+      "url": "/nhung-cau-hoi-thuong-gap/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/nhung-cau-hoi-thuong-gap/"
+    },
+    {
+      "url": "/chuong-trinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/chuong-trinh/"
+    },
+    {
+      "url": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/"
+    },
+    {
+      "url": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/khung-chuong-trinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/khung-chuong-trinh/"
+    },
+    {
+      "url": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/muc-tieu-va-chuan-dau-ra/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/muc-tieu-va-chuan-dau-ra/"
+    },
+    {
+      "url": "/chuong-trinh/chuong-trinh-dao-tao-ngan-han/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/chuong-trinh/chuong-trinh-dao-tao-ngan-han/"
+    },
+    {
+      "url": "/dao-tao/quy-che-dao-tao/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/quy-che-dao-tao/"
+    },
+    {
+      "url": "/dao-tao/ke-hoach-dao-tao/ke-hoach-nam-hoc/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/ke-hoach-dao-tao/ke-hoach-nam-hoc/"
+    },
+    {
+      "url": "/dao-tao/ke-hoach-dao-tao/ke-hoach-toan-khoa/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/ke-hoach-dao-tao/ke-hoach-toan-khoa/"
+    },
+    {
+      "url": "/dao-tao/ke-hoach-dao-tao/ke-hoach-hoc-ky/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/ke-hoach-dao-tao/ke-hoach-hoc-ky/"
+    },
+    {
+      "url": "/dao-tao/thoi-khoa-bieu/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/thoi-khoa-bieu/"
+    },
+    {
+      "url": "/dao-tao/lich-thi/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dao-tao/lich-thi/"
+    },
+    {
+      "url": "/quy-dinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/quy-dinh/"
+    },
+    {
+      "url": "/he-thong/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/he-thong/"
+    },
+    {
+      "url": "/tin-tuc/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc/"
+    },
+    {
+      "url": "/tin-tuc?category=tin-tuc-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=tin-tuc-tuyen-sinh"
+    },
+    {
+      "url": "/tin-tuc?category=thong-bao-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=thong-bao-tuyen-sinh"
+    },
+    {
+      "url": "/tin-tuc?category=su-kien",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=su-kien"
+    },
+    {
+      "url": "/tin-tuc?category=giao-duc",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=giao-duc"
+    },
+    {
+      "url": "/tin-tuc?category=hoat-dong-sinh-vien",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=hoat-dong-sinh-vien"
+    },
+    {
+      "url": "/tin-tuc?category=tuyen-dung",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/tin-tuc?category=tuyen-dung"
+    },
+    {
+      "url": "/dam-bao-chat-luong/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/dam-bao-chat-luong/"
+    },
+    {
+      "url": "/cong-khai/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/cong-khai/"
+    },
+    {
+      "url": "/bao-cao-thuong-nien/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/bao-cao-thuong-nien/"
+    },
+    {
+      "url": "/cong-khai-van-bang-chung-chi/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/cong-khai-van-bang-chung-chi/"
+    },
+    {
+      "url": "/khao-thi-dbcl/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/khao-thi-dbcl/"
+    },
+    {
+      "url": "/bo-quy-trinh/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/bo-quy-trinh/"
+    },
+    {
+      "url": "/bo-bieu-mau/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/bo-bieu-mau/"
+    },
+    {
+      "url": "/lien-he/",
+      "httpStatus": 200,
+      "type": "nav_link",
+      "label": "/lien-he/"
+    },
+    {
+      "url": "/tuyen-sinh-van-bang-2",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Tuyển sinh văn bằng 2",
+      "status": "published"
+    },
+    {
+      "url": "/ket-noi-doanh-nghiep-cho-sinh-vien",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Kết nối doanh nghiệp cho sinh viên",
+      "status": "published"
+    },
+    {
+      "url": "/he-thong",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Hệ thống",
+      "status": "published"
+    },
+    {
+      "url": "/quy-dinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Quy định",
+      "status": "published"
+    },
+    {
+      "url": "/bo-bieu-mau",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Bộ biểu mẫu",
+      "status": "published"
+    },
+    {
+      "url": "/bo-quy-trinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Bộ quy trình",
+      "status": "published"
+    },
+    {
+      "url": "/cong-khai",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Công khai",
+      "status": "published"
+    },
+    {
+      "url": "/ke-hoach-hoc-ky",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Kế hoạch học kỳ",
+      "status": "published"
+    },
+    {
+      "url": "/ke-hoach-toan-khoa",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Kế hoạch toàn khóa",
+      "status": "published"
+    },
+    {
+      "url": "/lich-thi",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Lịch thi",
+      "status": "published"
+    },
+    {
+      "url": "/thoi-khoa-bieu",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Thời khoá biểu",
+      "status": "published"
+    },
+    {
+      "url": "/ke-hoach-dao-tao",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Kế hoạch đào tạo",
+      "status": "published"
+    },
+    {
+      "url": "/quy-che-dao-tao",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Quy chế đào tạo",
+      "status": "published"
+    },
+    {
+      "url": "/thoi-gian-dao-tao",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Thời gian đào tạo",
+      "status": "published"
+    },
+    {
+      "url": "/6-ly-do-hoc-tap-tai-vien-topica",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "6 lý do học tập tại Viện Topica",
+      "status": "published"
+    },
+    {
+      "url": "/khung-chuong-trinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Khung Chương trình",
+      "status": "published"
+    },
+    {
+      "url": "/co-hoi-nghe-nghiep-vi-tri-viec-lam",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cơ hội Nghề Nghiệp &#038; vị trí Việc làm",
+      "status": "published"
+    },
+    {
+      "url": "/muc-tieu-va-chuan-dau-ra",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Mục tiêu và Chuẩn đầu ra",
+      "status": "published"
+    },
+    {
+      "url": "/de-an-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Đề án tuyển sinh",
+      "status": "published"
+    },
+    {
+      "url": "/quy-che-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Quy chế tuyển sinh",
+      "status": "published"
+    },
+    {
+      "url": "/khoa-dao-tao-truc-tuyen",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Khoá Đào tạo trực tuyến",
+      "status": "published"
+    },
+    {
+      "url": "/chuong-trinh-dao-tao-ngan-han",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Chương trình Đào tạo ngắn hạn",
+      "status": "published"
+    },
+    {
+      "url": "/chuong-trinh-dao-tao-tu-xa",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Chương trình Đào tạo từ xa",
+      "status": "published"
+    },
+    {
+      "url": "/chuong-trinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Chương trình",
+      "status": "published"
+    },
+    {
+      "url": "/co-so-vat-chat",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cơ sở vật chất",
+      "status": "published"
+    },
+    {
+      "url": "/co-cau-to-chuc",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cơ cấu tổ chức",
+      "status": "published"
+    },
+    {
+      "url": "/gia-tri-cot-loi-triet-ly-giao-duc",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Giá trị cốt lõi &#038; triết lý giáo dục",
+      "status": "published"
+    },
+    {
+      "url": "/tam-nhin-su-mang",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Tầm nhìn, Sứ mạng",
+      "status": "published"
+    },
+    {
+      "url": "/lich-su-hinh-thanh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Lịch sử hình thành",
+      "status": "published"
+    },
+    {
+      "url": "/tap-doan-giao-duc-equest",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Tập đoàn Giáo dục EQuest",
+      "status": "published"
+    },
+    {
+      "url": "/itd",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Trung tâm iTD",
+      "status": "published"
+    },
+    {
+      "url": "/test",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "test",
+      "status": "published"
+    },
+    {
+      "url": "/ke-hoach-nam-hoc",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Kế hoạch năm học",
+      "status": "published"
+    },
+    {
+      "url": "/thong-tin-lien-thong",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Thông tin liên thông",
+      "status": "published"
+    },
+    {
+      "url": "/truyen-thong-da-phuong-tien",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Truyền thông Đa phương tiện",
+      "status": "published"
+    },
+    {
+      "url": "/quan-ly-cong-nghiep",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Quản lý công nghiệp",
+      "status": "published"
+    },
+    {
+      "url": "/tai-sao-nen-hoc-tai-topica",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Tại sao nên học tại TOPICA",
+      "status": "published"
+    },
+    {
+      "url": "/cam-ket-gioi-thieu-viec-lam",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cam kết giới thiệu việc làm",
+      "status": "published"
+    },
+    {
+      "url": "/cam-nhan-ve-dh-phu-xuan",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cảm nhận về ĐH Phú Xuân",
+      "status": "published"
+    },
+    {
+      "url": "/de-an-quy-che-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Đề án – quy chế tuyển sinh",
+      "status": "published"
+    },
+    {
+      "url": "/hoc-phi-hoc-bong",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Học phí &#038; Học bổng",
+      "status": "published"
+    },
+    {
+      "url": "/hoc-phi",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Học phí",
+      "status": "published"
+    },
+    {
+      "url": "/thong-bao-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Thông báo tuyển sinh",
+      "status": "published"
+    },
+    {
+      "url": "/xet-tuyen-truc-tuyen",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Xét tuyển trực tuyến",
+      "status": "published"
+    },
+    {
+      "url": "/cong-khai-van-bang-chung-chi",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Công khai văn bằng chứng chỉ",
+      "status": "published"
+    },
+    {
+      "url": "/bao-cao-thuong-nien",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Báo cáo thường niên",
+      "status": "published"
+    },
+    {
+      "url": "/dao-tao-thuong-xuyen",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Đào tạo thường xuyên",
+      "status": "published"
+    },
+    {
+      "url": "/hop-tac-voi-dai-hoc-kuv",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Hợp tác với Đại học KUV",
+      "status": "published"
+    },
+    {
+      "url": "/lien-ket-dao-tao-quoc-te",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Liên kết đào tạo quốc tế",
+      "status": "published"
+    },
+    {
+      "url": "/van-bang-hai",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Văn bằng hai",
+      "status": "published"
+    },
+    {
+      "url": "/ung-dung-cong-nghe-thong-tin",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Ứng dụng công nghệ thông tin",
+      "status": "published"
+    },
+    {
+      "url": "/cong-nghe-ky-thuat-o-to",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Công nghệ Kỹ thuật Ô tô",
+      "status": "published"
+    },
+    {
+      "url": "/nckh-htqt",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "NCKH &#038; HTQT",
+      "status": "published"
+    },
+    {
+      "url": "/khao-thi-dbcl",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Khảo thí &#038; ĐBCL",
+      "status": "published"
+    },
+    {
+      "url": "/dao-tao",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Đào tạo",
+      "status": "published"
+    },
+    {
+      "url": "/my-account",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "My account",
+      "status": "published"
+    },
+    {
+      "url": "/checkout",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Checkout",
+      "status": "published"
+    },
+    {
+      "url": "/cart",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Cart",
+      "status": "published"
+    },
+    {
+      "url": "/shop",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Shop",
+      "status": "published"
+    },
+    {
+      "url": "/blog",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "Blog",
+      "status": "published"
+    },
+    {
+      "url": "/classic-shop",
+      "httpStatus": 200,
+      "type": "cms_page",
+      "label": "VIỆN TOPICA",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/vien-dao-tao-quoc-te-topica-va-eholdings-group-ky-ket-hop-tac-mo-rong-ket-noi-dao-tao-va-phat-trien-nguon-nhan-luc",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "VIỆN ĐÀO TẠO QUỐC TẾ TOPICA VÀ EHOLDINGS GROUP KÝ KẾT HỢP TÁC, MỞ RỘNG KẾT NỐI ĐÀO TẠO VÀ PHÁT TRIỂN NGUỒN NHÂN LỰC",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/chi-con-2-ngay-dang-ky-nhap-hoc-lop-khai-giang-ngay-20-07-2026",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "CHỈ CÒN 2 NGÀY ĐĂNG KÝ NHẬP HỌC LỚP KHAI GIẢNG NGÀY 20/07/2026",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/hoc-phi-mot-ky-dai-hoc-tai-vien-dao-tao-quoc-te-topica-it-hon-ban-nghi",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "HỌC PHÍ MỘT KỲ ĐẠI HỌC TẠI VIỆN ĐÀO TẠO QUỐC TẾ TOPICA – ÍT HƠN BẠN NGHĨ",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/vien-dao-tao-quoc-te-topica-chuc-mung-le-tot-nghiep-sinh-vien-truong-cao-dang-viet-my",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "VIỆN ĐÀO TẠO QUỐC TẾ TOPICA CHÚC MỪNG LỄ TỐT NGHIỆP SINH VIÊN TRƯỜNG CAO ĐẲNG VIỆT MỸ",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/tuyen-dung-chuyen-vien-hoc-lieu-so-mon-toan-lam-viec-tai-tp-hue",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "TUYỂN DỤNG CHUYÊN VIÊN HỌC LIỆU SỐ MÔN TOÁN LÀM VIỆC TẠI TP. HUẾ",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/vien-dao-tao-quoc-te-topica-tuyen-dung-05-tu-van-vien-lam-viec-tai-hue",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "VIỆN ĐÀO TẠO QUỐC TẾ TOPICA TUYỂN DỤNG 05 TƯ VẤN VIÊN LÀM VIỆC TẠI HUẾ",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/co-nang-luc-nhung-thieu-bang-dai-hoc-dung-de-co-hoi-vut-mat",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "CÓ NĂNG LỰC NHƯNG THIẾU BẰNG ĐẠI HỌC – ĐỪNG ĐỂ CƠ HỘI VỤT MẤT",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/30-tuoi-bat-dau-hoc-dai-hoc-khong-bao-gio-la-muon-de-thay-doi-tuong-lai",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "30 tuổi bắt đầu học đại học: Không bao giờ là muộn để thay đổi tương lai",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/vien-dao-tao-quoc-te-topica-tham-va-chuc-mung-cac-co-quan-bao-chi-nhan-ngay-bao-chi-cach-mang-viet-nam-21-6",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "VIỆN ĐÀO TẠO QUỐC TẾ TOPICA THĂM VÀ CHÚC MỪNG CÁC CƠ QUAN BÁO CHÍ NHÂN NGÀY BÁO CHÍ CÁCH MẠNG VIỆT NAM 21/6",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/mau-don-dang-ky-xet-tuyen-dai-hoc-nam-2026",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "MẪU ĐƠN ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC NĂM 2026",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/thong-bao-to-chuc-hoi-nghi-doi-thoai-giua-sinh-vien-va-lanh-dao-nha-truong-nam-hoc-2025-2026",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Thông báo Tổ chức Hội nghị đối thoại giữa sinh viên và lãnh đạo Nhà trường năm học 2025 – 2026",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/bi-quyet-hoc-dai-hoc-tu-xa-ma-van-dam-bao-hieu-qua-cong-viec",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Bí quyết học đại học từ xa mà vẫn đảm bảo hiệu quả công việc",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/hoc-dai-hoc-song-song-voi-cong-viec-giup-phat-trien-su-nghiep-ra-sao",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Học đại học song song với công việc giúp phát triển sự nghiệp ra sao?",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/5-dau-hieu-cho-thay-ban-dang-bi-gioi-han-su-nghiep-vi-thieu-bang-dai-hoc",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "5 dấu hiệu cho thấy bạn đang bị giới hạn sự nghiệp vì thiếu bằng đại học",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/thi-truong-lao-dong-hien-nay-chi-co-bang-thpt-se-doi-mat-voi-dieu-gi",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Thị trường lao động hiện nay: Chỉ có bằng THPT sẽ đối mặt với điều gì?",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/tu-bang-thpt-len-bang-dai-hoc-lo-trinh-nang-cap-ho-so-nghe-nghiep",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Từ bằng THPT lên bằng Đại học: Lộ trình nâng cấp hồ sơ nghề nghiệp",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/tam-giac-chat-luong-trong-dao-tao-dai-hoc-tu-xa",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Tam giác chất lượng trong đào tạo đại học từ xa",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/chuong-trinh-dai-hoc-tu-xa-khac-nhau-o-diem-nao-quyet-dinh-chat-luong-dau-ra",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Chương trình đại học từ xa khác nhau ở điểm nào quyết định chất lượng đầu ra?",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/chon-nganh-hoc-tu-xa-nguoi-di-lam-nen-dua-vao-kinh-nghiem-hay-xu-huong-thi-truong",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Chọn ngành học từ xa: Người đi làm nên dựa vào kinh nghiệm hay xu hướng thị trường?",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/nhung-gia-tri-vo-hinh-ma-nguoi-hoc-dai-hoc-tu-xa-nhan-duoc",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Những giá trị vô hình mà người học đại học từ xa nhận được",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/hoi-chung-so-bat-dau-lai-o-nguoi-hoc-dai-hoc-tu-xa-sau-25-tuoi",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Hội chứng “sợ bắt đầu lại” ở người học đại học từ xa sau 25 tuổi",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/dau-hieu-nhan-biet-chuong-trinh-dai-hoc-tu-xa-thiet-ke-kem",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Dấu hiệu nhận biết chương trình đại học từ xa thiết kế kém",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/hoc-dai-hoc-tu-xa-khong-that-bai-vi-chuong-trinh-ma-vi-ky-vong-sai-lech",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Học đại học từ xa không thất bại vì chương trình, mà vì kỳ vọng sai lệch",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/1-chuong-trinh-hoc-dai-hoc-tu-xa-duoc-thiet-ke-tot-can-giai-quyet-van-de-gi-cho-nguoi-hoc",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "1 chương trình học đại học từ xa được thiết kế tốt cần giải quyết vấn đề gì cho người học?",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/dung-di-hoc-dai-hoc-tu-xa-neu-ban-chua-tra-loi-duoc-3-cau-hoi-nay",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Đừng đi học đại học từ xa nếu bạn chưa trả lời được 3 câu hỏi này",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/hop-bao-cao-tien-do-thuc-tap-doanh-nghiep-ojt-tai-vien-dao-tao-quoc-te-topica",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "HỌP BÁO CÁO TIẾN ĐỘ THỰC TẬP DOANH NGHIỆP (OJT) TẠI VIỆN ĐÀO TẠO QUỐC TẾ TOPICA",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/quyet-dinh-ban-hanh-ke-hoach-trien-khai-cong-tac-tuyen-sinh-dai-hoc-tuyen-sinh-cao-dang-nam-2026",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Quyết định Ban hành Kế hoạch triển khai công tác tuyển sinh đại học, tuyển sinh cao đẳng năm 2026",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/thong-tin-tuyen-sinh-nam-2026",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "THÔNG TIN TUYỂN SINH NĂM 2026",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/thong-bao-tuyen-sinh-dai-hoc-chinh-quy-hinh-thuc-tu-xa-pxuni-elearning-nam-2026-dot-2",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "THÔNG BÁO TUYỂN SINH ĐẠI HỌC CHÍNH QUY HÌNH THỨC TỪ XA (PXUni-Elearning) NĂM 2026 – ĐỢT 2",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/thong-bao-tuyen-sinh",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "Thông báo tuyển sinh",
+      "status": "published"
+    },
+    {
+      "url": "/tin-tuc/topica-thuc-day-hop-tac-dao-tao-mo-rong-co-hoi-hoc-dai-hoc-cho-sinh-vien-cao-dang-quang-nam",
+      "httpStatus": 200,
+      "type": "cms_article",
+      "label": "TOPICA THÚC ĐẨY HỢP TÁC ĐÀO TẠO, MỞ RỘNG CƠ HỘI HỌC ĐẠI HỌC CHO SINH VIÊN CAO ĐẲNG QUẢNG NAM",
+      "status": "published"
+    }
+  ],
+  "statusCounts": {
+    "200": 155
+  }
+}

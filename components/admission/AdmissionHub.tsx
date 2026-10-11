@@ -12,6 +12,7 @@ import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { QuickActionCard } from "./QuickActionCard";
 import { AdmissionAnnouncementCard } from "./AdmissionAnnouncementCard";
 import { GraduationCap, ClipboardList, FileText, Banknote, HelpCircle, Phone } from "lucide-react";
+import { formatDateVN } from "@/lib/date";
 
 export interface AdmissionHubProps {
   page: CmsPage;
@@ -148,8 +149,8 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                 <AdmissionAnnouncementCard
                   key={article.id}
                   title={article.title}
-                  href={`/tin-tuc-tuyen-sinh/${article.slug}`}
-                  date={new Date(article.publishedAt).toLocaleDateString("vi-VN")}
+                  href={`/tin-tuc/${article.slug}`}
+                  date={formatDateVN(article.publishedAt)}
                   summary={article.excerpt}
                 />
               ))}

@@ -56,11 +56,11 @@
           "heading": "Kinh doanh & Dịch vụ",
           "items": [
             {
-              "label": "Quản trị Kinh doanh - Marketing",
+              "label": "Quản trị kinh doanh",
               "href": "/quan-tri-kinh-doanh-marketing/"
             },
             {
-              "label": "Quản trị Dịch vụ Du lịch và Lữ hành",
+              "label": "Quản trị du lịch và lữ hành",
               "href": "/quan-tri-dich-vu-du-lich-va-lu-hanh/"
             }
           ]
@@ -69,7 +69,7 @@
           "heading": "Công nghệ & Sáng tạo",
           "items": [
             {
-              "label": "Công nghệ thông tin",
+              "label": "Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số",
               "href": "/cong-nghe-thong-tin/"
             }
           ]

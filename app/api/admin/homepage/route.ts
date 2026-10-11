@@ -51,9 +51,9 @@ const DEFAULT_HERO: HomepageHeroSettings = {
 const DEFAULT_TRUST_ITEMS: TrustItemSetting[] = [
   { label: "Trực thuộc ĐH Phú Xuân" },
   { label: "Bằng cấp được công nhận" },
-  { label: "Đào tạo từ xa 100%" },
+  { label: "Đào tạo từ xa trực tuyến" },
   { label: "15,000+ sinh viên" },
-  { label: "9 ngành đào tạo" },
+  { label: "5 ngành đào tạo trọng điểm" },
   { label: "Thành viên EQuest" },
 ];
 
@@ -63,14 +63,14 @@ const DEFAULT_TESTIMONIALS: TestimonialSetting[] = [
     name: "Nguyễn Văn A",
     role: "Cựu sinh viên",
     quote: "Chương trình đào tạo tại Topica rất thực tiễn, giúp tôi tự tin áp dụng vào công việc ngay sau khi tốt nghiệp.",
-    program: "Công nghệ thông tin",
+    program: "Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số",
   },
   {
     id: "t2",
     name: "Trần Thị B",
     role: "Sinh viên năm 3",
     quote: "Đội ngũ giảng viên nhiệt tình và luôn hỗ trợ sinh viên trong suốt quá trình học tập.",
-    program: "Quản trị Kinh doanh - Marketing",
+    program: "Quản trị kinh doanh",
   },
   {
     id: "t3",
@@ -82,9 +82,9 @@ const DEFAULT_TESTIMONIALS: TestimonialSetting[] = [
   {
     id: "t4",
     name: "Phạm Thị D",
-    role: "Chuyên viên Nhân sự",
-    quote: "Kiến thức từ chương trình đã mở ra nhiều cơ hội phát triển nghề nghiệp cho tôi.",
-    program: "Quản lý công nghiệp",
+    role: "Chuyên viên Du lịch",
+    quote: "Kiến thức từ chương trình đã mở ra nhiều cơ hội phát triển nghề nghiệp cho tôi trong lĩnh vực lữ hành.",
+    program: "Quản trị du lịch và lữ hành",
   },
 ];
 
