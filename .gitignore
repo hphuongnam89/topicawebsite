@@ -47,6 +47,7 @@ next-env.d.ts
 *.db-wal
 *.sqlite
 *.sqlite3
+/data/backups/
 
 # temp / scratch files & local tools
 .hallmark/

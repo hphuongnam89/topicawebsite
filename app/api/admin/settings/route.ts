@@ -5,14 +5,14 @@ import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
 
 const DEFAULT_SETTINGS = {
-  hotline: "1800 646466",
-  email: "tuyensinh@topica.edu.vn",
-  address: "Tầng 5, Tòa nhà HITC, 239 Xuân Thủy, Cầu Giấy, Hà Nội",
+  hotline: "1800 646 857",
+  email: "tuyensinh@topicauni.edu.vn",
+  address: "27 Lê Văn Lương, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội",
   facebook: "https://www.facebook.com/topica.edu.vn",
   youtube: "https://www.youtube.com/user/TopicaVietnam",
   zalo: "https://zalo.me/topica",
-  siteTitle: "Viện Đào tạo Quốc tế Topica - Tiên phong Giáo dục Trực tuyến",
-  siteDescription: "Chương trình cử nhân trực tuyến chất lượng cao từ các trường đại học hàng đầu.",
+  siteTitle: "Viện Đào tạo Quốc tế Topica – Trường Đại học Phú Xuân",
+  siteDescription: "Chương trình đào tạo cử nhân trực tuyến chuẩn quốc gia do Trường Đại học Phú Xuân cấp bằng, hợp tác cùng Viện Đào tạo Quốc tế Topica.",
   telegramBotToken: "",
   telegramChatId: "",
 };
