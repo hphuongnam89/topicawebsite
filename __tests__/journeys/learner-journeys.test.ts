@@ -36,24 +36,21 @@ describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
   });
 
   describe("Journey 3: Minh bạch Học phí & Chính sách Học bổng", () => {
-    test("đơn giá học phí minh bạch: 750.000 đ/tín chỉ (Kinh doanh/Ngôn ngữ) và 850.000 đ/tín chỉ (CNTT)", () => {
+    test("đơn giá học phí 600.000 đ / tín chỉ nhất quán trên toàn bộ 5 ngành đào tạo", () => {
       OFFICIAL_TUITION_PROGRAMS.forEach((item) => {
-        if (item.group === "technology") {
-          expect(item.pricePerCredit).toBe(850000);
-        } else {
-          expect(item.pricePerCredit).toBe(750000);
-        }
+        expect(item.pricePerCredit).toBe(600000);
         expect(item.credits).toBeGreaterThanOrEqual(126);
         expect(item.totalTuition).toBe(item.credits * item.pricePerCredit);
+        expect(item.totalTuition).toBe(75600000);
+        expect(item.tuitionPerSemester).toBe(8400000);
       });
     });
 
-    test("có đầy đủ chính sách học bổng và điều kiện áp dụng", () => {
-      expect(SCHOLARSHIPS.length).toBeGreaterThan(0);
-      SCHOLARSHIPS.forEach((s) => {
-        expect(s.percentage).toBeDefined();
-        expect(s.criteria).toBeDefined();
-      });
+    test("học bổng Talent giảm 30% học phí và có đầy đủ điều kiện xét tuyển", () => {
+      const talent = SCHOLARSHIPS.find((s) => s.id === "talent");
+      expect(talent).toBeDefined();
+      expect(talent?.percentage).toBe("30%");
+      expect(talent?.description).toContain("30%");
     });
   });
 

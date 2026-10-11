@@ -36,10 +36,8 @@ Hệ thống đã được thử nghiệm thực tế và đồng thời đượ
 ### Kịch bản 3: Minh bạch Học phí & Chính sách Học bổng
 - **Hành trình**: Menu Tuyển sinh ➔ Trang Học phí (`/hoc-phi`) ➔ Chọn ngành ➔ Xem học phí theo tín chỉ & học kỳ ➔ Đối chiếu học bổng.
 - **Kết quả đo lường**:
-  - Đơn giá tín chỉ được tách bạch minh bạch theo đặc thù khối ngành:
-    - **750.000 đ / tín chỉ**: Khối Kinh doanh & Ngôn ngữ (Tổng học phí: 94.500.000 đ / 126 tín chỉ / 9 học kỳ).
-    - **850.000 đ / tín chỉ**: Khối Công nghệ thông tin (Tổng học phí: 107.100.000 đ / 126 tín chỉ / 9 học kỳ, bao gồm phòng lab thực hành ảo và học liệu số đồ hoạ).
-  - 6 chính sách học bổng (từ 10% đến 50%) có điều kiện xét tuyển minh bạch, tạo động lực đăng ký sớm.
+  - Đơn giá tín chỉ quy chuẩn thống nhất: **600.000 đ / tín chỉ** trên toàn bộ 5 ngành đào tạo (Tổng học phí toàn khóa: 75.600.000 đ / 126 tín chỉ / 9 học kỳ; ước tính 8.400.000 đ / học kỳ).
+  - Chính sách học bổng rõ ràng: **Học bổng Tài năng (Talent Scholarship) giảm 30%** học phí toàn khóa, Học bổng Khuyến học giảm 50% năm đầu, cùng chính sách Tiếp bước tương lai tạo động lực nhập học.
 
 ### Kịch bản 4: Kiểm tra Kỳ tuyển sinh & Điều kiện Hồ sơ
 - **Hành trình**: Trang chủ ➔ Lộ trình tuyển sinh (`/tuyen-sinh`) ➔ Xem các mốc nhận hồ sơ đợt 1, đợt 2 ➔ Nắm điều kiện xét tuyển học bạ THPT/văn bằng đại học.
@@ -80,7 +78,7 @@ Dựa trên phản hồi thực tế từ các phiên thử nghiệm, đội ng�
 | **SEO Core Routes** | 100% HTTP 200 OK | **8/8 routes trả về 200 OK** | ✅ Đạt |
 | **6 Hành trình Người học** | Không có ngõ cụt | **100% luồng thông suốt, không dead-end** | ✅ Đạt |
 | **Thông tin 5 Ngành học** | Chuẩn hóa hoàn toàn | **100% khớp dữ liệu ĐH Phú Xuân** | ✅ Đạt |
-| **Phân định Học phí** | Rõ ràng theo ngành | **750k (Kinh doanh/Ngôn ngữ) & 850k (CNTT)** | ✅ Đạt |
+| **Phân định Học phí** | Minh bạch toàn bộ 5 ngành | **600.000 đ / tín chỉ (75.600.000 đ/khóa)** | ✅ Đạt |
 
 ---
 

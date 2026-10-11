@@ -312,7 +312,7 @@ export default function DesignSystemPage() {
                 </div>
               </CardContent>
               <CardFooter className="justify-between border-t border-line-100 pt-4">
-                <span className="font-semibold text-navy-900">850.000 đ / tín chỉ</span>
+                <span className="font-semibold text-navy-900">600.000 đ / tín chỉ</span>
                 <ButtonLink href="/nganh-dao-tao/cong-nghe-thong-tin/" variant="outline" size="sm">
                   Xem chi tiết
                 </ButtonLink>
