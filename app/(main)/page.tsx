@@ -42,15 +42,15 @@ export default function Home() {
     <>
       <JsonLd data={orgJsonLd} />
       <HeroSection data={heroData} />
-      <TrustSection data={trustData} />
+      <AdmissionTimeline />
       <ProgramsSection />
+      <TrustSection data={trustData} />
       <WhyTopicaSection />
-      <NewsPreview />
       {/* TestimonialSection uses CMS data if available, otherwise falls back to static verified data */}
       {finalTestimonials && finalTestimonials.length > 0 && (
         <TestimonialSection data={finalTestimonials} />
       )}
-      <AdmissionTimeline />
+      <NewsPreview />
       <PartnersSection />
       <CampusSection />
     </>

@@ -37,6 +37,17 @@ const footerGroups = [
       { label: "Tra cứu hồ sơ xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
     ],
   },
+  {
+    title: "Chất lượng & Hệ thống",
+    links: [
+      { label: "Cổng học tập Elearning", href: "https://elib.pxu.edu.vn/" },
+      { label: "Trải nghiệm học tập", href: "/trai-nghiem-hoc-tap/" },
+      { label: "Chất lượng & Công khai", href: "/chat-luong-cong-khai/" },
+      { label: "Mẫu văn bằng tốt nghiệp", href: "/gioi-thieu/cong-khai-van-bang-chung-chi/" },
+      { label: "Chính sách bảo mật", href: "/chinh-sach-bao-mat/" },
+      { label: "Điều khoản sử dụng", href: "/dieu-khoan-su-dung/" },
+    ],
+  },
 ] as const;
 
 const socialLinks = [
@@ -63,7 +74,7 @@ export function Footer() {
       {/* Main footer */}
       <div className="bg-paper text-ink-800">
         <Container className="py-12 sm:py-16">
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {/* Footer link groups */}
             {footerGroups.map((group) => (
               <div key={group.title}>

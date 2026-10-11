@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SearchForm } from "@/components/search/SearchForm";
 import { SearchResultCard } from "@/components/search/SearchResultCard";
 import { Pagination } from "@/components/ui/Pagination";
+import { EmptyState } from "@/components/ui/EmptyState";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
@@ -76,12 +77,15 @@ async function SearchResults({ query, page }: { query?: string; page: number }) 
 
   if (!result || result.articles.length === 0) {
     return (
-      <div className="rounded-lg border border-line-200 bg-paper py-12 text-center">
-        <h3 className="text-h4 mb-2 font-bold text-ink-950">Không tìm thấy kết quả</h3>
-        <p className="text-ink-600">
-          Chúng tôi không tìm thấy kết quả nào phù hợp với từ khóa &quot;{query}&quot;. Vui lòng thử
-          lại với từ khóa khác.
-        </p>
+      <div className="py-8">
+        <EmptyState
+          title={`Không tìm thấy kết quả cho "${query}"`}
+          description="Vui lòng kiểm tra lại chính tả hoặc thử lại với các từ khóa phổ biến: Học phí, Quản trị kinh doanh, Công nghệ thông tin, Ngôn ngữ Anh..."
+          actionHref="/nganh-dao-tao"
+          actionLabel="Khám phá 5 ngành đào tạo"
+          secondaryActionHref="/"
+          secondaryActionLabel="Về trang chủ"
+        />
       </div>
     );
   }

@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { ArticleCard } from "@/components/news/ArticleCard";
 import { NewsFilterBar } from "@/components/news/NewsFilterBar";
 import { Pagination } from "@/components/ui/Pagination";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { env } from "@/lib/env";
 
@@ -122,9 +123,19 @@ export default async function NewsHomepage({ searchParams }: Props) {
             ))}
           </div>
         ) : (
-          <div className="py-24 text-center">
-            <h3 className="text-h4 mb-2 font-bold text-ink-950">Không tìm thấy bài viết nào</h3>
-            <p className="text-ink-600">Vui lòng thử lại với từ khóa khác.</p>
+          <div className="py-8">
+            <EmptyState
+              title="Không tìm thấy bài viết nào"
+              description={
+                search
+                  ? `Không tìm thấy kết quả nào phù hợp với từ khóa "${search}". Vui lòng thử lại với từ khóa khác.`
+                  : "Hiện chưa có bài viết nào trong chuyên mục này."
+              }
+              actionHref="/tin-tuc"
+              actionLabel="Xem tất cả tin tức"
+              secondaryActionHref="/nganh-dao-tao"
+              secondaryActionLabel="Khám phá 5 ngành học"
+            />
           </div>
         )}
 

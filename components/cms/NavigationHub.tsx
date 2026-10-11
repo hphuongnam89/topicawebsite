@@ -76,7 +76,7 @@ export function NavigationHub({ group }: { group: NavGroup }) {
               <div className="flex flex-wrap items-center gap-3 shrink-0">
                 <ButtonLink
                   href="https://www.tuyensinh.topicauni.edu.vn/"
-                  variant="primary"
+                  variant="accent"
                   size="default"
                   external
                   rightIcon={<ArrowRight className="w-4 h-4" />}

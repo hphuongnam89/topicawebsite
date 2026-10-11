@@ -97,7 +97,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                 <ButtonLink
                   href={content.ctaPrimaryLink || "https://www.tuyensinh.topicauni.edu.vn/"}
                   size="lg"
-                  variant="primary"
+                  variant="accent"
                   rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
                 >
                   {content.ctaPrimaryText}

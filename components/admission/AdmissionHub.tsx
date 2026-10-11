@@ -71,8 +71,9 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <ButtonLink
                 href="https://www.tuyensinh.topicauni.edu.vn/"
-                variant="primary"
+                variant="accent"
                 size="lg"
+                external
               >
                 Đăng ký xét tuyển
               </ButtonLink>
@@ -80,7 +81,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                 href="/lien-he/"
                 variant="secondary"
                 size="lg"
-                className="border-line-600 text-white hover:bg-white/10"
+                className="border-white/30 text-white hover:bg-white/10"
               >
                 Nhận tư vấn
               </ButtonLink>
