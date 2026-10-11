@@ -18,9 +18,9 @@
     "test": "vitest run",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
-    "test:links": "echo 'Link testing not implemented yet'",
-    "test:a11y": "echo 'A11y testing not implemented yet'",
-    "test:lighthouse": "echo 'Lighthouse testing not implemented yet'",
+    "test:links": "tsx scripts/test-links.ts",
+    "test:a11y": "tsx scripts/test-a11y.ts",
+    "test:lighthouse": "tsx scripts/test-lighthouse.ts",
     "verify": "npm run format:check && npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {

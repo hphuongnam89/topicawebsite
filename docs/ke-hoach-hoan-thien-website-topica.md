@@ -401,10 +401,11 @@ Tham chiếu: https://web.dev/articles/vitals
 - Không viết test chỉ để kiểm tra lại các class CSS hay tên khẩu hiệu đã chốt; cập nhật test cũ để xác minh hành vi mới.
 
 **Đầu ra:** báo cáo QA, lỗi đã xử lý, ma trận thiết bị, kết quả UX/hiệu năng/khả năng tiếp cận, biên bản nghiệm thu nghiệp vụ.
+*Trạng thái*: ✅ **Đã hoàn thành 100%** (Xem chi tiết tại: `docs/phase-9-qa-tong-the-va-hieu-nang.md`).
 
 **Chủ trì:** QA; UX và kỹ thuật sửa lỗi; Topica xác nhận nội dung.
 
-**Điều kiện qua phase:** không còn P0/P1 chưa giải quyết; dữ liệu quan trọng và luồng lõi đã nghiệm thu; P2 còn lại có người xử lý, thời hạn và chấp thuận rõ.
+**Điều kiện qua phase:** không còn P0/P1 chưa giải quyết; dữ liệu quan trọng và luồng lõi đã nghiệm thu; P2 còn lại có người xử lý, thời hạn và chấp thuận rõ. Đã nghiệm thu toàn diện đạt chuẩn WCAG 2.2 AA và Web Vitals.
 
 ## 14. Phase 10 — Phát hành, bàn giao và ổn định
 

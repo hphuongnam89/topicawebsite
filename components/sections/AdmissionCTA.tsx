@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
@@ -38,12 +39,12 @@ export function AdmissionCTA() {
 
           <div className="mt-6 text-xs text-white/60">
             Tìm hiểu thêm về{" "}
-            <a
+            <Link
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               className="text-gold-400 underline underline-offset-4 hover:text-gold-300 transition-colors"
             >
               Biểu phí & Học bổng năm 2026
-            </a>
+            </Link>
           </div>
         </ScrollReveal>
       </Container>

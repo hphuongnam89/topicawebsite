@@ -34,16 +34,16 @@ export function MobileStickyBar() {
         <ButtonLink
           href="/lien-he/"
           variant="outline"
-          size="sm"
-          className="flex-1"
+          size="default"
+          className="flex-1 min-h-[44px]"
         >
           Nhận tư vấn
         </ButtonLink>
         <ButtonLink
           href="https://www.tuyensinh.topicauni.edu.vn/"
           variant="accent"
-          size="sm"
-          className="flex-1 font-bold"
+          size="default"
+          className="flex-1 font-bold min-h-[44px]"
           external
         >
           Đăng ký xét tuyển

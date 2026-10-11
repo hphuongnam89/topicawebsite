@@ -55,7 +55,7 @@ export function CardMedia({
   );
 }
 
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function CardHeader({ className, ...props }: CardHeaderProps) {
   return <div className={cn("p-5 pb-2 sm:p-6 sm:pb-3", className)} {...props} />;
@@ -74,13 +74,13 @@ export function CardTitle({ className, as: Component = "h3", ...props }: CardTit
   );
 }
 
-export interface CardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type CardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
 
 export function CardDescription({ className, ...props }: CardDescriptionProps) {
   return <p className={cn("mt-1.5 text-body-sm text-ink-600 leading-relaxed", className)} {...props} />;
 }
 
-export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function CardContent({ className, ...props }: CardContentProps) {
   return <div className={cn("p-5 pt-0 sm:p-6 sm:pt-0", className)} {...props} />;

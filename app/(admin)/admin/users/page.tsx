@@ -53,7 +53,26 @@ export default function AdminUsersPage() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    let ignore = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/admin/users");
+        if (res.ok && !ignore) {
+          const data = await res.json();
+          setUsers(data.users || []);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+    load();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleOpenNew = () => {

@@ -21,6 +21,9 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/topica-logo.png",
   },
