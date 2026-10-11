@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, Building2, GraduationCap, Landmark } from "lucide-react";
+import { AlertTriangle, ArrowRight, Building2, GraduationCap, Landmark, CreditCard, MessageCircle } from "lucide-react";
 import { CurriculumExplorer } from "@/components/program/CurriculumExplorer";
 import { LearningOutcomes } from "@/components/program/LearningOutcomes";
 import { PendingAcademicSections } from "@/components/program/PendingAcademicSections";
@@ -11,6 +11,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { env } from "@/lib/env";
 import type { ProgramDetail } from "@/data/program-details";
+import { OFFICIAL_TUITION_PROGRAMS } from "@/data/tuition";
 
 const careerIcons = [Building2, Landmark, GraduationCap];
 
@@ -28,6 +29,7 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
   const creditFact = fact("Khối lượng");
   const durationFact = fact("Thời gian");
   const degreeFact = fact("Văn bằng");
+  const tuitionInfo = OFFICIAL_TUITION_PROGRAMS.find((p) => p.slug === program.slug);
   const courseSchema = {
     "@context": "https://schema.org",
     "@type": hasCurriculum ? "Course" : "EducationalOccupationalProgram",
@@ -48,13 +50,19 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       ? [
           [
             "Lộ trình học tập có bao nhiêu học kỳ?",
-            `Chương trình được bố trí trong ${program.semesters.length} học kỳ.`,
+            `Chương trình được bố trí trong ${program.semesters.length} học kỳ (khoảng 3 năm).`,
           ],
         ]
       : []),
     [
-      "Học phí và lịch khai giảng hiện tại?",
-      "Vui lòng nhận tư vấn để kiểm tra thông báo tuyển sinh hiện hành.",
+      "Học phí của ngành này là bao nhiêu?",
+      tuitionInfo
+        ? `Đơn giá học phí: ${tuitionInfo.pricePerCredit.toLocaleString("vi-VN")}đ/tín chỉ (~${tuitionInfo.tuitionPerSemester.toLocaleString("vi-VN")}đ/học kỳ). Học phí thu theo số tín chỉ thực tế đăng ký. Xem chi tiết biểu phí tại trang Tuyển sinh & Học phí.`
+        : "Học phí được tính theo số tín chỉ thực tế đăng ký trong mỗi kỳ. Vui lòng xem bảng học phí chính thức.",
+    ],
+    [
+      "Đơn vị cấp bằng và giá trị văn bằng?",
+      "Văn bằng Cử nhân do Trường Đại học Phú Xuân cấp, được Bộ GD&ĐT công nhận toàn quốc và có giá trị tương đương bằng chính quy theo Luật Giáo dục Đại học sửa đổi.",
     ],
   ];
   const breadcrumbSchema = {
@@ -65,7 +73,7 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       {
         "@type": "ListItem",
         position: 2,
-        name: "Ngành đào tạo",
+        name: "Ngành học",
         item: `${env.NEXT_PUBLIC_SITE_URL}/nganh-dao-tao/`,
       },
       { "@type": "ListItem", position: 3, name: program.officialName, item: canonical },
@@ -238,23 +246,47 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       </section>
 
       <section className="bg-[var(--color-academic-ink)] py-14 text-[var(--color-academic-on-accent)] sm:py-16">
-        <Container className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <Container className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent)] uppercase">
-              Bước tiếp theo
+              Hành trình học tập của bạn
             </p>
-            <h2 className="mt-2 max-w-2xl text-3xl font-semibold !text-[var(--color-academic-on-accent)] sm:text-4xl">
-              Nhận thông tin tuyển sinh đã được cập nhật
+            <h2 className="mt-2 max-w-2xl text-2xl font-semibold !text-[var(--color-academic-on-accent)] sm:text-3xl lg:text-4xl">
+              Sẵn sàng trở thành sinh viên ngành {program.officialName}?
             </h2>
+            <p className="mt-2 text-sm text-[var(--color-academic-on-accent)]/80 max-w-xl">
+              Kiểm tra điều kiện nhập học, xem dự toán học phí chính xác hoặc nộp hồ sơ xét tuyển trực tuyến ngay hôm nay.
+            </p>
           </div>
-          <ButtonLink
-            href="/lien-he/"
-            size="lg"
-            rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-            className="self-start bg-[var(--color-academic-elevated)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)] md:self-auto"
-          >
-            Liên hệ tư vấn
-          </ButtonLink>
+          <div className="flex flex-wrap items-center gap-3">
+            <ButtonLink
+              href="https://www.tuyensinh.topicauni.edu.vn/"
+              size="lg"
+              external
+              rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+              className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
+            >
+              Đăng ký xét tuyển
+            </ButtonLink>
+            <ButtonLink
+              href="/tuyen-sinh/hoc-phi-hoc-bong/"
+              size="lg"
+              variant="secondary"
+              leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
+              className="bg-[var(--color-academic-elevated)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+            >
+              Xem biểu phí & học bổng
+            </ButtonLink>
+            <ButtonLink
+              href="/lien-he/"
+              size="lg"
+              variant="secondary"
+              leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
+              className="bg-transparent border border-white/20 text-white hover:bg-white/10"
+            >
+              Nhận tư vấn
+            </ButtonLink>
+          </div>
         </Container>
       </section>
 

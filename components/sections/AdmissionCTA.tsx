@@ -23,17 +23,27 @@ export function AdmissionCTA() {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
-            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="primary">
+            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="primary" external>
               Đăng ký xét tuyển
             </ButtonLink>
             <ButtonLink
               href="/lien-he/"
               size="lg"
               variant="secondary"
-              className="border-white text-white hover:bg-white/10 hover:text-white"
+              className="border-white/30 text-white hover:bg-white/10 hover:text-white"
             >
               Nhận tư vấn
             </ButtonLink>
+          </div>
+
+          <div className="mt-6 text-xs text-white/60">
+            Tìm hiểu thêm về{" "}
+            <a
+              href="/tuyen-sinh/hoc-phi-hoc-bong/"
+              className="text-gold-400 underline underline-offset-4 hover:text-gold-300 transition-colors"
+            >
+              Biểu phí & Học bổng năm 2026
+            </a>
           </div>
         </ScrollReveal>
       </Container>

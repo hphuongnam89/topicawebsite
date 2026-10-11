@@ -34,7 +34,7 @@ export function ProgramStickyBar({
             rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
             className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
           >
-            Đăng ký ngay
+            Đăng ký xét tuyển
           </ButtonLink>
         </div>
       </Container>

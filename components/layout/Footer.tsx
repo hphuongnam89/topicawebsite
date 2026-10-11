@@ -17,23 +17,24 @@ const footerGroups = [
     ],
   },
   {
-    title: "Ngành đào tạo",
+    title: "Ngành học",
     links: [
-      { label: "CNTT", href: "/cong-nghe-thong-tin/" },
-      { label: "QTKD - Marketing", href: "/quan-tri-kinh-doanh-marketing/" },
-      { label: "Du lịch & Lữ hành", href: "/quan-tri-dich-vu-du-lich-va-lu-hanh/" },
+      { label: "Quản trị kinh doanh", href: "/quan-tri-kinh-doanh-marketing/" },
+      { label: "Quản trị du lịch và lữ hành", href: "/quan-tri-dich-vu-du-lich-va-lu-hanh/" },
+      { label: "Công nghệ thông tin - Đồ hoạ số", href: "/cong-nghe-thong-tin/" },
       { label: "Ngôn ngữ Anh", href: "/ngon-ngu-anh/" },
-      { label: "Ngôn ngữ Trung", href: "/ngon-ngu-trung-quoc/" },
+      { label: "Ngôn ngữ Trung Quốc", href: "/ngon-ngu-trung-quoc/" },
     ],
   },
   {
-    title: "Tuyển sinh",
+    title: "Tuyển sinh & Học phí",
     links: [
+      { label: "Học phí & Học bổng 2026", href: "/tuyen-sinh/hoc-phi-hoc-bong/" },
       { label: "Thông tin tuyển sinh", href: "/thong-tin-tuyen-sinh-nam-2026/" },
-      { label: "Học phí & Học bổng", href: "/tuyen-sinh/hoc-phi-hoc-bong/" },
-      { label: "Câu hỏi thường gặp", href: "/nhung-cau-hoi-thuong-gap/" },
       { label: "Đề án tuyển sinh", href: "/tuyen-sinh/de-an-tuyen-sinh/" },
+      { label: "Câu hỏi thường gặp (FAQ)", href: "/nhung-cau-hoi-thuong-gap/" },
       { label: "Đăng ký xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
+      { label: "Tra cứu hồ sơ xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
     ],
   },
 ] as const;

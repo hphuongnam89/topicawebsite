@@ -101,23 +101,36 @@ export function Header() {
           <div className="mx-auto flex max-w-[var(--width-container)] items-center justify-between px-4 py-2 text-xs sm:px-6 lg:px-8">
             <div className="flex items-center gap-4">
               <a
-                href="tel:+84123456789"
+                href="tel:1800646857"
                 className="flex items-center gap-1.5 text-white/75 transition-colors hover:text-white"
               >
-                <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden sm:inline">Hotline: 0123 456 789</span>
+                <Phone className="h-3.5 w-3.5 text-gold-400" aria-hidden="true" />
+                <span className="hidden sm:inline">Hotline: 1800 646 857</span>
               </a>
               <a
-                href="mailto:info@topica.edu.vn"
+                href="mailto:tuyensinh@topicauni.edu.vn"
                 className="flex items-center gap-1.5 text-white/75 transition-colors hover:text-white"
               >
-                <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden sm:inline">info@topica.edu.vn</span>
+                <Mail className="h-3.5 w-3.5 text-gold-400" aria-hidden="true" />
+                <span className="hidden sm:inline">tuyensinh@topicauni.edu.vn</span>
               </a>
             </div>
-            <div className="flex items-center gap-3 text-white/75">
-              <Link href="/tuyen-sinh" className="transition-colors hover:text-white">
-                Thông tin tuyển sinh
+            <div className="flex items-center gap-3 sm:gap-4 text-white/75">
+              <Link href="/he-thong/" className="transition-colors hover:text-white">
+                Cổng Elearning
+              </Link>
+              <span className="text-white/20">|</span>
+              <a
+                href="https://www.tuyensinh.topicauni.edu.vn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                Tra cứu xét tuyển
+              </a>
+              <span className="text-white/20 hidden xs:inline">|</span>
+              <Link href="/tuyen-sinh/hoc-phi-hoc-bong/" className="transition-colors hover:text-white hidden xs:inline">
+                Học phí 2026
               </Link>
             </div>
           </div>

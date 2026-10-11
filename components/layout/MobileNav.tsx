@@ -191,7 +191,26 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             </nav>
 
             {/* CTA Footer */}
-            <div className="space-y-3 border-t border-line-100 px-4 py-4">
+            <div className="space-y-3 border-t border-line-100 px-4 py-4 bg-paper/50">
+              <div className="flex items-center justify-between text-xs text-ink-600 px-1 pb-1">
+                <Link href="/he-thong/" onClick={onClose} className="hover:text-brand-700 font-medium">
+                  Cổng Elearning
+                </Link>
+                <span>•</span>
+                <a
+                  href="https://www.tuyensinh.topicauni.edu.vn/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand-700 font-medium"
+                >
+                  Tra cứu xét tuyển
+                </a>
+                <span>•</span>
+                <Link href="/tuyen-sinh/hoc-phi-hoc-bong/" onClick={onClose} className="hover:text-brand-700 font-medium">
+                  Học phí
+                </Link>
+              </div>
+
               {applyAction?.href && (
                 <ButtonLink
                   href={applyAction.href}

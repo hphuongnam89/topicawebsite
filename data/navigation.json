@@ -4,7 +4,7 @@
   "primary": [
     {
       "id": "about",
-      "label": "Giới thiệu",
+      "label": "Về Topica",
       "href": "/gioi-thieu/",
       "columns": [
         {
@@ -49,7 +49,7 @@
     },
     {
       "id": "programs",
-      "label": "Ngành đào tạo",
+      "label": "Ngành học",
       "href": "/nganh-dao-tao/",
       "columns": [
         {
@@ -91,7 +91,7 @@
     },
     {
       "id": "admissions",
-      "label": "Tuyển sinh",
+      "label": "Tuyển sinh & Học phí",
       "href": "/tuyen-sinh/",
       "columns": [
         {
@@ -140,7 +140,7 @@
     },
     {
       "id": "study",
-      "label": "Học tập",
+      "label": "Trải nghiệm học tập",
       "href": "/chuong-trinh/",
       "columns": [
         {
@@ -210,7 +210,7 @@
     },
     {
       "id": "news",
-      "label": "Tin tức",
+      "label": "Tin tức & Sự kiện",
       "href": "/tin-tuc/",
       "columns": [
         {
@@ -246,7 +246,7 @@
     },
     {
       "id": "quality",
-      "label": "Đảm bảo chất lượng",
+      "label": "Chất lượng & Công khai",
       "href": "/dam-bao-chat-luong/",
       "columns": [
         {
@@ -314,9 +314,16 @@
     {
       "id": "consult",
       "label": "Nhận tư vấn",
+      "href": "/lien-he/",
       "action": "open-consultation-form",
-      "variant": "secondary",
-      "mobileOnly": true
+      "variant": "secondary"
+    },
+    {
+      "id": "track",
+      "label": "Tra cứu hồ sơ",
+      "href": "https://www.tuyensinh.topicauni.edu.vn/",
+      "external": true,
+      "variant": "outline"
     }
   ]
 }
