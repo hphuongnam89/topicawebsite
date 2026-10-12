@@ -403,13 +403,15 @@
         "__tests__/components/Homepage.test.tsx",
         "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
-        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json",
+        "docs/evidence/phase-p5-p8-verification-report.md"
       ],
       "checks": [
         "vitest-homepage-sections-pass",
         "typecheck-pass",
         "lint-pass",
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance",
+        "phase-p5-t01-remediation-pass"
       ],
       "blockers": [],
       "accepted_at": null,
@@ -420,7 +422,8 @@
         "Standardized TrustSection with provenance URLs and WhyTopicaSection with truthful commitment statements",
         "Bound unified contact channels across 6 verified campus locations in CampusSection",
         "12/10 audit: prior verified narrowed to in_progress. Hero CTA wrapping/contrast corrected; real Chromium 1440/390/320 evidence. Business claims, R08 concept/research and long hero form remain unapproved.",
-        "12/10 evening completion: Hero image/message split, lower short form and neutral current admissions state; actual desktop/mobile screenshots reviewed, no research/design approval."
+        "12/10 evening completion: Hero image/message split, lower short form and neutral current admissions state; actual desktop/mobile screenshots reviewed, no research/design approval.",
+        "12/10 P5 polish: Standardized CurrentAdmissions neutral fallback when no active cycle, refined #tu-van anchor with 3 truthful academic commitments card, linked tuition lookup CTA."
       ]
     },
     {
@@ -446,13 +449,15 @@
         "__tests__/data/program-details.test.ts",
         "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
-        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json",
+        "docs/evidence/phase-p5-p8-verification-report.md"
       ],
       "checks": [
         "vitest-program-pages-pass",
         "typecheck-pass",
         "lint-pass",
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance",
+        "phase-p5-t02-t03-remediation-pass"
       ],
       "blockers": [],
       "accepted_at": null,
@@ -462,7 +467,8 @@
         "Bound consistent tuition, awarding institution, and curriculum data matching the academic contract",
         "Embedded Course, EducationalOccupationalProgram, and BreadcrumbList JSON-LD schemas",
         "12/10 audit: prior verified narrowed to in_progress. Quick facts dl semantics and sticky labels fixed; only IT program browser sample inspected, not all five content/route states. R03/R05 approvals open.",
-        "12/10 evening completion: Live program directory/detail mapping, stable IDs and archive suppression tested; actual curriculum/track facts still need confirmation."
+        "12/10 evening completion: Live program directory/detail mapping, stable IDs and archive suppression tested; actual curriculum/track facts still need confirmation.",
+        "12/10 P5 polish: Added 5-Program Quick Comparison Matrix to T02 (/nganh-dao-tao), implemented sticky ProgramInPageNav, scroll-mt-28 anchors, unified academic color tokens to official Navy/Gold in tokens.css, and explicit tuition/awarding institution facts in T03."
       ]
     },
     {
@@ -487,13 +493,15 @@
         "__tests__/components/TuitionAndAdmissionHub.test.tsx",
         "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
-        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json",
+        "docs/evidence/phase-p5-p8-verification-report.md"
       ],
       "checks": [
         "vitest-tuition-admission-pass",
         "typecheck-pass",
         "lint-pass",
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance",
+        "phase-p5-t04-t05-remediation-pass"
       ],
       "blockers": [],
       "accepted_at": null,
@@ -503,7 +511,8 @@
         "Documented one-time admission fees, financial commitments, and 30% Talent scholarship with criteria",
         "Replaced dummy download links with internal view routes and verified AdmissionHub rendering",
         "12/10 audit: prior verified narrowed to in_progress. Scholarship badge contrast corrected and T05 browser checked at three widths. Tuition/scholarship amounts remain needs_source, not officially confirmed.",
-        "12/10 evening completion: Tuition/admission consumes effective CMS DTO; neutral missing round/docs; official source reconciliation applied, business gate open."
+        "12/10 evening completion: Tuition/admission consumes effective CMS DTO; neutral missing round/docs; official source reconciliation applied, business gate open.",
+        "12/10 P5 polish: Cleaned up legacy brand color tokens to Navy/Gold, upgraded CurrentAdmissions and fallback state, polished admission timeline and mobile tuition matrix cards."
       ]
     },
     {
