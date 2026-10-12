@@ -2,7 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { campuses, contactInfo } from "@/data/campuses";
+import {
+  campuses as defaultCampuses,
+  contactChannels as defaultChannels,
+  type Campus,
+} from "@/data/campuses";
+import type { ContactChannels } from "@/lib/services/public-site";
 
 const footerGroups = [
   {
@@ -32,15 +37,16 @@ const footerGroups = [
       { label: "Học phí & Học bổng 2026", href: "/tuyen-sinh/hoc-phi-hoc-bong/" },
       { label: "Thông tin tuyển sinh", href: "/thong-tin-tuyen-sinh-nam-2026/" },
       { label: "Đề án tuyển sinh", href: "/tuyen-sinh/de-an-tuyen-sinh/" },
+      { label: "Quy chế tuyển sinh", href: "/tuyen-sinh/quy-che-tuyen-sinh/" },
       { label: "Câu hỏi thường gặp (FAQ)", href: "/nhung-cau-hoi-thuong-gap/" },
       { label: "Đăng ký xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
-      { label: "Tra cứu hồ sơ xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
     ],
   },
   {
     title: "Chất lượng & Hệ thống",
     links: [
-      { label: "Cổng học tập Elearning", href: "https://elib.pxu.edu.vn/" },
+      { label: "Cổng học tập Elearning", href: "/he-thong/" },
+      { label: "Thư viện điện tử (E-LIB)", href: "https://elib.pxu.edu.vn/" },
       { label: "Trải nghiệm học tập", href: "/trai-nghiem-hoc-tap/" },
       { label: "Chất lượng & Công khai", href: "/chat-luong-cong-khai/" },
       { label: "Mẫu văn bằng tốt nghiệp", href: "/gioi-thieu/cong-khai-van-bang-chung-chi/" },
@@ -68,7 +74,10 @@ const socialLinks = [
   },
 ] as const;
 
-export function Footer() {
+export function Footer({
+  channels: contactChannels = defaultChannels,
+  locations: campuses = defaultCampuses,
+}: { channels?: ContactChannels; locations?: readonly Campus[] } = {}) {
   return (
     <footer className="flex w-full flex-col border-t-4 border-gold-500" role="contentinfo">
       {/* Main footer */}
@@ -115,29 +124,51 @@ export function Footer() {
                   </li>
                 ))}
 
-                {contactInfo.phone && (
-                  <li className="flex items-center gap-2.5">
-                    <Phone className="h-4 w-4 shrink-0 text-gold-600" />
+                <li className="flex items-start gap-2.5">
+                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
+                  <div className="text-body-sm text-ink-600">
+                    <span className="font-medium text-ink-950">Tuyển sinh: </span>
                     <a
-                      href={`tel:${contactInfo.phone.replace(/\./g, "")}`}
-                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-gold-700"
+                      href={contactChannels.admissionsHotline.href}
+                      className="font-bold text-ink-900 transition-colors hover:text-gold-700"
                     >
-                      {contactInfo.phone}
+                      {contactChannels.admissionsHotline.value}
                     </a>
-                  </li>
-                )}
+                    <span className="text-xs text-ink-500"> (Miễn cước)</span>
+                    <br />
+                    <span className="font-medium text-ink-950">Tư vấn nhanh: </span>
+                    <a
+                      href={contactChannels.admissionsDirect.href}
+                      className="font-bold text-ink-900 transition-colors hover:text-gold-700"
+                    >
+                      {contactChannels.admissionsDirect.value}
+                    </a>
+                  </div>
+                </li>
 
-                {contactInfo.email && (
-                  <li className="flex items-center gap-2.5">
-                    <Mail className="h-4 w-4 shrink-0 text-gold-600" />
-                    <a
-                      href={`mailto:${contactInfo.email}`}
-                      className="text-body-sm font-bold text-ink-600 transition-colors hover:text-gold-700"
-                    >
-                      {contactInfo.email}
-                    </a>
-                  </li>
-                )}
+                <li className="flex items-start gap-2.5">
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
+                  <div className="text-body-sm text-ink-600">
+                    <div>
+                      <span className="font-medium text-ink-950">Tuyển sinh: </span>
+                      <a
+                        href={contactChannels.admissionsEmail.href}
+                        className="font-bold text-ink-900 transition-colors hover:text-gold-700"
+                      >
+                        {contactChannels.admissionsEmail.value}
+                      </a>
+                    </div>
+                    <div>
+                      <span className="font-medium text-ink-950">Chung: </span>
+                      <a
+                        href={contactChannels.generalEmail.href}
+                        className="font-bold text-ink-900 transition-colors hover:text-gold-700"
+                      >
+                        {contactChannels.generalEmail.value}
+                      </a>
+                    </div>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -145,7 +176,7 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-navy-800 bg-navy-900 text-white">
+      <div className="border-t border-navy-800 bg-navy-900 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] text-white lg:pb-0">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-center sm:flex-row sm:text-left">
           {/* Logo */}
           <div className="flex h-12 w-[180px] items-center justify-center rounded-lg bg-gold-500 p-2">
@@ -170,7 +201,7 @@ export function Footer() {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors duration-[var(--duration-base)] hover:bg-gold-500 hover:text-navy-900 hover:border-gold-500"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors duration-[var(--duration-base)] hover:border-gold-500 hover:bg-gold-500 hover:text-navy-900"
               >
                 <SocialIcon type={social.icon} />
               </a>

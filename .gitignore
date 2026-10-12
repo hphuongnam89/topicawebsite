@@ -15,6 +15,11 @@
 
 # next.js
 /.next/
+/.next-qa-*/
+/.tsconfig-qa-*.json
+/public/qa-uploads/
+/playwright-report/
+/test-results/
 /out/
 
 # production

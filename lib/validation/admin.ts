@@ -19,6 +19,8 @@ export const articleCreateSchema = z.object({
 }).strict();
 
 export const articleUpdateSchema = articleCreateSchema.partial();
+export const pageCreateSchema=articleCreateSchema.pick({title:true,slug:true,excerpt:true,content_html:true,featured_image:true,status:true,seo_title:true,seo_description:true,published_at:true});
+export const pageUpdateSchema=pageCreateSchema.partial().extend({expected_updated_at:z.string().optional(),id:z.number().optional(),created_at:z.string().optional(),updated_at:z.string().optional()}).strict();
 export const categorySchema = z.object({
   name: z.string().trim().min(1).max(200),
   slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(240),

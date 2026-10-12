@@ -3,6 +3,7 @@ import { programs, programGroups } from "@/data/programs";
 import { getProgramDetail } from "@/data/program-details";
 import { OFFICIAL_TUITION_PROGRAMS, SCHOLARSHIPS } from "@/data/tuition";
 import { leadFormSchema, leadApiSchema } from "@/lib/form-schema";
+import { contactChannels, servicePortals } from "@/data/campuses";
 
 describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
   describe("Journey 1: Lựa chọn 5 ngành đào tạo chính thức", () => {
@@ -50,7 +51,7 @@ describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
       const talent = SCHOLARSHIPS.find((s) => s.id === "talent");
       expect(talent).toBeDefined();
       expect(talent?.percentage).toBe("30%");
-      expect(talent?.description).toContain("30%");
+      expect(talent?.criteria).toContain("31/12/2026");
     });
   });
 
@@ -69,7 +70,7 @@ describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
         fullName: "Nguyễn Văn An",
         phone: "0912345678",
         email: "vanan@example.com",
-        program: "Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số",
+        program: "it",
         educationLevel: "Tốt nghiệp THPT / Trung học nghề",
         consent: true,
       };
@@ -92,24 +93,45 @@ describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
       expect(result.success).toBe(false);
     });
 
-    test("leadApiSchema kiểm tra cấu trúc API chặt chẽ", () => {
+    test("leadApiSchema kiểm tra cấu trúc API chặt chẽ và bắt buộc consent", () => {
       const apiPayload = {
         fullname: "Trần Thị Bình",
         phone: "0987654321",
         email: "binh@example.com",
         program: "Quản trị kinh doanh",
+        consent: true,
       };
       const result = leadApiSchema.safeParse(apiPayload);
       expect(result.success).toBe(true);
+
+      // Thiếu consent phải bị từ chối
+      const noConsentPayload = {
+        fullname: "Trần Thị Bình",
+        phone: "0987654321",
+        program: "Quản trị kinh doanh",
+      };
+      const rejectedResult = leadApiSchema.safeParse(noConsentPayload);
+      expect(rejectedResult.success).toBe(false);
     });
   });
 
   describe("Journey 6: Cổng học tập & Dịch vụ sinh viên", () => {
-    test("cổng Elearning và hotline tuyển sinh được quy chuẩn chính xác", () => {
-      const elearningUrl = "https://elib.pxu.edu.vn/";
-      const hotline = "1800 646 857";
-      expect(elearningUrl).toContain("pxu.edu.vn");
-      expect(hotline).toBe("1800 646 857");
+    test("cổng Elearning, thư viện E-LIB và hotline tuyển sinh được quy chuẩn chính xác theo vai trò", () => {
+      const elearningPortal = servicePortals.find((p) => p.id === "elearning");
+      const elibPortal = servicePortals.find((p) => p.id === "elib");
+
+      expect(elearningPortal).toBeDefined();
+      expect(elearningPortal?.url).toBe("/he-thong/");
+      expect(elearningPortal?.role).toContain("LMS");
+
+      expect(elibPortal).toBeDefined();
+      expect(elibPortal?.url).toBe("https://elib.pxu.edu.vn/");
+      expect(elibPortal?.name).toContain("Thư viện");
+
+      // Hotline tuyển sinh và hotline tư vấn
+      expect(contactChannels.admissionsHotline.value).toBe("1800 646 857");
+      expect(contactChannels.admissionsHotline.href).toBe("tel:1800646857");
+      expect(contactChannels.admissionsDirect.value).toBe("0901 795 580");
     });
   });
 });

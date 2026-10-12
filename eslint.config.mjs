@@ -6,7 +6,16 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Override default ignores of eslint-config-next.
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    ".next-qa-*/**",
+    "scratch/**",
+    "playwright-report/**",
+    "test-results/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",

@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import { programs, TARGET_AUDIENCE_DEFAULTS } from '../data/programs';
+import { OFFICIAL_TUITION_PROGRAMS, ADMISSION_FEES, SCHOLARSHIPS } from '../data/tuition';
+import { campuses, contactChannels, servicePortals } from '../data/campuses';
+const columns = ['record_id','entity_id','field','current_value','proposed_value','scope','source_reference','source_date','effective_from','effective_to','owner','reviewer','verification_status','public_urls','conflict','decision_id','code_origin'];
+const rows: Record<string,string>[] = [];
+function add(entity: string, field: string, value: unknown, scope: string, code: string, urls: string, conflict = '') {
+  rows.push({record_id: `CR-${String(rows.length+1).padStart(3,'0')}`, entity_id: entity, field, current_value: typeof value === 'string' ? value : JSON.stringify(value), proposed_value: '', scope, source_reference: '', source_date: '', effective_from: '', effective_to: '', owner: '', reviewer: '', verification_status: 'needs_source', public_urls: urls, conflict, decision_id: '', code_origin: code});
+}
+for (const program of programs) for (const field of ['officialMajorName','specialization','majorCode','trainingMode','degreeAwarded','awardingInstitution','collaboratingUnit','image','targetAudiences'] as const) {
+  if (program[field] !== undefined) add(program.id, field, program[field], 'Program; cohort/effective date not verified', 'data/programs.ts', program.href);
+}
+for (const policy of OFFICIAL_TUITION_PROGRAMS) for (const field of ['programName','credits','pricePerCredit','totalTuition','semesters','tuitionPerSemester','degreeAwarded','awardingInstitution','cohort','note'] as const) {
+  add(`tuition-${policy.id}`, field, policy[field], 'Code claims cohort 2026; audience/effective date unverified', 'data/tuition.ts', '/tuyen-sinh/hoc-phi-hoc-bong/', field === 'programName' && policy.id === 'tourism' ? 'Name differs from officialMajorName in programs.ts; official name requires confirmation' : '');
+}
+for (const [audience, value] of Object.entries(TARGET_AUDIENCE_DEFAULTS)) for (const [field, current] of Object.entries(value)) add(`audience-${audience}`, field, current, 'Audience track; credit exemption unverified', 'data/programs.ts', '/nganh-dao-tao/', field === 'durationYears' && audience === 'thpt' ? '3.5 years here vs program detail showing 3 years/9 semesters' : '');
+for (const [field, value] of Object.entries(ADMISSION_FEES)) add('admission-fees', field, value, 'Code only; official fee decision/effective date required', 'data/tuition.ts', '/tuyen-sinh/hoc-phi-hoc-bong/');
+for (const scholarship of SCHOLARSHIPS) for (const [field, value] of Object.entries(scholarship)) add(`scholarship-${scholarship.id}`, field, value, 'Scholarship; code mentions decision without attached document', 'data/tuition.ts', '/tuyen-sinh/hoc-phi-hoc-bong/', field === 'percentage' ? 'Historical phase-1 report claims different 100/50/30 percentages; do not choose by tests' : '');
+for (const [role, channel] of Object.entries(contactChannels)) for (const [field, value] of Object.entries(channel)) add(`contact-${role}`, field, value, 'Contact role; directory owner not yet confirmed', 'data/campuses.ts', '/; /lien-he/');
+for (const campus of campuses) add(`campus-${campus.city}`, 'address', campus.address, 'Location purpose/current administrative address unverified', 'data/campuses.ts', '/lien-he/; /', 'Comment claims verified on 2026-08-28, no source capture supplied in this run');
+for (const portal of Object.values(servicePortals)) for (const [field, value] of Object.entries(portal)) add(`portal-${portal.id}`, field, value, 'Portal purpose/final destination needs verification', 'data/campuses.ts', '/', field === 'status' ? 'Code verified flag is a claim, not evidence' : '');
+const csv = [columns.join(','), ...rows.map(row => columns.map(column => '"'+(row[column] || '').replaceAll('"','""')+'"').join(','))].join('\n')+'\n';
+fs.writeFileSync('docs/agent-execution/CONTENT_REGISTER.csv', csv);
+console.log(JSON.stringify({records: rows.length, confirmed: 0, status: 'needs_source', liveDatabaseRead: false}));

@@ -31,7 +31,7 @@ export function SearchForm({ initialQuery = "", isSearching = false }: SearchFor
   };
 
   return (
-    <form onSubmit={handleSearch} className="relative w-full max-w-2xl mx-auto">
+    <form onSubmit={handleSearch} role="search" className="relative w-full max-w-2xl mx-auto">
       <div className="relative flex items-center">
         <Search className="absolute left-4 h-5 w-5 text-ink-400" />
         <input

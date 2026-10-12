@@ -24,6 +24,7 @@
     min-width: 0;
     background: var(--color-canvas);
     color-scheme: light;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -100,6 +101,11 @@
       display: flex;
     }
   }
+}
+
+/* HUI-08: Nâng FloatingActions lên khi trang có sticky bar để tránh che lấp */
+body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions] {
+  bottom: 6rem;
 }
 
 @layer components {
@@ -466,6 +472,26 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -486,24 +512,4 @@
     animation: none !important;
     transform: none !important;
   }
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 25s linear infinite !important;
-  will-change: transform;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused !important;
 }

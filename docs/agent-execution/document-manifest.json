@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-10-11",
+  "purpose": "Hồ sơ kiểm kê tài liệu, văn bản và tài nguyên chính thức (Task R06 Document Manifest)",
+  "rules": [
+    "Chỉ xuất bản thông tin dung lượng/MIME khi có tệp tin vật lý thực tế trong repository",
+    "Không tạo link tải download đối với các trang HTML",
+    "Các tài liệu chưa có tệp PDF vật lý phải dùng viewUrl dẫn tới trang công khai hoặc hiển thị nhãn 'Bản số đang cập nhật'"
+  ],
+  "physical_assets": [
+    {
+      "id": "asset-mau-phoi-bang",
+      "title": "Mẫu Phôi bằng Cử nhân — Trường Đại học Phú Xuân",
+      "relativePath": "public/official-assets/mau-phoi-bang.png",
+      "publicUrl": "/official-assets/mau-phoi-bang.png",
+      "mimeType": "image/png",
+      "bytes": 1625985,
+      "sha256": "499C3FA5AF144D098722FEA9BB594AD7D23B938BA8F8F37E145ACB219612F7D3",
+      "rights": "Công khai theo quy định của Bộ GD&ĐT",
+      "source": "Trường Đại học Phú Xuân",
+      "access": "public"
+    },
+    {
+      "id": "asset-mau-bang-diem",
+      "title": "Mẫu Bảng điểm tốt nghiệp Cử nhân — Trường Đại học Phú Xuân",
+      "relativePath": "public/official-assets/mau-bang-diem.png",
+      "publicUrl": "/official-assets/mau-bang-diem.png",
+      "mimeType": "image/png",
+      "bytes": 1785491,
+      "sha256": "5F8505509A692454E291AE7D4D2AA013B16B0EC4CFCD8D29F15EF4AF7EA178F9",
+      "rights": "Công khai theo quy định của Bộ GD&ĐT",
+      "source": "Trường Đại học Phú Xuân",
+      "access": "public"
+    }
+  ],
+  "web_documents": [
+    {
+      "id": "doc-thong-tu-27",
+      "title": "Thông tư 27/2019/TT-BGDĐT quy định về nội dung chính ghi trên văn bằng và phụ lục văn bằng",
+      "type": "Quy định pháp lý",
+      "date": "Ban hành: 30/12/2019",
+      "viewUrl": "/chat-luong-dao-tao/",
+      "downloadUrl": null,
+      "fileSize": null,
+      "hasPhysicalFile": false,
+      "status": "viewable_online"
+    },
+    {
+      "id": "doc-de-an-tuyen-sinh-2026",
+      "title": "Quyết định ban hành Đề án tuyển sinh Đại học từ xa năm 2026 - Trường Đại học Phú Xuân",
+      "type": "Đề án tuyển sinh",
+      "date": "Ban hành: 15/01/2026",
+      "viewUrl": "/tuyen-sinh/",
+      "downloadUrl": null,
+      "fileSize": null,
+      "hasPhysicalFile": false,
+      "status": "viewable_online"
+    },
+    {
+      "id": "doc-quy-dinh-hoc-phi-2026",
+      "title": "Quy định Học phí và Thu phí sinh viên 2026 — ĐH Phú Xuân",
+      "type": "Quy định tài chính",
+      "date": "Ban hành: 15/01/2026",
+      "viewUrl": "/tuyen-sinh/de-an-tuyen-sinh/",
+      "downloadUrl": null,
+      "fileSize": null,
+      "hasPhysicalFile": false,
+      "status": "viewable_online"
+    },
+    {
+      "id": "doc-huong-dan-thanh-toan-lms",
+      "title": "Hướng dẫn thanh toán học phí trực tuyến qua cổng Elearning",
+      "type": "Hướng dẫn",
+      "date": "Ban hành: 10/02/2026",
+      "viewUrl": "/he-thong/",
+      "downloadUrl": null,
+      "fileSize": null,
+      "hasPhysicalFile": false,
+      "status": "viewable_online"
+    },
+    {
+      "id": "doc-bieu-mau-hoc-bong",
+      "title": "Biểu mẫu xin cấp Học bổng và Hỗ trợ tài chính",
+      "type": "Biểu mẫu",
+      "date": "Ban hành: 15/01/2026",
+      "viewUrl": "/bo-bieu-mau/",
+      "downloadUrl": null,
+      "fileSize": null,
+      "hasPhysicalFile": false,
+      "status": "viewable_online"
+    }
+  ]
+}

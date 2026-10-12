@@ -1,0 +1,251 @@
+{
+  "run_id": "overnight-2026-10-12/00-bootstrap",
+  "captured_at": "2026-10-12T00:13:40.3830217+07:00",
+  "timezone": "Asia/Bangkok",
+  "source_head": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc",
+  "source_status": "dirty",
+  "git_status": [
+    " M AGENTS.md",
+    " M DEPLOYMENT.md",
+    " M __tests__/cms/cms-admin-workflows.test.ts",
+    " M __tests__/journeys/learner-journeys.test.ts",
+    " M __tests__/qa/a11y-responsive-quality.test.ts",
+    " M __tests__/security/auth-validation.test.ts",
+    " M app/(main)/[...slug]/page.tsx",
+    " M app/(main)/design-system/page.tsx",
+    " M app/api/public/lead/route.ts",
+    " M app/design-tokens.css",
+    " M app/globals.css",
+    " M app/robots.ts",
+    " M app/theme.css",
+    " M components/admission/AdmissionHub.tsx",
+    " M components/forms/LeadForm.tsx",
+    " M components/layout/FloatingActions.tsx",
+    " M components/layout/Footer.tsx",
+    " M components/layout/Header.tsx",
+    " M components/layout/MobileNav.tsx",
+    " M components/layout/MobileStickyBar.tsx",
+    " M components/search/SearchForm.tsx",
+    " M components/sections/CampusSection.tsx",
+    " M components/sections/HeroSection.tsx",
+    " M components/tuition/TuitionHub.tsx",
+    " M components/ui/DocumentCard.tsx",
+    " M data/campuses.ts",
+    " M data/program-details.ts",
+    " M data/programs.ts",
+    " M data/supplemental-program-details.ts",
+    " M data/tuition.ts",
+    " M lib/cms/html.ts",
+    " M lib/cms/queries.ts",
+    " M lib/date.ts",
+    " M lib/db/index.ts",
+    " M lib/db/types.ts",
+    " M lib/form-schema.ts",
+    " M lib/services/leads.ts",
+    " M next.config.ts",
+    " M package.json",
+    " M scripts/backup-db.ts",
+    " M scripts/test-lighthouse.ts",
+    " M scripts/test-links.ts",
+    "?? __tests__/cms/cms-models-migration.test.ts",
+    "?? __tests__/cms/html.test.ts",
+    "?? __tests__/components/ContentPagesAndSearch.test.tsx",
+    "?? __tests__/components/DocumentCard.test.tsx",
+    "?? __tests__/components/Homepage.test.tsx",
+    "?? __tests__/components/MobileNavAndShell.test.tsx",
+    "?? __tests__/components/ProgramPages.test.tsx",
+    "?? __tests__/components/TuitionAndAdmissionHub.test.tsx",
+    "?? __tests__/data/tuition-contract.test.ts",
+    "?? __tests__/journeys/route-map-and-journeys.test.ts",
+    "?? __tests__/operations/",
+    "?? __tests__/services/",
+    "?? docs/agent-execution/",
+    "?? docs/kiem-tra-muc-do-hoan-thien-cac-phase-2026-10-11.md",
+    "?? docs/kiem-tra-tien-do-2026-10-12.md",
+    "?? lib/db/migrations/",
+    "?? lib/services/cms-models.ts",
+    "?? lib/validation/cms-schemas.ts",
+    "?? scripts/migrate-db.ts",
+    "?? scripts/restore-db.ts"
+  ],
+  "tracked_diff_sha256": "4903f1da2df3c61693a59efd725eb35144ba0e5903468e986de10c4da1228e06",
+  "fingerprint_method": "SHA256 UTF8 PowerShell Out-String of git diff --binary; untracked artifacts separately hashed; evidence directory excluded to avoid self-reference",
+  "untracked_artifacts": [
+    {
+      "sha256": "5516a03c57aca1d1ee0e8a7d8565789b277132269c81a2db8f0f305b2cf883b2",
+      "path": "__tests__/cms/cms-models-migration.test.ts"
+    },
+    {
+      "sha256": "b75784bcf498d6038dc29c555c9145cf22353142d79dbbe9dd264a2cf2a1b330",
+      "path": "__tests__/cms/html.test.ts"
+    },
+    {
+      "sha256": "1b48aa0560c891561879791fbe82f62bfc1a77789659e9db2b9fd2aa5b4014fe",
+      "path": "__tests__/components/ContentPagesAndSearch.test.tsx"
+    },
+    {
+      "sha256": "18ec080f177107122ae7dba4bd4749f14cd026ac0f8dfef344b2eee9330b9e9e",
+      "path": "__tests__/components/DocumentCard.test.tsx"
+    },
+    {
+      "sha256": "bad15cbd5f13bd5e7cea0816f2ca4d773ba3a545d355f0f753a686997a7eeca2",
+      "path": "__tests__/components/Homepage.test.tsx"
+    },
+    {
+      "sha256": "3d404003bf59b7b943e02308545a1c7e4994009b231286f7df30d2bd59bf3ea4",
+      "path": "__tests__/components/MobileNavAndShell.test.tsx"
+    },
+    {
+      "sha256": "7cb55f195f4fb7868078d9f33be129e2ff62eadbc74869023cbaeed6c5ddc8ab",
+      "path": "__tests__/components/ProgramPages.test.tsx"
+    },
+    {
+      "sha256": "75a29d16487b588a7eb04dc9219cdbcc21194e7c5d6c0679f262e099a51da922",
+      "path": "__tests__/components/TuitionAndAdmissionHub.test.tsx"
+    },
+    {
+      "sha256": "b91bcdd2e7f3e4d85eb5957b1e3add18f20110b02984a11aa2e5f8a91ccb91c8",
+      "path": "__tests__/data/tuition-contract.test.ts"
+    },
+    {
+      "sha256": "3a46c3bf5408c0c1c0fd1e6adc7f4f86dd74411b1f8b3babddfe2e9f8bc63fd3",
+      "path": "__tests__/journeys/route-map-and-journeys.test.ts"
+    },
+    {
+      "sha256": "14e278b6c5f98f5fb346d92fb931310f099b24b28d9545e16bf4ec79c83c5979",
+      "path": "__tests__/operations/backup-restore.test.ts"
+    },
+    {
+      "sha256": "aa838bb6cc9a9c3f186722bb55161305df3d53f00bd86638c3e75bc354f13890",
+      "path": "__tests__/services/lead-idempotency-contract.test.ts"
+    },
+    {
+      "sha256": "60df3a030b0180ec9c7573ce5fcbde0c7e6bfe7e75a2ed4dd68b57ee37f44ecd",
+      "path": "docs/agent-execution/ACCEPTANCE_AND_EVIDENCE.md"
+    },
+    {
+      "sha256": "c2b7527bed00d3bcb083e3c0da3adfffaae0ca8e2d0780ff9b78b1c9350b72be",
+      "path": "docs/agent-execution/AGENT_HANDOFF.md"
+    },
+    {
+      "sha256": "4a23bdf1e21dffe10009017aae4193a69ba982b884d95bdec018b924badd5d74",
+      "path": "docs/agent-execution/DESIGN_UX_SPEC.md"
+    },
+    {
+      "sha256": "0e7391913135fa80b602b1917b40c7c86f97e3e1d4e28be6b4f8223ee585205d",
+      "path": "docs/agent-execution/GOOSE_COLLABORATION_PLAN.md"
+    },
+    {
+      "sha256": "cff6463c5cf392a1cd5bdd0e5c55dc48a0a668dd657fd316b7cfdec41360f0a6",
+      "path": "docs/agent-execution/IMPLEMENTATION_BACKLOG.md"
+    },
+    {
+      "sha256": "49dcbc0be64f372ac599054d264dc6d70a7605ffaf67ad9de407836921f04be4",
+      "path": "docs/agent-execution/OVERNIGHT_LOG.md"
+    },
+    {
+      "sha256": "9ed767f133b4802a2e99903e15a6004ff023ac422467c1bfb2c284626ea4446d",
+      "path": "docs/agent-execution/OVERNIGHT_RUNBOOK.md"
+    },
+    {
+      "sha256": "f7392c10b4fbaa66973c728e2945ebcfe479d0ec67bd1a3061bbd958fe34bba1",
+      "path": "docs/agent-execution/README.md"
+    },
+    {
+      "sha256": "14c73fe9f780e739ec887bbffaece8cc16e23ff62ffceff7ee05d415509842c1",
+      "path": "docs/agent-execution/ROUTE_MAP_AND_JOURNEYS.md"
+    },
+    {
+      "sha256": "8b5bf721b38b70a91dc1860598601959724379f427c746b59ce039f76d4248a3",
+      "path": "docs/agent-execution/document-manifest.json"
+    },
+    {
+      "sha256": "973eff258dca50b83b67e01b16b3d9599c1b9b5e9e5f6bbc350313da8d99073f",
+      "path": "docs/agent-execution/progress.json"
+    },
+    {
+      "sha256": "30808868ce0aa4fa965a04dc22e8f407bc803730d3d9060a583f7bb764193bea",
+      "path": "docs/agent-execution/route-manifest.json"
+    },
+    {
+      "sha256": "27ab1412993d4f91284bd562d46bdb9a930e7971a0afa0c4e0a5fce2f3c947ae",
+      "path": "docs/kiem-tra-muc-do-hoan-thien-cac-phase-2026-10-11.md"
+    },
+    {
+      "sha256": "beb26f3dcd59a027bcd6ca18587fe0524fa82a85e3820d70fd49ca3842e1d33e",
+      "path": "docs/kiem-tra-tien-do-2026-10-12.md"
+    },
+    {
+      "sha256": "6e112c6efbbaeb3044e1c4398e76f181027ddec78ff21fdb73b74264689f4625",
+      "path": "lib/db/migrations/001_core_legacy_baseline.ts"
+    },
+    {
+      "sha256": "3c67245f4572e76d6dce1275eb2ebc8e3c85de78ec9ff6bb94412a7a90745b94",
+      "path": "lib/db/migrations/002_cms_domain_models.ts"
+    },
+    {
+      "sha256": "4a3549981dc5bf8cd390f15b96ec34995dcb10dd67dad83324f531583c39d208",
+      "path": "lib/db/migrations/003_seed_verified_domain_data.ts"
+    },
+    {
+      "sha256": "2917373e362a1bb347b2d75bd899c5151b939d6069bebb58cff08cef0f2057c0",
+      "path": "lib/db/migrations/index.ts"
+    },
+    {
+      "sha256": "f384b09088e6503e6e819c6c274066683849368e8be26d8a396f05b63fc6a3f0",
+      "path": "lib/db/migrations/runner.ts"
+    },
+    {
+      "sha256": "44135842876dea22ed262f5f16b5eb1b78ef1238e0857ac0e4fbfb022e698d4a",
+      "path": "lib/db/migrations/types.ts"
+    },
+    {
+      "sha256": "e984a3d7f77c80c058341a79af64237ebb14874b7bbb3349d4e5035bb19a277d",
+      "path": "lib/services/cms-models.ts"
+    },
+    {
+      "sha256": "ab91530a63763bf900400214ebe67b64c01fc324c34724f7b7679bf368377701",
+      "path": "lib/validation/cms-schemas.ts"
+    },
+    {
+      "sha256": "15526ff3f32095d86fd6c987e9a907f49e67f4dbf207eac066ed8a3d562f4025",
+      "path": "scripts/migrate-db.ts"
+    },
+    {
+      "sha256": "fa967e5f3daf02674a672311d0692837112700c8ba2cdaddcc3a87b5db5b613b",
+      "path": "scripts/restore-db.ts"
+    }
+  ],
+  "runtime": {
+    "required_node": "22.x",
+    "next": "16.3.3",
+    "browser_actual": "not_run",
+    "node": "v24.19.0",
+    "playwright_package": "1.62.1",
+    "npm": "11.17.0"
+  },
+  "dataset": "none opened; source inspection only",
+  "automation": {
+    "id": "ho-n-thi-n-topica-n-s-ng",
+    "persisted_schedule_verified": true,
+    "kind": "heartbeat",
+    "deadline_local": "2026-10-12T07:00:00+07:00",
+    "interval_minutes": 60,
+    "status": "ACTIVE"
+  },
+  "checks": {
+    "source_inventory": "pass",
+    "uat": "not_run",
+    "production_build": "not_run",
+    "integration": "not_run",
+    "lighthouse": "not_run",
+    "visual_matrix": "not_run",
+    "e2e": "not_run"
+  },
+  "limitations": [
+    "R00 partial; no baseline screenshots or rendered URL crawl yet",
+    "Node runtime differs from package engines",
+    "Existing verified task claims still require evidence review",
+    "Live data not opened and no application code modified in bootstrap"
+  ]
+}

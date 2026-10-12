@@ -1,0 +1,241 @@
+{
+  "version": "2.0.0",
+  "updated_at": "2026-10-11",
+  "canonical_domain": "https://topicauni.edu.vn",
+  "routes": [
+    {
+      "path": "/",
+      "template": "T01 - Homepage",
+      "owner": "Marketing / Frontend",
+      "source": "Core Template",
+      "action": "keep",
+      "canonical": "/",
+      "purpose": "Trang chủ giới thiệu tổng quan 5 chương trình cử nhân, đơn vị cấp bằng ĐH Phú Xuân, học bổng và form tư vấn nhanh"
+    },
+    {
+      "path": "/gioi-thieu/",
+      "template": "T02 / NavigationHub",
+      "owner": "Viện Topica / PXU",
+      "source": "CMS / NavigationHub",
+      "action": "keep",
+      "canonical": "/gioi-thieu/",
+      "purpose": "Giới thiệu lịch sử, tầm nhìn, sứ mệnh, Tập đoàn EQuest và cơ sở vật chất"
+    },
+    {
+      "path": "/nganh-dao-tao/",
+      "template": "T02 - Programs Directory",
+      "owner": "Đào tạo / Frontend",
+      "source": "Core Directory Page",
+      "action": "keep",
+      "canonical": "/nganh-dao-tao/",
+      "purpose": "Danh mục tổng hợp 5 chương trình đào tạo cử nhân trực tuyến"
+    },
+    {
+      "path": "/quan-tri-kinh-doanh-marketing/",
+      "template": "T03 - Program Detail",
+      "owner": "Khoa QTKD / Đào tạo",
+      "source": "data/program-details.ts",
+      "action": "keep",
+      "canonical": "/quan-tri-kinh-doanh-marketing/",
+      "purpose": "Chi tiết ngành Quản trị kinh doanh - 7340101, 126 tín chỉ, bằng Cử nhân do ĐH Phú Xuân cấp"
+    },
+    {
+      "path": "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+      "template": "T03 - Program Detail",
+      "owner": "Khoa Du lịch / Đào tạo",
+      "source": "data/program-details.ts",
+      "action": "keep",
+      "canonical": "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+      "purpose": "Chi tiết ngành Quản trị dịch vụ du lịch và lữ hành - 7810103, 126 tín chỉ, bằng Cử nhân do ĐH Phú Xuân cấp"
+    },
+    {
+      "path": "/cong-nghe-thong-tin/",
+      "template": "T03 - Program Detail",
+      "owner": "Khoa CNTT / Đào tạo",
+      "source": "data/program-details.ts",
+      "action": "keep",
+      "canonical": "/cong-nghe-thong-tin/",
+      "purpose": "Chi tiết ngành CNTT - Đồ họa kỹ thuật số - 7480201, 126 tín chỉ, bằng Cử nhân do ĐH Phú Xuân cấp"
+    },
+    {
+      "path": "/ngon-ngu-anh/",
+      "template": "T03 - Program Detail",
+      "owner": "Khoa Ngoại ngữ / Đào tạo",
+      "source": "data/program-details.ts",
+      "action": "keep",
+      "canonical": "/ngon-ngu-anh/",
+      "purpose": "Chi tiết ngành Ngôn ngữ Anh - 7220201, 126 tín chỉ, bằng Cử nhân do ĐH Phú Xuân cấp"
+    },
+    {
+      "path": "/ngon-ngu-trung-quoc/",
+      "template": "T03 - Program Detail",
+      "owner": "Khoa Ngoại ngữ / Đào tạo",
+      "source": "data/program-details.ts",
+      "action": "keep",
+      "canonical": "/ngon-ngu-trung-quoc/",
+      "purpose": "Chi tiết ngành Ngôn ngữ Trung Quốc - 7220204, 126 tín chỉ, bằng Cử nhân do ĐH Phú Xuân cấp"
+    },
+    {
+      "path": "/tuyen-sinh/",
+      "template": "T04 - AdmissionHub / NavigationHub",
+      "owner": "Phòng Tuyển sinh",
+      "source": "Core Directory Page",
+      "action": "keep",
+      "canonical": "/tuyen-sinh/",
+      "purpose": "Thông tin kỳ tuyển sinh, đề án tuyển sinh, hướng dẫn nộp hồ sơ xét tuyển"
+    },
+    {
+      "path": "/tuyen-sinh/hoc-phi-hoc-bong/",
+      "template": "T05 - TuitionHub",
+      "owner": "Tài chính / Tuyển sinh",
+      "source": "components/tuition/TuitionHub.tsx",
+      "action": "keep",
+      "canonical": "/tuyen-sinh/hoc-phi-hoc-bong/",
+      "purpose": "Biểu phí 600.000 VNĐ/tín chỉ, 3 chính sách học bổng và cam kết tài chính khóa 2026"
+    },
+    {
+      "path": "/he-thong/",
+      "template": "T06 - Student Portal Hub",
+      "owner": "Quản lý đào tạo / IT",
+      "source": "CMS Page / Hub",
+      "action": "keep",
+      "canonical": "/he-thong/",
+      "purpose": "Cổng truy cập hệ thống học tập LMS Elearning dành cho sinh viên Topica"
+    },
+    {
+      "path": "/tin-tuc/",
+      "template": "T07 - News Index",
+      "owner": "Ban Biên tập",
+      "source": "app/(main)/tin-tuc/page.tsx",
+      "action": "keep",
+      "canonical": "/tin-tuc/",
+      "purpose": "Tin tức tuyển sinh, sự kiện, thông báo đào tạo và hoạt động sinh viên"
+    },
+    {
+      "path": "/dam-bao-chat-luong/",
+      "template": "T08 - Quality Hub",
+      "owner": "Phòng ĐBCL & Khảo thí",
+      "source": "CMS / NavigationHub",
+      "action": "keep",
+      "canonical": "/dam-bao-chat-luong/",
+      "purpose": "Ba công khai, quy chế đào tạo, khảo thí và đảm bảo chất lượng giáo dục"
+    },
+    {
+      "path": "/lien-he/",
+      "template": "T09 - Contact Page",
+      "owner": "Tuyển sinh / Chăm sóc học viên",
+      "source": "app/(main)/lien-he/page.tsx",
+      "action": "keep",
+      "canonical": "/lien-he/",
+      "purpose": "Đầu mối liên hệ theo vai trò (tuyển sinh 1800 646 857, quản lý đào tạo, cơ sở Hà Nội, Đà Nẵng, Huế, TP.HCM)"
+    },
+    {
+      "path": "/nhung-cau-hoi-thuong-gap/",
+      "template": "T10 - FAQ Page",
+      "owner": "Tuyển sinh & Hỗ trợ",
+      "source": "CMS Page",
+      "action": "keep",
+      "canonical": "/nhung-cau-hoi-thuong-gap/",
+      "purpose": "Giải đáp thắc mắc thường gặp về hình thức học online, thi kết thúc môn, giá trị bằng cấp và học phí"
+    },
+    {
+      "path": "/chinh-sach-bao-mat/",
+      "template": "T11 - Legal & Policy",
+      "owner": "Pháp chế",
+      "source": "CMS Page",
+      "action": "keep",
+      "canonical": "/chinh-sach-bao-mat/",
+      "purpose": "Chính sách bảo mật thông tin người học và bảo vệ dữ liệu cá nhân"
+    },
+    {
+      "path": "/dieu-khoan-su-dung/",
+      "template": "T11 - Legal & Policy",
+      "owner": "Pháp chế",
+      "source": "CMS Page",
+      "action": "keep",
+      "canonical": "/dieu-khoan-su-dung/",
+      "purpose": "Điều khoản sử dụng dịch vụ và quy định học tập trực tuyến"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/hoc-phi",
+      "destination": "/tuyen-sinh/hoc-phi-hoc-bong/",
+      "statusCode": 308,
+      "reason": "URL ngắn gọn cũ về biểu phí và học bổng"
+    },
+    {
+      "source": "/quan-tri-kinh-doanh",
+      "destination": "/quan-tri-kinh-doanh-marketing/",
+      "statusCode": 308,
+      "reason": "Legacy slug ngành Quản trị kinh doanh"
+    },
+    {
+      "source": "/quan-tri-du-lich",
+      "destination": "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+      "statusCode": 308,
+      "reason": "Legacy slug ngành Du lịch"
+    },
+    {
+      "source": "/du-lich-lu-hanh",
+      "destination": "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+      "statusCode": 308,
+      "reason": "Legacy alias ngành Du lịch"
+    },
+    {
+      "source": "/cntt",
+      "destination": "/cong-nghe-thong-tin/",
+      "statusCode": 308,
+      "reason": "Legacy alias ngành CNTT"
+    },
+    {
+      "source": "/tieng-anh",
+      "destination": "/ngon-ngu-anh/",
+      "statusCode": 308,
+      "reason": "Legacy alias ngành Ngôn ngữ Anh"
+    },
+    {
+      "source": "/tieng-trung",
+      "destination": "/ngon-ngu-trung-quoc/",
+      "statusCode": 308,
+      "reason": "Legacy alias ngành Ngôn ngữ Trung"
+    },
+    {
+      "source": "/nganh-dao-tao/:slug",
+      "destination": "/:slug/",
+      "statusCode": 308,
+      "reason": "Chuẩn hóa URL ngành đào tạo phân cấp về root canonical URL"
+    },
+    {
+      "source": "/blog",
+      "destination": "/tin-tuc/",
+      "statusCode": 308,
+      "reason": "Legacy WordPress blog URL sang /tin-tuc/"
+    },
+    {
+      "source": "/chuyen-muc/tin-tuc",
+      "destination": "/tin-tuc/",
+      "statusCode": 308,
+      "reason": "Legacy WordPress taxonomy URL"
+    },
+    {
+      "source": "/tuyen-sinh-van-bang-2",
+      "destination": "/van-bang-hai/",
+      "statusCode": 308,
+      "reason": "Legacy URL tuyển sinh văn bằng 2"
+    },
+    {
+      "source": "/de-an-quy-che-tuyen-sinh",
+      "destination": "/tuyen-sinh/",
+      "statusCode": 308,
+      "reason": "Legacy URL đề án tuyển sinh sang hub tuyển sinh"
+    }
+  ],
+  "blocked_legacy_woocommerce_routes": [
+    "/cart",
+    "/checkout",
+    "/my-account",
+    "/shop",
+    "/classic-shop"
+  ]
+}

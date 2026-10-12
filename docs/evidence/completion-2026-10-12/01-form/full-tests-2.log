@@ -1,0 +1,221 @@
+
+> topica-edu@0.1.0 test
+> vitest run --maxWorkers=2
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.11 C:/Users/Hp/Downloads/topica/topica/topica-edu
+
+ ❯ __tests__/journeys/learner-journeys.test.ts (10 tests | 1 failed) 13ms
+       × học bổng Talent giảm 30% học phí và có đầy đủ điều kiện xét tuyển 4ms
+ ❯ __tests__/components/TuitionAndAdmissionHub.test.tsx (4 tests | 1 failed) 248ms
+       × hiển thị thẻ học phí 5 ngành đào tạo không cần cuộn ngang trên mobile 100ms
+ ❯ __tests__/cms/publication-consumers.test.ts (4 tests | 1 failed) 93ms
+   × program directory/detail and price cards change together, archive suppresses static fallback 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  __tests__/cms/publication-consumers.test.ts > program directory/detail and price cards change together, archive suppresses static fallback
+TypeError: Cannot read properties of undefined (reading 'id')
+ ❯ __tests__/cms/publication-consumers.test.ts:96:36
+     94|     .prepare("SELECT id,total_credits FROM tuition_policies WHERE prog…
+     95|     .get() as { id: string; total_credits: number };
+     96|   publish("tuition_policy", policy.id, {
+       |                                    ^
+     97|     unit_price_per_credit: 700000,
+     98|     total_tuition: 700000 * policy.total_credits,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  __tests__/components/TuitionAndAdmissionHub.test.tsx > Task R13: Tuyển sinh và Học phí (Mobile Cards & Bảng biểu phí) > 1. TuitionHub Mobile & Desktop Readability > hiển thị thẻ học phí 5 ngành đào tạo không cần cuộn ngang trên mobile
+TestingLibraryElementError: Unable to find an element with the text: Học phí 5 ngành đào tạo chính thức. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="space-y-0"
+    >
+      <section
+        class="py-16 lg:py-24 bg-paper text-ink-800"
+      >
+        <div
+          class="mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-[77.5rem]"
+        >
+          <div
+            class="mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-[77.5rem]"
+          >
+            <div
+              class="mb-12 max-w-3xl"
+            >
+              <div
+                class="mb-3 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold tracking-wider text-brand-800 uppercase"
+              >
+                Khóa tuyển sinh năm 2026
+              </div>
+              <div
+                class=""
+              >
+                <h2
+                  class="font-display text-h2 font-bold text-ink-950"
+                >
+                  Học phí theo chương trình và đối tượng
+                </h2>
+              </div>
+              <p
+                class="mt-4 text-body-lg text-ink-700"
+              >
+                Chương trình đào tạo đại học do 
+                <strong>
+                  Trường Đại học Phú Xuân
+                </strong>
+                 cấp bằng, hợp tác triển khai cùng 
+                <strong>
+                  Viện Đào tạo Quốc tế Topica
+                </strong>
+                . Học phí thu theo số tín chỉ thực tế sinh viên đăng ký trong từng học kỳ (toàn khóa gồm 9 học kỳ, 126 tín chỉ tích lũy).
+              </p>
+            </div>
+            <div
+              class="mb-6 grid grid-cols-1 gap-4 md:hidden"
+            >
+              <div
+                class="space-y-3 rounded-xl border border-line-200 bg-canvas p-5 shadow-xs"
+              >
+                <div
+                  class="flex items-start justify-between gap-2 border-b border-line-100 pb-3"
+                >
+                  <div>
+                    <a
+                      class="inline-flex items-center gap-1 font-bold text-ink-950 transition-colors hover:text-brand-700"
+                      href="/quan-tri-kinh-doanh-marketing"
+                    >
+                      Quản trị kinh doanh
+                      <svg
+                        aria-hidden="true"
+                        class="lucide lucide-arrow-right h-3.5 w-3.5 shrink-0 text-brand-500"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 12h14"
+                        />
+                        <path
+                          d="m12 5 7 7-7 7"
+                        />
+                      </svg>
+                    </a>
+                    <div
+                      class="mt-0.5 text-xs text-ink-500"
+                    >
+                      Không bao gồm khối kiến thức GDTC và GDQP&AN
+                    </div>
+                  </div>
+                  <span
+                    class="shrink-0 rounded bg-line-100 px-2 py-0.5 font-mono text-xs font-semibold text-ink-700"
+                  >
+                    7340101
+                  </span>
+                </div>
+                <div
+                  class="grid grid-cols-2 gap-3 text-body-sm"
+                >
+                  <div>
+                    <span
+                      class="block text-xs text-ink-500"
+                    >
+                      Đơn giá / tín chỉ
+                    </span>
+                    <span
+                      class="font-semibold text-brand-800"
+                    >
+                      600.000 ₫
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      class="block text-xs text-ink-500"
+                    >
+                      Ước tính / học kỳ
+                    </span>
+                    <span
+                      class="font-medium text-ink-800"
+                    >
+                      ~
+                      8.400.000 ₫
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      class="block text-xs text-ink-500"
+                    >
+                      Tín chỉ tích lũy
+                    </span>
+                    <span
+                      class="font-medium text-ink-700"
+                    >
+                      126
+                       TC
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      class="block text-xs text-ink-500"
+                    >
+                      Học phí toàn khóa
+                    </span>
+                    <span
+                      class="font-bold text-ink-950"
+                    >
+                      75.600.000 ₫
+                    </span>
+                  </div>
+                </div>
+              </div>
+              [3...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ __tests__/components/TuitionAndAdmissionHub.test.tsx:36:21
+     34|
+     35|       // Tiêu đề chính
+     36|       expect(screen.getByText("Học phí 5 ngành đào tạo chính thức")).t…
+       |                     ^
+     37|       expect(
+     38|         screen.getByText(/Trường Đại học Phú Xuân/i, { selector: "stro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  __tests__/journeys/learner-journeys.test.ts > Phase 5: 6 Core Learner Journeys & User Acceptance > Journey 3: Minh bạch Học phí & Chính sách Học bổng > học bổng Talent giảm 30% học phí và có đầy đủ điều kiện xét tuyển
+AssertionError: expected 'Ưu đãi học phí toàn chương trình cho …' to contain '30%'
+
+Expected: "30%"
+Received: "Ưu đãi học phí toàn chương trình cho sinh viên mới."
+
+ ❯ __tests__/journeys/learner-journeys.test.ts:54:35
+     52|       expect(talent).toBeDefined();
+     53|       expect(talent?.percentage).toBe("30%");
+     54|       expect(talent?.description).toContain("30%");
+       |                                   ^
+     55|     });
+     56|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 27 passed (30)
+      Tests  3 failed | 204 passed | 1 skipped (208)
+   Start at  18:48:34
+   Duration  26.52s (transform 1.76s, setup 9.88s, import 4.85s, tests 5.35s, environment 26.03s)
+
+exit_code=1

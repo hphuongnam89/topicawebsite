@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -32,6 +32,49 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const asideRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const aside = asideRef.current;
+    const trigger = triggerRef.current;
+    if (!aside) return;
+    const main = aside.closest(".min-h-screen")?.querySelector("main");
+    const previousInert = main?.inert ?? false;
+    const previousOverflow = document.body.style.overflow;
+    if (main) main.inert = true;
+    document.body.style.overflow = "hidden";
+    const focusable = () =>
+      Array.from(aside.querySelectorAll<HTMLElement>("a[href],button:not(:disabled)")).filter(
+        (element) => element.getClientRects().length > 0,
+      );
+    focusable()[0]?.focus();
+    const keyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsMobileOpen(false);
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable(),
+        first = items[0],
+        last = items.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    document.addEventListener("keydown", keyboard);
+    return () => {
+      document.removeEventListener("keydown", keyboard);
+      if (main) main.inert = previousInert;
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
+    };
+  }, [isMobileOpen]);
 
   // If on login page, don't show sidebar
   if (pathname === "/admin/login") {
@@ -39,6 +82,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
   }
 
   const navItems = [
+    { title: "Nội dung & phê duyệt", href: "/admin/content", icon: ShieldCheck },
     {
       title: "Tổng quan",
       href: "/admin",
@@ -93,7 +137,11 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       href: "/admin/settings/account",
       icon: ShieldCheck,
     },
-  ];
+  ].filter(
+    (item) =>
+      user.role === "admin" ||
+      !["/admin/leads", "/admin/users", "/admin/homepage", "/admin/settings"].includes(item.href),
+  );
 
   const handleLogout = async () => {
     if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
@@ -121,14 +169,20 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     <>
       {/* Mobile Top Header */}
       <div className="flex h-16 items-center justify-between border-b border-line-200 bg-white px-4 lg:hidden">
-        <Link href="/admin" className="flex items-center gap-2 font-display text-lg font-bold text-brand-700">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2 font-display text-lg font-bold text-brand-700"
+        >
           <GraduationCap className="h-6 w-6 text-brand-700" />
           <span>TOPICA ADMIN</span>
         </Link>
         <button
+          ref={triggerRef}
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           className="rounded-md p-2 text-ink-700 hover:bg-paper"
-          aria-label="Toggle Menu"
+          aria-label="Mở menu quản trị"
+          aria-expanded={isMobileOpen}
+          aria-controls="admin-navigation"
         >
           {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -144,23 +198,34 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-line-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0 ${
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        ref={asideRef}
+        id="admin-navigation"
+        role={isMobileOpen ? "dialog" : undefined}
+        aria-modal={isMobileOpen ? true : undefined}
+        aria-label="Điều hướng quản trị"
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col border-r border-line-200 bg-white transition-transform duration-200 lg:visible lg:static lg:translate-x-0 ${
+          isMobileOpen ? "visible translate-x-0" : "invisible -translate-x-full"
         }`}
       >
         {/* Brand Header */}
         <div className="flex h-16 items-center justify-between border-b border-line-200 px-6">
-          <Link href="/admin" className="flex items-center gap-2.5 font-display text-xl font-bold text-brand-700">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2.5 font-display text-xl font-bold text-brand-700"
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-700 text-white shadow-sm">
               <GraduationCap className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
               <span className="leading-tight tracking-tight">TOPICA</span>
-              <span className="text-[10px] font-semibold tracking-wider text-ink-500 uppercase">Admin Portal</span>
+              <span className="text-[10px] font-semibold tracking-wider text-ink-500 uppercase">
+                Admin Portal
+              </span>
             </div>
           </Link>
           <button
             onClick={() => setIsMobileOpen(false)}
+            aria-label="Đóng menu quản trị"
             className="rounded-md p-1.5 text-ink-500 hover:bg-paper lg:hidden"
           >
             <X className="h-5 w-5" />
@@ -187,7 +252,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                       : "text-ink-700 hover:bg-paper hover:text-ink-950"
                   }`}
                 >
-                  <Icon className={`h-5 w-5 shrink-0 ${active ? "text-brand-700" : "text-ink-500"}`} />
+                  <Icon
+                    className={`h-5 w-5 shrink-0 ${active ? "text-brand-700" : "text-ink-500"}`}
+                  />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -217,13 +284,15 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-body-sm font-semibold text-ink-900">{user.name}</p>
-              <p className="truncate text-xs text-ink-500">@{user.username} • {user.role}</p>
+              <p className="truncate text-xs text-ink-500">
+                @{user.username} • {user.role}
+              </p>
             </div>
           </div>
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3 py-2 text-body-sm font-medium text-error transition-colors hover:bg-error/5 hover:border-error/20"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3 py-2 text-body-sm font-medium text-error transition-colors hover:border-error/20 hover:bg-error/5"
           >
             <LogOut className="h-4 w-4" />
             <span>{loggingOut ? "Đang đăng xuất..." : "Đăng xuất"}</span>

@@ -20,7 +20,7 @@ function sessionToken(expiresAt: number, secret: string): string {
 describe("security boundary schemas", () => {
   test("rejects malformed lead input and accepts bounded valid input", () => {
     expect(leadApiSchema.safeParse({ fullname: "A", phone: "bad" }).success).toBe(false);
-    expect(leadApiSchema.safeParse({ fullname: "Nguyễn Văn A", phone: "0912345678", email: "a@example.com" }).success).toBe(true);
+    expect(leadApiSchema.safeParse({ fullname: "Nguyễn Văn A", phone: "0912345678", email: "a@example.com", consent: true }).success).toBe(true);
   });
 
   test("rejects arbitrary article fields and invalid status payloads", () => {

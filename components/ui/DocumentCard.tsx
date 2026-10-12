@@ -1,5 +1,6 @@
 import * as React from "react";
-import { FileText, Download, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { FileText, Download, ExternalLink, ArrowRight } from "lucide-react";
 import { cn } from "./cn";
 
 export interface DocumentCardProps {
@@ -27,6 +28,15 @@ export function DocumentCard({
   downloadUrl,
   className,
 }: DocumentCardProps) {
+  const hasValidDownload = Boolean(downloadUrl && downloadUrl !== "#" && downloadUrl.trim() !== "");
+  const hasValidView = Boolean(viewUrl && viewUrl !== "#" && viewUrl.trim() !== "");
+  const isInternalView = Boolean(
+    hasValidView &&
+      viewUrl?.startsWith("/") &&
+      !viewUrl.endsWith(".pdf") &&
+      !viewUrl.endsWith(".docx")
+  );
+
   return (
     <div
       className={cn(
@@ -45,27 +55,39 @@ export function DocumentCard({
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-body-sm text-ink-600">
           {type && <span>{type}</span>}
           {date && <span>{date}</span>}
-          {fileSize && <span>{fileSize}</span>}
+          {hasValidDownload && fileSize && <span>{fileSize}</span>}
         </div>
       </div>
 
       {/* Actions */}
       <div className="flex shrink-0 items-center gap-2">
-        {viewUrl && (
-          <a
-            href={viewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
-            aria-label={`Xem tài liệu: ${title}`}
-          >
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">Xem</span>
-          </a>
+        {hasValidView && (
+          isInternalView ? (
+            <Link
+              href={viewUrl!}
+              className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
+              aria-label={`Xem tài liệu: ${title}`}
+            >
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Xem văn bản</span>
+            </Link>
+          ) : (
+            <a
+              href={viewUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
+              aria-label={`Xem tài liệu: ${title}`}
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Xem</span>
+            </a>
+          )
         )}
-        {downloadUrl && (
+
+        {hasValidDownload && (
           <a
-            href={downloadUrl}
+            href={downloadUrl!}
             download
             className="flex h-9 items-center gap-1.5 rounded-md bg-navy-900 px-3 text-body-sm font-medium text-white transition-colors hover:bg-navy-800"
             aria-label={`Tải xuống: ${title}`}
@@ -73,6 +95,12 @@ export function DocumentCard({
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">Tải xuống</span>
           </a>
+        )}
+
+        {!hasValidView && !hasValidDownload && (
+          <span className="inline-flex items-center text-xs text-ink-500 bg-line-100 px-2.5 py-1 rounded font-medium">
+            Bản số đang cập nhật
+          </span>
         )}
       </div>
     </div>

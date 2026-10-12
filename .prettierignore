@@ -1,4 +1,9 @@
 .next
+.next-qa-*
+.tsconfig-qa-*.json
+scratch
+playwright-report
+test-results
 node_modules
 coverage
 out

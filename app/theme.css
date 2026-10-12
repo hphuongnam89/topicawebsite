@@ -8,30 +8,48 @@
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
 
-  --color-brand-50: #fbf8f2;
-  --color-brand-100: #f2e7d5;
+  /* Brand color aliases for backward compatibility (mapped to Gold academic accent) */
+  --color-brand-50: #fbf8f3;
+  --color-brand-100: #f6eddd;
+  --color-brand-200: #e8d1a8;
   --color-brand-300: #d8b67c;
+  --color-brand-400: #c49f63;
   --color-brand-500: #b78744;
-  --color-brand-600: #b78744;
-  --color-brand-700: #b78744;
-  --color-brand-800: #9c733a;
+  --color-brand-600: #a97d3d;
+  --color-brand-700: #946727;
+  --color-brand-800: #8a6226;
+  --color-brand-900: #6b4f28;
+  --color-brand-950: #422f14;
 
+  /* Ink & Text scale */
   --color-ink-950: #11100e;
+  --color-ink-900: #1c1a17;
   --color-ink-800: #292620;
+  --color-ink-700: #3d3a33;
   --color-ink-600: #625e58;
+  --color-ink-500: #6b665f;
   --color-ink-400: #8996a0;
+  --color-ink-300: #b5b0a7;
+  --color-ink-200: #ddd8cf;
+  --color-ink-100: #ece8e1;
+  --color-ink-50: #f7f5f1;
+  --color-ink-0: #ffffff;
+  --color-ink-body: #243447;
 
-  --color-line-200: #ddd8cf;
+  /* Dividers & Borders */
+  --color-line-50: #f4f1eb;
   --color-line-100: #ece8e1;
+  --color-line-200: #ddd8cf;
+  --color-line-300: #c8c3ba;
 
   --color-canvas: #ffffff;
   --color-paper: #f7f5f1;
   --color-elevated: #fffdf9;
 
-  --color-info: #245b82;
-  --color-success: #26724f;
-  --color-warning: #a56416;
-  --color-error: #b23b3b;
+  --color-info: #16466b;
+  --color-success: #166534;
+  --color-warning: #b45309;
+  --color-error: #b91c1c;
 
   --text-display: 4rem;
   --text-display--line-height: 4.5rem;

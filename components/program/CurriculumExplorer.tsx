@@ -23,7 +23,7 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
             >
               {creditFact
                 ? `${creditFact.value}, đọc theo từng học kỳ`
-                : "Khung học phần đã xác minh"}
+                : "Khung chương trình đào tạo"}
             </h2>
             <p className="mt-5 max-w-md leading-7 text-[var(--color-academic-muted)]">
               Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng

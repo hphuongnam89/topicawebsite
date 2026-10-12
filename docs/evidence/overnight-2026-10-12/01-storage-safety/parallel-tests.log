@@ -1,0 +1,16 @@
+
+> topica-edu@0.1.0 test
+> vitest run --maxWorkers=2 __tests__/operations __tests__/cms __tests__/services
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.11 C:/Users/Hp/Downloads/topica/topica/topica-edu
+
+
+ Test Files  8 passed (8)
+      Tests  63 passed (63)
+   Start at  01:17:37
+   Duration  6.83s (transform 516ms, setup 2.70s, import 595ms, tests 1.97s, environment 5.89s)
+

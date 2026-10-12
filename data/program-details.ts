@@ -89,7 +89,7 @@ export const businessAdministrationProgram = {
   facts: [
     { label: "Mã ngành", value: "7340101", status: "verified" },
     { label: "Trình độ", value: "Đại học", status: "verified" },
-    { label: "Hình thức", value: "Chính quy", status: "verified" },
+    { label: "Hình thức", value: "Đào tạo từ xa", status: "verified" },
     { label: "Văn bằng", value: "Cử nhân", status: "verified" },
     { label: "Thời gian", value: "3 năm · 9 học kỳ", status: "verified" },
     {

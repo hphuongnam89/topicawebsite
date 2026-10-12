@@ -1,35 +1,37 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
-import { getPages, createPage } from "@/lib/db";
-
-export async function GET(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  try {
-    const pages = getPages();
-    return NextResponse.json({ pages, totalPages: 1 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+import { requireUser } from "@/lib/auth/guards";
+import { getPages, createPage, getPageBySlug } from "@/lib/db";
+import { isSameOrigin } from "@/lib/security/request";
+import { pageCreateSchema } from "@/lib/validation/admin";
+import { sanitizeWordPressHtml } from "@/lib/cms/html";
+export async function GET() {
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  return NextResponse.json({ pages: getPages(), totalPages: 1 });
 }
-
 export async function POST(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   try {
-    const data = await request.json();
-    if (!data.title || !data.slug || !data.content_html) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    const newPage = createPage(data);
-    return NextResponse.json(newPage, { status: 201 });
-  } catch (error: any) {
-    if (error.message.includes("UNIQUE constraint failed")) {
-      return NextResponse.json({ error: "Đường dẫn (slug) đã tồn tại." }, { status: 400 });
-    }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const parsed = pageCreateSchema.safeParse(await request.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: "Thông tin trang không hợp lệ" }, { status: 422 });
+    if (parsed.data.status === "published")
+      return NextResponse.json(
+        { error: "Lưu nháp rồi gửi duyệt tại mục Nội dung & phê duyệt" },
+        { status: 422 },
+      );
+    if (getPageBySlug(parsed.data.slug))
+      return NextResponse.json({ error: "Đường dẫn đã tồn tại" }, { status: 409 });
+    const page = createPage({
+      ...parsed.data,
+      status: "draft",
+      content_html: sanitizeWordPressHtml(parsed.data.content_html),
+    });
+    return NextResponse.json(page, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Không lưu được trang" }, { status: 500 });
   }
 }

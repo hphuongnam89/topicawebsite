@@ -85,16 +85,16 @@ export function ArticleEditorForm({
       tags: "",
       author_name: "Ban Biên Tập Topica",
       is_featured: false,
-      status: "published",
+      status: "draft",
       seo_title: "",
       seo_description: "",
       published_at: new Date().toISOString().slice(0, 16),
-    }
+    },
   );
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -134,7 +134,6 @@ export function ArticleEditorForm({
     }
   };
 
-  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.slug) {
@@ -173,6 +172,19 @@ export function ArticleEditorForm({
     }
   };
 
+  if (initialData?.status === "published")
+    return (
+      <div className="rounded-xl border bg-white p-6">
+        <h1 className="text-h2 font-bold">Chỉnh sửa bài viết đã công bố</h1>
+        <p className="mt-4">
+          Mở Nội dung & phê duyệt, chọn Bài viết và tải mã <strong>{initialData.id}</strong> để tạo
+          bản nháp mới.
+        </p>
+        <Link href="/admin/content" className="mt-4 inline-block underline">
+          Mở nội dung & phê duyệt
+        </Link>
+      </div>
+    );
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Top Action Bar */}
@@ -180,7 +192,7 @@ export function ArticleEditorForm({
         <div className="flex items-center gap-3">
           <Link
             href="/admin/articles"
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line-200 bg-white text-ink-700 hover:bg-paper transition-colors"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line-200 bg-white text-ink-700 transition-colors hover:bg-paper"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -198,7 +210,7 @@ export function ArticleEditorForm({
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
           >
             {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             <span>{saving ? "Đang lưu..." : isEdit ? "Lưu thay đổi" : "Xuất bản bài viết"}</span>
@@ -207,14 +219,14 @@ export function ArticleEditorForm({
       </div>
 
       {error && (
-        <div className="flex items-start gap-3 rounded-lg bg-red-50 p-4 text-body-sm text-red-800 border border-red-200">
+        <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-body-sm text-red-800">
           <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="flex items-start gap-3 rounded-lg bg-emerald-50 p-4 text-body-sm text-emerald-800 border border-emerald-200">
+        <div className="flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-body-sm text-emerald-800">
           <CheckCircle className="h-5 w-5 shrink-0 text-emerald-600" />
           <span>{success}</span>
         </div>
@@ -224,9 +236,9 @@ export function ArticleEditorForm({
         {/* Left 2 Columns: Main Content */}
         <div className="space-y-6 lg:col-span-2">
           {/* Title & Slug */}
-          <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
+          <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Tiêu đề bài viết <span className="text-error">*</span>
               </label>
               <input
@@ -240,11 +252,11 @@ export function ArticleEditorForm({
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Đường dẫn tĩnh (Slug) <span className="text-error">*</span>
               </label>
               <div className="flex items-center rounded-lg border border-line-200 bg-slate-50 px-3">
-                <span className="text-xs text-ink-400 font-mono">/tin-tuc/</span>
+                <span className="font-mono text-xs text-ink-400">/tin-tuc/</span>
                 <input
                   type="text"
                   required
@@ -257,7 +269,7 @@ export function ArticleEditorForm({
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Tóm tắt ngắn (Excerpt)
               </label>
               <textarea
@@ -272,7 +284,7 @@ export function ArticleEditorForm({
 
           {/* Content Editor */}
           <div className="space-y-1">
-            <label className="text-sm font-semibold text-ink-950 flex justify-between items-center">
+            <label className="flex items-center justify-between text-sm font-semibold text-ink-950">
               <span>Nội dung chính</span>
             </label>
             <RichTextEditor
@@ -293,14 +305,14 @@ export function ArticleEditorForm({
           </div>
 
           {/* SEO Metadata Box */}
-          <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-            <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+          <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+            <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
               <Globe className="h-4 w-4 text-brand-700" />
               <span>Tối ưu hóa SEO (On-page SEO)</span>
             </h3>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Tiêu đề SEO (Meta Title)
               </label>
               <input
@@ -313,7 +325,7 @@ export function ArticleEditorForm({
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Mô tả SEO (Meta Description)
               </label>
               <textarea
@@ -330,13 +342,13 @@ export function ArticleEditorForm({
         {/* Right 1 Column: Meta Sidebar */}
         <div className="space-y-6">
           {/* Publish Options */}
-          <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-            <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3">
+          <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+            <h3 className="border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
               Cài đặt Xuất bản
             </h3>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Trạng thái
               </label>
               <select
@@ -344,13 +356,12 @@ export function ArticleEditorForm({
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                 className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
               >
-                <option value="published">Xuất bản (Công khai)</option>
                 <option value="draft">Bản nháp (Chưa hiển thị)</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Danh mục chuyên mục
               </label>
               <select
@@ -373,7 +384,7 @@ export function ArticleEditorForm({
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+              <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                 Tác giả / Nguồn tin
               </label>
               <input
@@ -385,7 +396,7 @@ export function ArticleEditorForm({
               />
             </div>
 
-            <label className="flex items-center gap-3 pt-2 cursor-pointer">
+            <label className="flex cursor-pointer items-center gap-3 pt-2">
               <input
                 type="checkbox"
                 checked={formData.is_featured}
@@ -399,13 +410,13 @@ export function ArticleEditorForm({
           </div>
 
           {/* Featured Image */}
-          <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-            <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+          <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+            <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
               <ImageIcon className="h-4 w-4 text-brand-700" />
               <span>Ảnh đại diện (Featured Image)</span>
             </h3>
 
-            <div className="overflow-hidden rounded-lg border border-line-200 aspect-video relative bg-slate-100">
+            <div className="relative aspect-video overflow-hidden rounded-lg border border-line-200 bg-slate-100">
               {formData.featured_image ? (
                 <img
                   src={formData.featured_image}
@@ -431,15 +442,19 @@ export function ArticleEditorForm({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2 text-body-sm font-semibold text-ink-800 hover:bg-slate-100 transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2 text-body-sm font-semibold text-ink-800 transition-colors hover:bg-slate-100"
               >
-                {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                {uploading ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4" />
+                )}
                 <span>{uploading ? "Đang tải lên..." : "Tải ảnh từ máy"}</span>
               </button>
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="mb-1 block text-body-sm font-semibold text-ink-900">
                 Hoặc nhập URL ảnh
               </label>
               <input

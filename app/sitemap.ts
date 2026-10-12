@@ -1,18 +1,15 @@
 import { MetadataRoute } from "next";
 import { env } from "@/lib/env";
-import { programs } from "@/data/programs";
+import { getLivePrograms } from "@/lib/services/public-site";
 import { cms } from "@/lib/cms";
-import { getPages } from "@/lib/db";
+import { readPublicRows } from "@/lib/services/publication";
+import type { ArticleRecord, PageRecord } from "@/lib/db/types";
+import { connection } from "next/server";
 
-const BLOCKED_SLUGS = new Set([
-  "cart",
-  "checkout",
-  "my-account",
-  "shop",
-  "classic-shop",
-]);
+const BLOCKED_SLUGS = new Set(["cart", "checkout", "my-account", "shop", "classic-shop"]);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await connection();
   const baseUrl = env.NEXT_PUBLIC_SITE_URL;
 
   // 1. Core Hubs & Static pages
@@ -22,10 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/nganh-dao-tao",
     "/tuyen-sinh",
     "/tuyen-sinh/hoc-phi-hoc-bong",
-    "/chuong-trinh",
     "/tin-tuc",
-    "/dam-bao-chat-luong",
-    "/he-thong",
     "/lien-he",
     "/nhung-cau-hoi-thuong-gap",
   ];
@@ -34,11 +28,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === "" ? ("daily" as const) : ("weekly" as const),
-    priority: route === "" ? 1.0 : route.startsWith("/nganh-dao-tao") || route.startsWith("/tuyen-sinh") ? 0.9 : 0.8,
+    priority:
+      route === ""
+        ? 1.0
+        : route.startsWith("/nganh-dao-tao") || route.startsWith("/tuyen-sinh")
+          ? 0.9
+          : 0.8,
   }));
 
   // 2. 5 Official Programs
-  const programPages = programs.map((program) => ({
+  const programPages = getLivePrograms().map((program) => ({
     url: `${baseUrl}/${program.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
@@ -48,9 +47,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 3. Published CMS Pages from SQLite
   let cmsPages: MetadataRoute.Sitemap = [];
   try {
-    const rawPages = getPages();
+    const rawPages = readPublicRows<PageRecord>("page");
     const publishedPages = rawPages.filter(
-      (p) => p.status === "published" && !BLOCKED_SLUGS.has(p.slug.toLowerCase())
+      (p) => p.status === "published" && !BLOCKED_SLUGS.has(p.slug.toLowerCase()),
     );
     cmsPages = publishedPages.map((page) => ({
       url: `${baseUrl}/${page.slug}`,
@@ -65,10 +64,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 4. Articles from CMS
   let articlePages: MetadataRoute.Sitemap = [];
   try {
-    const { articles } = await cms.getArticles({ limit: 100 });
+    const articles = readPublicRows<ArticleRecord>("article").filter(
+      (article) => article.status === "published",
+    );
     articlePages = articles.map((article) => ({
       url: `${baseUrl}/tin-tuc/${article.slug}`,
-      lastModified: article.updatedAt ? new Date(article.updatedAt) : new Date(article.publishedAt),
+      lastModified: new Date(article.updated_at || article.published_at),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     }));
@@ -92,8 +93,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Deduplicate by URL
   const seenUrls = new Set<string>();
-  const combined = [...staticPages, ...programPages, ...cmsPages, ...articlePages, ...categoryPages];
-  
+  const combined = [
+    ...staticPages,
+    ...programPages,
+    ...cmsPages,
+    ...articlePages,
+    ...categoryPages,
+  ];
+
   return combined.filter((item) => {
     if (seenUrls.has(item.url)) return false;
     seenUrls.add(item.url);

@@ -55,6 +55,12 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
+      if (!drawerRef.current.contains(document.activeElement)) {
+        e.preventDefault();
+        first.focus();
+        return;
+      }
+
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();
@@ -99,6 +105,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Menu điều hướng"
+            id="mobile-nav-drawer"
             className="fixed top-0 right-0 bottom-0 z-[70] flex w-full max-w-[360px] flex-col bg-canvas shadow-md"
           >
             {/* Header */}
@@ -215,7 +222,8 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 <ButtonLink
                   href={applyAction.href}
                   external={applyAction.external}
-                  className="w-full"
+                  variant="accent"
+                  className="w-full font-bold"
                   onClick={onClose}
                 >
                   {applyAction.label}

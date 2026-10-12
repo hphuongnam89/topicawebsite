@@ -1,0 +1,14 @@
+✓ Đã tạo bản sao lưu thành công tại: C:\Users\Hp\Downloads\topica\topica\topica-edu\scratch\qa-completion-03\backups\topica_backup_2026-10-12T11-56-59_816_ism9_pre_migration.db
+✓ Manifest kiểm chứng: C:\Users\Hp\Downloads\topica\topica\topica-edu\scratch\qa-completion-03\backups\topica_backup_2026-10-12T11-56-59_816_ism9_pre_migration.db.manifest.json (SHA-256: 92e0b9eb2e0e...)
+▲ Next.js 16.3.3 (webpack)
+✓ Running next.config.ts took 46ms
+
+  Creating an optimized production build ...
+  Using tsconfig file: .tsconfig-qa-completion-03.json
+Failed to compile.
+
+Error: EPERM: operation not permitted, mkdir 'C:\Users\Hp\Downloads\topica\topica\topica-edu\scratch\qa-completion-03\workspace\.next-qa-completion-03\server\app\api\admin'
+
+
+> Build failed because of webpack errors
+exit_code=1

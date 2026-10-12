@@ -1,4 +1,5 @@
 import { cn } from "@/components/ui/cn";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -13,24 +14,30 @@ import { QuickActionCard } from "./QuickActionCard";
 import { AdmissionAnnouncementCard } from "./AdmissionAnnouncementCard";
 import { GraduationCap, ClipboardList, FileText, Banknote, HelpCircle, Phone } from "lucide-react";
 import { formatDateVN } from "@/lib/date";
+import { getLivePrograms } from "@/lib/services/public-site";
+import { getPublicAdmissionRounds } from "@/lib/services/cms-models";
 
 export interface AdmissionHubProps {
-  page: CmsPage;
+  page: Pick<CmsPage, "excerpt">;
 }
 
 export async function AdmissionHub({ page }: AdmissionHubProps) {
   // Fetch latest admission news
-  const admissionNews = await cms.getArticles({
-    category: "tin-tuc-tuyen-sinh",
-    limit: 4,
-  });
+  const admissionNews = await cms
+    .getArticles({
+      category: "tin-tuc-tuyen-sinh",
+      limit: 4,
+    })
+    .catch(() => ({ articles: [], total: 0 }));
+  const articles = admissionNews?.articles || [];
+  const rounds = getPublicAdmissionRounds();
 
   // Common admission FAQs
   const faqData = [
     {
       question: "Topica xét tuyển bằng những phương thức nào?",
       answer:
-        "Topica xét tuyển thông qua 3 phương thức chính: Xét tuyển thẳng, Xét tuyển dựa trên kết quả thi THPT Quốc gia, và Xét tuyển học bạ THPT.",
+        "Phương thức và điều kiện xét tuyển phụ thuộc đối tượng và kỳ tuyển sinh. Xem thông báo đang áp dụng hoặc trao đổi với bộ phận tuyển sinh để xác định hồ sơ phù hợp.",
     },
     {
       question: "Hồ sơ xét tuyển trực tuyến cần chuẩn bị những gì?",
@@ -40,31 +47,31 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
     {
       question: "Topica có các chương trình học bổng nào cho tân sinh viên?",
       answer:
-        "Topica và Trường Đại học Phú Xuân áp dụng nhiều gói học bổng cho tân sinh viên: Học bổng Tài năng (Talent Scholarship) giảm 30% học phí toàn khóa, Học bổng Khuyến học giảm 50% năm đầu, cùng chính sách Tiếp bước tương lai cho sinh viên vượt khó.",
+        "Xem mục Học phí & Học bổng để đối chiếu quyền lợi, đối tượng và thời hạn. Bộ phận tuyển sinh xác nhận suất và điều kiện áp dụng cho hồ sơ của bạn.",
     },
     {
       question: "Thời gian nhận hồ sơ xét tuyển là khi nào?",
       answer:
-        "Nhà trường liên tục tiếp nhận hồ sơ xét tuyển theo các đợt trong năm. Đợt 1 mở từ tháng 3 và Đợt 2 mở vào tháng 7. Thí sinh có thể nộp hồ sơ trực tuyến và nhận kết quả xét tuyển nhanh chóng.",
+        "Thời hạn được ghi trong thông báo của từng kỳ. Khi chưa có kỳ đang mở được công bố ở đây, bạn có thể nhận tư vấn để xác nhận lịch tiếp theo.",
     },
     {
       question: "Học phí tại Topica được đóng như thế nào?",
       answer:
-        "Học phí áp dụng 600.000 đ / tín chỉ, thu theo số tín chỉ thực tế sinh viên đăng ký trong từng học kỳ (toàn khóa 9 học kỳ, ước tính ~8.400.000 đ / học kỳ). Sinh viên có thể thanh toán linh hoạt qua chuyển khoản hoặc tham gia chương trình trả góp 0% lãi suất.",
+        "Học phí tính theo số tín chỉ và chính sách áp dụng cho khóa, đối tượng. Xem bảng học phí và đề nghị dự toán sau khi xác nhận tín chỉ được công nhận; các ưu đãi cần đáp ứng điều kiện.",
     },
   ];
 
   return (
     <main>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-ink-950 pt-24 pb-16 md:pt-32 md:pb-24">
+      <section className="relative overflow-hidden bg-navy-950 pt-24 pb-16 md:pt-32 md:pb-24">
         <Container className="relative z-10">
           <div className="max-w-measure mx-auto text-center">
-            <span className="text-brand-400 mb-4 inline-block rounded-full border border-brand-500/30 px-3 py-1 text-xs font-semibold tracking-wider uppercase">
+            <span className="mb-4 inline-block rounded-full border border-gold-400/40 bg-navy-900/60 px-3.5 py-1 text-xs font-semibold tracking-wider text-gold-300 uppercase backdrop-blur-xs">
               Năm học 2026-2027
             </span>
             <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
-            <p className="text-ink-200 mx-auto mb-10 max-w-2xl text-body-lg">
+            <p className="mx-auto mb-10 max-w-2xl text-body-lg text-white/80">
               {page.excerpt ||
                 "Khám phá các chương trình đào tạo chất lượng cao tại Topica. Chúng tôi chào đón những sinh viên đam mê học hỏi, sẵn sàng kiến tạo tương lai."}
             </p>
@@ -97,7 +104,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
             <QuickActionCard
               icon={<GraduationCap size={24} />}
               title="Ngành đào tạo"
-              description="Khám phá các chương trình đại học chính quy."
+              description="Khám phá 5 chương trình cử nhân đào tạo từ xa."
               href="/nganh-dao-tao/"
             />
             <QuickActionCard
@@ -134,6 +141,54 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
         </Container>
       </Section>
 
+      <Section className="bg-canvas">
+        <Container>
+          <SectionHeading>Kỳ tuyển sinh</SectionHeading>
+          {rounds.length ? (
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {rounds.map((round) => (
+                <article key={round.id} className="rounded-xl border border-line-200 bg-canvas p-5 shadow-2xs">
+                  <h3 className="text-h4 font-bold text-navy-950">{round.name}</h3>
+                  <p className="mt-2 text-ink-700">
+                    {round.status === "open"
+                      ? "Đang nhận hồ sơ"
+                      : round.status === "planned"
+                        ? "Chưa mở nhận hồ sơ"
+                        : "Đã đóng nhận hồ sơ"}
+                  </p>
+                  <p className="mt-2 text-ink-700">Hạn hồ sơ: {formatDateVN(round.deadlineAt)}</p>
+                  <ButtonLink
+                    className="mt-4"
+                    href={round.status === "open" ? round.applicationUrl : "/lien-he/"}
+                    external={
+                      round.status === "open" && round.applicationUrl.startsWith("https://")
+                    }
+                  >
+                    {round.status === "open"
+                      ? "Xem hướng dẫn nộp hồ sơ"
+                      : "Nhận tư vấn kỳ tuyển sinh"}
+                  </ButtonLink>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 flex flex-col gap-4 rounded-xl border border-line-200 bg-surface-subtle/60 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div className="text-ink-700">
+                <p className="font-semibold text-navy-950">Kế hoạch tiếp nhận hồ sơ năm 2026</p>
+                <p className="mt-1 text-body-sm text-ink-600">
+                  Chưa có kỳ tuyển sinh đang mở được công bố tại đây.{" "}
+                  <Link className="font-medium text-navy-800 underline hover:text-navy-950" href="/lien-he/">
+                    Liên hệ để xác nhận lịch nhận hồ sơ.
+                  </Link>
+                </p>
+              </div>
+              <ButtonLink href="/lien-he/" variant="secondary" size="sm" className="shrink-0">
+                Nhận thông báo kỳ mới
+              </ButtonLink>
+            </div>
+          )}
+        </Container>
+      </Section>
       {/* Latest Admission News */}
       <Section className="bg-paper">
         <Container>
@@ -144,9 +199,9 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
             </ButtonLink>
           </div>
 
-          {admissionNews.articles.length > 0 ? (
+          {articles.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {admissionNews.articles.map((article) => (
+              {articles.map((article) => (
                 <AdmissionAnnouncementCard
                   key={article.id}
                   title={article.title}
@@ -181,7 +236,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                     key={index}
                     className="relative flex flex-1 flex-row items-start gap-6 md:flex-col md:items-center md:gap-4"
                   >
-                    <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-4 border-canvas bg-brand-600 text-lg font-bold text-white">
+                    <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-gold-400 bg-navy-900 text-lg font-bold text-white shadow-xs">
                       {index + 1}
                     </div>
                     <div className="pt-2 md:pt-0 md:text-center">
@@ -197,7 +252,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
       </Section>
 
       {/* Programs Preview */}
-      <ProgramsSection />
+      <ProgramsSection programs={getLivePrograms()} />
 
       {/* FAQ Preview */}
       <Section className="bg-canvas">

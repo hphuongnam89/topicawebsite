@@ -1,53 +1,84 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
-import { getPageById, updatePage, deletePage } from "@/lib/db";
-
-export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const resolvedParams = await context.params;
-  const id = parseInt(resolvedParams.id, 10);
-  if (isNaN(id)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-
-  const page = getPageById(id);
-  if (!page) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  return NextResponse.json(page);
+import { requireUser, requireAdmin } from "@/lib/auth/guards";
+import { getPageById, updatePage, deletePage, getDb } from "@/lib/db";
+import { isSameOrigin } from "@/lib/security/request";
+import { pageUpdateSchema } from "@/lib/validation/admin";
+import { sanitizeWordPressHtml } from "@/lib/cms/html";
+import { getRevisions } from "@/lib/services/revisions";
+type Context = { params: Promise<{ id: string }> };
+export async function GET(_request: Request, context: Context) {
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  const page = getPageById(Number((await context.params).id));
+  return page
+    ? NextResponse.json(page)
+    : NextResponse.json({ error: "Không tìm thấy trang" }, { status: 404 });
 }
-
-export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const resolvedParams = await context.params;
-  const id = parseInt(resolvedParams.id, 10);
-  if (isNaN(id)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-
+export async function PUT(request: Request, context: Context) {
+  const auth = await requireUser();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  const id = Number((await context.params).id);
+  if (!Number.isSafeInteger(id) || id < 1)
+    return NextResponse.json({ error: "ID không hợp lệ" }, { status: 400 });
+  const parsed = pageUpdateSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success)
+    return NextResponse.json({ error: "Thông tin trang không hợp lệ" }, { status: 422 });
+  const db = getDb();
+  db.exec("BEGIN IMMEDIATE");
   try {
-    const data = await request.json();
-    const updated = updatePage(id, data);
-    if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    
-    return NextResponse.json(updated);
-  } catch (error: any) {
-    if (error.message.includes("UNIQUE constraint failed")) {
-      return NextResponse.json({ error: "Đường dẫn (slug) đã tồn tại." }, { status: 400 });
+    const current = getPageById(id);
+    if (!current) {
+      db.exec("ROLLBACK");
+      return NextResponse.json({ error: "Không tìm thấy trang" }, { status: 404 });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (
+      current.status === "published" ||
+      parsed.data.status === "published" ||
+      getRevisions("page", String(id)).length
+    ) {
+      db.exec("ROLLBACK");
+      return NextResponse.json(
+        { error: "Tạo bản nháp revision để sửa và duyệt nội dung công khai" },
+        { status: 409 },
+      );
+    }
+    if (
+      !parsed.data.expected_updated_at ||
+      parsed.data.expected_updated_at !== current.updated_at
+    ) {
+      db.exec("ROLLBACK");
+      return NextResponse.json(
+        { error: "Trang đã thay đổi hoặc thiếu phiên bản. Tải lại trước khi lưu." },
+        { status: 409 },
+      );
+    }
+    const input = {
+      ...parsed.data,
+      content_html:
+        parsed.data.content_html === undefined
+          ? undefined
+          : sanitizeWordPressHtml(parsed.data.content_html),
+    };
+    const page = updatePage(id, input);
+    db.exec("COMMIT");
+    return NextResponse.json(page);
+  } catch {
+    db.exec("ROLLBACK");
+    return NextResponse.json({ error: "Không lưu được trang" }, { status: 500 });
   }
 }
-
-export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
-  const user = await getCurrentUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const resolvedParams = await context.params;
-  const id = parseInt(resolvedParams.id, 10);
-  if (isNaN(id)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-
-  const success = deletePage(id);
-  if (!success) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  return NextResponse.json({ success: true });
+export async function DELETE(request: Request, context: Context) {
+  const auth = await requireAdmin();
+  if ("response" in auth) return auth.response;
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  const id = Number((await context.params).id);
+  if (getPageById(id)?.status === "published" || getRevisions("page", String(id)).length)
+    return NextResponse.json(
+      { error: "Hãy lưu trữ revision thay vì xóa trang công khai" },
+      { status: 409 },
+    );
+  return NextResponse.json({ success: deletePage(id) });
 }

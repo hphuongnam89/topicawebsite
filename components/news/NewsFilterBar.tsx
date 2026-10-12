@@ -58,7 +58,7 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
           className={cn(
             "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
             currentCategory === ""
-              ? "bg-brand-500 text-white"
+              ? "bg-navy-900 text-white"
               : "border border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500",
           )}
         >
@@ -71,7 +71,7 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
             className={cn(
               "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
               currentCategory === cat.slug
-                ? "bg-brand-500 text-white"
+                ? "bg-navy-900 text-white"
                 : "border border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500",
             )}
           >
@@ -86,11 +86,11 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
           placeholder="Tìm kiếm bài viết..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="text-ink-900 w-full rounded-full border border-line-200 bg-paper py-2.5 pr-4 pl-11 text-sm transition-all outline-none placeholder:text-ink-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+          className="w-full rounded-full border border-line-200 bg-paper py-2.5 pr-4 pl-11 text-sm text-ink-900 transition-all outline-none placeholder:text-ink-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
         />
         <Search className="absolute top-1/2 left-4 -translate-y-1/2 text-ink-400" size={18} />
         {isPending && (
-          <div className="border-brand-200 absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-t-brand-500" />
+          <div className="absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-brand-200 border-t-brand-500" />
         )}
       </form>
     </div>

@@ -1,0 +1,14 @@
+{
+  "run": "overnight-final-ui",
+  "buildId": "QQdjcbczvweMrV56Nv5zU",
+  "sourceFingerprint": "afe7e3333ca2fdcb3fbf0a2c74242e072b41fd678854f7cb6a784364b1abe50a",
+  "browser": "151.0.7922.34",
+  "capturedAt": "2026-10-11T23:50:09.742Z",
+  "dataset": "Synthetic fixture only; no research participants",
+  "results": [
+    {
+      "result": "fail",
+      "error": "Error: Please use browser.newContext()\n Please check out https://github.com/dequelabs/axe-core-npm/blob/develop/packages/playwright/error-handling.md"
+    }
+  ]
+}

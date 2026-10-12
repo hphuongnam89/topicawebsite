@@ -3,16 +3,24 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { campuses, contactInfo } from "@/data/campuses";
+import {
+  campuses as defaultCampuses,
+  contactChannels as defaultChannels,
+  type Campus,
+} from "@/data/campuses";
+import type { ContactChannels } from "@/lib/services/public-site";
 
-export function CampusSection() {
+export function CampusSection({
+  channels: contactChannels = defaultChannels,
+  locations: campuses = defaultCampuses,
+}: { channels?: ContactChannels; locations?: readonly Campus[] } = {}) {
   return (
     <section className="bg-paper py-16 lg:py-24" aria-labelledby="campus-title">
       <Container>
         <SectionHeading
           id="campus-title"
           title="Hệ thống trung tâm"
-          subtitle="Topica có mặt tại 6 thành phố lớn trên cả nước"
+          subtitle="Địa điểm hỗ trợ và thông tin liên hệ"
           align="center"
         />
 
@@ -31,24 +39,35 @@ export function CampusSection() {
           ))}
         </div>
 
-        {/* Shared contact info — verified from topicauni.edu.vn footer */}
+        {/* Shared contact info — unified by role */}
         <div className="mt-8 flex flex-col items-center justify-center gap-4 text-body-sm text-ink-600 sm:flex-row sm:flex-wrap sm:gap-6">
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4 text-gold-500" />
+            <span>Hotline tư vấn:</span>
             <a
-              href={`tel:${contactInfo.phone}`}
-              className="rounded-sm transition-colors hover:text-navy-900 focus-visible:outline-navy-500"
+              href={contactChannels.admissionsHotline.href}
+              className="font-bold text-navy-900 transition-colors hover:text-gold-700 focus-visible:outline-navy-500"
             >
-              {contactInfo.phone}
+              {contactChannels.admissionsHotline.value}
+            </a>
+          </div>
+          <div className="flex items-center gap-2">
+            <Phone className="h-4 w-4 text-gold-500" />
+            <span>Tư vấn nhanh:</span>
+            <a
+              href={contactChannels.admissionsDirect.href}
+              className="font-bold text-navy-900 transition-colors hover:text-gold-700 focus-visible:outline-navy-500"
+            >
+              {contactChannels.admissionsDirect.value}
             </a>
           </div>
           <div className="flex items-center gap-2">
             <Mail className="h-4 w-4 text-gold-500" />
             <a
-              href={`mailto:${contactInfo.email}`}
-              className="rounded-sm transition-colors hover:text-navy-900 focus-visible:outline-navy-500"
+              href={contactChannels.admissionsEmail.href}
+              className="rounded-sm font-medium transition-colors hover:text-navy-900 focus-visible:outline-navy-500"
             >
-              {contactInfo.email}
+              {contactChannels.admissionsEmail.value}
             </a>
           </div>
         </div>

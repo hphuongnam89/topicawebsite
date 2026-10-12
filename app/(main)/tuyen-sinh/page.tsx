@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { AdmissionHub } from "@/components/admission/AdmissionHub";
 import { cms } from "@/lib/cms";
 import { env } from "@/lib/env";
@@ -17,7 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AdmissionsPage() {
   const page = await cms.getPageByPath("tuyen-sinh").catch(() => null);
-  if (!page) notFound();
-
-  return <AdmissionHub page={page} />;
+  return (
+    <AdmissionHub
+      page={
+        page || {
+          excerpt: "Tìm ngành học, xem điều kiện và xác nhận lịch nhận hồ sơ phù hợp.",
+        }
+      }
+    />
+  );
 }

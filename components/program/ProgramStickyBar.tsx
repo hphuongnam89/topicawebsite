@@ -11,7 +11,7 @@ export function ProgramStickyBar({
   return (
     <aside
       aria-label="Hành động tuyển sinh"
-      className="fixed inset-x-0 bottom-0 z-[100] border-t border-[var(--color-academic-rule)] bg-[color:var(--color-academic-elevated)] shadow-[0_-10px_30px_var(--color-academic-shadow)]"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--color-academic-rule)] bg-[color:var(--color-academic-elevated)] shadow-[0_-10px_30px_var(--color-academic-shadow)]"
     >
       <Container className="flex min-h-[var(--academic-sticky-height)] items-center justify-between gap-3 py-2 [padding-bottom:max(0.5rem,env(safe-area-inset-bottom))]">
         <p className="hidden text-sm text-[var(--color-academic-muted)] md:block">
@@ -24,7 +24,7 @@ export function ProgramStickyBar({
             variant="secondary"
             size="sm"
             leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
-            className="border-[var(--color-academic-rule-strong)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+            className="h-auto min-h-11 min-w-0 border-[var(--color-academic-rule-strong)] px-2 py-2 text-center whitespace-normal text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)] md:h-9 md:min-h-9 md:px-4 md:py-0 md:whitespace-nowrap"
           >
             Nhận tư vấn
           </ButtonLink>
@@ -32,7 +32,7 @@ export function ProgramStickyBar({
             href="https://www.tuyensinh.topicauni.edu.vn/"
             size="sm"
             rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-            className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
+            className="h-auto min-h-11 min-w-0 bg-[var(--color-academic-accent-strong)] px-2 py-2 text-center whitespace-normal text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)] md:h-9 md:min-h-9 md:px-4 md:py-0 md:whitespace-nowrap"
           >
             Đăng ký xét tuyển
           </ButtonLink>

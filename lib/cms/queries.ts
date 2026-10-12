@@ -1,37 +1,47 @@
 
 import 'server-only';
 import {
-  getArticles as getDbArticles,
-  getArticleBySlug as getDbArticleBySlug,
   getCategories as getDbCategories,
   getCategoryById,
-  getPages,
-  getPageBySlug
 } from '@/lib/db';
+import type { ArticleRecord, PageRecord } from '@/lib/db/types';
+import { readPublicRows } from '@/lib/services/publication';
 import type { CmsService, Article, CmsPage, Category, PaginatedArticles } from './types';
-import { sanitizeWordPressHtml } from './html';
+import { sanitizeWordPressHtml, cleanWordPressEntities, wordpressText } from './html';
+
+function normalizeArticleTitle(title: string): string {
+  const clean = cleanWordPressEntities(title);
+  if (/^CHỈ CÒN \d+ NGÀY /i.test(clean)) {
+    return clean.replace(/^CHỈ CÒN \d+ NGÀY ĐĂNG KÝ NHẬP HỌC LỚP KHAI GIẢNG/i, "Thông báo nhập học lớp khai giảng");
+  }
+  return clean;
+}
 
 function mapDbArticleToArticle(row: any): Article {
+  const category = row.category_id ? getCategoryById(row.category_id) : undefined;
+  row = { ...row, category_name: category?.name, category_slug: category?.slug };
   const cat: Category | undefined = row.category_name
     ? {
         id: row.category_id || 0,
-        title: row.category_name,
+        title: cleanWordPressEntities(row.category_name),
         slug: row.category_slug || '',
       }
     : undefined;
 
+  const cleanTitle = normalizeArticleTitle(row.title);
+
   return {
     id: row.id,
-    title: row.title,
+    title: cleanTitle,
     slug: row.slug,
     sourceUrl: `/tin-tuc/${row.slug}`,
-    excerpt: row.excerpt || '',
+    excerpt: wordpressText(row.excerpt || ''),
     contentHtml: sanitizeWordPressHtml(row.content_html),
     featuredImage: row.featured_image
       ? {
           id: 0,
           url: row.featured_image,
-          alt: row.title,
+          alt: cleanTitle,
         }
       : undefined,
     category: cat,
@@ -45,33 +55,40 @@ function mapDbArticleToArticle(row: any): Article {
     updatedAt: row.updated_at,
     featured: row.is_featured === 1,
     seo: {
-      title: row.seo_title || row.title,
-      description: row.seo_description || row.excerpt || '',
+      title: normalizeArticleTitle(row.seo_title || row.title),
+      description: wordpressText(row.seo_description || row.excerpt || ''),
     },
   };
 }
 
 function mapDbPageToCmsPage(row: any): CmsPage {
+  const cleanTitle = cleanWordPressEntities(row.title);
+
   return {
     id: row.id,
-    title: row.title,
+    title: cleanTitle,
     slug: row.slug,
     sourceUrl: `/${row.slug}`,
     contentHtml: sanitizeWordPressHtml(row.content_html),
-    excerpt: row.excerpt || '',
+    excerpt: wordpressText(row.excerpt || ''),
     publishedAt: row.published_at,
     updatedAt: row.updated_at,
-    featuredImage: row.featured_image ? { id: 0, url: row.featured_image, alt: row.title } : undefined,
+    featuredImage: row.featured_image ? { id: 0, url: row.featured_image, alt: cleanTitle } : undefined,
     seo: {
-      title: row.seo_title || row.title,
-      description: row.seo_description || row.excerpt || '',
+      title: cleanWordPressEntities(row.seo_title || row.title),
+      description: wordpressText(row.seo_description || row.excerpt || ''),
     },
   };
 }
 
+function publicArticles() {
+  return readPublicRows<ArticleRecord>('article').filter(row => row.status === 'published')
+    .sort((a,b) => b.published_at.localeCompare(a.published_at));
+}
+
 export const cms: CmsService = {
   async getPageBySlug(slug: string) {
-    const dbPage = getPageBySlug(slug);
+    const dbPage = readPublicRows<PageRecord>('page').find(row => row.slug === slug && row.status === 'published');
     if (dbPage && dbPage.status === 'published') return mapDbPageToCmsPage(dbPage);
     return null;
   },
@@ -87,20 +104,19 @@ export const cms: CmsService = {
     const limit = Number.isFinite(params.limit) ? Math.min(100, Math.max(1, Math.trunc(params.limit ?? 12))) : 12;
     const search = params.search?.trim().slice(0, 100);
 
-    let categoryId = undefined;
+    let categoryId: number | undefined;
     if (params.category) {
       const cats = getDbCategories();
       const cat = cats.find(c => c.slug === params.category);
       if (cat) categoryId = cat.id;
+      else return { articles: [], total: 0, totalPages: 1 };
     }
 
-    const { items, total } = getDbArticles({
-      search,
-      categoryId,
-      status: 'published',
-      limit,
-      offset: (page - 1) * limit,
-    });
+    const rows = publicArticles().filter(row =>
+      (categoryId === undefined || row.category_id === categoryId) &&
+      (!search || `${row.title} ${row.excerpt || ''} ${wordpressText(row.content_html)}`.toLocaleLowerCase('vi').includes(search.toLocaleLowerCase('vi'))));
+    const total = rows.length;
+    const items = rows.slice((page - 1) * limit, page * limit);
 
     return {
       articles: items.map(mapDbArticleToArticle),
@@ -110,7 +126,7 @@ export const cms: CmsService = {
   },
 
   async getArticleBySlug(slug: string) {
-    const dbArticle = getDbArticleBySlug(slug);
+    const dbArticle = publicArticles().find(row => row.slug === slug);
     if (dbArticle && dbArticle.status === 'published') {
       return mapDbArticleToArticle(dbArticle);
     }
@@ -118,14 +134,14 @@ export const cms: CmsService = {
   },
 
   async getFeaturedArticles(limit = 1) {
-    const { items } = getDbArticles({ limit: Math.min(10, Math.max(1, limit)), status: 'published' });
+    const items = publicArticles();
     const featured = items.filter(a => a.is_featured === 1);
     if (featured.length > 0) return featured.slice(0, limit).map(mapDbArticleToArticle);
     return items.slice(0, limit).map(mapDbArticleToArticle);
   },
 
   async getLatestArticles(limit = 10) {
-    const { items } = getDbArticles({ limit, status: 'published' });
+    const items = publicArticles().slice(0, Math.min(100, Math.max(1, limit)));
     return items.map(mapDbArticleToArticle);
   },
 
@@ -134,7 +150,7 @@ export const cms: CmsService = {
     const cats = getDbCategories();
     const cat = cats.find(c => c.slug === article.category!.slug);
     if (!cat) return [];
-    const { items } = getDbArticles({ categoryId: cat.id, limit: limit + 1, status: 'published' });
+    const items = publicArticles().filter(row => row.category_id === cat.id);
     return items.filter(a => a.id !== article.id).slice(0, limit).map(mapDbArticleToArticle);
   },
 
@@ -143,7 +159,9 @@ export const cms: CmsService = {
   },
 
   async getCategories() {
+    const articles = publicArticles();
     return getDbCategories()
+      .map(cat => ({...cat, article_count: articles.filter(row => row.category_id === cat.id).length}))
       .filter((cat: any) => cat.article_count > 0)
       .map((cat: any) => ({
         id: cat.id,

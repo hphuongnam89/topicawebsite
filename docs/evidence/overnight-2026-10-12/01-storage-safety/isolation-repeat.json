@@ -1,0 +1,23 @@
+{
+  "startedFor": "R01",
+  "scope": "File metadata only, no production records read; data and public/uploads",
+  "before": {
+    "entries": 25,
+    "sha256Metadata": "b9d2bce90a61b9c8289e6d9bc6ebcf593078eb3ee82be16d8df1adce917a5ed8"
+  },
+  "after": {
+    "entries": 25,
+    "sha256Metadata": "b9d2bce90a61b9c8289e6d9bc6ebcf593078eb3ee82be16d8df1adce917a5ed8"
+  },
+  "unchanged": true,
+  "runs": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run __tests__/cms __tests__/operations __tests__/services --maxWorkers=2",
+      "exitCode": 0
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run __tests__/cms __tests__/operations __tests__/services --maxWorkers=2",
+      "exitCode": 0
+    }
+  ]
+}

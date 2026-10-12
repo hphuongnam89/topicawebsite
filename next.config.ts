@@ -18,6 +18,9 @@ const contentSecurityPolicy = [
 ].join("; ");
 
 const securityHeaders = [
+  ...(process.env.TOPICA_QA_MODE === "true"
+    ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
+    : []),
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -35,21 +38,84 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  distDir: process.env.TOPICA_NEXT_DIST_DIR || ".next",
+  ...(process.env.TOPICA_QA_MODE === "true" && process.env.TOPICA_QA_SOURCE_ROOT
+    ? { turbopack: { root: process.env.TOPICA_QA_SOURCE_ROOT } }
+    : {}),
+  typescript: { tsconfigPath: process.env.TOPICA_QA_TSCONFIG || "tsconfig.json" },
   async redirects() {
     return [
-      { source: "/chuyen-muc/thong-bao-tuyen-sinh", destination: "/tin-tuc?category=thong-bao-tuyen-sinh", permanent: true },
-      { source: "/chuyen-muc/tin-tuc-tuyen-sinh", destination: "/tin-tuc?category=tin-tuc-tuyen-sinh", permanent: true },
-      { source: "/category/tin-tuc-tuyen-sinh", destination: "/tin-tuc?category=tin-tuc-tuyen-sinh", permanent: true },
+      {
+        source: "/chuyen-muc/thong-bao-tuyen-sinh",
+        destination: "/tin-tuc?category=thong-bao-tuyen-sinh",
+        permanent: true,
+      },
+      {
+        source: "/chuyen-muc/tin-tuc-tuyen-sinh",
+        destination: "/tin-tuc?category=tin-tuc-tuyen-sinh",
+        permanent: true,
+      },
+      {
+        source: "/category/tin-tuc-tuyen-sinh",
+        destination: "/tin-tuc?category=tin-tuc-tuyen-sinh",
+        permanent: true,
+      },
       { source: "/chuyen-muc/tin-tuc", destination: "/tin-tuc/", permanent: true },
-      { source: "/chuyen-muc/tin-tuc/tin-tuc-chung", destination: "/tin-tuc?category=tin-tuc-chung", permanent: true },
-      { source: "/chuyen-muc/tin-tuc/su-kien", destination: "/tin-tuc?category=su-kien", permanent: true },
-      { source: "/chuyen-muc/tuyen-dung", destination: "/tin-tuc?category=tuyen-dung", permanent: true },
+      {
+        source: "/chuyen-muc/tin-tuc/tin-tuc-chung",
+        destination: "/tin-tuc?category=tin-tuc-chung",
+        permanent: true,
+      },
+      {
+        source: "/chuyen-muc/tin-tuc/su-kien",
+        destination: "/tin-tuc?category=su-kien",
+        permanent: true,
+      },
+      {
+        source: "/chuyen-muc/tuyen-dung",
+        destination: "/tin-tuc?category=tuyen-dung",
+        permanent: true,
+      },
       { source: "/blog", destination: "/tin-tuc/", permanent: true },
       { source: "/hoc-phi", destination: "/tuyen-sinh/hoc-phi-hoc-bong/", permanent: true },
       { source: "/tuyen-sinh-van-bang-2", destination: "/van-bang-hai/", permanent: true },
       { source: "/de-an-quy-che-tuyen-sinh", destination: "/tuyen-sinh/", permanent: true },
-      { source: "/thong-bao-tuyen-sinh", destination: "/tin-tuc?category=thong-bao-tuyen-sinh", permanent: true },
-      { source: "/tuyen-sinh/thong-bao-tuyen-sinh", destination: "/tin-tuc?category=thong-bao-tuyen-sinh", permanent: true },
+      {
+        source: "/thong-bao-tuyen-sinh",
+        destination: "/tin-tuc?category=thong-bao-tuyen-sinh",
+        permanent: true,
+      },
+      {
+        source: "/tuyen-sinh/thong-bao-tuyen-sinh",
+        destination: "/tin-tuc?category=thong-bao-tuyen-sinh",
+        permanent: true,
+      },
+      // Legacy program URLs -> Canonical program URLs (Task R07)
+      {
+        source: "/quan-tri-kinh-doanh",
+        destination: "/quan-tri-kinh-doanh-marketing/",
+        permanent: true,
+      },
+      {
+        source: "/quan-tri-du-lich",
+        destination: "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+        permanent: true,
+      },
+      {
+        source: "/du-lich-lu-hanh",
+        destination: "/quan-tri-dich-vu-du-lich-va-lu-hanh/",
+        permanent: true,
+      },
+      { source: "/cntt", destination: "/cong-nghe-thong-tin/", permanent: true },
+      { source: "/tieng-anh", destination: "/ngon-ngu-anh/", permanent: true },
+      { source: "/tieng-trung", destination: "/ngon-ngu-trung-quoc/", permanent: true },
+      // Hierarchical program URLs -> Root canonical program URLs
+      {
+        source:
+          "/nganh-dao-tao/:slug((?:quan-tri-kinh-doanh-marketing|quan-tri-dich-vu-du-lich-va-lu-hanh|cong-nghe-thong-tin|ngon-ngu-anh|ngon-ngu-trung-quoc))",
+        destination: "/:slug/",
+        permanent: true,
+      },
     ];
   },
   async headers() {

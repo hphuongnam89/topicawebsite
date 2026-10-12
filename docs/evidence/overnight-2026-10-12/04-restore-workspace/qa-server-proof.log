@@ -1,0 +1,77 @@
+✓ Đã tạo bản sao lưu thành công tại: C:\Users\Hp\Downloads\topica\topica\topica-edu\scratch\qa-overnight-02-proof\backups\topica_backup_2026-10-11T23-46-31_582_0msv_pre_migration.db
+✓ Manifest kiểm chứng: C:\Users\Hp\Downloads\topica\topica\topica-edu\scratch\qa-overnight-02-proof\backups\topica_backup_2026-10-11T23-46-31_582_0msv_pre_migration.db.manifest.json (SHA-256: 92e0b9eb2e0e...)
+▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.ts took 29ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 14.5s
+  Running TypeScript ...
+  Finished TypeScript in 4.2s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/42) ...
+  Generating static pages using 15 workers (10/42) 
+  Generating static pages using 15 workers (20/42) 
+  Generating static pages using 15 workers (31/42) 
+✓ Generating static pages using 15 workers (42/42) in 586ms
+  Finalizing page optimization ...
+
+Route (app)                          Revalidate  Expire
+┌ ○ /                                        5m      1y
+├ ○ /_not-found
+├ ƒ /[...slug]
+├ ƒ /admin
+├ ƒ /admin/articles
+├ ƒ /admin/articles/[id]/edit
+├ ƒ /admin/articles/categories
+├ ƒ /admin/articles/new
+├ ƒ /admin/homepage
+├ ƒ /admin/leads
+├ ƒ /admin/login
+├ ƒ /admin/media
+├ ƒ /admin/pages
+├ ƒ /admin/pages/[id]/edit
+├ ƒ /admin/pages/new
+├ ƒ /admin/settings
+├ ƒ /admin/settings/account
+├ ƒ /admin/users
+├ ƒ /api/admin/articles
+├ ƒ /api/admin/articles/[id]
+├ ƒ /api/admin/auth/change-password
+├ ƒ /api/admin/auth/login
+├ ƒ /api/admin/auth/logout
+├ ƒ /api/admin/categories
+├ ƒ /api/admin/homepage
+├ ƒ /api/admin/leads
+├ ƒ /api/admin/media
+├ ƒ /api/admin/pages
+├ ƒ /api/admin/pages/[id]
+├ ƒ /api/admin/settings
+├ ƒ /api/admin/upload
+├ ƒ /api/admin/users
+├ ƒ /api/public/hit
+├ ƒ /api/public/lead
+├ ○ /design-system
+├ ○ /gioi-thieu                              5m      1y
+├ ○ /icon.png
+├ ○ /lien-he                                 5m      1y
+├ ○ /nganh-dao-tao                           5m      1y
+├ ○ /nhung-cau-hoi-thuong-gap                5m      1y
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+├ ƒ /tim-kiem
+├ ƒ /tin-tuc
+├ ƒ /tin-tuc/[slug]
+├ ○ /tuyen-sinh                              5m      1y
+└ ○ /tuyen-sinh/hoc-phi-hoc-bong             5m      1y
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+▲ Next.js 16.3.3
+- Local:         http://localhost:3107
+- Network:       http://localhost:3107
+✓ Ready in 199ms
+✓ Running next.config.ts took 31ms

@@ -7,8 +7,9 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
 
   return (
     <section
+      id="thong-tin-nhanh"
       aria-labelledby="facts-title"
-      className="bg-[var(--color-academic-elevated)] py-10 sm:py-14"
+      className="scroll-mt-28 bg-[var(--color-academic-elevated)] py-10 sm:py-14"
     >
       <Container>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)]">
@@ -20,7 +21,7 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
               id="facts-title"
               className="mt-3 text-2xl font-semibold text-[var(--color-academic-ink)]"
             >
-              {hasVerifiedAcademicData ? "Những gì đã được xác minh" : "Mức độ hoàn thiện dữ liệu"}
+              Thông tin chương trình
             </h2>
           </div>
           <dl className="grid min-w-0 gap-px border border-[var(--color-academic-rule)] bg-[var(--color-academic-rule)] sm:grid-cols-2 xl:grid-cols-4">
@@ -45,12 +46,12 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
                 </dt>
                 <dd className="mt-3 text-xl font-semibold text-[var(--color-academic-ink)]">
                   {fact.value}
+                  {fact.note && (
+                    <span className="mt-2 block text-xs leading-5 font-normal text-[var(--color-academic-muted)]">
+                      {fact.note}
+                    </span>
+                  )}
                 </dd>
-                {fact.note && (
-                  <p className="mt-2 text-xs leading-5 text-[var(--color-academic-muted)]">
-                    {fact.note}
-                  </p>
-                )}
               </div>
             ))}
           </dl>

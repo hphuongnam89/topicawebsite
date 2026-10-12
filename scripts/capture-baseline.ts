@@ -1,0 +1,137 @@
+import fs from "node:fs";
+import path from "node:path";
+import { chromium } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+async function main() {
+  const runId = process.env.TOPICA_QA_RUN_ID;
+  if (!runId || !/^[a-zA-Z0-9-]+$/.test(runId)) throw new Error("A known QA run ID is required.");
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "scratch", `qa-${runId}`, "manifest.json"), "utf8"),
+  );
+  if (manifest.runId !== runId || manifest.port === 3000)
+    throw new Error("Invalid isolated QA manifest.");
+  const baseURL = `http://localhost:${manifest.port}`;
+  const batch = process.env.TOPICA_QA_EVIDENCE_BATCH || "02-browser-baseline";
+  if (!/^[a-zA-Z0-9-]+$/.test(batch)) throw new Error("Invalid evidence batch.");
+  const evidenceRun = process.env.TOPICA_QA_EVIDENCE_RUN || "overnight-2026-10-12";
+  if (!/^[a-zA-Z0-9-]+$/.test(evidenceRun)) throw new Error("Invalid evidence run.");
+  const output = path.join(process.cwd(), "docs", "evidence", evidenceRun, batch);
+  if (fs.existsSync(path.join(output, "results.json")))
+    throw new Error("Evidence already exists; choose a new batch to preserve before/after.");
+  fs.mkdirSync(output, { recursive: true });
+  const browser = await chromium.launch();
+  const rows: Record<string, unknown>[] = [];
+  try {
+    for (const width of [1440, 1280, 390, 320]) {
+      const context = await browser.newContext({
+        viewport: { width, height: 900 },
+        reducedMotion: "reduce",
+      });
+      const page = await context.newPage();
+      for (const [template, route] of [
+        ["T01", "/"],
+        ["T03", "/cong-nghe-thong-tin/"],
+        ["T05", "/tuyen-sinh/hoc-phi-hoc-bong/"],
+        ["T02", "/nganh-dao-tao/"],
+        ["T04", "/tuyen-sinh/"],
+        ["T08", "/tin-tuc/"],
+        ["T10", "/tim-kiem?q=qa-no-match"],
+        ["T11", "/lien-he/"],
+        ["T12", "/missing-qa-template"],
+      ]) {
+        const response = await page.goto(`${baseURL}${route}`, { waitUntil: "domcontentloaded" });
+        if (response?.headers()["x-robots-tag"] !== "noindex, nofollow")
+          throw new Error("Target is not the isolated QA server.");
+        await page.evaluate(() => document.fonts.ready);
+        const stem = `${template}-${width}`;
+        await page.screenshot({ path: path.join(output, `${stem}-full.png`), fullPage: true });
+        await page.screenshot({ path: path.join(output, `${stem}-top.png`) });
+        const axe = await new AxeBuilder({ page })
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+          .analyze();
+        fs.writeFileSync(path.join(output, `${stem}-axe.json`), JSON.stringify(axe, null, 2));
+        const metrics = await page.evaluate(() => ({
+          scrollWidth: document.documentElement.scrollWidth,
+          viewport: window.innerWidth,
+          fontStatus: document.fonts.status,
+          brokenImages: Array.from(document.images)
+            .filter((image) => image.complete && image.naturalWidth === 0)
+            .map((image) => image.getAttribute("alt")),
+        }));
+        rows.push({
+          template,
+          route,
+          width,
+          status: response?.status(),
+          finalURL: page.url(),
+          metrics,
+          axeViolations: axe.violations.map((violation) => ({
+            id: violation.id,
+            impact: violation.impact,
+            nodes: violation.nodes.length,
+          })),
+        });
+      }
+      for (const route of ["/hoc-phi", "/cntt", "/missing-overnight-fixture"]) {
+        const response = await page.goto(`${baseURL}${route}`, { waitUntil: "domcontentloaded" });
+        rows.push({ route, width, status: response?.status(), finalURL: page.url() });
+      }
+      await context.close();
+    }
+  } finally {
+    fs.writeFileSync(
+      path.join(output, "results.json"),
+      JSON.stringify(
+        {
+          runId,
+          sourceFingerprint: manifest.sourceFingerprint || "not_recorded",
+          buildId: manifest.buildId || "not_recorded",
+          baseURL,
+          browser: browser.version(),
+          dataset: manifest.dataset,
+          capturedAt: new Date().toISOString(),
+          rows,
+        },
+        null,
+        2,
+      ),
+    );
+    await browser.close();
+  }
+  console.log(
+    JSON.stringify(
+      rows.map((row) => ({
+        template: row.template,
+        route: row.route,
+        width: row.width,
+        status: row.status,
+        metrics: row.metrics,
+        axeViolations: row.axeViolations,
+      })),
+      null,
+      2,
+    ),
+  );
+  if (
+    rows.some((row) => {
+      if (!row.template) return false;
+      const metrics = row.metrics as {
+        scrollWidth: number;
+        viewport: number;
+        brokenImages: unknown[];
+      };
+      return (
+        row.status !== (row.template === "T12" ? 404 : 200) ||
+        metrics.scrollWidth > metrics.viewport ||
+        metrics.brokenImages.length > 0 ||
+        (row.axeViolations as unknown[]).length > 0
+      );
+    })
+  )
+    process.exitCode = 1;
+}
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

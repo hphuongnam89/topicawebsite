@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-10-11T18:37:22.016Z",
+  "head": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc",
+  "sourceFingerprint": "294af29b63b16ba0483414478f75d90b43fbad0a97ce57716fbb40456e40b0d9",
+  "records": 192,
+  "confirmed": 0,
+  "verificationStatus": "needs_source",
+  "dataset": "static source modules; no live DB read",
+  "command": "node --import tsx scratch/inventory-content.ts",
+  "exitCode": 0,
+  "register": "../../../agent-execution/CONTENT_REGISTER.csv",
+  "sources": [
+    {
+      "path": "data/programs.ts",
+      "sha256": "a64450594cb72653db032a2134dd5b11ab2817c7b18322fe240135d7054010f2"
+    },
+    {
+      "path": "data/tuition.ts",
+      "sha256": "bec7c9f26fa3573181cdf623a642bd1e8c7b97671c4389b76654859349f0230b"
+    },
+    {
+      "path": "data/campuses.ts",
+      "sha256": "4f05d57e12efe5cb01fefe16f2c8117e82696a364e01356568f5be87f634baaa"
+    }
+  ]
+}

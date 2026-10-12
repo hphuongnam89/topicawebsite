@@ -78,26 +78,32 @@ describe("Phase 9: Comprehensive QA, Accessibility WCAG 2.2 AA & Responsive Qual
   // 2. Kiểm tra Khả năng tiếp cận WCAG 2.2 AA (Accessibility)
   // -------------------------------------------------------------
   describe("2. Tiêu chuẩn Khả năng tiếp cận WCAG 2.2 AA", () => {
-    test("độ tương phản màu sắc chữ thường đạt tối thiểu 4.5:1 (Level AA)", () => {
-      // Navy 900 trên trắng
-      const navyOnWhite = getContrast("#0A2540", "#FFFFFF");
+    test("độ tương phản màu sắc chữ thường đạt tối thiểu 4.5:1 (Level AA) từ bảng token thực tế", () => {
+      // Primary Navy 900 (#00264D) trên White Canvas (#FFFFFF)
+      const navyOnWhite = getContrast("#00264D", "#FFFFFF");
       expect(navyOnWhite).toBeGreaterThanOrEqual(4.5);
       expect(navyOnWhite).toBeGreaterThan(13); // Chuẩn AAA > 7:1
 
-      // Body text ink trên trắng
-      const bodyInkOnWhite = getContrast("#1A202C", "#FFFFFF");
-      expect(bodyInkOnWhite).toBeGreaterThanOrEqual(4.5);
+      // Secondary Navy (#16466B) trên White Canvas (#FFFFFF)
+      const navySecOnWhite = getContrast("#16466B", "#FFFFFF");
+      expect(navySecOnWhite).toBeGreaterThanOrEqual(4.5);
+      expect(navySecOnWhite).toBeGreaterThan(7); // Chuẩn AAA > 7:1
 
-      // Muted text ink trên trắng
-      const mutedInkOnWhite = getContrast("#4A5568", "#FFFFFF");
+      // High-legibility Body Ink (#243447) trên White Canvas (#FFFFFF)
+      const bodyInkOnWhite = getContrast("#243447", "#FFFFFF");
+      expect(bodyInkOnWhite).toBeGreaterThanOrEqual(4.5);
+      expect(bodyInkOnWhite).toBeGreaterThan(10); // Chuẩn AAA > 7:1
+
+      // Muted Ink 600 (#625E58) trên White Canvas (#FFFFFF)
+      const mutedInkOnWhite = getContrast("#625E58", "#FFFFFF");
       expect(mutedInkOnWhite).toBeGreaterThanOrEqual(4.5);
 
-      // Crimson Red trên trắng
-      const redOnWhite = getContrast("#BA1B1D", "#FFFFFF");
-      expect(redOnWhite).toBeGreaterThanOrEqual(4.5);
+      // Dark Gold 700 (#946727) trên White Canvas (#FFFFFF)
+      const goldTextOnWhite = getContrast("#946727", "#FFFFFF");
+      expect(goldTextOnWhite).toBeGreaterThanOrEqual(4.5);
 
-      // Gold Accent text trên Deep Navy
-      const goldOnNavy = getContrast("#E5A83B", "#0A2540");
+      // Gold 400 (#C49F63) trên Navy 900 (#00264D)
+      const goldOnNavy = getContrast("#C49F63", "#00264D");
       expect(goldOnNavy).toBeGreaterThanOrEqual(4.5);
     });
 
@@ -133,7 +139,7 @@ describe("Phase 9: Comprehensive QA, Accessibility WCAG 2.2 AA & Responsive Qual
         fullName: "Nguyễn Văn An",
         phone: "0912345678",
         email: "nguyenvanan@gmail.com",
-        program: "quan-tri-kinh-doanh-marketing",
+        program: "ba",
         educationLevel: "tot-nghiep-thpt",
         consent: true,
       };

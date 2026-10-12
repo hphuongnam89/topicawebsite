@@ -5,8 +5,9 @@ import type { ProgramDetail } from "@/data/program-details";
 export function LearningOutcomes({ program }: { program: ProgramDetail }) {
   return (
     <section
+      id="chuan-dau-ra"
       aria-labelledby="outcomes-title"
-      className="bg-[var(--color-academic-canvas)] py-[var(--academic-section-space)]"
+      className="scroll-mt-28 bg-[var(--color-academic-canvas)] py-[var(--academic-section-space)]"
     >
       <Container>
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">

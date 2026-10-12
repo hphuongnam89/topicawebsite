@@ -7,6 +7,8 @@ import { cms } from "@/lib/cms";
 import { env } from "@/lib/env";
 import { primaryNav } from "@/data/navigation";
 import { getProgramDetail } from "@/data/program-details";
+import { PROGRAM_ID_MAP, getProgramById } from "@/data/programs";
+import { getLiveProgramDetail, isKnownProgramPath } from "@/lib/services/public-site";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -14,13 +16,7 @@ type Props = {
 
 export const revalidate = 300;
 
-const BLOCKED_SLUGS = new Set([
-  "cart",
-  "checkout",
-  "my-account",
-  "shop",
-  "classic-shop",
-]);
+const BLOCKED_SLUGS = new Set(["cart", "checkout", "my-account", "shop", "classic-shop"]);
 
 function normalizePath(path: string): string {
   return `/${path.replace(/^\/+|\/+$/g, "")}`;
@@ -38,20 +34,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const path = slug.join("/");
 
-  const program = getProgramDetail(path);
+  const mappedProgramId = PROGRAM_ID_MAP[path];
+  const program = getLiveProgramDetail(path);
+
   if (program) {
+    const canonicalUrl = `${env.NEXT_PUBLIC_SITE_URL}/${program.slug}/`;
     return {
       title: `${program.officialName} – ${program.marketingLabel}`,
       description: program.summary,
       alternates: {
-        canonical: `${env.NEXT_PUBLIC_SITE_URL}/${path}`,
+        canonical: canonicalUrl,
       },
       openGraph: {
         title: `${program.officialName} – ${program.marketingLabel}`,
         description: program.summary,
         type: "website",
         locale: "vi_VN",
-        url: `${env.NEXT_PUBLIC_SITE_URL}/${path}`,
+        url: canonicalUrl,
       },
       twitter: {
         card: "summary",
@@ -89,9 +88,22 @@ export default async function CmsRoutePage({ params }: Props) {
   }
   const path = slug.join("/");
 
+  // Redirect legacy program aliases to canonical program URL (Task R07)
+  const mappedProgramId = PROGRAM_ID_MAP[path];
+  if (isKnownProgramPath(path) && !getLiveProgramDetail(path)) notFound();
+  if (mappedProgramId) {
+    const canonicalProgram = getProgramById(mappedProgramId);
+    if (canonicalProgram && path !== canonicalProgram.slug) {
+      redirect(`/${canonicalProgram.slug}/`);
+    }
+  }
+
   // Only programs with verified academic source data use the structured landing page.
-  const program = getProgramDetail(path);
+  const program = getLiveProgramDetail(path);
   if (program) {
+    if (path !== program.slug) {
+      redirect(`/${program.slug}/`);
+    }
     return <ProgramPageView program={program} />;
   }
 

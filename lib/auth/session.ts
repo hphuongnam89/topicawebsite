@@ -2,6 +2,7 @@ import "server-only";
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { verifySessionToken, type SessionPayload, type SessionUser } from "./token";
+import { getUserById } from "@/lib/db";
 
 const SESSION_COOKIE_NAME = "topica_admin_session";
 const DEVELOPMENT_SESSION_SECRET = "development-only-session-secret-do-not-use-in-production";
@@ -9,13 +10,20 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days in seconds
 
 export type { SessionUser } from "./token";
 
-function getSessionSecret(): string {
+export function getSessionSecret(): string {
   const secret = process.env.ADMIN_SESSION_SECRET || process.env.SESSION_SECRET;
-  return secret || "topica-super-safe-production-session-secret-2026-xyz";
+  if (secret && secret.length >= 32) return secret;
+  if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
+    return DEVELOPMENT_SESSION_SECRET;
+  }
+  throw new Error("ADMIN_SESSION_SECRET phải có ít nhất 32 ký tự ở production.");
 }
 
 function signToken(data: string): string {
-  const signature = crypto.createHmac("sha256", getSessionSecret()).update(data).digest("base64url");
+  const signature = crypto
+    .createHmac("sha256", getSessionSecret())
+    .update(data)
+    .digest("base64url");
   return `${data}.${signature}`;
 }
 
@@ -64,7 +72,10 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     if (!sessionCookie?.value) return null;
 
     const payload = await verifySessionToken(sessionCookie.value, getSessionSecret());
-    return payload?.user ?? null;
+    if (!payload) return null;
+    const user = getUserById(payload.user.id);
+    if (!user || (user.role !== "admin" && user.role !== "editor")) return null;
+    return { id: user.id, username: user.username, name: user.name, role: user.role };
   } catch {
     return null;
   }

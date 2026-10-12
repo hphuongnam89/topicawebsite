@@ -1,0 +1,14 @@
+{
+  "h1Font": "beVietnamPro, \"beVietnamPro Fallback\", system-ui, -apple-system, sans-serif",
+  "h1Size": "44px",
+  "links": [
+    {
+      "href": "#chuong-trinh",
+      "text": "Xem trạng thái hồ sơ"
+    }
+  ],
+  "pageHeight": 11684,
+  "route": "/cong-nghe-thong-tin",
+  "scrollWidth": 375,
+  "width": 390
+}

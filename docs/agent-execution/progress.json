@@ -1,0 +1,1019 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-11",
+  "purpose": "Remediation plan only. Planned tasks are not completion claims.",
+  "dependency_semantics": "Task completion requires depends_on, requires_milestones and completion_requires when present. Milestone nodes have their own dependencies; R25 staging precedes QA while R25 release follows R24.",
+  "status_values": [
+    "planned",
+    "in_progress",
+    "implemented",
+    "verified",
+    "accepted",
+    "blocked",
+    "deferred"
+  ],
+  "acceptance_rule": "accepted requires relevant gates and recorded evidence; never infer phase completion from task count.",
+  "source_documents": [
+    "README.md",
+    "IMPLEMENTATION_BACKLOG.md",
+    "DESIGN_UX_SPEC.md",
+    "ACCEPTANCE_AND_EVIDENCE.md",
+    "AGENT_HANDOFF.md"
+  ],
+  "tasks": [
+    {
+      "id": "R00",
+      "title": "Baseline và báo cáo",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/overnight-2026-10-12/02-browser-baseline/SUMMARY.md",
+        "docs/evidence/overnight-2026-10-12/02-browser-baseline/results.json",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "real-chromium-baseline-captured; axe findings remain",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 Codex: T01/T03/T05 desktop/mobile baseline; audit notes added to phase0-9. Full URL/template inventory and exact source fingerprint at screenshot time incomplete; no acceptance.",
+        "12/10 final: immutable QA source fingerprint/build ID plus T01/T03/T05 Chromium baseline at 1440/390/320. Full URL/template inventory still incomplete; see 04 manifest and 08-final-ui.",
+        "12/10 evening completion: New immutable source/build and delta from morning captured; complete inventory still open."
+      ]
+    },
+    {
+      "id": "R01",
+      "title": "Cô lập DB/test/build/notification",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R00"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "__tests__/cms/cms-admin-workflows.test.ts",
+        "lib/db/index.ts",
+        "lib/services/leads.ts",
+        "scripts/backup-db.ts",
+        "docs/evidence/overnight-2026-10-12/01-storage-safety/HANDOFF.md",
+        "docs/evidence/overnight-2026-10-12/01-storage-safety/isolation-repeat.json",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-cms-isolation-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "173-tests-pass-node24",
+        "isolated-production-build-pass-node24",
+        "cms-operations-services-repeat-63-tests-twice-pass",
+        "data-upload-metadata-unchanged-during-repeat",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Isolated test DB in temp directory, stubbed live Telegram webhook notifications in test, made DB path and backup dir configurable via environment variables",
+        "12/10 Codex audit: prior verified narrowed to in_progress. Fixture/build/port/upload/notification/tsconfig isolation implemented; E2E journeys/runtime22 remain not_run. Preserve historical evidence; current logs identify tested scope.",
+        "Next generates root next-env.d.ts even with isolated distDir/tsconfig; QA points helper to its output. Build workspace copy/helper isolation still open; no claim of zero dev-workspace mutation.",
+        "12/10 final: QA workspace copy excludes env/real DB/uploads; clean environment allowlist, isolated port/storage/output, final build protected root helper/config hashes unchanged. Vitest scoped to all 27 project test files; 191 passed, 1 hardlink not_run. Node22/staging remain not_run. Supersedes earlier open helper-isolation note for this measured build only.",
+        "12/10 evening completion: User explicitly authorized out-of-sandbox build/Chromium after EPERM; isolated scratch fixture/stub and protected helpers verified. Node22 and parallel deployment not verified."
+      ]
+    },
+    {
+      "id": "R02",
+      "title": "Backup và restore",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R01"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "scripts/backup-db.ts",
+        "scripts/restore-db.ts",
+        "__tests__/operations/backup-restore.test.ts",
+        "DEPLOYMENT.md",
+        "docs/evidence/overnight-2026-10-12/01-storage-safety/HANDOFF.md",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-backup-restore-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "backup-failure-aborts-migrate-and-rollback",
+        "no-unsafe-filecopy-fallback-tested",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Implemented atomic VACUUM INTO snapshots with SHA-256 manifests, integrity checks, and safe rotation protecting pre-migration backups. Created restoreDatabase with active DB overwrite guards and isolated destination validation. Added test suite covering concurrent writes, tampered files, and safe restore.",
+        "12/10 Codex audit: prior verified narrowed. DB snapshot safety tested; media restore rehearsal, missing/invalid restore manifest handling, disk faults and measured RPO/RTO still open.",
+        "12/10 final: restore now rejects missing/invalid manifest/SHA, existing or active destination, nonempty WAL; exclusive copy and post-verification. Restore-safety fixtures verified; Windows hardlink test not_run EPERM. DB+media rehearsal, disk faults, RPO/RTO remain open.",
+        "12/10 evening completion: DB+uploads bundle/restore implemented; 4 fixture fault cases pass. Disk-full/permissions/offsite/production RPO-RTO not_run."
+      ]
+    },
+    {
+      "id": "R03",
+      "title": "Sổ nội dung chính thức",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R00"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/agent-execution/CONTENT_REGISTER.csv",
+        "docs/agent-execution/CONTENT_REGISTER.md",
+        "docs/evidence/overnight-2026-10-12/03-content-register/manifest.json",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "192-static-source-fields-inventoried; zero-confirmed",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 Codex: program/tuition/scholarship/contact/location/portal register needs_source. Official sources/reviewer/effective dates absent. Admissions/exam/documents/all imagery/CMS provenance inventory incomplete.",
+        "12/10 evening completion: User permits existing data/topicauni.edu.vn; source reconciliation D01-D08 added, CSV retained as historical inventory. No business reviewer confirmation."
+      ]
+    },
+    {
+      "id": "R04",
+      "title": "Danh tính/contact/cổng dịch vụ",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R03"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "data/campuses.ts",
+        "components/layout/Header.tsx",
+        "components/layout/Footer.tsx",
+        "components/sections/CampusSection.tsx",
+        "components/layout/FloatingActions.tsx",
+        "__tests__/journeys/learner-journeys.test.ts",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-journey-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Created structured contactChannels by role (admissions toll-free 1800 646 857, direct line 0901 795 580, admissions/general emails). Distinguished Elearning LMS portal (/he-thong/) from PXU digital library E-LIB (elib.pxu.edu.vn). Removed unverified admission lookup link from footer.",
+        "12/10 evening completion: Single live organization DTO updates contact consumers; managed archive neutralizes fallback. Source conflicts hotline roles/Da Nang address remain; previous verified scope was technical only."
+      ]
+    },
+    {
+      "id": "R05",
+      "title": "Hợp đồng chương trình/học phí",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R03"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "data/programs.ts",
+        "data/tuition.ts",
+        "app/(main)/design-system/page.tsx",
+        "components/tuition/TuitionHub.tsx",
+        "components/admission/AdmissionHub.tsx",
+        "__tests__/data/tuition-contract.test.ts",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-tuition-contract-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Defined stable ProgramId ('ba', 'tourism', 'it', 'english', 'chinese') and target audience schemas ('thpt', 'trung_cap', 'cao_dang', 'van_bang_2'). Corrected degree awarding terminology to 'Bằng Cử nhân do Trường Đại học Phú Xuân cấp' across UI and data contracts. Implemented calculateProgramTuition() with strict rejection of unverified cohorts (zero silent fallback).",
+        "12/10 evening completion: Source-backed fees/scholarships corrected, unsupported commitments removed; duration/126-credit/cohort facts still need review. Previous technical verified is not whole business-contract verification."
+      ]
+    },
+    {
+      "id": "R06",
+      "title": "Tài liệu/HTML/metadata",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R02",
+        "R03"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "lib/cms/html.ts",
+        "lib/cms/queries.ts",
+        "components/ui/DocumentCard.tsx",
+        "docs/agent-execution/document-manifest.json",
+        "__tests__/cms/html.test.ts",
+        "__tests__/components/DocumentCard.test.tsx",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-html-pass",
+        "vitest-document-card-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Inventoried physical and web documents in document-manifest.json with verified bytes and SHA-256 hashes. Enhanced DocumentCard to use Next.js Link for internal route view, eliminated fake '#' download links and fake sizes, and handled missing downloads with 'Bản số đang cập nhật'. Hardened HTML sanitization against XSS payloads and ensured zero leftover &#038; or &amp; in excerpts and SEO metadata.",
+        "12/10 evening completion: Fake download claims/default testimonials removed; document schema gates public records. Real file/MIME/bytes/rights inventory not complete, so previous technical verified is narrowed."
+      ]
+    },
+    {
+      "id": "R07",
+      "title": "IA/route/journey",
+      "priority": "P1",
+      "status": "verified",
+      "depends_on": [
+        "R04",
+        "R05"
+      ],
+      "owner": "antigravity",
+      "reviewer": null,
+      "source_version": "head",
+      "evidence": [
+        "docs/agent-execution/route-manifest.json",
+        "docs/agent-execution/ROUTE_MAP_AND_JOURNEYS.md",
+        "next.config.ts",
+        "app/(main)/[...slug]/page.tsx",
+        "app/not-found.tsx",
+        "__tests__/journeys/route-map-and-journeys.test.ts"
+      ],
+      "checks": [
+        "vitest-route-journeys-pass",
+        "typecheck-pass",
+        "lint-pass"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Defined complete route manifest and IA for 6 learner decision journeys. Enforced canonical program URLs at root level, established permanent redirects (308) for legacy and nested program paths, and verified zero dead ends across navigation."
+      ]
+    },
+    {
+      "id": "R08",
+      "title": "Concept/thiết kế/prototype",
+      "priority": "P1",
+      "status": "planned",
+      "depends_on": [
+        "R07"
+      ],
+      "owner": null,
+      "reviewer": null,
+      "source_version": null,
+      "evidence": [],
+      "checks": [],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": []
+    },
+    {
+      "id": "R09",
+      "title": "Token/component states",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R08"
+      ],
+      "owner": "antigravity",
+      "reviewer": null,
+      "source_version": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc + dirty; 04-restore-workspace/source-manifest.json; UI immutable copy fingerprint afe7e3333ca2fdcb3fbf0a2c74242e072b41fd678854f7cb6a784364b1abe50a",
+      "evidence": [
+        "app/design-tokens.css",
+        "app/theme.css",
+        "__tests__/qa/a11y-responsive-quality.test.ts",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md"
+      ],
+      "checks": [
+        "vitest-contrast-pass",
+        "typecheck-pass",
+        "lint-pass"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Added full neutral academic ink scale (ink-0 through ink-950) and line tokens (line-50) resolving undefined text-ink-900 / line-50. Preserved brand-* as aliases to Gold academic accent, adjusted gold-700 to #946727 for WCAG AA compliance (4.88:1), and verified token contrast in Vitest.",
+        "12/10 audit: prior verified narrowed to in_progress. Custom text sizes confused Tailwind merge and dropped CTA navy color; regression fixed/tested. Ink/success contrast fixed. T01/T03/T05 nine axe checks zero violations; token consolidation/design concept/full states remain open."
+      ]
+    },
+    {
+      "id": "R10",
+      "title": "Shell/menu/sticky",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R09",
+        "R04"
+      ],
+      "owner": "antigravity",
+      "reviewer": null,
+      "source_version": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc + dirty; 04-restore-workspace/source-manifest.json; UI immutable copy fingerprint afe7e3333ca2fdcb3fbf0a2c74242e072b41fd678854f7cb6a784364b1abe50a",
+      "evidence": [
+        "components/layout/Header.tsx",
+        "components/layout/MobileNav.tsx",
+        "components/layout/MobileStickyBar.tsx",
+        "components/layout/Footer.tsx",
+        "app/globals.css",
+        "__tests__/components/MobileNavAndShell.test.tsx",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md"
+      ],
+      "checks": [
+        "vitest-mobilenav-shell-pass",
+        "typecheck-pass",
+        "lint-pass"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Enforced body scroll lock and robust Tab/Shift+Tab focus trap in MobileNav dialog",
+        "Integrated escape key handler, backdrop dismissal, and accordion menu expansion",
+        "Configured scroll-padding-top (5.5rem) on html element for fixed header anchor offsets",
+        "Added safe-area padding clearance in Footer to prevent MobileStickyBar overlapping content",
+        "Updated MobileStickyBar to auto-hide during form/input focus to preserve keyboard accessibility",
+        "12/10 audit: prior verified narrowed to in_progress. Header target/spacing and program sticky clipping at 320 corrected; 320/390 text bounds and >=44px targets tested. Menu 18 Tab steps/Escape and open-menu axe passed. Safari/real mobile keyboard/full shell matrix not_run."
+      ]
+    },
+    {
+      "id": "R11",
+      "title": "Trang chủ",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R10",
+        "R05",
+        "R06",
+        "R16"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "app/(main)/page.tsx",
+        "components/sections/HeroSection.tsx",
+        "components/sections/AdmissionTimeline.tsx",
+        "components/sections/ProgramsSection.tsx",
+        "components/sections/TrustSection.tsx",
+        "components/sections/WhyTopicaSection.tsx",
+        "components/sections/CampusSection.tsx",
+        "components/sections/NewsPreview.tsx",
+        "lib/cms/queries.ts",
+        "__tests__/components/Homepage.test.tsx",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-homepage-sections-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Implemented full T01 homepage hierarchy: Hero with transparent human-revealing overlay & embedded LeadForm",
+        "Standardized 5-step AdmissionTimeline roadmap without fake urgency countdown timers",
+        "Integrated ProgramsSection for all 5 verified bachelor majors awarded by Trường Đại học Phú Xuân",
+        "Standardized TrustSection with provenance URLs and WhyTopicaSection with truthful commitment statements",
+        "Bound unified contact channels across 6 verified campus locations in CampusSection",
+        "12/10 audit: prior verified narrowed to in_progress. Hero CTA wrapping/contrast corrected; real Chromium 1440/390/320 evidence. Business claims, R08 concept/research and long hero form remain unapproved.",
+        "12/10 evening completion: Hero image/message split, lower short form and neutral current admissions state; actual desktop/mobile screenshots reviewed, no research/design approval."
+      ]
+    },
+    {
+      "id": "R12",
+      "title": "Danh mục và 5 ngành",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R10",
+        "R05",
+        "R16"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "app/(main)/nganh-dao-tao/page.tsx",
+        "app/(main)/[...slug]/page.tsx",
+        "components/cms/ProgramPageView.tsx",
+        "data/programs.ts",
+        "data/program-details.ts",
+        "__tests__/components/ProgramPages.test.tsx",
+        "__tests__/data/program-details.test.ts",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-program-pages-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Delivered T02 Directory Hub (/nganh-dao-tao/) with Phú Xuân degree legal notice and 5 official bachelor majors",
+        "Verified all 5 canonical T03 program pages with 126 credits, 9 semesters roadmap, career outcomes, and FAQ",
+        "Bound consistent tuition, awarding institution, and curriculum data matching the academic contract",
+        "Embedded Course, EducationalOccupationalProgram, and BreadcrumbList JSON-LD schemas",
+        "12/10 audit: prior verified narrowed to in_progress. Quick facts dl semantics and sticky labels fixed; only IT program browser sample inspected, not all five content/route states. R03/R05 approvals open.",
+        "12/10 evening completion: Live program directory/detail mapping, stable IDs and archive suppression tested; actual curriculum/track facts still need confirmation."
+      ]
+    },
+    {
+      "id": "R13",
+      "title": "Tuyển sinh/học phí",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R10",
+        "R05",
+        "R06",
+        "R16"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "components/tuition/TuitionHub.tsx",
+        "components/admission/AdmissionHub.tsx",
+        "data/tuition.ts",
+        "data/admissions.ts",
+        "__tests__/components/TuitionAndAdmissionHub.test.tsx",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-tuition-admission-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Delivered dedicated responsive mobile cards for all 5 tuition programs eliminating horizontal scroll on 320-390px screens",
+        "Provided transparent fee breakdown: 600.000đ/credit, 9 semesters, 126 credits, and 75.600.000đ total tuition",
+        "Documented one-time admission fees, financial commitments, and 30% Talent scholarship with criteria",
+        "Replaced dummy download links with internal view routes and verified AdmissionHub rendering",
+        "12/10 audit: prior verified narrowed to in_progress. Scholarship badge contrast corrected and T05 browser checked at three widths. Tuition/scholarship amounts remain needs_source, not officially confirmed.",
+        "12/10 evening completion: Tuition/admission consumes effective CMS DTO; neutral missing round/docs; official source reconciliation applied, business gate open."
+      ]
+    },
+    {
+      "id": "R14",
+      "title": "Nội dung/search/hỗ trợ",
+      "priority": "P1",
+      "status": "verified",
+      "depends_on": [
+        "R10",
+        "R06",
+        "R07"
+      ],
+      "owner": "antigravity",
+      "reviewer": null,
+      "source_version": "head",
+      "evidence": [
+        "app/not-found.tsx",
+        "app/(main)/tim-kiem/page.tsx",
+        "components/search/SearchForm.tsx",
+        "components/cms/CmsPageView.tsx",
+        "app/robots.ts",
+        "app/sitemap.ts",
+        "__tests__/components/ContentPagesAndSearch.test.tsx"
+      ],
+      "checks": [
+        "vitest-content-search-pass",
+        "typecheck-pass",
+        "lint-pass"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Configured accessible 404 page with integrated SearchForm and 5 recommended program cards",
+        "Enhanced SearchForm with role=search and noindex robots meta for search results",
+        "Protected robots.txt disallowing /api/ and /admin/ crawling",
+        "Verified sitemap.ts excludes blocked routes (cart/checkout/shop) and unpublished draft pages",
+        "Standardized CmsPageView template with graceful empty states and verified credential samples"
+      ]
+    },
+    {
+      "id": "R15",
+      "title": "Form và lead API",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R01",
+        "R10",
+        "R16"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "components/forms/LeadForm.tsx",
+        "lib/form-schema.ts",
+        "app/api/public/lead/route.ts",
+        "lib/services/leads.ts",
+        "lib/db/index.ts",
+        "__tests__/services/lead-idempotency-contract.test.ts",
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-lead-idempotency-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Implemented idempotent lead submission with unique idempotency keys and TTL deduplication window",
+        "Stored consent timestamp, policy version (2026.1), and sanitized source URL in database",
+        "Enforced rate limiting and masked PII logging (phone/email masked in production and logs)",
+        "Decoupled notification dispatch to prevent double submission when notification channels fail",
+        "12/10 audit: prior verified narrowed to in_progress. Fixture browser validated empty errors, 503 preservation, actual API success/one synthetic DB row with notifications stubbed. Required email/education and missing undecided-program option still conflict with spec; unverified 24h promise remains. This is technical state evidence, not acceptance.",
+        "12/10 evening completion: Browser real fixture submit/retry/dedupe/consent/rate/body/error focus pass; optional schema and server success event aligned. Process-local limit and notification outbox/status remain."
+      ]
+    },
+    {
+      "id": "R16",
+      "title": "Model CMS/migration",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R01",
+        "R02",
+        "R03",
+        "R05",
+        "R07"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "lib/db/types.ts",
+        "lib/validation/cms-schemas.ts",
+        "lib/date.ts",
+        "lib/db/migrations/types.ts",
+        "lib/db/migrations/001_core_legacy_baseline.ts",
+        "lib/db/migrations/002_cms_domain_models.ts",
+        "lib/db/migrations/003_seed_verified_domain_data.ts",
+        "lib/db/migrations/runner.ts",
+        "lib/services/cms-models.ts",
+        "scripts/migrate-db.ts",
+        "__tests__/cms/cms-models-migration.test.ts",
+        "docs/evidence/overnight-2026-10-12/01-storage-safety/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "vitest-cms-models-migration-pass",
+        "typecheck-pass",
+        "lint-pass",
+        "migration-cli-safety-and-transaction-fixtures-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Defined complete Section 2 domain models: organizations, programs, admission_rounds, tuition_policies, scholarships, documents, content_revisions, audit_logs, analytics_events",
+        "Enforced strict Zod validation on major codes, positive integer VND tuition, half-open date intervals, and PII-free analytics metadata",
+        "Implemented versioned, transactional, and dry-run migration runner with pre-migration backup integration and rollback down to target version",
+        "Created content_revisions separating draft revisions from published live entities, ensuring public DTOs never leak drafts, reviewer notes, or internal metadata",
+        "Added 18 comprehensive integration tests in __tests__/cms/cms-models-migration.test.ts verifying clean migration, idempotency, transaction rollback on failure, backup restore, and workflow transitions",
+        "12/10 Codex audit: prior verified narrowed. Reads do not migrate; mandatory actual-connection backup; seed003 no-op; no default admin password. Legacy seeded records not deleted. Public revisions/effective dates, provenance and source-content checksum remain open.",
+        "12/10 evening completion: Revision/publication/domain DTO integration tested with fixtures, legacy mutations gated; real legacy import dry-run/review not_run."
+      ]
+    },
+    {
+      "id": "R17",
+      "title": "Workflow/quyền/preview",
+      "priority": "P1",
+      "status": "verified",
+      "depends_on": [
+        "R16"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Technical default editor/admin matrix, negative APIs, fresh role checks, CAS/audit rollback and private five-minute preview tested; actual browser workflow passes. Business matrix/UAT still unaccepted."
+      ]
+    },
+    {
+      "id": "R18",
+      "title": "Lịch/hết hạn/cache",
+      "priority": "P1",
+      "status": "implemented",
+      "depends_on": [
+        "R17"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: UTC [start,end), no resurrection and warm localhost publication/expiry tested (+531/+521ms); production staging timing/day-end convention not confirmed."
+      ]
+    },
+    {
+      "id": "R19",
+      "title": "CMS UX/media",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R17",
+        "R09"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Domain workbench, load by ID, version conflict handling, draft/preview/review/schedule and responsive drawer added; mobile browser/axe pass. JSON auxiliary fields, domain preview, media/dashboard and five-task UAT remain."
+      ]
+    },
+    {
+      "id": "R20",
+      "title": "Nghiên cứu người dùng",
+      "priority": "P1",
+      "status": "planned",
+      "depends_on": [
+        "R08"
+      ],
+      "owner": null,
+      "reviewer": null,
+      "source_version": null,
+      "evidence": [],
+      "checks": [],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": []
+    },
+    {
+      "id": "R21",
+      "title": "Integration/dữ liệu/route",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Effective public/search/category/sitemap/program/tuition/contact consumers integrated; archive suppresses fallback, sitemap beyond100 regression tested. Real data migration/cross-page content review remains."
+      ]
+    },
+    {
+      "id": "R22",
+      "title": "QA automation",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R01",
+        "R21"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "scripts/test-lighthouse.ts",
+        "scripts/test-links.ts",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "typecheck-pass",
+        "lint-pass",
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "Removed hardcoded fake Lighthouse scores (96, 98, 96, 100) from test-lighthouse.ts and replaced with honest measured HTTP benchmarks. Enhanced test-links.ts to follow redirects up to 5 hops, verify 200 OK destination status, and classify external URLs.",
+        "12/10 evening completion: 33 test files/216 pass/1 not_run hardlink; actual Chromium workflow and 36 UI/axe scans, failures-before/fixes-after retained. Full crawl/CI/performance remains."
+      ]
+    },
+    {
+      "id": "R23",
+      "title": "UI/accessibility/performance",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R22"
+      ],
+      "requires_milestones": [
+        "R25:staging_ready"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 partial local fixture evidence: nine Chromium axe scans with zero violations plus mobile menu/form/sticky states. Full WCAG, browser/device coverage, Lighthouse and staging milestone remain not_run. Keep planned; not staging QA acceptance.",
+        "12/10 evening completion: Nine template x four viewport actual scans plus CMS mobile axe have zero violations in selected tags; reviewed screenshots and fixed nav/mobile/contrast defects. T06/T07/T09, real devices and Lighthouse/CWV not_run."
+      ]
+    },
+    {
+      "id": "R24",
+      "title": "QA/UAT/release candidate",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R20",
+        "R21",
+        "R23",
+        "R27"
+      ],
+      "requires_milestones": [
+        "R25:staging_ready"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Local production-build regression package exists, no P0/P1 observed in tested scenarios after fixes. Staging/reviewer/manual full matrix and UAT not_run; no release candidate acceptance."
+      ]
+    },
+    {
+      "id": "R25",
+      "title": "Staging/release/rollback",
+      "priority": "P1",
+      "status": "planned",
+      "depends_on": [
+        "R02",
+        "R21",
+        "R27"
+      ],
+      "completion_requires": [
+        "R25:release_complete"
+      ],
+      "milestones": [
+        {
+          "id": "staging_ready",
+          "status": "planned",
+          "depends_on": [
+            "R02",
+            "R21",
+            "R27"
+          ],
+          "evidence": [],
+          "accepted_at": null
+        },
+        {
+          "id": "release_complete",
+          "status": "planned",
+          "depends_on": [
+            "R24",
+            "R25:staging_ready"
+          ],
+          "evidence": [],
+          "accepted_at": null
+        }
+      ],
+      "owner": null,
+      "reviewer": null,
+      "source_version": null,
+      "evidence": [],
+      "checks": [],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": []
+    },
+    {
+      "id": "R26",
+      "title": "Bàn giao/vận hành",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R19",
+        "R25"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: CMS.md corrected from WordPress to SQLite; storage and analytics contracts/handoff delivered. Named operator training/production rehearsal not_run."
+      ]
+    },
+    {
+      "id": "R27",
+      "title": "Analytics trước phát hành",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R15",
+        "R21"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Safe route/metadata events and server-only persisted form success verified, no raw search/PII. Form-start/error/download/session/bot/denominator/dashboard incomplete; no funnel claim."
+      ]
+    },
+    {
+      "id": "R28",
+      "title": "Đo lường 30 ngày thật",
+      "priority": "P2",
+      "status": "planned",
+      "depends_on": [
+        "R25",
+        "R26",
+        "R27"
+      ],
+      "owner": null,
+      "reviewer": null,
+      "source_version": null,
+      "evidence": [],
+      "checks": [],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": []
+    },
+    {
+      "id": "R29",
+      "title": "Đóng phase/bàn giao cuối",
+      "priority": "P1",
+      "status": "in_progress",
+      "depends_on": [
+        "R00",
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19",
+        "R20",
+        "R21",
+        "R22",
+        "R23",
+        "R24",
+        "R25",
+        "R26",
+        "R27",
+        "R28"
+      ],
+      "owner": "Codex",
+      "reviewer": null,
+      "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
+      "evidence": [
+        "docs/evidence/completion-2026-10-12/HANDOFF.md",
+        "docs/evidence/completion-2026-10-12/final-build-manifest.json"
+      ],
+      "checks": [
+        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
+      ],
+      "blockers": [],
+      "accepted_at": null,
+      "notes": [
+        "12/10 evening completion: Evening report/evidence and sequential progress reconciled; no accepted task/whole-project completion claim."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+
+> topica-edu@0.1.0 test
+> vitest run --maxWorkers=2 __tests__/components/LeadForm.test.tsx __tests__/components/Homepage.test.tsx __tests__/services/lead-idempotency-contract.test.ts
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.11 C:/Users/Hp/Downloads/topica/topica/topica-edu
+
+ ❯ __tests__/services/lead-idempotency-contract.test.ts (0 test)
+ ❯ __tests__/components/Homepage.test.tsx (0 test)
+ ❯ __tests__/components/LeadForm.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  __tests__/components/Homepage.test.tsx [ __tests__/components/Homepage.test.tsx ]
+ FAIL  __tests__/services/lead-idempotency-contract.test.ts [ __tests__/services/lead-idempotency-contract.test.ts ]
+Error: EPERM: operation not permitted, rename 'C:\Users\Hp\AppData\Local\Packages\sandbox.{0ebc7fc0-1f88-4259-a492-8951b65b605c}\AC\Temp\wg0YnXs5vCytT10MFQbi9\client\.tmp-1791803605069-9r4xz05j1e' -> 'C:\Users\Hp\AppData\Local\Packages\sandbox.{0ebc7fc0-1f88-4259-a492-8951b65b605c}\AC\Temp\wg0YnXs5vCytT10MFQbi9\client\9593e14e2ff094f82e9cdc6e3453de146a7ce0df'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  __tests__/components/LeadForm.test.tsx [ __tests__/components/LeadForm.test.tsx ]
+Error: EPERM: operation not permitted, rename 'C:\Users\Hp\AppData\Local\Packages\sandbox.{0ebc7fc0-1f88-4259-a492-8951b65b605c}\AC\Temp\wg0YnXs5vCytT10MFQbi9\client\.tmp-1791803606182-z425f2iiiuo' -> 'C:\Users\Hp\AppData\Local\Packages\sandbox.{0ebc7fc0-1f88-4259-a492-8951b65b605c}\AC\Temp\wg0YnXs5vCytT10MFQbi9\client\9593e14e2ff094f82e9cdc6e3453de146a7ce0df'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  no tests
+   Start at  18:13:11
+   Duration  14.50s (transform 0ms, setup 0ms, import 0ms, tests 0ms, environment 26.43s)
+

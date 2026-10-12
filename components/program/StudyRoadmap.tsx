@@ -9,8 +9,9 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
 
   return (
     <section
+      id="lo-trinh-hoc-tap"
       aria-labelledby="roadmap-title"
-      className="bg-[var(--color-academic-paper)] py-[var(--academic-section-space)]"
+      className="scroll-mt-28 bg-[var(--color-academic-paper)] py-[var(--academic-section-space)]"
     >
       <Container>
         <div className="grid gap-5 border-b border-[var(--color-academic-rule-strong)] pb-8 md:grid-cols-2 md:items-end">

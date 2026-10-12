@@ -1,0 +1,20 @@
+
+> topica-edu@0.1.0 lint
+> eslint .
+
+
+C:\Users\Hp\Downloads\topica\topica\topica-edu\docs\evidence\completion-2026-10-12\02-browser\browser-check.cjs
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:25  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  7:24  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Hp\Downloads\topica\topica\topica-edu\docs\evidence\completion-2026-10-12\02-browser\resume-qa.cjs
+  2:10   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:34   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:62   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:103  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 8 problems (8 errors, 0 warnings)
+
+exit_code=1

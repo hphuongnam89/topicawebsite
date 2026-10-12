@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Lora } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { env } from "@/lib/env";
 
-const beVietnamPro = Be_Vietnam_Pro({
-  subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
+const beVietnamPro = localFont({
+  src: [
+    { path: "./fonts/BeVietnamPro-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/BeVietnamPro-Medium.ttf", weight: "500", style: "normal" },
+    { path: "./fonts/BeVietnamPro-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "./fonts/BeVietnamPro-Bold.ttf", weight: "700", style: "normal" },
+  ],
   display: "swap",
   variable: "--font-be-vietnam-pro",
 });
 
-const lora = Lora({
-  subsets: ["latin", "vietnamese"],
+const lora = localFont({
+  src: "./fonts/Lora-Variable.ttf",
+  weight: "400 700",
   display: "swap",
   variable: "--font-lora",
 });

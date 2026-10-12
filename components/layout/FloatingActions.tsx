@@ -2,16 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { Mail, Phone, ChevronUp } from "lucide-react";
-import { contactInfo } from "@/data/campuses";
+import { contactChannels as defaultChannels } from "@/data/campuses";
+import type { ContactChannels } from "@/lib/services/public-site";
 import { cn } from "@/components/ui/cn";
 
-export function FloatingActions() {
+export function FloatingActions({
+  channels: contactChannels = defaultChannels,
+}: { channels?: ContactChannels } = {}) {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setShowTopBtn(window.scrollY > 400);
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -23,13 +27,14 @@ export function FloatingActions() {
   return (
     <div
       data-floating-actions
-      className="fixed right-6 bottom-6 z-50 hidden flex-col items-center gap-4 lg:flex"
+      className="fixed bottom-6 right-6 z-40 hidden flex-col items-center gap-3 transition-[bottom] duration-200 lg:flex"
     >
       {/* Mail */}
       <a
-        href={`mailto:${contactInfo.email}`}
-        aria-label="Gửi email"
-        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-service-mail)] text-white shadow-lg transition-[opacity,transform] hover:opacity-90 active:translate-y-px"
+        href={contactChannels.admissionsEmail.href}
+        aria-label={`Gửi email tư vấn tuyển sinh (${contactChannels.admissionsEmail.value})`}
+        title={`Email tuyển sinh: ${contactChannels.admissionsEmail.value}`}
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-line-200 bg-white text-navy-800 shadow-card transition-all hover:border-navy-400 hover:shadow-card-hover active:translate-y-px"
       >
         <Mail className="relative z-10 h-5 w-5" />
       </a>
@@ -40,11 +45,11 @@ export function FloatingActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Facebook Messenger"
-        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-service-messenger)] text-white shadow-lg transition-[opacity,transform] hover:opacity-90 active:translate-y-px"
+        title="Nhắn tin qua Facebook Messenger"
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-line-200 bg-white text-navy-800 shadow-card transition-all hover:border-navy-400 hover:shadow-card-hover active:translate-y-px"
       >
         <svg
-          className="relative z-10 h-5 w-5"
-          fill="currentColor"
+          className="relative z-10 h-5 w-5 fill-current"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -52,11 +57,12 @@ export function FloatingActions() {
         </svg>
       </a>
 
-      {/* Phone */}
+      {/* Phone (Primary Hotline) */}
       <a
-        href={`tel:${contactInfo.phone.replace(/\./g, "")}`}
-        aria-label="Gọi điện thoại"
-        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-service-phone)] text-white shadow-lg transition-[opacity,transform] hover:opacity-90 active:translate-y-px"
+        href={contactChannels.admissionsHotline.href}
+        aria-label={`Gọi hotline tư vấn (${contactChannels.admissionsHotline.value})`}
+        title={`Hotline tư vấn: ${contactChannels.admissionsHotline.value}`}
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-gold-400 bg-navy-900 text-gold-400 shadow-card transition-all hover:border-gold-300 hover:bg-navy-800 hover:shadow-card-hover active:translate-y-px"
       >
         <Phone className="relative z-10 h-5 w-5" />
       </a>
@@ -66,7 +72,7 @@ export function FloatingActions() {
         onClick={scrollToTop}
         aria-label="Trở về đầu trang"
         className={cn(
-          "mt-2 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold-500 bg-white text-gold-600 shadow-md transition-[color,background-color,transform,opacity] hover:bg-gold-50 hover:text-navy-900 active:translate-y-px",
+          "mt-1 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold-500 bg-white text-gold-600 shadow-md transition-[color,background-color,transform,opacity] hover:bg-gold-50 hover:text-navy-900 active:translate-y-px",
           showTopBtn ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-8 opacity-0",
         )}
       >

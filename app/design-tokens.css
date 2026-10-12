@@ -32,7 +32,7 @@
   --color-gold-950: #422f14;
   --color-gold-900: #6b4f28;
   --color-gold-800: #8a6226;
-  --color-gold-700: #9a6f33;  /* Dark gold for text on light bg - AA compliant */
+  --color-gold-700: #946727;  /* Dark gold for text on light bg - WCAG AA compliant (4.88:1) */
   --color-gold-600: #a97d3d;
   --color-gold-500: #b78744;  /* Brand gold from logo */
   --color-gold-400: #c49f63;
@@ -52,17 +52,26 @@
   --color-cream: #fbf8f3;
 
   /* ============================================
-     TEXT & INK
+     TEXT & INK (Neutral Academic Palette)
      ============================================ */
-  --color-ink-950: #11100e;
-  --color-ink-800: #292620;
-  --color-ink-body: #243447;  /* High-legibility body ink for long texts */
+  --color-ink-950: #11100e;  /* Deepest contrast heading ink */
+  --color-ink-900: #1c1a17;  /* High-emphasis text & dark UI */
+  --color-ink-800: #292620;  /* Standard title/body contrast */
+  --color-ink-700: #3d3a33;  /* Secondary strong text */
   --color-ink-600: #625e58;  /* Muted secondary descriptions */
+  --color-ink-500: #6b665f;  /* Captions with contrast on paper */
   --color-ink-400: #8996a0;  /* Placeholders & hairline borders */
+  --color-ink-300: #b5b0a7;  /* Inactive & disabled text */
+  --color-ink-200: #ddd8cf;  /* Very soft divider ink */
+  --color-ink-100: #ece8e1;  /* Light tint background */
+  --color-ink-50: #f7f5f1;   /* Paper tint ink */
+  --color-ink-0: #ffffff;    /* Reverse pure white ink */
+  --color-ink-body: #243447; /* High-legibility body ink for long texts */
 
   /* ============================================
      DIVIDERS & LINES
      ============================================ */
+  --color-line-50: #f4f1eb;
   --color-line-100: #ece8e1;
   --color-line-200: #ddd8cf;
   --color-line-300: #c8c3ba;
@@ -80,7 +89,7 @@
   --color-accent-light: #f6eddd;
 
   --color-info: #16466b;
-  --color-success: #15803d;
+  --color-success: #166534;
   --color-warning: #b45309;
   --color-error: #b91c1c;
 

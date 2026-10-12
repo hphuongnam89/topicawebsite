@@ -196,7 +196,7 @@ export default function DesignSystemPage() {
                 <Badge variant="brand">Topica Uni</Badge>
                 <Badge variant="success">Học bổng 30%</Badge>
                 <Badge variant="warning">Hạn nộp 30/10</Badge>
-                <Badge variant="outline">Cử nhân chính quy</Badge>
+                <Badge variant="outline">Bằng Cử nhân PXU</Badge>
               </div>
             </div>
           </div>
@@ -379,17 +379,13 @@ export default function DesignSystemPage() {
               title="Thông tư 27/2019/TT-BGDĐT quy định về nội dung chính ghi trên văn bằng và phụ lục văn bằng"
               type="Quy định pháp lý"
               date="Ban hành: 30/12/2019"
-              fileSize="1.8 MB PDF"
               viewUrl="/chat-luong-dao-tao/"
-              downloadUrl="#"
             />
             <DocumentCard
               title="Quyết định ban hành Đề án tuyển sinh Đại học từ xa năm 2026 - Trường Đại học Phú Xuân"
               type="Đề án tuyển sinh"
               date="Ban hành: 15/01/2026"
-              fileSize="3.2 MB PDF"
               viewUrl="/tuyen-sinh/"
-              downloadUrl="#"
             />
           </div>
         </section>

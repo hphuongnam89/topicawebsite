@@ -1,3 +1,5 @@
+import { MapPin } from "lucide-react";
+
 const facilities = [
   [
     "TP. Hồ Chí Minh",
@@ -28,10 +30,10 @@ export function FacilitiesDirectory() {
         {facilities.map(([city, address]) => (
           <article
             key={city}
-            className="rounded-xl border border-line-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            className="rounded-xl border border-line-200 bg-white p-6 shadow-sm transition-all hover:border-gold-400 hover:shadow-md"
           >
-            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-brand-100 text-xl text-brand-700">
-              ◉
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-navy-50 text-navy-800 border border-navy-100">
+              <MapPin className="h-5 w-5" aria-hidden="true" />
             </div>
             <h2 className="font-display text-xl font-semibold text-ink-950">{city}</h2>
             <p className="mt-3 font-sans text-body text-ink-700">{address}</p>

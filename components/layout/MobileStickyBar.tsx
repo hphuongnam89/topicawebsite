@@ -13,12 +13,43 @@ export function MobileStickyBar() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let isInputFocused = false;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        isInputFocused = true;
+        setVisible(false);
+      }
+    };
+
+    const handleFocusOut = () => {
+      isInputFocused = false;
       setVisible(window.scrollY > 300);
     };
+
+    const handleScroll = () => {
+      if (!isInputFocused) {
+        setVisible(window.scrollY > 300);
+      }
+    };
+
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    document.addEventListener("focusin", handleFocusIn);
+    document.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("focusin", handleFocusIn);
+      document.removeEventListener("focusout", handleFocusOut);
+    };
   }, []);
 
   return (
@@ -33,9 +64,9 @@ export function MobileStickyBar() {
       <div className="flex items-center gap-3 px-4 py-3">
         <ButtonLink
           href="/lien-he/"
-          variant="outline"
+          variant="secondary"
           size="default"
-          className="flex-1 min-h-[44px]"
+          className="flex-1 min-h-[44px] font-semibold"
         >
           Nhận tư vấn
         </ButtonLink>

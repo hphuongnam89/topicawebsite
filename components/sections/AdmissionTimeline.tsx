@@ -15,7 +15,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function AdmissionTimeline() {
   return (
-    <section className="bg-paper py-16 lg:py-24" aria-labelledby="admission-timeline-title">
+    <section
+      id="quy-trinh-tuyen-sinh"
+      className="scroll-mt-20 bg-paper py-16 lg:py-24"
+      aria-labelledby="admission-timeline-title"
+    >
       <Container>
         <SectionHeading
           id="admission-timeline-title"
@@ -73,15 +77,24 @@ export function AdmissionTimeline() {
           <p className="text-body-sm font-semibold text-navy-900">
             Sẵn sàng bắt đầu lộ trình của bạn?
           </p>
-          <ButtonLink
-            href="https://www.tuyensinh.topicauni.edu.vn/"
-            external
-            variant="primary"
-            size="lg"
-            className="mt-4"
-          >
-            Đăng ký xét tuyển
-          </ButtonLink>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            <ButtonLink
+              href="https://www.tuyensinh.topicauni.edu.vn/"
+              external
+              variant="primary"
+              size="lg"
+            >
+              Đăng ký xét tuyển
+            </ButtonLink>
+            <ButtonLink
+              href="/tuyen-sinh/hoc-phi-hoc-bong/"
+              variant="secondary"
+              size="lg"
+              className="border-navy-200 bg-white text-navy-900 hover:bg-navy-50"
+            >
+              Tra cứu học phí & học bổng
+            </ButtonLink>
+          </div>
         </div>
       </Container>
     </section>

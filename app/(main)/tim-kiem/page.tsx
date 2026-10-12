@@ -38,7 +38,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <Suspense
           fallback={
             <div className="flex justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-brand-500" />
+              <Loader2 className="h-8 w-8 animate-spin text-gold-500" />
             </div>
           }
         >
@@ -62,7 +62,7 @@ async function SearchResults({ query, page }: { query?: string; page: number }) 
               <Link
                 key={term}
                 href={`/tim-kiem?q=${encodeURIComponent(term)}`}
-                className="rounded-full border border-line-200 bg-paper px-4 py-2 text-body-sm font-medium text-ink-800 transition-colors hover:border-brand-500 hover:text-brand-700"
+                className="rounded-full border border-line-200 bg-paper px-4 py-2 text-body-sm font-medium text-ink-800 transition-colors hover:border-gold-500 hover:text-navy-900"
               >
                 {term}
               </Link>

@@ -3,6 +3,7 @@ import { CurriculumExplorer } from "@/components/program/CurriculumExplorer";
 import { LearningOutcomes } from "@/components/program/LearningOutcomes";
 import { PendingAcademicSections } from "@/components/program/PendingAcademicSections";
 import { ProgramHero } from "@/components/program/ProgramHero";
+import { ProgramInPageNav } from "@/components/program/ProgramInPageNav";
 import { ProgramQuickFacts } from "@/components/program/ProgramQuickFacts";
 import { ProgramStickyBar } from "@/components/program/ProgramStickyBar";
 import { StudyRoadmap } from "@/components/program/StudyRoadmap";
@@ -85,6 +86,7 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       <JsonLd data={courseSchema} />
       <JsonLd data={breadcrumbSchema} />
       <ProgramHero program={program} />
+      <ProgramInPageNav program={program} />
       <ProgramQuickFacts program={program} />
       {hasCurriculum ? (
         <CurriculumExplorer program={program} />
@@ -95,8 +97,9 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       {hasOutcomes && <LearningOutcomes program={program} />}
 
       <section
+        id="co-hoi-nghe-nghiep"
         aria-labelledby="career-title"
-        className="bg-[var(--color-academic-ink)] py-[var(--academic-section-space)] text-[var(--color-academic-on-accent)]"
+        className="scroll-mt-28 bg-[var(--color-academic-ink)] py-[var(--academic-section-space)] text-[var(--color-academic-on-accent)]"
       >
         <Container>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
@@ -146,8 +149,9 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
 
       {hasAdmissions && (
         <section
+          id="dieu-kien-tuyen-sinh"
           aria-labelledby="admissions-title"
-          className="bg-[var(--color-academic-paper)] py-[var(--academic-section-space)]"
+          className="scroll-mt-28 bg-[var(--color-academic-paper)] py-[var(--academic-section-space)]"
         >
           <Container>
             <div className="grid min-w-0 gap-8 lg:grid-cols-2 lg:gap-16">
@@ -216,8 +220,9 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       )}
 
       <section
+        id="cau-hoi-thuong-gap"
         aria-labelledby="faq-title"
-        className="bg-[var(--color-academic-canvas)] py-[var(--academic-section-space)]"
+        className="scroll-mt-28 bg-[var(--color-academic-canvas)] py-[var(--academic-section-space)]"
       >
         <Container size="narrow">
           <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">

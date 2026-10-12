@@ -63,6 +63,49 @@ export function formatDateLongVN(input: string | Date | number | null | undefine
   const day = parts.find((p) => p.type === "day")?.value || "";
   const month = parts.find((p) => p.type === "month")?.value || "";
   const year = parts.find((p) => p.type === "year")?.value || "";
-
   return `Ngày ${day} tháng ${month} năm ${year}`;
 }
+
+/**
+ * Chuyển đổi thời gian bất kỳ sang chuẩn chuỗi ISO UTC (kết thúc bằng Z)
+ * Dùng để lưu trữ chuẩn mực trong SQLite/Database
+ */
+export function toUtcIso(input: string | Date | number): string {
+  const date = parseDate(input);
+  if (!date) {
+    throw new Error(`Thời gian không hợp lệ: ${String(input)}`);
+  }
+  return date.toISOString();
+}
+
+/**
+ * Kiểm tra xem thời điểm hiện tại có nằm trong khoảng hiệu lực [start, end) hay không
+ * Quy tắc biên: start <= now < end (Nửa mở - Half-open interval)
+ */
+export function isWithinInterval(
+  now: string | Date | number,
+  start: string | Date | number,
+  end?: string | Date | number | null
+): boolean {
+  const nowDate = parseDate(now);
+  const startDate = parseDate(start);
+  if (!nowDate || !startDate) return false;
+
+  const nowMs = nowDate.getTime();
+  const startMs = startDate.getTime();
+
+  if (nowMs < startMs) return false;
+
+  if (end) {
+    const endDate = parseDate(end);
+    if (endDate && nowMs >= endDate.getTime()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export const formatDateGMT7 = formatDateVN;
+export const formatDateTimeGMT7 = formatDateTimeVN;
+export const formatDateLongGMT7 = formatDateLongVN;

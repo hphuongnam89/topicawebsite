@@ -83,6 +83,7 @@ export function cleanWordPressEntities(value: string): string {
   if (!value) return value;
   return value
     .replace(/&#038;/g, "&")
+    .replace(/&amp;/g, "&")
     .replace(/&#8211;/g, "–")
     .replace(/&#8212;/g, "—")
     .replace(/&#8216;/g, "‘")

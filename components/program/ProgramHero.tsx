@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowRight, BookOpen, GraduationCap } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, CreditCard, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
@@ -16,6 +16,14 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
     {
       label: "Văn bằng",
       value: fact("Văn bằng")?.status === "verified" ? fact("Văn bằng")?.value : null,
+    },
+    {
+      label: "Đơn vị cấp bằng",
+      value: "Trường Đại học Phú Xuân",
+    },
+    {
+      label: "Học phí",
+      value: "600.000 đ / tín chỉ",
     },
     {
       label: "Ngôn ngữ",
@@ -53,10 +61,10 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             {program.heroLabel}
           </p>
           <h1
-            className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.045em] break-words text-[var(--color-academic-ink)] sm:max-w-[14ch] ${
+            className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.03em] break-words text-[var(--color-academic-ink)] sm:max-w-[16ch] ${
               program.officialName.length >= 35
-                ? "text-[clamp(2.4rem,4.5vw,4rem)] leading-[1.02]"
-                : "text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.98]"
+                ? "text-[clamp(1.875rem,3.5vw+0.5rem,2.75rem)] leading-[1.18]"
+                : "text-[clamp(2rem,4vw+0.5rem,3rem)] leading-[1.15]"
             }`}
           >
             {program.officialName}
@@ -84,9 +92,16 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
               className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
-              {program.evidenceLevel === "academic_source"
-                ? "Xem chương trình"
-                : "Xem trạng thái hồ sơ"}
+              Xem chương trình
+            </ButtonLink>
+            <ButtonLink
+              href="/tuyen-sinh/hoc-phi-hoc-bong/"
+              size="lg"
+              variant="secondary"
+              leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
+              className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+            >
+              Tra cứu học phí
             </ButtonLink>
           </div>
         </div>

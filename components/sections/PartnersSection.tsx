@@ -3,16 +3,14 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 
-const partners = [
+// Chỉ render các đối tác đã xác thực danh tính và quan hệ hợp tác chính thức.
+// Logo 6–9 đang chờ xác minh từ bộ phận đối ngoại/Topica theo R03/R06/HUI-07.
+export const partners = [
   { name: "Deakin University", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/1.png" },
   { name: "OBC", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/2.png" },
   { name: "Thaco Agri", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/3.png" },
   { name: "Deha Digital Solutions", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/4.png" },
   { name: "Deha Software", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/5.png" },
-  { name: "Đối tác 6", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/6.png" },
-  { name: "Đối tác 7", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/7.png" },
-  { name: "Đối tác 8", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/8.png" },
-  { name: "Đối tác 9", src: "https://topicauni.edu.vn/wp-content/uploads/2026/01/9.png" },
 ];
 
 // Duplicate the array for seamless infinite marquee scrolling

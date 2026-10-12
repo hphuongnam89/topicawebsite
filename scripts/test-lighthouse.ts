@@ -154,19 +154,21 @@ async function runLighthouseAudit() {
   }
 
   console.log("===================================================================");
-  console.log("📊 BẢNG ĐIỂM CHẤT LƯỢNG MÔ PHỎNG LIGHTHOUSE LAB (ESTIMATED LAB SCORES)");
+  console.log("📊 BÁO CÁO ĐO LƯỜNG HIỆU NĂNG THỰC TẾ (REAL MEASURED BENCHMARKS)");
   console.log("-------------------------------------------------------------------");
-  console.log("⚡ Performance:   96 / 100 (Core Web Vitals Lab Optimized)");
-  console.log("♿ Accessibility: 98 / 100 (WCAG 2.2 AA Compliant, Color Contrast > 4.5:1)");
-  console.log("🛡️ Best Practices: 96 / 100 (HTTPS ready, clean headers, no console errors)");
-  console.log("🔍 SEO:          100 / 100 (Metadata, Canonical, Sitemap & Robots valid)");
+  console.log(`- Trạng thái kiểm thử: ${hasErrors ? "CÓ LỖI CẦN XỬ LÝ" : "HOÀN TẤT THÀNH CÔNG"}`);
+  console.log(`- Công cụ đo: Node.js HTTP Benchmark Runner (TTFB, Payload, Meta Tags)`);
+  console.log(`- Môi trường kiểm thử: ${SITE_URL}`);
+  console.log(`- Lưu ý: Điểm tổng hợp Chrome DevTools Lighthouse (0-100) yêu cầu chạy`);
+  console.log(`  trên môi trường Staging/Production với trình duyệt Headless Chrome.`);
+  console.log(`  Không tự bịa điểm synthetic (96/98/96/100) theo quy định R22.`);
   console.log("===================================================================");
 
   if (hasErrors) {
     console.error("\n⚠️ Một số tiêu chí hiệu năng hoặc SEO chưa đạt chỉ số mong muốn.");
     process.exit(1);
   } else {
-    console.log("\n🎉 XÁC NHẬN: TOÀN BỘ CHỈ SỐ HIỆU NĂNG VÀ CHUẨN MỰC WEB ĐỀU ĐẠT TIÊU CHUẨN!");
+    console.log("\n✅ Hoàn thành đo lường hiệu năng kỹ thuật và tiêu chuẩn Web.");
     process.exit(0);
   }
 }
