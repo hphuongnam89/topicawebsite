@@ -75,7 +75,7 @@ export default async function AdminDashboardPage() {
             Bảng điều khiển Quản trị
           </h1>
           <p className="mt-1 text-body-sm text-ink-500">
-            Xin chào, <span className="font-semibold text-brand-700">{user.name}</span>. Chúc bạn
+            Xin chào, <span className="font-semibold text-navy-900">{user.name}</span>. Chúc bạn
             một ngày làm việc hiệu quả!
           </p>
         </div>
@@ -89,7 +89,7 @@ export default async function AdminDashboardPage() {
           </Link>
           <Link
             href="/admin/articles/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-navy-800"
           >
             <PlusCircle className="h-4 w-4" />
             <span>Đăng bài mới</span>
@@ -105,7 +105,7 @@ export default async function AdminDashboardPage() {
             <Link
               key={card.title}
               href={card.href}
-              className="group relative overflow-hidden rounded-xl border border-line-200 bg-white p-5 shadow-xs transition-all hover:border-brand-300 hover:shadow-md"
+              className="group relative overflow-hidden rounded-xl border border-line-200 bg-white p-5 shadow-xs transition-all hover:border-gold-300 hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <span className="text-body-sm font-medium text-ink-500">{card.title}</span>
@@ -135,7 +135,7 @@ export default async function AdminDashboardPage() {
             </div>
             <Link
               href="/admin/leads"
-              className="inline-flex items-center gap-1 text-body-sm font-semibold text-brand-700 hover:underline"
+              className="inline-flex items-center gap-1 text-body-sm font-semibold text-navy-900 hover:underline"
             >
               <span>Xem tất cả</span>
               <ArrowUpRight className="h-4 w-4" />
@@ -195,7 +195,7 @@ export default async function AdminDashboardPage() {
             </div>
             <Link
               href="/admin/articles"
-              className="inline-flex items-center gap-1 text-body-sm font-semibold text-brand-700 hover:underline"
+              className="inline-flex items-center gap-1 text-body-sm font-semibold text-navy-900 hover:underline"
             >
               <span>Quản lý tin</span>
               <ArrowUpRight className="h-4 w-4" />
@@ -216,7 +216,7 @@ export default async function AdminDashboardPage() {
                   <div className="min-w-0 space-y-1 pr-4">
                     <Link
                       href={`/admin/articles/${art.id}/edit`}
-                      className="block truncate font-semibold text-ink-900 transition-colors hover:text-brand-700"
+                      className="block truncate font-semibold text-ink-900 transition-colors hover:text-navy-900"
                     >
                       {art.title}
                     </Link>
@@ -230,7 +230,7 @@ export default async function AdminDashboardPage() {
                   </div>
                   <Link
                     href={`/admin/articles/${art.id}/edit`}
-                    className="shrink-0 text-xs font-semibold text-brand-700 hover:underline"
+                    className="shrink-0 text-xs font-semibold text-navy-900 hover:underline"
                   >
                     Chỉnh sửa
                   </Link>
@@ -269,7 +269,7 @@ export default async function AdminDashboardPage() {
                     href={page.path}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-body-sm font-medium text-ink-900 transition-colors hover:text-brand-700"
+                    className="text-body-sm font-medium text-ink-900 transition-colors hover:text-navy-900"
                   >
                     {page.path}
                   </a>
