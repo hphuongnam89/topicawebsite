@@ -189,6 +189,7 @@ export const migration002: Migration = {
         metadata TEXT
       );
       CREATE INDEX IF NOT EXISTS idx_analytics_events_name ON analytics_events(event_name);
+      CREATE INDEX IF NOT EXISTS idx_analytics_events_server_time ON analytics_events(server_time);
     `);
   },
   down: (db: DatabaseSync) => {

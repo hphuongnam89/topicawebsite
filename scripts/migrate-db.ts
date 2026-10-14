@@ -7,6 +7,7 @@ import {
   getTableCounts,
   runMigrations,
   rollbackMigration,
+  verifyAppliedMigrationChecksums,
 } from "@/lib/db/migrations";
 import { assertFixturePath } from "@/lib/db/safety";
 
@@ -64,14 +65,27 @@ function main() {
     if (isStatus) {
       const applied = getAppliedMigrations(db);
       const appliedSet = new Set(applied.map((a) => a.version));
+      const driftCheck = verifyAppliedMigrationChecksums(db);
+      const driftedSet = new Set(driftCheck.drifted.map((d) => d.version));
+
       console.log("\n--- TRẠNG THÁI MIGRATION ---");
       for (const m of ALL_MIGRATIONS) {
         const isApplied = appliedSet.has(m.version);
         const appRecord = applied.find((a) => a.version === m.version);
-        const mark = isApplied
-          ? `[✓ APPLIED at ${appRecord?.applied_at} (${appRecord?.execution_time_ms}ms)]`
-          : "[PENDING]";
+        const isDrifted = driftedSet.has(m.version);
+        let mark: string;
+        if (isDrifted) {
+          mark = `[✗ CHECKSUM DRIFT / MISMATCH]`;
+        } else if (isApplied) {
+          mark = `[✓ APPLIED & VERIFIED at ${appRecord?.applied_at} (${appRecord?.execution_time_ms}ms)]`;
+        } else {
+          mark = "[PENDING]";
+        }
         console.log(`v${m.version}: ${m.name.padEnd(35)} ${mark}`);
+      }
+
+      if (!driftCheck.valid) {
+        console.log("\n⚠️ CẢNH BÁO: Phát hiện migration đã bị sửa đổi nội dung sau khi áp dụng!");
       }
 
       const counts = getTableCounts(db);

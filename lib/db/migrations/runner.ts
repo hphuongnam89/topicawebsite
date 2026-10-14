@@ -12,8 +12,41 @@ export { ensureMigrationsTable, getAppliedMigrations } from "./state";
 
 export function computeMigrationChecksum(m: Migration): string {
   const hash = crypto.createHash("sha256");
+  const upSrc = typeof m.up === "function" ? m.up.toString() : "";
+  const downSrc = typeof m.down === "function" ? m.down.toString() : "";
+  hash.update(`v${m.version}:${m.name}:${upSrc}:${downSrc}`);
+  return hash.digest("hex");
+}
+
+export function computeLegacyMigrationChecksum(m: Migration): string {
+  const hash = crypto.createHash("sha256");
   hash.update(`v${m.version}:${m.name}`);
   return hash.digest("hex");
+}
+
+export function verifyAppliedMigrationChecksums(db: DatabaseSync): {
+  valid: boolean;
+  drifted: Array<{ version: number; name: string; recorded: string; expected: string }>;
+} {
+  const applied = getAppliedMigrations(db);
+  const drifted: Array<{ version: number; name: string; recorded: string; expected: string }> = [];
+
+  for (const record of applied) {
+    const migration = ALL_MIGRATIONS.find((m) => m.version === record.version);
+    if (!migration) continue;
+    const currentChecksum = computeMigrationChecksum(migration);
+    const legacyChecksum = computeLegacyMigrationChecksum(migration);
+    if (record.checksum !== currentChecksum && record.checksum !== legacyChecksum) {
+      drifted.push({
+        version: record.version,
+        name: record.name,
+        recorded: record.checksum,
+        expected: currentChecksum,
+      });
+    }
+  }
+
+  return { valid: drifted.length === 0, drifted };
 }
 
 export function getTableCounts(db: DatabaseSync): Record<string, number> {
@@ -68,6 +101,13 @@ export function runMigrations(
   const startTime = Date.now();
 
   const appliedList = getAppliedMigrations(db);
+  const driftCheck = verifyAppliedMigrationChecksums(db);
+  if (!driftCheck.valid) {
+    const d = driftCheck.drifted[0];
+    throw new Error(
+      `Phát hiện sai lệch checksum tại migration v${d.version} (${d.name}). File migration đã bị sửa đổi sau khi áp dụng.`,
+    );
+  }
   const appliedVersionSet = new Set(appliedList.map((m) => m.version));
 
   let pending = ALL_MIGRATIONS.filter((m) => !appliedVersionSet.has(m.version));

@@ -22,24 +22,25 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: "5 Ngành Đào tạo Cử nhân Trực tuyến | Topica Uni & ĐH Phú Xuân",
-  description:
-    "Danh mục 5 ngành đào tạo cử nhân đại học từ xa chính thức: Quản trị kinh doanh, Quản trị du lịch và lữ hành, Công nghệ thông tin - Đồ hoạ kỹ thuật số, Ngôn ngữ Anh, Ngôn ngữ Trung Quốc. Bằng do Trường Đại học Phú Xuân cấp.",
-  alternates: {
-    canonical: `${env.NEXT_PUBLIC_SITE_URL}/nganh-dao-tao/`,
-    languages: { vi: "/nganh-dao-tao", en: "/en/programs" },
-  },
-  openGraph: {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+} = {}): Promise<Metadata> {
+  const locale = await resolveRequestLocale(searchParams);
+  return buildLocalizedMetadata({
+    locale,
     title: "5 Ngành Đào tạo Cử nhân Trực tuyến | Topica Uni & ĐH Phú Xuân",
     description:
-      "Chương trình cử nhân trực tuyến chuẩn quốc gia do Trường Đại học Phú Xuân cấp bằng. Thời gian linh hoạt, học trực tuyến 100%.",
-    url: `${env.NEXT_PUBLIC_SITE_URL}/nganh-dao-tao/`,
-    type: "website",
-  },
-};
+      "Danh mục 5 ngành đào tạo cử nhân đại học từ xa chính thức: Quản trị kinh doanh, Quản trị du lịch và lữ hành, Công nghệ thông tin - Đồ hoạ kỹ thuật số, Ngôn ngữ Anh, Ngôn ngữ Trung Quốc. Bằng do Trường Đại học Phú Xuân cấp.",
+    viPath: "/nganh-dao-tao",
+    enPath: "/en/programs",
+  });
+}
 
 export default function ProgramsDirectoryPage() {
   const programs = getLivePrograms();

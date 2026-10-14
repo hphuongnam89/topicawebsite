@@ -14,6 +14,12 @@ const jsonFields = new Set([
   "documents",
   "other_fees",
   "assumptions",
+  "careers",
+  "curriculum",
+  "semesters",
+  "outcomes",
+  "confirmations",
+  "faqs",
 ]);
 export function publishedRow<T extends { id: string | number }>(
   type: EntityType,

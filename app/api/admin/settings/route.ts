@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS = {
   telegramChatId: "",
 };
 
-export const siteSettingsSchema = z
+const siteSettingsSchema = z
   .object({
     hotline: z.string().trim().min(1).max(50),
     email: z.string().trim().min(1).max(100),
@@ -35,16 +35,25 @@ export const siteSettingsSchema = z
   })
   .strict();
 
-export const settingsPayloadSchema = z.union([
+const settingsPayloadSchema = z.union([
   z.object({ settings: siteSettingsSchema }).strict(),
   siteSettingsSchema,
 ]);
+
+const MASKED_SECRET = "••••••••";
+
+function maskSettings(settings: typeof DEFAULT_SETTINGS) {
+  return {
+    ...settings,
+    telegramBotToken: settings.telegramBotToken ? MASKED_SECRET : "",
+  };
+}
 
 export async function GET() {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
   const settings = getSetting("site_settings", DEFAULT_SETTINGS);
-  return NextResponse.json({ settings });
+  return NextResponse.json({ settings: maskSettings(settings) });
 }
 
 export async function PUT(request: Request) {
@@ -61,15 +70,29 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Dữ liệu cài đặt không hợp lệ." }, { status: 422 });
     }
 
-    const settings = "settings" in parsed.data ? parsed.data.settings : parsed.data;
+    const inputSettings = "settings" in parsed.data ? parsed.data.settings : parsed.data;
+    const currentSettings = getSetting<typeof DEFAULT_SETTINGS>("site_settings", DEFAULT_SETTINGS);
 
-    setSetting("site_settings", settings);
-    recordAdminAudit(auth.user, "update", "setting", "site_settings", Object.keys(settings));
+    // If masked sentinel was returned to client and submitted unchanged, preserve existing secret
+    const effectiveBotToken =
+      inputSettings.telegramBotToken === MASKED_SECRET
+        ? (currentSettings.telegramBotToken || "")
+        : (inputSettings.telegramBotToken || "");
+
+    const toSave: typeof DEFAULT_SETTINGS = {
+      ...DEFAULT_SETTINGS,
+      ...currentSettings,
+      ...inputSettings,
+      telegramBotToken: effectiveBotToken,
+    };
+
+    setSetting("site_settings", toSave);
+    recordAdminAudit(auth.user, "update", "setting", "site_settings", Object.keys(toSave));
 
     // Revalidate whole website layout
     revalidatePath("/", "layout");
 
-    return NextResponse.json({ success: true, settings });
+    return NextResponse.json({ success: true, settings: maskSettings(toSave) });
   } catch (error) {
     console.error("Save settings error:", error);
     return NextResponse.json({ error: "Lỗi lưu cài đặt." }, { status: 500 });

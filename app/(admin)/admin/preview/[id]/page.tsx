@@ -191,13 +191,26 @@ function DomainPreview({
           </div>
         ) : (
           <div className="p-6 sm:p-10">
+            {typeof payload.summary === "string" && payload.summary && (
+              <div className="mb-6 rounded-lg bg-slate-50 p-4 border border-line-200">
+                <p className="text-xs font-semibold text-ink-500 uppercase">Tóm tắt chương trình</p>
+                <p className="mt-1 text-sm leading-6 text-ink-900">{payload.summary}</p>
+              </div>
+            )}
             <dl className="grid gap-x-8 sm:grid-cols-2">
               <Detail label="Mã ngành" value={payload.code} />
+              <Detail label="Nhóm ngành" value={payload.group} />
               <Detail label="Hình thức" value={payload.form} />
               <Detail label="Văn bằng" value={payload.degree_name} />
               <Detail label="Đơn vị cấp bằng" value={payload.awarding_institution} />
               <Detail label="Tín chỉ & thời gian" value={payload.duration_credits} />
               <Detail label="Đường dẫn" value={payload.slug} />
+              <Detail label="Cơ hội nghề nghiệp" value={payload.careers} />
+              <Detail label="Khung chương trình" value={payload.curriculum} />
+              <Detail label="Lộ trình học tập" value={payload.semesters} />
+              <Detail label="Điều kiện tuyển sinh" value={payload.admissions} />
+              <Detail label="Điều kiện tốt nghiệp" value={payload.graduation} />
+              <Detail label="Học tập nâng cao" value={payload.further_study} />
               <Detail label="Nguồn" value={payload.source} />
             </dl>
           </div>

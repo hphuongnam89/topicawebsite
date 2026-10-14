@@ -53,6 +53,24 @@ export interface PublicProgramDto {
     tracks?: Array<{ audience: string; credits: number; duration: string }>;
   };
   version: number;
+  summary?: string;
+  marketingLabel?: string;
+  heroLabel?: string;
+  group?: string;
+  icon?: string;
+  image?: string;
+  language?: string;
+  courseCount?: string;
+  careers?: string[];
+  curriculum?: any[];
+  semesters?: any[];
+  outcomes?: any[];
+  admissions?: string;
+  graduation?: string;
+  furtherStudy?: string;
+  confirmations?: string[];
+  faqs?: Array<{ question: string; answer: string }>;
+  source?: string;
 }
 
 export interface PublicAdmissionRoundDto {
@@ -184,6 +202,48 @@ export function getPublicPrograms(): PublicProgramDto[] {
     )
       return [];
 
+    let careers: string[] | undefined;
+    if (r.careers) {
+      try {
+        careers = typeof r.careers === "string" ? JSON.parse(r.careers) : r.careers;
+      } catch {}
+    }
+
+    let curriculum: any[] | undefined;
+    if (r.curriculum) {
+      try {
+        curriculum = typeof r.curriculum === "string" ? JSON.parse(r.curriculum) : r.curriculum;
+      } catch {}
+    }
+
+    let semesters: any[] | undefined;
+    if (r.semesters) {
+      try {
+        semesters = typeof r.semesters === "string" ? JSON.parse(r.semesters) : r.semesters;
+      } catch {}
+    }
+
+    let outcomes: any[] | undefined;
+    if (r.outcomes) {
+      try {
+        outcomes = typeof r.outcomes === "string" ? JSON.parse(r.outcomes) : r.outcomes;
+      } catch {}
+    }
+
+    let confirmations: string[] | undefined;
+    if (r.confirmations) {
+      try {
+        confirmations = typeof r.confirmations === "string" ? JSON.parse(r.confirmations) : r.confirmations;
+      } catch {}
+    }
+
+    let faqs: any[] | undefined;
+    if (r.faqs) {
+      try {
+        faqs = typeof r.faqs === "string" ? JSON.parse(r.faqs) : r.faqs;
+      } catch {}
+    }
+
     return [
       {
         id: r.id,
@@ -197,6 +257,24 @@ export function getPublicPrograms(): PublicProgramDto[] {
         awardingInstitution: r.awarding_institution,
         durationCredits,
         version: r.version,
+        summary: r.summary || undefined,
+        marketingLabel: r.marketing_label || undefined,
+        heroLabel: r.hero_label || undefined,
+        group: r.group_id || undefined,
+        icon: r.icon || undefined,
+        image: r.image || undefined,
+        language: r.language || undefined,
+        courseCount: r.course_count || undefined,
+        careers,
+        curriculum,
+        semesters,
+        outcomes,
+        admissions: r.admissions || undefined,
+        graduation: r.graduation || undefined,
+        furtherStudy: r.further_study || undefined,
+        confirmations,
+        faqs,
+        source: r.source || undefined,
       },
     ];
   });
@@ -621,4 +699,25 @@ export function recordAnalyticsEvent(event: {
     validated.environment,
     validated.metadata ? JSON.stringify(validated.metadata) : null,
   );
+
+  // Opportunistic retention pruning (throttle check)
+  if (Math.random() < 0.01) {
+    try {
+      pruneAnalyticsEvents(90);
+    } catch {
+      // Best-effort cleanup
+    }
+  }
+}
+
+/**
+ * Prunes analytics events older than retentionDays (default 90 days).
+ * Protects SQLite volume against unbounded growth.
+ */
+export function pruneAnalyticsEvents(retentionDays = 90): number {
+  const db = getDb();
+  const safeDays = Math.max(1, Math.min(365, retentionDays));
+  const cutoff = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000).toISOString();
+  const result = db.prepare("DELETE FROM analytics_events WHERE server_time < ?").run(cutoff);
+  return Number(result.changes);
 }

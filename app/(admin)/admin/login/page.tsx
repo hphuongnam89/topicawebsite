@@ -37,6 +37,7 @@ export default function AdminLoginPage() {
       }
 
       // Force full window navigation to ensure session cookie is sent and bypass client router cache
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = "/admin";
     } catch (err) {
       console.error(err);

@@ -44,7 +44,9 @@ export function hasManagedContent(type: EntityType, id?: string): boolean {
 
 export function getLivePrograms(): Program[] {
   const published = getPublicPrograms();
-  return programs.flatMap((base) => {
+  const knownBaseIds = new Set(programs.map((p) => p.id));
+
+  const baseLive = programs.flatMap((base) => {
     const current = published.find((row) => row.id === base.id);
     if (!current) return hasManagedContent("program", base.id) ? [] : [base];
     return [
@@ -56,9 +58,51 @@ export function getLivePrograms(): Program[] {
         slug: current.slug,
         href: `/${current.slug}/`,
         degreeAwarded: current.degreeName,
+        group: (["business", "technology", "language"].includes(current.group as string)
+          ? current.group
+          : base.group) as Program["group"],
+        image: current.image || base.image,
+        icon: current.icon || base.icon,
+        shortDescription: current.summary || base.shortDescription,
+        specialization: current.major || base.specialization,
       },
     ];
   });
+
+  const dynamicLive: Program[] = published
+    .filter((row) => !knownBaseIds.has(row.id as any))
+    .map((row) => ({
+      id: row.id as any,
+      name: row.name,
+      officialMajorName: row.name,
+      specialization: row.major,
+      majorCode: row.code,
+      slug: row.slug,
+      legacySlugs: row.aliases,
+      shortDescription: row.summary || `Chương trình đào tạo ${row.name}`,
+      icon: row.icon || "GraduationCap",
+      image: row.image || "/images/programs/program-business.webp",
+      href: `/${row.slug}/`,
+      group: (["business", "technology", "language"].includes(row.group as string)
+        ? row.group
+        : "technology") as Program["group"],
+      trainingMode: "Đào tạo từ xa",
+      degreeAwarded: row.degreeName,
+      awardingInstitution: "Trường Đại học Phú Xuân",
+      collaboratingUnit: "Viện Đào tạo Quốc tế Topica",
+      targetAudiences: [
+        {
+          audienceId: "thpt",
+          audienceName: "Tốt nghiệp THPT / Tương đương",
+          durationYears: 3.5,
+          durationSemesters: row.durationCredits.semesters || 9,
+          estimatedCredits: row.durationCredits.credits || 126,
+          description: "Khối kiến thức đầy đủ theo khung chương trình chuẩn.",
+        },
+      ],
+    }));
+
+  return [...baseLive, ...dynamicLive];
 }
 
 export function getLiveProgramDetail(path: string): ProgramDetail | null {
@@ -71,27 +115,87 @@ export function getLiveProgramDetail(path: string): ProgramDetail | null {
       row.slug === path ||
       row.legacySlugs?.includes(path),
   );
-  if (!base) return null;
-  const detail = getProgramDetail(base.slug);
-  if (!detail) return null;
-  if (!current) return hasManagedContent("program", base.id) ? null : detail;
-  const facts = {
+
+  if (!base && !current) return null;
+  const baseDetail = base ? getProgramDetail(base.slug) : null;
+
+  if (!current) {
+    if (!baseDetail) return null;
+    return hasManagedContent("program", base!.id) ? null : baseDetail;
+  }
+
+  const factsMap: Record<string, string> = {
     "Mã ngành": current.code,
+    "Trình độ": "Đại học",
     "Hình thức": current.form,
     "Văn bằng": current.degreeName,
-    "Đơn vị cấp bằng": current.awardingInstitution,
-    "Khối lượng": `${current.durationCredits.credits} tín chỉ`,
     "Thời gian": `${current.durationCredits.semesters} học kỳ`,
+    "Khối lượng": `${current.durationCredits.credits} tín chỉ`,
+    "Đơn vị cấp bằng": current.awardingInstitution,
+    ...(current.language ? { "Ngôn ngữ": current.language } : {}),
+    ...(current.courseCount ? { "Số học phần": current.courseCount } : {}),
   };
+
+  const defaultFacts: ProgramDetail["facts"] = [
+    { label: "Mã ngành", value: current.code, status: "verified" },
+    { label: "Trình độ", value: "Đại học", status: "verified" },
+    { label: "Hình thức", value: current.form, status: "verified" },
+    { label: "Văn bằng", value: current.degreeName, status: "verified" },
+    { label: "Thời gian", value: `${current.durationCredits.semesters} học kỳ`, status: "verified" },
+    {
+      label: "Khối lượng",
+      value: `${current.durationCredits.credits} tín chỉ`,
+      note: "Không gồm Giáo dục thể chất và GDQP&AN",
+      status: "verified",
+    },
+    { label: "Đơn vị cấp bằng", value: current.awardingInstitution, status: "verified" },
+    ...(current.language ? [{ label: "Ngôn ngữ", value: current.language, status: "verified" as const }] : []),
+    ...(current.courseCount ? [{ label: "Số học phần", value: current.courseCount, status: "verified" as const }] : []),
+  ];
+
+  const facts = baseDetail
+    ? baseDetail.facts.map((fact) => ({
+        ...fact,
+        value: factsMap[fact.label] ?? fact.value,
+      }))
+    : defaultFacts;
+
+  let semesters =
+    current.semesters && current.semesters.length > 0 ? current.semesters : (baseDetail?.semesters ?? []);
+  if ((!semesters || semesters.length === 0) && current.curriculum && current.curriculum.length > 0) {
+    semesters = current.curriculum.map((term: any, index: number) => ({
+      term: index + 1,
+      credits: term.credits ?? 0,
+      phase: term.name || `Học kỳ ${index + 1}`,
+      highlights: Array.isArray(term.courses)
+        ? term.courses.slice(0, 3).map((c: any) => c.name || c.title || "")
+        : [],
+    }));
+  }
+
   return {
-    ...detail,
     slug: current.slug,
     officialName: current.name,
+    englishName: baseDetail?.englishName ?? null,
+    marketingLabel: current.marketingLabel || baseDetail?.marketingLabel || current.major,
     code: current.code,
-    facts: detail.facts.map((fact) => ({
-      ...fact,
-      value: facts[fact.label as keyof typeof facts] ?? fact.value,
-    })),
+    summary: current.summary || baseDetail?.summary || "",
+    heroLabel: current.heroLabel || baseDetail?.heroLabel || "Chương trình đào tạo · Kế hoạch 9 học kỳ",
+    evidenceLevel: baseDetail?.evidenceLevel || "academic_source",
+    source: {
+      label: current.source || baseDetail?.source.label || "Quyết định mở ngành & Kiểm định chất lượng",
+      reference: baseDetail?.source.reference || "Hồ sơ chương trình đào tạo",
+      reviewedAt: baseDetail?.source.reviewedAt || new Date().toISOString().slice(0, 10),
+    },
+    facts,
+    curriculum: current.curriculum && current.curriculum.length > 0 ? current.curriculum : (baseDetail?.curriculum ?? []),
+    semesters,
+    outcomes: current.outcomes && current.outcomes.length > 0 ? current.outcomes : (baseDetail?.outcomes ?? []),
+    careers: current.careers && current.careers.length > 0 ? current.careers : (baseDetail?.careers ?? []),
+    furtherStudy: current.furtherStudy !== undefined ? current.furtherStudy : (baseDetail?.furtherStudy ?? null),
+    admissions: current.admissions !== undefined ? current.admissions : (baseDetail?.admissions ?? null),
+    graduation: current.graduation !== undefined ? current.graduation : (baseDetail?.graduation ?? null),
+    confirmations: current.confirmations ?? (baseDetail?.confirmations ?? []),
   };
 }
 

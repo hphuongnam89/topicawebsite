@@ -65,7 +65,7 @@ describe("CMS-08: Vietnamese slug generation and continuous typing", () => {
 
   test("simulates continuous keystroke slug updating without premature truncation", () => {
     let slug = "";
-    let slugManuallyEdited = false;
+    const slugManuallyEdited = false;
 
     const keystrokes = "QA Browser Category";
     let currentInput = "";

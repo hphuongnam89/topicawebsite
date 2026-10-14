@@ -8,7 +8,10 @@ const eslintConfig = defineConfig([
   // Override default ignores of eslint-config-next.
   globalIgnores([
     ".next/**",
-    ".next-qa-*/**",
+    ".next*/**",
+    ".next-*/**",
+    ".work/**",
+    "docs/evidence/**",
     "scratch/**",
     "playwright-report/**",
     "test-results/**",
@@ -21,6 +24,12 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "@next/next/no-img-element": "off",
+    },
+  },
+  {
+    files: ["__tests__/**"],
+    rules: {
+      "@typescript-eslint/ban-ts-comment": "off",
     },
   },
 ]);

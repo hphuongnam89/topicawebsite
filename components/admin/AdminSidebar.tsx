@@ -124,6 +124,12 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       icon: Home,
     },
     {
+      title: "Quản lý Ngành học",
+      href: "/admin/programs",
+      icon: GraduationCap,
+      exact: false,
+    },
+    {
       title: "Quản lý Trang (Pages)",
       href: "/admin/pages",
       icon: FileText,

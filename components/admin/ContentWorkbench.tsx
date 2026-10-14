@@ -336,6 +336,103 @@ function ServiceUrlsEditor({
   );
 }
 
+function CurriculumJsonEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  const [formatError, setFormatError] = useState<string | null>(null);
+
+  const format = () => {
+    try {
+      const parsed = JSON.parse(value || "[]");
+      onChange(JSON.stringify(parsed, null, 2));
+      setFormatError(null);
+    } catch (e: any) {
+      setFormatError("Lỗi JSON: " + (e?.message || "Cú pháp không hợp lệ"));
+    }
+  };
+
+  const insertSample = () => {
+    const sample = [
+      {
+        id: "term-1",
+        name: "Học kỳ 1",
+        credits: 14,
+        phase: "Nền tảng cơ bản",
+        courses: [
+          { code: "GEN.101", name: "Nhập môn ngành", credits: 2, requirement: "Bắt buộc" },
+          { code: "GEN.102", name: "Tin học ứng dụng", credits: 3, requirement: "Bắt buộc" },
+          { code: "ENG.101", name: "Ngoại ngữ 1", credits: 3, requirement: "Bắt buộc" },
+          { code: "LAW.101", name: "Pháp luật đại cương", credits: 3, requirement: "Bắt buộc" },
+          { code: "POL.101", name: "Triết học Mác-Lênin", credits: 3, requirement: "Bắt buộc" },
+        ],
+      },
+      {
+        id: "term-2",
+        name: "Học kỳ 2",
+        credits: 15,
+        phase: "Cơ sở chuyên ngành",
+        courses: [
+          { code: "ENG.102", name: "Ngoại ngữ 2", credits: 3, requirement: "Bắt buộc" },
+          { code: "MAJ.201", name: "Cơ sở chuyên ngành 1", credits: 3, requirement: "Bắt buộc" },
+          { code: "MAJ.202", name: "Cơ sở chuyên ngành 2", credits: 3, requirement: "Bắt buộc" },
+          { code: "MAJ.203", name: "Kỹ năng chuyên môn", credits: 3, requirement: "Bắt buộc" },
+          { code: "POL.102", name: "Kinh tế chính trị Mác-Lênin", credits: 3, requirement: "Bắt buộc" },
+        ],
+      },
+    ];
+    onChange(JSON.stringify(sample, null, 2));
+    setFormatError(null);
+  };
+
+  return (
+    <div className="grid gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-xs text-ink-600">
+          Danh mục học phần theo từng học kỳ. Có thể dán trực tiếp JSON từ khung chương trình đào tạo.
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={format}
+            className="rounded border border-line-200 bg-white px-2.5 py-1 text-xs font-semibold text-ink-700 hover:bg-slate-50"
+          >
+            Định dạng JSON
+          </button>
+          {(!value || value === "[]" || value === "{}") && (
+            <button
+              type="button"
+              onClick={insertSample}
+              className="rounded border border-navy-300 bg-navy-50 px-2.5 py-1 text-xs font-semibold text-navy-800 hover:bg-navy-100"
+            >
+              + Chèn mẫu học kỳ
+            </button>
+          )}
+        </div>
+      </div>
+      <textarea
+        rows={8}
+        className={`${inputClass} font-mono text-xs leading-relaxed`}
+        spellCheck={false}
+        value={value || ""}
+        onChange={(event) => {
+          onChange(event.target.value);
+          try {
+            if (event.target.value.trim()) JSON.parse(event.target.value);
+            setFormatError(null);
+          } catch {
+            setFormatError("JSON chưa đúng định dạng");
+          }
+        }}
+      />
+      {formatError && <span className="text-xs font-medium text-red-600">{formatError}</span>}
+    </div>
+  );
+}
+
 function toVietnamLocal(value: unknown) {
   if (typeof value !== "string" || !value) return "";
   const date = new Date(value);
@@ -924,16 +1021,36 @@ export function ContentWorkbench({
                 <span className="text-xs text-ink-600">
                   {type === "article"
                     ? "Mã tự tạo theo tiêu đề; bạn có thể sửa nếu cần."
-                    : "Dùng mã đã có khi cập nhật; chương trình: ba, tourism, it, english, chinese."}
+                    : type === "program"
+                      ? "Chọn mã có sẵn (ba, tourism, it, english, chinese) hoặc nhập mã mới để tạo ngành mới."
+                      : "Dùng mã đã có khi cập nhật hoặc nhập mã mới."}
                 </span>
               </label>
-              <button
-                type="button"
-                className="min-h-11 rounded border px-4 text-navy-900 underline sm:col-span-2"
-                onClick={() => void run(loadExisting)}
-              >
-                Tải nội dung hiện có theo mã
-              </button>
+              <div className="flex flex-wrap gap-2 sm:col-span-2">
+                <button
+                  type="button"
+                  className="min-h-11 flex-1 rounded border px-4 text-navy-900 underline hover:bg-slate-50"
+                  onClick={() => void run(loadExisting)}
+                >
+                  Tải nội dung hiện có theo mã
+                </button>
+                {selected && (
+                  <button
+                    type="button"
+                    className="min-h-11 rounded border border-navy-700 bg-navy-50 px-4 text-sm font-semibold text-navy-900 hover:bg-navy-100"
+                    onClick={() => {
+                      setSelected(null);
+                      setEntityId("");
+                      setTitle("");
+                      setValues({});
+                      setBase(0);
+                      setDirty(false);
+                    }}
+                  >
+                    + Tạo mới ({contentTypes[type]})
+                  </button>
+                )}
+              </div>
               <label className="grid gap-1 sm:col-span-2">
                 Tên bản sửa
                 <input
@@ -1101,12 +1218,77 @@ export function ContentWorkbench({
                         return data.url;
                       }}
                     />
-                  ) : key === "aliases" || key === "program_ids" ? (
+                  ) : key === "aliases" || key === "program_ids" || key === "careers" || key === "confirmations" ? (
                     <StringListEditor
                       label={fieldLabels[key] || key}
                       value={values[key] || "[]"}
                       onChange={(value) => {
                         setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "curriculum" ? (
+                    <CurriculumJsonEditor
+                      value={values[key] || "[]"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "group" && type === "program" ? (
+                    <select
+                      className={inputClass}
+                      value={values[key] || "technology"}
+                      onChange={(event) => {
+                        setValues({ ...values, [key]: event.target.value });
+                        setDirty(true);
+                      }}
+                    >
+                      <option value="technology">Công nghệ & Sáng tạo</option>
+                      <option value="business">Kinh doanh & Dịch vụ</option>
+                      <option value="language">Ngôn ngữ</option>
+                      <option value="other">Khác</option>
+                    </select>
+                  ) : key === "image" && type === "program" ? (
+                    <div className="grid gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <input
+                          className={`flex-1 ${inputClass}`}
+                          value={values[key] || ""}
+                          placeholder="/images/programs/... hoặc https://..."
+                          onChange={(event) => {
+                            setValues({ ...values, [key]: event.target.value });
+                            setDirty(true);
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => void openMediaPicker()}
+                          className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
+                        >
+                          <ImageIcon className="h-4 w-4" />
+                          <span>Thư viện Media</span>
+                        </button>
+                      </div>
+                      {values[key] && (
+                        <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
+                          <img
+                            src={values[key]}
+                            alt="Ảnh ngành"
+                            className="h-12 w-20 rounded object-cover"
+                          />
+                          <span className="truncate text-xs text-ink-600">{values[key]}</span>
+                        </div>
+                      )}
+                    </div>
+                  ) : key === "summary" || key === "admissions" || key === "graduation" || key === "further_study" ? (
+                    <textarea
+                      rows={3}
+                      className={inputClass}
+                      value={values[key] || ""}
+                      placeholder={`Nhập ${fieldLabels[key]?.toLowerCase() || key}...`}
+                      onChange={(event) => {
+                        setValues({ ...values, [key]: event.target.value });
                         setDirty(true);
                       }}
                     />
@@ -1204,15 +1386,15 @@ export function ContentWorkbench({
                       onChange={(event) => {
                         const value = event.target.value;
                         setValues({ ...values, [key]: value });
-                        if (type === "article" && key === "slug") setAutoArticleSlug(false);
-                        if (type === "article" && key === "title" && !selected) {
+                        if ((type === "article" || type === "program") && key === "slug") setAutoArticleSlug(false);
+                        if ((type === "article" || type === "program") && (key === "title" || key === "name") && !selected) {
                           const generated = articleContentId(value);
                           if (!entityId || autoEntityId) {
                             setEntityId(generated);
                             setAutoEntityId(Boolean(generated));
                           }
                           if (!title.trim() || autoRevisionTitle) {
-                            setTitle(value.slice(0, 240));
+                            setTitle(type === "program" ? `Cập nhật ngành: ${value}`.slice(0, 240) : value.slice(0, 240));
                             setAutoRevisionTitle(Boolean(value.trim()));
                           }
                           if (!values.slug || autoArticleSlug) {

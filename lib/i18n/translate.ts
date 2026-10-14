@@ -9,11 +9,15 @@ export function translateText(text: string, locale: Locale): string {
   let translated = english[key] ?? caseInsensitiveEnglish[key.toLocaleLowerCase("vi")];
   if (!translated) {
     const program = key.match(/^Tìm hiểu chương trình (.+)$/);
+    const illustration = key.match(/^Ảnh minh họa cho ngành (.+)$/);
+    const titleWithTopica = key.match(/^(.+?)\s*\|\s*Topica$/i);
     const banner = key.match(/^Hiển thị banner (\d+): (.+)$/);
     const story = key.match(/^Xem chia sẻ (\d+)$/);
     const course = key.match(/^(Ngoại ngữ|Giáo dục thể chất|Vẽ mỹ thuật|Biên dịch|Đọc|Viết|Giao tiếp|Nói|Tiếng Anh chuyên ngành|Tiếng Anh thương mại|Tiếng Anh du lịch) (\d+)$/);
     const credits = key.match(/^(\d+) (tín chỉ|học phần|học kỳ)$/);
     const contact = key.match(/^(Gửi email tư vấn tuyển sinh|Gọi hotline tư vấn|Hotline tư vấn:|Email tuyển sinh:)\s*(.+)$/);
+    if (titleWithTopica) translated = `${translateText(titleWithTopica[1], locale)} | Topica`;
+    if (illustration) translated = `Illustration for ${translateText(illustration[1], locale)}`;
     if (program) translated = `Explore ${translateText(program[1], locale)}`;
     if (banner) translated = `Show slide ${banner[1]}: ${translateText(banner[2], locale)}`;
     if (story) translated = `View story ${story[1]}`;

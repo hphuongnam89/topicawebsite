@@ -99,6 +99,23 @@ export interface ProgramRecord {
   version: number;
   created_at: string;
   updated_at: string;
+  summary?: string | null;
+  marketing_label?: string | null;
+  hero_label?: string | null;
+  group_id?: string | null;
+  icon?: string | null;
+  image?: string | null;
+  language?: string | null;
+  course_count?: string | null;
+  careers?: string | null;
+  curriculum?: string | null;
+  semesters?: string | null;
+  outcomes?: string | null;
+  admissions?: string | null;
+  graduation?: string | null;
+  further_study?: string | null;
+  confirmations?: string | null;
+  faqs?: string | null;
 }
 
 export interface AdmissionRoundRecord {

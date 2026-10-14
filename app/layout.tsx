@@ -74,26 +74,55 @@ const DEFAULT_METADATA: Metadata = {
   },
 };
 
+import { headers } from "next/headers";
+import { translateText } from "@/lib/i18n/translate";
+
 export async function generateMetadata(): Promise<Metadata> {
+  let locale: "vi" | "en" = "vi";
+  try {
+    const h = await headers();
+    if (h.get("x-topica-locale") === "en") locale = "en";
+    const p = h.get("x-pathname") || "";
+    if (p === "/en" || p.startsWith("/en/")) locale = "en";
+  } catch {}
+
   const settings = getSetting<{ siteTitle?: string; siteDescription?: string }>("site_settings", {});
-  const title = settings.siteTitle?.trim() || DEFAULT_METADATA.title;
-  const description = settings.siteDescription?.trim() || DEFAULT_METADATA.description || "";
+  const rawTitle = (settings.siteTitle?.trim() || "Viện Đào tạo Quốc tế Topica") as string;
+  const rawDescription = (settings.siteDescription?.trim() || DEFAULT_METADATA.description || "") as string;
+
+  const title = locale === "en" ? translateText(rawTitle, "en") : rawTitle;
+  const description = locale === "en" ? translateText(rawDescription, "en") : rawDescription;
+
   return {
     ...DEFAULT_METADATA,
-    title: { default: title as string, template: "%s | Topica" },
+    title: { default: title, template: "%s | Topica" },
     description,
-    openGraph: { ...DEFAULT_METADATA.openGraph, title: title as string, description },
-    twitter: { ...DEFAULT_METADATA.twitter, title: title as string, description },
+    openGraph: {
+      ...DEFAULT_METADATA.openGraph,
+      locale: locale === "en" ? "en_US" : "vi_VN",
+      siteName: locale === "en" ? "Topica International Institute" : "Topica University",
+      title,
+      description,
+    },
+    twitter: { ...DEFAULT_METADATA.twitter, title, description },
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let locale = "vi";
+  try {
+    const h = await headers();
+    if (h.get("x-topica-locale") === "en") locale = "en";
+    const p = h.get("x-pathname") || "";
+    if (p === "/en" || p.startsWith("/en/")) locale = "en";
+  } catch {}
+
   return (
-    <html lang="vi" data-scroll-behavior="smooth">
+    <html lang={locale} data-scroll-behavior="smooth">
       <body
         className={`${beVietnamPro.variable} ${lora.variable} bg-canvas font-sans text-ink-800 antialiased`}
       >

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/guards";
 import { getUserById, updateUserPassword } from "@/lib/db";
-import { verifyPassword, hashPassword } from "@/lib/auth/password";
+import { verifyPassword, hashPassword, MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 import { isSameOrigin } from "@/lib/security/request";
 import { recordAdminAudit } from "@/lib/services/admin-audit";
 
@@ -22,9 +22,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (newPassword.length < 6) {
+    if (typeof newPassword !== "string" || newPassword.length < MIN_PASSWORD_LENGTH) {
       return NextResponse.json(
-        { error: "Mật khẩu mới phải có tối thiểu 6 ký tự." },
+        { error: `Mật khẩu mới phải có tối thiểu ${MIN_PASSWORD_LENGTH} ký tự.` },
         { status: 400 },
       );
     }

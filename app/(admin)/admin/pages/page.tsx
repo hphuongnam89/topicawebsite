@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   FileText,
@@ -32,7 +32,7 @@ export default function AdminPagesPage() {
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const fetchPages = async () => {
+  const fetchPages = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -50,10 +50,35 @@ export default function AdminPagesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchPages();
+    let ignore = false;
+    async function loadPages() {
+      try {
+        const res = await fetch("/api/admin/pages");
+        if (ignore) return;
+        if (res.ok) {
+          const data = await res.json();
+          setPages(data.pages || []);
+        } else {
+          setError(`Không thể tải danh sách trang (HTTP ${res.status}). Vui lòng thử lại.`);
+        }
+      } catch (err) {
+        if (!ignore) {
+          console.error("Error fetching pages:", err);
+          setError("Lỗi kết nối khi tải danh sách trang. Vui lòng kiểm tra mạng và thử lại.");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+    loadPages();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleDelete = async (id: number, title: string) => {

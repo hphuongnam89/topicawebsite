@@ -107,7 +107,7 @@ describe("Migration safety on synthetic databases", () => {
       throw new Error("fixture disk full");
     });
     expect(() => rollbackMigration(db, { targetVersion: 0 })).toThrow("fixture disk full");
-    expect(getAppliedMigrations(db)).toHaveLength(3);
+    expect(getAppliedMigrations(db)).toHaveLength(ALL_MIGRATIONS.length);
     expect(db.prepare("SELECT value FROM settings WHERE key = 'sentinel'").get()).toEqual({
       value: '"keep"',
     });
@@ -138,7 +138,7 @@ describe("Migration safety on synthetic databases", () => {
       expect(
         db.prepare("SELECT name FROM sqlite_master WHERE name = 'failed_step'").get(),
       ).toBeUndefined();
-      expect(getAppliedMigrations(db)).toHaveLength(3);
+      expect(getAppliedMigrations(db)).toHaveLength(ALL_MIGRATIONS.length - 1);
     } finally {
       ALL_MIGRATIONS.pop();
     }

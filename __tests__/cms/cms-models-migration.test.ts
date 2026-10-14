@@ -6,6 +6,7 @@ import os from "os";
 import { DatabaseSync } from "node:sqlite";
 import { closeDb, getDb } from "@/lib/db";
 import {
+  ALL_MIGRATIONS,
   runMigrations,
   rollbackMigration,
   getAppliedMigrations,
@@ -73,11 +74,11 @@ describe("Task R16: Model CMS và Migration có thể khôi phục (Database Sch
 
       const report = runMigrations(db, { skipBackup: true });
       expect(report.dryRun).toBe(false);
-      expect(report.currentVersion).toBe(3);
-      expect(report.applied.length).toBe(3);
+      expect(report.currentVersion).toBe(ALL_MIGRATIONS.length);
+      expect(report.applied.length).toBe(ALL_MIGRATIONS.length);
 
       const applied = getAppliedMigrations(db);
-      expect(applied.length).toBe(3);
+      expect(applied.length).toBe(ALL_MIGRATIONS.length);
       expect(applied[0].name).toBe("001_core_legacy_baseline");
       expect(applied[1].name).toBe("002_cms_domain_models");
       expect(applied[2].name).toBe("003_seed_verified_domain_data");
@@ -126,7 +127,7 @@ describe("Task R16: Model CMS và Migration có thể khôi phục (Database Sch
 
       const report = runMigrations(db, { dryRun: true, skipBackup: true });
       expect(report.dryRun).toBe(true);
-      expect(report.applied.length).toBe(3);
+      expect(report.applied.length).toBe(ALL_MIGRATIONS.length);
 
       // Vì là dry-run, schema_migrations không ghi nhận
       const applied = getAppliedMigrations(db);
@@ -185,15 +186,16 @@ describe("Task R16: Model CMS và Migration có thể khôi phục (Database Sch
       db.exec("PRAGMA journal_mode = WAL;");
 
       runMigrations(db, { skipBackup: true });
-      expect(getAppliedMigrations(db).length).toBe(3);
+      expect(getAppliedMigrations(db).length).toBe(ALL_MIGRATIONS.length);
 
-      // Rollback 1 bước (từ v3 về v2)
+      // Rollback 1 bước
+      const lastMigration = ALL_MIGRATIONS[ALL_MIGRATIONS.length - 1];
       const reportRollback = rollbackMigration(db, { steps: 1, skipBackup: true });
-      expect(reportRollback.rolledBack).toContain("v3 (003_seed_verified_domain_data)");
-      expect(reportRollback.currentVersion).toBe(2);
+      expect(reportRollback.rolledBack).toContain(`v${lastMigration.version} (${lastMigration.name})`);
+      expect(reportRollback.currentVersion).toBe(ALL_MIGRATIONS.length - 1);
 
       const appliedAfter = getAppliedMigrations(db);
-      expect(appliedAfter.length).toBe(2);
+      expect(appliedAfter.length).toBe(ALL_MIGRATIONS.length - 1);
 
       // Bảng programs vẫn còn (từ v2) nhưng dữ liệu seed đã được dọn sạch
       const counts = getTableCounts(db);

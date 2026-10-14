@@ -33,11 +33,11 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
-# Seed the demo volume on first boot. The live volume remains persistent across deploys.
-COPY --from=builder /app/railway-seed/topica.seed ./seed-data/topica.db
-
-RUN mkdir -p /app/data /app/public/uploads && chown -R nextjs:nodejs /app/data /app/public/uploads
+RUN mkdir -p /app/data /app/public/uploads /app/seed-data && chown -R nextjs:nodejs /app/data /app/public/uploads /app/seed-data
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -54,4 +54,4 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["sh", "-c", "if [ ! -f /app/data/topica.db ]; then cp /app/seed-data/topica.db /app/data/topica.db; fi; chown -R nextjs:nodejs /app/data /app/public/uploads; su nextjs -s /bin/sh -c 'PORT=3000 npm start'"]
+CMD ["sh", "-c", "if [ ! -f /app/data/topica.db ]; then if [ -f /app/seed-data/topica.db ]; then cp /app/seed-data/topica.db /app/data/topica.db; else npm run db:migrate; fi; fi; chown -R nextjs:nodejs /app/data /app/public/uploads; su nextjs -s /bin/sh -c 'PORT=3000 npm start'"]

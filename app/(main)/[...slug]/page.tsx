@@ -10,8 +10,11 @@ import { getProgramDetail } from "@/data/program-details";
 import { PROGRAM_ID_MAP, getProgramById } from "@/data/programs";
 import { getLiveProgramDetail, isKnownProgramPath } from "@/lib/services/public-site";
 
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
 type Props = {
   params: Promise<{ slug: string[] }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export const revalidate = 300;
@@ -27,61 +30,50 @@ function findHub(path: string) {
   return primaryNav.find((group) => normalizePath(group.href) === normalized);
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   if (slug[0] && BLOCKED_SLUGS.has(slug[0].toLowerCase())) {
     return {};
   }
   const path = slug.join("/");
+  const locale = await resolveRequestLocale(searchParams);
 
   const mappedProgramId = PROGRAM_ID_MAP[path];
   const program = getLiveProgramDetail(path);
 
   if (program) {
-    const canonicalUrl = `${env.NEXT_PUBLIC_SITE_URL}/${program.slug}/`;
-    return {
+    const enPath = mappedProgramId ? `/en/programs/${mappedProgramId}` : `/en/${program.slug}`;
+    const viPath = `/${program.slug}`;
+    return buildLocalizedMetadata({
+      locale,
       title: `${program.officialName} – ${program.marketingLabel}`,
       description: program.summary,
-      alternates: {
-        canonical: canonicalUrl,
-        languages: {
-          vi: canonicalUrl,
-          en: mappedProgramId ? `/en/programs/${mappedProgramId}` : "/en",
-        },
-      },
-      openGraph: {
-        title: `${program.officialName} – ${program.marketingLabel}`,
-        description: program.summary,
-        type: "website",
-        locale: "vi_VN",
-        url: canonicalUrl,
-      },
-      twitter: {
-        card: "summary",
-        title: `${program.officialName} – ${program.marketingLabel}`,
-        description: program.summary,
-      },
-    };
+      viPath,
+      enPath,
+      twitter: { card: "summary" },
+    });
   }
 
   const page = await cms.getPageByPath(path).catch(() => null);
 
   if (page) {
-    return {
+    return buildLocalizedMetadata({
+      locale,
       title: page.seo?.title || page.title,
       description: page.seo?.description || page.excerpt || undefined,
-      alternates: {
-        canonical: page.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/${path}`,
-      },
-    };
+      viPath: `/${path}`,
+      enPath: `/en/${path}`,
+    });
   }
 
   const hub = findHub(path);
   return hub
-    ? {
+    ? buildLocalizedMetadata({
+        locale,
         title: hub.label,
-        alternates: { canonical: `${env.NEXT_PUBLIC_SITE_URL}${normalizePath(hub.href)}` },
-      }
+        viPath: normalizePath(hub.href),
+        enPath: `/en${normalizePath(hub.href)}`,
+      })
     : {};
 }
 

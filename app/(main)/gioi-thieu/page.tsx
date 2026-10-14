@@ -4,21 +4,29 @@ import { CmsPageView } from "@/components/cms/CmsPageView";
 import { cms } from "@/lib/cms";
 import { env } from "@/lib/env";
 
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
 export const revalidate = 300;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await cms.getPageByPath("gioi-thieu").catch(() => null);
-  return {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+} = {}): Promise<Metadata> {
+  const [page, locale] = await Promise.all([
+    cms.getPageByPath("gioi-thieu").catch(() => null),
+    resolveRequestLocale(searchParams),
+  ]);
+  return buildLocalizedMetadata({
+    locale,
     title: page?.seo?.title || page?.title || "Giới thiệu",
     description:
       page?.seo?.description ||
       page?.excerpt ||
       "Giới thiệu Viện Đào tạo Quốc tế Topica, Trường Đại học Phú Xuân (PXU) - Thành viên EQuest, tiên phong đại học trực tuyến chất lượng cao.",
-    alternates: {
-      canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/gioi-thieu`,
-      languages: { vi: "/gioi-thieu", en: "/en/about" },
-    },
-  };
+    viPath: "/gioi-thieu",
+    enPath: "/en/about",
+  });
 }
 
 export default async function AboutPage() {

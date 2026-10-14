@@ -18,7 +18,7 @@ interface CategoryItem {
   article_count?: number;
 }
 
-export function generateSlug(text: string): string {
+function generateSlug(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")

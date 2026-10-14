@@ -8,9 +8,19 @@ const LanguageContext = createContext<{ locale: Locale; setLocale: (locale: Loca
 export function LanguageProvider({ children, initialLocale }: { children: ReactNode; initialLocale: Locale }) {
   const [locale, setLocale] = useState(initialLocale);
   const scrollPosition = useRef<number | null>(null);
+  const viTitleRef = useRef<string | null>(null);
   useEffect(() => {
     document.documentElement.lang = locale;
     document.cookie = `topica_locale=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`;
+    if (typeof document !== "undefined" && document.title) {
+      if (locale === "vi") {
+        if (!viTitleRef.current) viTitleRef.current = document.title;
+        else document.title = viTitleRef.current;
+      } else {
+        if (!viTitleRef.current) viTitleRef.current = document.title;
+        document.title = translateText(viTitleRef.current, "en");
+      }
+    }
   }, [locale]);
   useLayoutEffect(() => {
     if (scrollPosition.current === null) return;

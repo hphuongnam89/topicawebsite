@@ -62,6 +62,14 @@ export async function POST(request: Request) {
   if (!isSameOrigin(request))
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > MAX_VIDEO_SIZE + 1024 * 1024) {
+    return NextResponse.json(
+      { error: "Kích thước yêu cầu vượt quá giới hạn tối đa 25 MB." },
+      { status: 413 },
+    );
+  }
+
   let writtenFilePath: string | undefined;
   try {
     const formData = await request.formData();
@@ -79,6 +87,17 @@ export async function POST(request: Request) {
     if (file.size === 0 || file.size > MAX_VIDEO_SIZE) {
       return NextResponse.json(
         { error: "File phải có dung lượng từ 1 byte đến 25 MB." },
+        { status: 413 },
+      );
+    }
+
+    // Early size check before reading arrayBuffer into memory
+    if (file.type.startsWith("image/") && file.size > MAX_IMAGE_SIZE) {
+      return NextResponse.json({ error: "Ảnh phải có dung lượng tối đa 5 MB." }, { status: 413 });
+    }
+    if (file.type === "application/pdf" && file.size > MAX_DOCUMENT_SIZE) {
+      return NextResponse.json(
+        { error: "Tài liệu PDF phải có dung lượng tối đa 20 MB." },
         { status: 413 },
       );
     }

@@ -20,12 +20,28 @@ import { getLivePrograms, getLiveContact } from "@/lib/services/public-site";
 import type { HeroSectionData } from "@/components/sections/HeroSection";
 import { testimonials as staticTestimonials, type Testimonial } from "@/data/testimonials";
 
+import type { Metadata } from "next";
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
 // Keep the homepage fast after the first render while preserving on-demand
 // refreshes from the admin settings endpoint via revalidatePath("/").
 export const revalidate = 300;
-export const metadata: Metadata = {
-  alternates: { canonical: "/", languages: { vi: "/", en: "/en" } },
-};
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const locale = await resolveRequestLocale(searchParams);
+  return buildLocalizedMetadata({
+    locale,
+    title: "Viện Đào tạo Quốc tế Topica",
+    description:
+      "Thông tin chương trình đào tạo từ xa, tuyển sinh và hệ thống học tập của Viện Đào tạo Quốc tế Topica.",
+    viPath: "/",
+    enPath: "/en",
+  });
+}
 
 export default function Home() {
   const contact = getLiveContact();

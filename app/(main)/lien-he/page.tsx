@@ -10,18 +10,26 @@ import { servicePortals } from "@/data/campuses";
 import { cms } from "@/lib/cms";
 import { env } from "@/lib/env";
 
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
 export const revalidate = 300;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const page = await cms.getPageByPath("lien-he").catch(() => null);
-  return {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+} = {}): Promise<Metadata> {
+  const [page, locale] = await Promise.all([
+    cms.getPageByPath("lien-he").catch(() => null),
+    resolveRequestLocale(searchParams),
+  ]);
+  return buildLocalizedMetadata({
+    locale,
     title: page?.seo?.title || page?.title || "Liên hệ",
     description: page?.seo?.description || page?.excerpt || undefined,
-    alternates: {
-      canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/lien-he`,
-      languages: { vi: "/lien-he", en: "/en/contact" },
-    },
-  };
+    viPath: "/lien-he",
+    enPath: "/en/contact",
+  });
 }
 
 export default async function ContactPage() {

@@ -69,8 +69,8 @@ export default function AdminAccountPage() {
       return;
     }
 
-    if (newPassword.length < 6) {
-      setPasswordMessage({ type: "error", text: "Mật khẩu mới phải có ít nhất 6 ký tự." });
+    if (newPassword.length < 12) {
+      setPasswordMessage({ type: "error", text: "Mật khẩu mới phải có ít nhất 12 ký tự." });
       return;
     }
 
@@ -208,7 +208,7 @@ export default function AdminAccountPage() {
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Tối thiểu 6 ký tự"
+                placeholder="Tối thiểu 12 ký tự"
                 className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
               />
             </div>

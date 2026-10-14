@@ -3,45 +3,26 @@ import { leadApiSchema } from "@/lib/form-schema";
 import { submitLead, LeadConflictError } from "@/lib/services/leads";
 import { safePublicPath } from "@/lib/analytics-path";
 import { readBoundedJson, BodyLimitError } from "@/lib/http/read-json";
+import { BoundedRateLimiter, getClientIp } from "@/lib/security/rate-limit";
 
-const MAX_SUBMISSIONS = 5;
-const WINDOW_MS = 15 * 60 * 1000;
-const submissions = new Map<string, { count: number; resetAt: number }>();
-
-function getClientKey(request: Request): string {
-  return (
-    request.headers.get("x-real-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "unknown"
-  );
-}
-
-function consumeSubmission(request: Request): number | null {
-  const key = getClientKey(request);
-  const now = Date.now();
-  for (const [ip, value] of submissions) if (value.resetAt <= now) submissions.delete(ip);
-  if (!submissions.has(key) && submissions.size >= 5000) return 60;
-  const entry = submissions.get(key);
-  if (!entry || entry.resetAt <= now) {
-    submissions.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    return null;
-  }
-  if (entry.count >= MAX_SUBMISSIONS) return Math.ceil((entry.resetAt - now) / 1000);
-  entry.count += 1;
-  return null;
-}
+const leadLimiter = new BoundedRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  maxAttempts: 5,
+  maxKeys: 5000,
+});
 
 export async function POST(request: Request) {
   try {
     const origin=request.headers.get("origin");
     if(origin && origin!==new URL(request.url).origin)return NextResponse.json({error:"Invalid origin"},{status:403});
-    const retryAfter = consumeSubmission(request);
-    if (retryAfter !== null) {
+    const clientIp = getClientIp(request);
+    const limitStatus = leadLimiter.increment(clientIp);
+    if (!limitStatus.allowed) {
       return NextResponse.json(
         { error: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau." },
         {
           status: 429,
-          headers: { "Retry-After": String(retryAfter) },
+          headers: { "Retry-After": String(limitStatus.retryAfterSeconds) },
         }
       );
     }

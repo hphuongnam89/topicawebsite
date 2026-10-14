@@ -10,26 +10,31 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { env } from "@/lib/env";
 
-export async function generateMetadata({ searchParams }: Props) {
-  const resolvedParams = await searchParams;
-  const category = resolvedParams.category as string | undefined;
-  const page = resolvedParams.page as string | undefined;
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
 
-  let url = `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc`;
+export async function generateMetadata({ searchParams }: Props) {
+  const [resolvedParams, locale] = await Promise.all([
+    searchParams,
+    resolveRequestLocale(searchParams),
+  ]);
+  const category = resolvedParams?.category as string | undefined;
+  const page = resolvedParams?.page as string | undefined;
+
+  let querySuffix = "";
   const query = new URLSearchParams();
   if (category) query.set("category", category);
   if (page) query.set("page", page);
   const queryString = query.toString();
-  if (queryString) url += `?${queryString}`;
+  if (queryString) querySuffix = `?${queryString}`;
 
-  return {
+  return buildLocalizedMetadata({
+    locale,
     title: "Tin tức & Sự kiện",
     description:
       "Cập nhật những tin tức, sự kiện và thông báo mới nhất từ Viện Đào tạo Quốc tế Topica.",
-    alternates: {
-      canonical: url,
-    },
-  };
+    viPath: `/tin-tuc${querySuffix}`,
+    enPath: `/en/tin-tuc${querySuffix}`,
+  });
 }
 
 type Props = {

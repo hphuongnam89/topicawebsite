@@ -6,7 +6,7 @@ import { isSameOrigin } from "@/lib/security/request";
 import { recordAdminAudit } from "@/lib/services/admin-audit";
 import { z } from "zod";
 
-export const homepageHeroSchema = z
+const homepageHeroSchema = z
   .object({
     badge: z.string().trim().min(1).max(300),
     title: z.string().trim().min(1).max(300),
@@ -21,13 +21,13 @@ export const homepageHeroSchema = z
   })
   .strict();
 
-export const trustItemSchema = z
+const trustItemSchema = z
   .object({
     label: z.string().trim().min(1).max(200),
   })
   .strict();
 
-export const testimonialSchema = z
+const testimonialSchema = z
   .object({
     id: z.string().trim().min(1).max(100),
     name: z.string().trim().min(1).max(200),
@@ -38,7 +38,7 @@ export const testimonialSchema = z
   })
   .strict();
 
-export const admissionStepSchema = z
+const admissionStepSchema = z
   .object({
     step: z.number().int().min(1).max(20),
     title: z.string().trim().min(1).max(200),
@@ -47,7 +47,7 @@ export const admissionStepSchema = z
   })
   .strict();
 
-export const homepageUpdateSchema = z
+const homepageUpdateSchema = z
   .object({
     hero: homepageHeroSchema.optional(),
     trustItems: z.array(trustItemSchema).optional(),

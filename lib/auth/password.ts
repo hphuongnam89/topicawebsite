@@ -5,7 +5,7 @@ const SALT_LENGTH = 16;
 const KEY_LENGTH = 64;
 const ITERATIONS = 100_000;
 const DIGEST = "sha512";
-export const MIN_PASSWORD_LENGTH = 6;
+export const MIN_PASSWORD_LENGTH = 12;
 
 /**
  * Hashes a password using PBKDF2 with SHA-512

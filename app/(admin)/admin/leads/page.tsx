@@ -25,7 +25,7 @@ interface LeadItem {
   created_at: string;
 }
 
-export function escapeCsvCell(value: unknown): string {
+function escapeCsvCell(value: unknown): string {
   if (value === null || value === undefined) return '""';
   let str = String(value);
   // Protect against spreadsheet formula injection (=, +, -, @, tab, CR)
