@@ -1,5 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "./cn";
 
@@ -89,9 +91,9 @@ function ButtonContent({
   return (
     <>
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
-      {!loading && leftIcon && <span className="mr-2">{leftIcon}</span>}
-      {children}
-      {!loading && rightIcon && !isTertiary && <span className="ml-2">{rightIcon}</span>}
+      <LocalizedText>{!loading && leftIcon && <span className="mr-2"><LocalizedText>{leftIcon}</LocalizedText></span>}</LocalizedText>
+      <LocalizedText>{children}</LocalizedText>
+      <LocalizedText>{!loading && rightIcon && !isTertiary && <span className="ml-2"><LocalizedText>{rightIcon}</LocalizedText></span>}</LocalizedText>
       {!loading && isTertiary && (
         <ArrowRight
           className="ml-1 h-4 w-4 transition-transform duration-[var(--duration-base)] group-hover:translate-x-[2px]"
@@ -126,7 +128,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   ref,
 ) {
   return (
-    <button
+    <LocalizedElement as="button"
       ref={ref}
       type={type}
       className={buttonStyles({ variant, size, loading, disabled, className })}
@@ -135,9 +137,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       {...props}
     >
       <ButtonContent loading={loading} leftIcon={leftIcon} rightIcon={rightIcon} variant={variant}>
-        {children}
+        <LocalizedText>{children}</LocalizedText>
       </ButtonContent>
-    </button>
+    </LocalizedElement>
   );
 });
 
@@ -171,7 +173,7 @@ export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(f
 ) {
   const content = (
     <ButtonContent leftIcon={leftIcon} rightIcon={rightIcon} variant={variant}>
-      {children}
+      <LocalizedText>{children}</LocalizedText>
     </ButtonContent>
   );
   const styles = buttonStyles({ variant, size, className });

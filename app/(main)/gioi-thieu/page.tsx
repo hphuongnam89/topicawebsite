@@ -14,7 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
       page?.seo?.description ||
       page?.excerpt ||
       "Giới thiệu Viện Đào tạo Quốc tế Topica, Trường Đại học Phú Xuân (PXU) - Thành viên EQuest, tiên phong đại học trực tuyến chất lượng cao.",
-    alternates: { canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/gioi-thieu` },
+    alternates: {
+      canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/gioi-thieu`,
+      languages: { vi: "/gioi-thieu", en: "/en/about" },
+    },
   };
 }
 

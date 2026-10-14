@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getLeads, getArticles, getCategories, getAnalyticsStats } from "@/lib/db";
+import { getLeads, getCategories, getAnalyticsStats } from "@/lib/db";
 import { getReviewQueueCount } from "@/lib/services/revisions";
 import { getCmsOperationsHealth } from "@/lib/services/cms-models";
+import { getAdminArticleStats } from "@/lib/services/admin-content";
 import { redirect } from "next/navigation";
 import {
   Users,
@@ -37,7 +38,8 @@ export default async function AdminDashboardPage({
   const range = [7, 30, 90].includes(Number(requestedRange)) ? Number(requestedRange) : 7;
   const totalLeads = getLeads().total;
   const { items: recentLeads } = getLeads({ limit: 5 });
-  const { items: recentArticles, total: totalArticles } = getArticles({ limit: 5 });
+  const articleStats = getAdminArticleStats();
+  const recentArticles = articleStats.recentArticles;
   const categories = getCategories();
 
   const newLeadsCount = getLeads({ status: "new" }).total;
@@ -64,8 +66,8 @@ export default async function AdminDashboardPage({
     },
     {
       title: "Bài viết Tin tức",
-      value: totalArticles,
-      total: "Đã xuất bản",
+      value: articleStats.publishedArticles,
+      total: `Đã xuất bản (Tổng: ${articleStats.totalArticles} bài)`,
       icon: FileText,
       color: "bg-blue-600 text-white",
       href: "/admin/articles",
@@ -421,7 +423,7 @@ export default async function AdminDashboardPage({
                 >
                   <div className="min-w-0 space-y-1 pr-4">
                     <Link
-                      href={`/admin/articles/${art.id}/edit`}
+                      href={`/admin/content?entityType=article&entityId=${art.id}`}
                       className="block truncate font-semibold text-ink-900 transition-colors hover:text-navy-900"
                     >
                       {art.title}
@@ -435,7 +437,7 @@ export default async function AdminDashboardPage({
                     </div>
                   </div>
                   <Link
-                    href={`/admin/articles/${art.id}/edit`}
+                    href={`/admin/content?entityType=article&entityId=${art.id}`}
                     className="shrink-0 text-xs font-semibold text-navy-900 hover:underline"
                   >
                     Chỉnh sửa

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cms } from "@/lib/cms";
 import { Article, Category } from "@/lib/cms/types";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -97,24 +98,24 @@ export default async function NewsHomepage({ searchParams }: Props) {
         )}
 
         {/* Search Results Summary */}
-        {(search || category) && (
+        <LocalizedText>{(search || category) && (
           <div className="mb-8 text-body text-ink-600">
-            Tìm thấy <span className="text-ink-900 font-bold">{articles.length}</span> kết quả
-            {search && (
+            <LocalizedText>Tìm thấy </LocalizedText><span className="text-ink-900 font-bold">{articles.length}</span> <LocalizedText>kết quả
+            </LocalizedText><LocalizedText>{search && (
               <span>
-                {" "}
-                cho từ khóa &quot;<span className="text-ink-900 font-bold">{search}</span>&quot;
-              </span>
-            )}
-            {category && <span> trong chuyên mục này</span>}
+                <LocalizedText>{" "}</LocalizedText>
+                <LocalizedText>cho từ khóa &quot;</LocalizedText><span className="text-ink-900 font-bold"><LocalizedText>{search}</LocalizedText></span><LocalizedText>&quot;
+              </LocalizedText></span>
+            )}</LocalizedText>
+            <LocalizedText>{category && <span> <LocalizedText>trong chuyên mục này</LocalizedText></span>}</LocalizedText>
           </div>
-        )}
+        )}</LocalizedText>
 
         {/* Articles Grid */}
         {cmsUnavailable ? (
           <div className="rounded-lg border border-line-200 bg-paper px-6 py-12 text-center">
-            <h2 className="font-display text-h3 text-ink-950">Tin tức tạm thời chưa khả dụng</h2>
-            <p className="mt-2 text-body text-ink-600">Vui lòng quay lại sau.</p>
+            <h2 className="font-display text-h3 text-ink-950"><LocalizedText>Tin tức tạm thời chưa khả dụng</LocalizedText></h2>
+            <p className="mt-2 text-body text-ink-600"><LocalizedText>Vui lòng quay lại sau.</LocalizedText></p>
           </div>
         ) : articles.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

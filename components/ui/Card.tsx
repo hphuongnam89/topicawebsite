@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import { cn } from "./cn";
 
@@ -49,7 +50,7 @@ export function CardMedia({
   return (
     <div className={cn("relative overflow-hidden", aspect, className)} {...props}>
       <div className="h-full w-full transition-transform duration-[var(--duration-slow)] group-hover:scale-[1.03]">
-        {children}
+        <LocalizedText>{children}</LocalizedText>
       </div>
     </div>
   );

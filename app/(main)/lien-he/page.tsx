@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import type { Metadata } from "next";
 import { BookOpen, ExternalLink, FileText, GraduationCap } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -16,7 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: page?.seo?.title || page?.title || "Liên hệ",
     description: page?.seo?.description || page?.excerpt || undefined,
-    alternates: { canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/lien-he` },
+    alternates: {
+      canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/lien-he`,
+      languages: { vi: "/lien-he", en: "/en/contact" },
+    },
   };
 }
 
@@ -34,19 +38,19 @@ export default async function ContactPage() {
         <Container className="grid items-start gap-8 lg:grid-cols-2">
           <div>
             <h2 id="contact-form-title" className="text-h2 font-bold text-navy-950">
-              Nhận tư vấn tuyển sinh
-            </h2>
+              <LocalizedText>Nhận tư vấn tuyển sinh
+            </LocalizedText></h2>
             <p className="mt-4 text-body-lg text-ink-700">
-              Bạn chưa chọn ngành cũng có thể gửi yêu cầu. Biểu mẫu này ghi nhận nhu cầu tư vấn.
-            </p>
+              <LocalizedText>Bạn chưa chọn ngành cũng có thể gửi yêu cầu. Biểu mẫu này ghi nhận nhu cầu tư vấn.
+            </LocalizedText></p>
             <dl className="mt-6 space-y-4">
               {[contact.channels.admissionsHotline, contact.channels.admissionsEmail].map(
                 (channel) => (
                   <div key={channel.href}>
-                    <dt className="font-semibold text-ink-950">{channel.label}</dt>
+                    <dt className="font-semibold text-ink-950"><LocalizedText>{channel.label}</LocalizedText></dt>
                     <dd>
                       <a className="break-all text-navy-700 underline hover:text-gold-700" href={channel.href}>
-                        {channel.value}
+                        <LocalizedText>{channel.value}</LocalizedText>
                       </a>
                     </dd>
                   </div>
@@ -63,14 +67,14 @@ export default async function ContactPage() {
         <Container>
           <div className="max-w-2xl">
             <p className="text-xs font-bold tracking-[0.16em] text-navy-700 uppercase">
-              Cổng dịch vụ số
-            </p>
+              <LocalizedText>Cổng dịch vụ số
+            </LocalizedText></p>
             <h2 id="services-title" className="mt-2 text-2xl font-bold text-navy-950 sm:text-3xl">
-              Hệ thống học tập & Tra cứu trực tuyến
-            </h2>
+              <LocalizedText>Hệ thống học tập & Tra cứu trực tuyến
+            </LocalizedText></h2>
             <p className="mt-2 text-sm text-ink-600">
-              Phân định các cổng thông tin chuyên trách dành cho thí sinh đăng ký và sinh viên đang theo học.
-            </p>
+              <LocalizedText>Phân định các cổng thông tin chuyên trách dành cho thí sinh đăng ký và sinh viên đang theo học.
+            </LocalizedText></p>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -92,10 +96,10 @@ export default async function ContactPage() {
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <h3 className="font-sans text-lg font-bold text-navy-950">
-                      {portal.name}
+                      <LocalizedText>{portal.name}</LocalizedText>
                     </h3>
                     <p className="mt-2 text-sm text-ink-600 leading-relaxed">
-                      {portal.role}
+                      <LocalizedText>{portal.role}</LocalizedText>
                     </p>
                   </div>
                   <div className="mt-6 pt-4 border-t border-line-100">
@@ -105,11 +109,11 @@ export default async function ContactPage() {
                       rel={portal.isExternal ? "noopener noreferrer" : undefined}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-navy-700 hover:text-gold-700 transition-colors"
                     >
-                      Truy cập cổng
-                      {portal.isExternal ? (
+                      <LocalizedText>Truy cập cổng
+                      </LocalizedText>{portal.isExternal ? (
                         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       ) : (
-                        <span aria-hidden="true">→</span>
+                        <span aria-hidden="true"><LocalizedText>→</LocalizedText></span>
                       )}
                     </a>
                   </div>

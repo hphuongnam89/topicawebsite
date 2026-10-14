@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import { cn } from "./cn";
 import { Container, type ContainerProps } from "./Container";
@@ -38,11 +39,11 @@ export function Section({
       )}
       {...props}
     >
-      {contained ? (
-        <Container size={containerSize}>{children}</Container>
+      <LocalizedText>{contained ? (
+        <Container size={containerSize}><LocalizedText>{children}</LocalizedText></Container>
       ) : (
         children
-      )}
+      )}</LocalizedText>
     </Component>
   );
 }

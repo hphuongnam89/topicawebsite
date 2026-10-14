@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/guards";
-import { getCategories, createCategory, deleteCategory } from "@/lib/db";
+import { createCategory, deleteCategory } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
 import { categorySchema } from "@/lib/validation/admin";
 import { recordAdminAudit } from "@/lib/services/admin-audit";
+import { getAdminCategorySummary } from "@/lib/services/admin-content";
 
 export async function GET() {
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
-  const categories = getCategories();
-  return NextResponse.json({ categories });
+  return NextResponse.json(getAdminCategorySummary());
 }
 
 export async function POST(request: Request) {

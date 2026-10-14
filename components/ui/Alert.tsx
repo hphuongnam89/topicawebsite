@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import { Info, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import { cn } from "./cn";
@@ -67,15 +68,15 @@ export function Alert({
       {...props}
     >
       <div className={cn("mt-0.5 shrink-0", config.iconColor)}>
-        {icon || <IconComponent className="h-5 w-5" aria-hidden="true" />}
+        <LocalizedText>{icon || <IconComponent className="h-5 w-5" aria-hidden="true" />}</LocalizedText>
       </div>
       <div className="min-w-0 flex-1">
-        {title && (
+        <LocalizedText>{title && (
           <h4 className={cn("mb-1 font-semibold text-body", config.titleColor)}>
-            {title}
+            <LocalizedText>{title}</LocalizedText>
           </h4>
-        )}
-        <div className="text-ink-800">{children}</div>
+        )}</LocalizedText>
+        <div className="text-ink-800"><LocalizedText>{children}</LocalizedText></div>
       </div>
     </div>
   );

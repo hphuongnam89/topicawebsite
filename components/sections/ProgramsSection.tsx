@@ -1,5 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import Link from "@/components/i18n/LocalizedLink";
+import Image from "@/components/i18n/LocalizedImage";
 import { ArrowRight, GraduationCap, Clock } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -59,30 +60,30 @@ export function ProgramsSection({
 
                     <CardBody className="flex-1">
                       <div className="mb-2.5 flex items-center justify-between gap-2">
-                        <Badge variant="navy">{programGroups[program.group]}</Badge>
+                        <Badge variant="navy"><LocalizedText>{programGroups[program.group]}</LocalizedText></Badge>
                       </div>
 
                       <h3 className="min-h-[3.5rem] font-serif text-h3 font-bold text-ink-950 transition-colors group-hover:text-navy-900">
-                        {mainName}
+                        <LocalizedText>{mainName}</LocalizedText>
                       </h3>
 
                       <p className="mt-1 min-h-4 text-xs font-semibold tracking-wider text-gold-700 uppercase">
-                        {specialization ? `Chuyên ngành: ${specialization}` : ""}
+                        <LocalizedText>{specialization ? `Chuyên ngành: ${specialization}` : ""}</LocalizedText>
                       </p>
 
                       <p className="mt-2.5 line-clamp-2 text-body-sm leading-relaxed text-ink-600">
-                        {program.shortDescription}
+                        <LocalizedText>{program.shortDescription}</LocalizedText>
                       </p>
 
                       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line-100 pt-3 text-xs text-ink-600">
                         <span className="flex items-center gap-1">
                           <GraduationCap className="h-3.5 w-3.5 text-navy-700" aria-hidden="true" />
-                          Cử nhân ĐH Phú Xuân
-                        </span>
+                          <LocalizedText>Cử nhân ĐH Phú Xuân
+                        </LocalizedText></span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3.5 w-3.5 text-navy-700" aria-hidden="true" />
-                          Theo lộ trình và tín chỉ được công nhận
-                        </span>
+                          <LocalizedText>Theo lộ trình và tín chỉ được công nhận
+                        </LocalizedText></span>
                       </div>
                     </CardBody>
 
@@ -94,8 +95,8 @@ export function ProgramsSection({
                           className: "group/cta gap-2 px-0 font-semibold text-navy-900",
                         })}
                       >
-                        Xem chi tiết & Khung chương trình
-                        <ArrowRight
+                        <LocalizedText>Xem chi tiết & Khung chương trình
+                        </LocalizedText><ArrowRight
                           className="h-4 w-4 transition-transform duration-[var(--duration-fast)] group-hover/cta:translate-x-1"
                           aria-hidden="true"
                         />
@@ -115,21 +116,21 @@ export function ProgramsSection({
           />
           <div className="relative max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-400">
-              Chọn ngành học
-            </p>
+              <LocalizedText>Chọn ngành học
+            </LocalizedText></p>
             <h3 className="mt-2 font-serif text-xl font-bold text-white sm:text-2xl">
-              Đang phân vân ngành nào phù hợp với bạn?
-            </h3>
+              <LocalizedText>Đang phân vân ngành nào phù hợp với bạn?
+            </LocalizedText></h3>
             <p className="mt-2 max-w-xl text-body-sm leading-relaxed text-navy-100">
-              Khám phá chương trình, lộ trình học và định hướng của từng ngành để tìm lựa chọn phù hợp.
-            </p>
+              <LocalizedText>Khám phá chương trình, lộ trình học và định hướng của từng ngành để tìm lựa chọn phù hợp.
+            </LocalizedText></p>
           </div>
           <Link
             href="/nganh-dao-tao/"
             className="relative mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-gold-400 px-5 py-3 text-body-sm font-bold text-navy-950 shadow-sm transition-colors hover:bg-gold-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-300 sm:w-auto lg:mt-0 lg:shrink-0"
           >
-            Khám phá các ngành
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <LocalizedText>Khám phá các ngành
+            </LocalizedText><ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
       </Container>

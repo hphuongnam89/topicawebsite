@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn";
 import { ButtonLink } from "@/components/ui/Button";
 import { GraduationCap } from "lucide-react";
@@ -25,7 +26,7 @@ export function InlineAdmissionCTA({
       <div className="flex shrink-0 text-brand-600">
         <GraduationCap size={24} />
       </div>
-      <p className="m-0 flex-1 text-body-sm font-medium text-ink-800">{message}</p>
+      <p className="m-0 flex-1 text-body-sm font-medium text-ink-800"><LocalizedText>{message}</LocalizedText></p>
       <div className="w-full shrink-0 sm:w-auto">
         <ButtonLink
           href={href}
@@ -33,7 +34,7 @@ export function InlineAdmissionCTA({
           size="sm"
           className="w-full bg-white hover:bg-brand-100 hover:text-brand-700 sm:w-auto"
         >
-          {buttonLabel}
+          <LocalizedText>{buttonLabel}</LocalizedText>
         </ButtonLink>
       </div>
     </div>

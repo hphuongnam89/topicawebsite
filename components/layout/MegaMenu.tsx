@@ -1,7 +1,8 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { motion, AnimatePresence } from "motion/react";
 import type { NavColumn } from "@/data/navigation";
 import { transitions } from "@/lib/motion";
@@ -91,7 +92,7 @@ export function MegaMenu({ columns, onClose, onMouseEnter, onMouseLeave }: MegaM
           {columns.map((column) => (
             <div key={column.heading}>
               <h3 className="mb-3 text-[12px] font-bold tracking-wider text-gold-700 uppercase">
-                {column.heading}
+                <LocalizedText>{column.heading}</LocalizedText>
               </h3>
               <ul className="space-y-0.5" role="none">
                 {column.items.map((item) =>
@@ -103,7 +104,7 @@ export function MegaMenu({ columns, onClose, onMouseEnter, onMouseLeave }: MegaM
                         onClick={onClose}
                         className="block rounded-md px-2.5 py-2 text-body-sm font-medium text-ink-800 transition-colors duration-[var(--duration-base)] hover:bg-navy-50 hover:text-navy-900"
                       >
-                        {item.label}
+                        <LocalizedText>{item.label}</LocalizedText>
                       </Link>
                     </li>
                   ) : null,

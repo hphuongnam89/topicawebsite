@@ -1,3 +1,5 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "./cn";
@@ -32,11 +34,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className={className}>
         <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
-          {label}
-          {required && <span className="ml-1 text-error" aria-hidden="true">*</span>}
+          <LocalizedText>{label}</LocalizedText>
+          {required && <span className="ml-1 text-error" aria-hidden="true"><LocalizedText>*</LocalizedText></span>}
         </label>
         <div className="relative">
-          <textarea
+          <LocalizedElement as="textarea"
             id={id}
             ref={ref}
             rows={rows}
@@ -55,17 +57,17 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             {...props}
           />
         </div>
-        {error && (
+        <LocalizedText>{error && (
           <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
             <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>{error}</span>
+            <span><LocalizedText>{error}</LocalizedText></span>
           </div>
-        )}
-        {!error && helperText && (
+        )}</LocalizedText>
+        <LocalizedText>{!error && helperText && (
           <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
-            {helperText}
+            <LocalizedText>{helperText}</LocalizedText>
           </p>
-        )}
+        )}</LocalizedText>
       </div>
     );
   },

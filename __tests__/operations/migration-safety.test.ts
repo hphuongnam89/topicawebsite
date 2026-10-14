@@ -26,7 +26,7 @@ describe("Migration safety on synthetic databases", () => {
 
   beforeEach(() => {
     closeDb();
-    root = fs.mkdtempSync(path.join(os.tmpdir(), "topica-migration-safety-"));
+    root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "topica-migration-safety-")));
     file = path.join(root, "fixture.db");
     vi.stubEnv("TOPICA_DB_PATH", file);
     vi.stubEnv("TOPICA_BACKUP_DIR", path.join(root, "backups"));

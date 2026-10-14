@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { BookOpenCheck, FileWarning, ListChecks } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
@@ -31,18 +32,18 @@ export function PendingAcademicSections({ program }: { program: ProgramDetail })
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              Chương trình đào tạo
-            </p>
+              <LocalizedText>Chương trình đào tạo
+            </LocalizedText></p>
             <h2
               id="pending-academic-title"
               className="mt-3 max-w-[14ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              Hồ sơ học thuật đang chờ bổ sung
-            </h2>
+              <LocalizedText>Hồ sơ học thuật đang chờ bổ sung
+            </LocalizedText></h2>
             <p className="mt-5 max-w-lg leading-7 text-[var(--color-academic-muted)]">
-              Trang hiện có mới xác minh phần giới thiệu ngành và cơ hội nghề nghiệp. Các dữ liệu
+              <LocalizedText>Trang hiện có mới xác minh phần giới thiệu ngành và cơ hội nghề nghiệp. Các dữ liệu
               học thuật chỉ được công bố sau khi có hồ sơ chương trình chính thức.
-            </p>
+            </LocalizedText></p>
           </div>
 
           <div className="border-t border-[var(--color-academic-rule-strong)]">
@@ -54,26 +55,26 @@ export function PendingAcademicSections({ program }: { program: ProgramDetail })
                 <Icon className="h-6 w-6 text-[var(--color-academic-warning)]" aria-hidden="true" />
                 <div>
                   <h3 className="text-xl font-semibold text-[var(--color-academic-ink)]">
-                    {title}
+                    <LocalizedText>{title}</LocalizedText>
                   </h3>
-                  <p className="mt-2 leading-7 text-[var(--color-academic-muted)]">{description}</p>
+                  <p className="mt-2 leading-7 text-[var(--color-academic-muted)]"><LocalizedText>{description}</LocalizedText></p>
                 </div>
               </div>
             ))}
-            {program.source.url && (
+            <LocalizedText>{program.source.url && (
               <p className="mt-6 text-sm leading-6 text-[var(--color-academic-muted)]">
-                Nội dung đang hiển thị được đối chiếu từ{" "}
+                <LocalizedText>Nội dung đang hiển thị được đối chiếu từ</LocalizedText><LocalizedText>{" "}</LocalizedText>
                 <a
                   href={program.source.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-semibold whitespace-nowrap underline underline-offset-4"
                 >
-                  trang ngành Topica
-                </a>
-                , ngày {program.source.reviewedAt}.
-              </p>
-            )}
+                  <LocalizedText>trang ngành Topica
+                </LocalizedText></a>
+                <LocalizedText>, ngày </LocalizedText><LocalizedText>{program.source.reviewedAt}</LocalizedText><LocalizedText>.
+              </LocalizedText></p>
+            )}</LocalizedText>
           </div>
         </div>
       </Container>

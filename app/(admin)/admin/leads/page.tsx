@@ -25,6 +25,17 @@ interface LeadItem {
   created_at: string;
 }
 
+export function escapeCsvCell(value: unknown): string {
+  if (value === null || value === undefined) return '""';
+  let str = String(value);
+  // Protect against spreadsheet formula injection (=, +, -, @, tab, CR)
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  const escaped = str.replace(/"/g, '""');
+  return `"${escaped}"`;
+}
+
 export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<LeadItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -33,6 +44,8 @@ export default function AdminLeadsPage() {
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -40,6 +53,7 @@ export default function AdminLeadsPage() {
   const fetchLeads = async (searchQuery = search) => {
     try {
       setLoading(true);
+      setError(null);
       const params = new URLSearchParams();
       params.set("page", String(page));
       params.set("limit", "20");
@@ -52,9 +66,13 @@ export default function AdminLeadsPage() {
         setLeads(data.leads || []);
         setTotal(data.total || 0);
         setTotalPages(data.totalPages || 1);
+        setError(null);
+      } else {
+        setError(`Không thể tải danh sách lead (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`);
       }
     } catch (err) {
       console.error(err);
+      setError("Lỗi kết nối khi tải danh sách lead. Vui lòng kiểm tra mạng và thử lại.");
     } finally {
       setLoading(false);
     }
@@ -67,16 +85,18 @@ export default function AdminLeadsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, selectedStatus]);
 
-  
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
     fetchLeads(search);
   };
 
-  const handleStatusChange = async (id: number, newStatus: "new" | "contacted" | "consulted" | "cancelled") => {
+  const handleStatusChange = async (
+    id: number,
+    newStatus: "new" | "contacted" | "consulted" | "cancelled",
+  ) => {
     setUpdatingId(id);
+    setMessage(null);
     try {
       const res = await fetch("/api/admin/leads", {
         method: "PATCH",
@@ -86,11 +106,11 @@ export default function AdminLeadsPage() {
 
       if (!res.ok) throw new Error("Cập nhật trạng thái thất bại.");
 
-      setLeads((prev) =>
-        prev.map((lead) => (lead.id === id ? { ...lead, status: newStatus } : lead))
-      );
+      setMessage({ type: "success", text: "Đã cập nhật trạng thái lead thành công." });
+      // CMS-11: Refresh leads list and total count according to active filter
+      await fetchLeads();
     } catch (err: any) {
-      alert(err.message || "Lỗi cập nhật.");
+      setMessage({ type: "error", text: err.message || "Lỗi cập nhật trạng thái." });
     } finally {
       setUpdatingId(null);
     }
@@ -115,33 +135,67 @@ export default function AdminLeadsPage() {
     }
   };
 
-  const exportCSV = () => {
-    if (leads.length === 0) {
-      alert("Không có dữ liệu để xuất.");
-      return;
+  const exportCSV = async (mode: "all" | "page" = "all") => {
+    try {
+      setExporting(true);
+      let dataToExport = leads;
+
+      if (mode === "all") {
+        const params = new URLSearchParams();
+        params.set("export", "true");
+        if (search) params.set("search", search);
+        if (selectedStatus && selectedStatus !== "all") params.set("status", selectedStatus);
+        const res = await fetch(`/api/admin/leads?${params.toString()}`);
+        if (!res.ok) throw new Error("Không thể tải toàn bộ danh sách lead để xuất.");
+        const data = await res.json();
+        dataToExport = data.leads || [];
+      }
+
+      if (dataToExport.length === 0) {
+        alert("Không có dữ liệu để xuất.");
+        return;
+      }
+
+      const headers = [
+        "ID",
+        "Ho va Ten",
+        "So Dien Thoai",
+        "Email",
+        "Nganh Quan Tam",
+        "Ghi Chu",
+        "Trang Thai",
+        "Ngay Gui",
+      ];
+      const rows = dataToExport.map((l) => [
+        l.id,
+        escapeCsvCell(l.fullname),
+        escapeCsvCell(l.phone),
+        escapeCsvCell(l.email),
+        escapeCsvCell(l.program),
+        escapeCsvCell(l.notes),
+        escapeCsvCell(l.status),
+        escapeCsvCell(new Date(l.created_at).toLocaleString("vi-VN")),
+      ]);
+
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      const suffix = selectedStatus !== "all" ? `_${selectedStatus}` : "";
+      link.setAttribute(
+        "download",
+        `topica_leads${suffix}_${mode === "all" ? "toan_bo" : `trang_${page}`}_${new Date().toISOString().slice(0, 10)}.csv`,
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Lỗi xuất file CSV");
+    } finally {
+      setExporting(false);
     }
-
-    const headers = ["ID", "Ho va Ten", "So Dien Thoai", "Email", "Nganh Quan Tam", "Ghi Chu", "Trang Thai", "Ngay Gui"];
-    const rows = leads.map((l) => [
-      l.id,
-      `"${l.fullname}"`,
-      `"${l.phone}"`,
-      `"${l.email || ""}"`,
-      `"${l.program || ""}"`,
-      `"${(l.notes || "").replace(/"/g, '""')}"`,
-      l.status,
-      `"${new Date(l.created_at).toLocaleString("vi-VN")}"`,
-    ]);
-
-    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `topica_leads_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   const statusTabs = [
@@ -168,13 +222,27 @@ export default function AdminLeadsPage() {
           </p>
         </div>
 
-        <button
-          onClick={exportCSV}
-          className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-4 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs hover:bg-paper transition-all"
-        >
-          <Download className="h-4 w-4 text-ink-500" />
-          <span>Xuất file Excel / CSV</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => exportCSV("all")}
+            disabled={exporting || total === 0}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-body-sm font-semibold text-white shadow-xs hover:bg-navy-800 disabled:opacity-50 transition-all focus:outline-2 focus:outline-navy-900"
+            title="Xuất toàn bộ kết quả phù hợp với bộ lọc hiện tại"
+          >
+            {exporting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4 text-white" />}
+            <span>Xuất toàn bộ CSV ({total})</span>
+          </button>
+          {totalPages > 1 && (
+            <button
+              onClick={() => exportCSV("page")}
+              disabled={exporting || leads.length === 0}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3.5 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs hover:bg-paper disabled:opacity-50 transition-all focus:outline-2 focus:outline-navy-900"
+              title="Chỉ xuất các dòng trên trang này"
+            >
+              <span>Xuất trang này ({leads.length})</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {message && (
@@ -205,7 +273,7 @@ export default function AdminLeadsPage() {
                 setSelectedStatus(tab.key);
                 setPage(1);
               }}
-              className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors ${
+              className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors focus:outline-2 focus:outline-navy-900 ${
                 selectedStatus === tab.key
                   ? "bg-brand-700 text-white"
                   : "bg-white text-ink-600 hover:bg-slate-100 border border-line-200"
@@ -228,6 +296,24 @@ export default function AdminLeadsPage() {
           />
         </form>
       </div>
+
+      {/* Error banner when background refresh fails */}
+      {error && leads.length > 0 && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4 text-body-sm text-amber-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-600" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchLeads()}
+            className="inline-flex items-center gap-1 text-xs font-semibold underline hover:text-amber-900"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Thử lại</span>
+          </button>
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
@@ -252,10 +338,27 @@ export default function AdminLeadsPage() {
                     </div>
                   </td>
                 </tr>
+              ) : error && leads.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-12 text-center">
+                    <div className="mx-auto max-w-md rounded-lg border border-red-200 bg-red-50 p-6 text-red-800">
+                      <AlertCircle className="mx-auto mb-2 h-8 w-8 text-red-600" />
+                      <p className="font-semibold">{error}</p>
+                      <button
+                        type="button"
+                        onClick={() => fetchLeads()}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 focus:outline-2 focus:outline-red-600"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        <span>Thử lại</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ) : leads.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center text-ink-500">
-                    Chưa có dữ liệu tư vấn nào.
+                    Chưa có dữ liệu tư vấn nào phù hợp.
                   </td>
                 </tr>
               ) : (

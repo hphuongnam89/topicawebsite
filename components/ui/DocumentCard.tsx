@@ -1,5 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { FileText, Download, ExternalLink, ArrowRight } from "lucide-react";
 import { cn } from "./cn";
 
@@ -51,11 +53,11 @@ export function DocumentCard({
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <h4 className="text-body font-semibold text-ink-950">{title}</h4>
+        <h4 className="text-body font-semibold text-ink-950"><LocalizedText>{title}</LocalizedText></h4>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-body-sm text-ink-600">
-          {type && <span>{type}</span>}
-          {date && <span>{date}</span>}
-          {hasValidDownload && fileSize && <span>{fileSize}</span>}
+          <LocalizedText>{type && <span><LocalizedText>{type}</LocalizedText></span>}</LocalizedText>
+          <LocalizedText>{date && <span><LocalizedText>{date}</LocalizedText></span>}</LocalizedText>
+          <LocalizedText>{hasValidDownload && fileSize && <span><LocalizedText>{fileSize}</LocalizedText></span>}</LocalizedText>
         </div>
       </div>
 
@@ -69,10 +71,10 @@ export function DocumentCard({
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Xem văn bản</span>
+              <span className="hidden sm:inline"><LocalizedText>Xem văn bản</LocalizedText></span>
             </Link>
           ) : (
-            <a
+            <LocalizedElement as="a"
               href={viewUrl!}
               target="_blank"
               rel="noopener noreferrer"
@@ -80,27 +82,27 @@ export function DocumentCard({
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Xem</span>
-            </a>
+              <span className="hidden sm:inline"><LocalizedText>Xem</LocalizedText></span>
+            </LocalizedElement>
           )
         )}
 
         {hasValidDownload && (
-          <a
+          <LocalizedElement as="a"
             href={downloadUrl!}
             download
             className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md bg-navy-900 px-0 text-body-sm font-medium text-white transition-colors hover:bg-navy-800 sm:h-9 sm:w-32 sm:px-2"
             aria-label={`Tải xuống: ${title}`}
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">Tải xuống</span>
-          </a>
+            <span className="hidden sm:inline"><LocalizedText>Tải xuống</LocalizedText></span>
+          </LocalizedElement>
         )}
 
         {!hasValidView && !hasValidDownload && (
           <span className="inline-flex items-center text-xs text-ink-500 bg-line-100 px-2.5 py-1 rounded font-medium">
-            Bản số đang cập nhật
-          </span>
+            <LocalizedText>Bản số đang cập nhật
+          </LocalizedText></span>
         )}
       </div>
     </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { Category } from "@/lib/cms/types";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -62,8 +64,8 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
               : "border border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500",
           )}
         >
-          Tất cả
-        </button>
+          <LocalizedText>Tất cả
+        </LocalizedText></button>
         {categories.map((cat) => (
           <button
             key={cat.id}
@@ -75,17 +77,17 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
                 : "border border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500",
             )}
           >
-            {cat.title}
+            <LocalizedText>{cat.title}</LocalizedText>
           </button>
         ))}
       </div>
 
       <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80">
-        <input
+        <LocalizedElement as="input"
           type="search"
           placeholder="Tìm kiếm bài viết..."
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
           className="w-full rounded-full border border-line-200 bg-paper py-2.5 pr-4 pl-11 text-sm text-ink-900 transition-all outline-none placeholder:text-ink-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
         />
         <Search className="absolute top-1/2 left-4 -translate-y-1/2 text-ink-400" size={18} />

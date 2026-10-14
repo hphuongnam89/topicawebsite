@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import Image from "@/components/i18n/LocalizedImage";
 
 const credentialSamples = [
   {
@@ -16,8 +17,8 @@ export function CredentialSamples() {
     <div className="space-y-8">
       <div className="mx-auto max-w-2xl text-center">
         <p className="font-sans text-body-lg text-ink-700">
-          Mẫu phôi bằng và mẫu bảng điểm áp dụng cho phương thức đào tạo từ xa.
-        </p>
+          <LocalizedText>Mẫu phôi bằng và mẫu bảng điểm áp dụng cho phương thức đào tạo từ xa.
+        </LocalizedText></p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -36,7 +37,7 @@ export function CredentialSamples() {
               />
             </div>
             <figcaption className="border-t border-line-200 px-5 py-4 text-center font-sans text-body font-semibold text-ink-950">
-              {sample.title}
+              <LocalizedText>{sample.title}</LocalizedText>
             </figcaption>
           </figure>
         ))}

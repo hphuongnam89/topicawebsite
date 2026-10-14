@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import type { ContentRevisionRecord } from "@/lib/db/types";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import {
+  Upload,
+  Image as ImageIcon,
+  Trash2,
+  FolderOpen,
+  X,
+  RefreshCw,
+} from "lucide-react";
+import {
   contentTypes,
   contentFields,
   fieldLabels,
@@ -376,6 +384,62 @@ export function ContentWorkbench({
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [categories, setCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+  const [mediaList, setMediaList] = useState<{ key: string; name: string; url: string; size: number }[]>([]);
+  const [loadingMedia, setLoadingMedia] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/categories")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.categories) setCategories(data.categories);
+      })
+      .catch(() => {});
+  }, []);
+
+  const openMediaPicker = async () => {
+    setMediaPickerOpen(true);
+    setLoadingMedia(true);
+    try {
+      const res = await fetch("/api/admin/media");
+      if (res.ok) {
+        const data = await res.json();
+        setMediaList(data.media || []);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoadingMedia(false);
+    }
+  };
+
+  const uploadFeaturedImage = async (file: File) => {
+    setUploadingImage(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Không tải được ảnh");
+      setValues((current) => ({
+        ...current,
+        featured_image: data.url,
+      }));
+      setDirty(true);
+      setNotice(`Đã tải ảnh "${file.name}" lên cho trường ảnh đại diện.`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Lỗi tải ảnh");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -781,7 +845,11 @@ export function ContentWorkbench({
             ))}
           </ul>
           {!rows.length && (
-            <p className="mt-4 text-ink-600">Chưa có bản sửa. Bạn có thể tạo bản nháp đầu tiên.</p>
+            <p className="mt-4 text-ink-600">
+              {search || listType || listState
+                ? "Không tìm thấy bản sửa phù hợp. Hãy thử đổi từ khóa hoặc bộ lọc."
+                : "Chưa có bản sửa. Bạn có thể tạo bản nháp đầu tiên."}
+            </p>
           )}
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between gap-2">
@@ -891,7 +959,91 @@ export function ContentWorkbench({
                   className={`grid min-w-0 gap-1 ${jsonFields.has(key) || key === "content_html" ? "sm:col-span-2" : ""}`}
                 >
                   {fieldLabels[key] || key}
-                  {key === "access" && type === "document" ? (
+                  {key === "category_id" && type === "article" ? (
+                    <select
+                      className={inputClass}
+                      value={values[key] || ""}
+                      onChange={(event) => {
+                        setValues({ ...values, [key]: event.target.value });
+                        setDirty(true);
+                      }}
+                    >
+                      <option value="">-- Chưa phân loại --</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : key === "featured_image" ? (
+                    <div className="grid gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <input
+                          className={`flex-1 ${inputClass}`}
+                          value={values[key] || ""}
+                          placeholder="https://... hoặc tải ảnh lên"
+                          onChange={(event) => {
+                            setValues({ ...values, [key]: event.target.value });
+                            setDirty(true);
+                          }}
+                          aria-label="Đường dẫn ảnh đại diện"
+                        />
+                        <label className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50">
+                          <Upload className="h-4 w-4" />
+                          <span>{uploadingImage ? "Đang tải..." : "Tải từ máy"}</span>
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            disabled={uploadingImage}
+                            className="sr-only"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0];
+                              if (file) void uploadFeaturedImage(file);
+                              event.currentTarget.value = "";
+                            }}
+                          />
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => void openMediaPicker()}
+                          className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
+                        >
+                          <ImageIcon className="h-4 w-4" />
+                          <span>Thư viện Media</span>
+                        </button>
+                        {values[key] && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setValues({ ...values, [key]: "" });
+                              setDirty(true);
+                            }}
+                            className="inline-flex min-h-11 items-center gap-1 rounded-md border border-red-200 bg-red-50 px-2.5 py-2 text-sm text-red-700 hover:bg-red-100"
+                            title="Xóa ảnh đại diện"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>Xóa</span>
+                          </button>
+                        )}
+                      </div>
+                      {values[key] && (
+                        <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
+                          <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded border border-line-200 bg-white">
+                            <img
+                              src={values[key]}
+                              alt="Xem trước ảnh đại diện"
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0 text-xs">
+                            <p className="font-semibold text-ink-900">Xem trước ảnh đại diện (Bản nháp)</p>
+                            <p className="mt-0.5 truncate text-ink-500">{values[key]}</p>
+                            <p className="mt-0.5 text-ink-400">Ảnh này chỉ được công bố khi hoàn tất duyệt và xuất bản.</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : key === "access" && type === "document" ? (
                     <select
                       className={inputClass}
                       value={values[key] || "public"}
@@ -1190,6 +1342,80 @@ export function ContentWorkbench({
           )}
         </section>
       </div>
+
+      {mediaPickerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-xl bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-navy-800" />
+                <h3 className="font-display text-lg font-bold text-ink-950">
+                  Chọn ảnh đại diện từ Thư viện Media
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMediaPickerOpen(false)}
+                className="rounded-lg p-1.5 text-ink-400 hover:bg-slate-100 hover:text-ink-700"
+                aria-label="Đóng thư viện ảnh"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {loadingMedia ? (
+                <div className="flex h-48 items-center justify-center gap-2 text-ink-500">
+                  <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
+                  <span>Đang tải thư viện media...</span>
+                </div>
+              ) : mediaList.length === 0 ? (
+                <div className="py-12 text-center text-ink-500">
+                  <p>Chưa có tệp nào trong thư viện media.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                  {mediaList
+                    .filter((item) => /\.(jpg|jpeg|png|webp|gif)$/i.test(item.name || item.url))
+                    .map((item) => (
+                      <button
+                        key={item.key || item.url}
+                        type="button"
+                        onClick={() => {
+                          setValues({ ...values, featured_image: item.url });
+                          setDirty(true);
+                          setMediaPickerOpen(false);
+                        }}
+                        className="group flex flex-col overflow-hidden rounded-lg border border-line-200 bg-white text-left transition-all hover:border-brand-600 hover:shadow-md focus:outline-2 focus:outline-brand-600"
+                      >
+                        <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
+                          <img
+                            src={item.url}
+                            alt={item.name}
+                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="p-2">
+                          <p className="line-clamp-1 text-xs font-semibold text-ink-900" title={item.name}>
+                            {item.name}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                </div>
+              )}
+            </div>
+            <div className="border-t border-line-200 px-6 py-3 text-right">
+              <button
+                type="button"
+                onClick={() => setMediaPickerOpen(false)}
+                className="rounded-lg border border-line-200 bg-white px-4 py-2 text-xs font-semibold text-ink-700 hover:bg-slate-50"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

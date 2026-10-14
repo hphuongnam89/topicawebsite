@@ -1,6 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { Article } from "@/lib/cms/types";
-import Image from "next/image";
-import Link from "next/link";
+import Image from "@/components/i18n/LocalizedImage";
+import Link from "@/components/i18n/LocalizedLink";
 import { formatDateVN } from "@/lib/date";
 import { cn } from "@/lib/utils";
 
@@ -29,21 +30,21 @@ export function ArticleCard({ article, variant = "default", className }: Article
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-gold-400">
-                T
-              </div>
+                <LocalizedText>T
+              </LocalizedText></div>
             )}
           </div>
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-4 text-body-sm text-ink-600">
               {article.category && (
-                <span className="font-semibold text-gold-700">{article.category.title}</span>
+                <span className="font-semibold text-gold-700"><LocalizedText>{article.category.title}</LocalizedText></span>
               )}
-              {publishedDate && <span>{publishedDate}</span>}
+              <LocalizedText>{publishedDate && <span><LocalizedText>{publishedDate}</LocalizedText></span>}</LocalizedText>
             </div>
             <h2 className="mt-4 font-display text-h2 text-ink-950 transition-colors group-hover:text-gold-700">
-              {article.title}
+              <LocalizedText>{article.title}</LocalizedText>
             </h2>
-            <p className="mt-4 line-clamp-3 text-body-lg text-ink-600">{article.excerpt}</p>
+            <p className="mt-4 line-clamp-3 text-body-lg text-ink-600"><LocalizedText>{article.excerpt}</LocalizedText></p>
           </div>
         </article>
       </Link>
@@ -68,21 +69,21 @@ export function ArticleCard({ article, variant = "default", className }: Article
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center font-display text-[4rem] text-gold-400">
-                T
-              </div>
+                <LocalizedText>T
+              </LocalizedText></div>
             )}
           </div>
           <div className="flex flex-1 flex-col p-6 md:p-8">
             <div className="mb-4 flex items-center gap-4 text-body-sm text-ink-600">
               {article.category && (
-                <span className="font-semibold text-gold-700">{article.category.title}</span>
+                <span className="font-semibold text-gold-700"><LocalizedText>{article.category.title}</LocalizedText></span>
               )}
-              {publishedDate && <span>{publishedDate}</span>}
+              <LocalizedText>{publishedDate && <span><LocalizedText>{publishedDate}</LocalizedText></span>}</LocalizedText>
             </div>
             <h2 className="line-clamp-3 font-display text-h3 text-ink-950 transition-colors group-hover:text-gold-700">
-              {article.title}
+              <LocalizedText>{article.title}</LocalizedText>
             </h2>
-            <p className="mt-4 line-clamp-3 flex-1 text-body-lg text-ink-600">{article.excerpt}</p>
+            <p className="mt-4 line-clamp-3 flex-1 text-body-lg text-ink-600"><LocalizedText>{article.excerpt}</LocalizedText></p>
           </div>
         </article>
       </Link>
@@ -109,19 +110,19 @@ export function ArticleCard({ article, variant = "default", className }: Article
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center font-display text-xl text-gold-400">
-              T
-            </div>
+              <LocalizedText>T
+            </LocalizedText></div>
           )}
         </div>
         <div className="flex flex-col py-1">
           <div className="mb-2 flex items-center gap-3 text-body-sm text-ink-600">
             {article.category && (
-              <span className="font-semibold text-gold-700">{article.category.title}</span>
+              <span className="font-semibold text-gold-700"><LocalizedText>{article.category.title}</LocalizedText></span>
             )}
-            {publishedDate && <span className="hidden md:inline">{publishedDate}</span>}
+            <LocalizedText>{publishedDate && <span className="hidden md:inline"><LocalizedText>{publishedDate}</LocalizedText></span>}</LocalizedText>
           </div>
           <h3 className="line-clamp-2 font-display text-body-lg font-bold text-ink-950 transition-colors group-hover:text-gold-700">
-            {article.title}
+            <LocalizedText>{article.title}</LocalizedText>
           </h3>
         </div>
       </Link>
@@ -135,10 +136,10 @@ export function ArticleCard({ article, variant = "default", className }: Article
         className={cn("group flex flex-col gap-2", className)}
       >
         <div className="text-ink-500 flex items-center gap-2 text-body-sm">
-          {publishedDate && <time>{publishedDate}</time>}
+          <LocalizedText>{publishedDate && <time><LocalizedText>{publishedDate}</LocalizedText></time>}</LocalizedText>
         </div>
         <h3 className="text-ink-900 line-clamp-2 font-bold transition-colors group-hover:text-gold-700">
-          {article.title}
+          <LocalizedText>{article.title}</LocalizedText>
         </h3>
       </Link>
     );
@@ -159,21 +160,21 @@ export function ArticleCard({ article, variant = "default", className }: Article
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center font-display text-[3rem] text-gold-400">
-              T
-            </div>
+              <LocalizedText>T
+            </LocalizedText></div>
           )}
         </div>
         <div className="flex flex-1 flex-col p-6">
           <div className="mb-3 flex items-center gap-3 text-body-sm text-ink-600">
             {article.category && (
-              <span className="font-semibold text-gold-700">{article.category.title}</span>
+              <span className="font-semibold text-gold-700"><LocalizedText>{article.category.title}</LocalizedText></span>
             )}
-            {publishedDate && <span>{publishedDate}</span>}
+            <LocalizedText>{publishedDate && <span><LocalizedText>{publishedDate}</LocalizedText></span>}</LocalizedText>
           </div>
           <h3 className="text-h4 line-clamp-2 font-display font-bold text-ink-950 transition-colors group-hover:text-gold-700">
-            {article.title}
+            <LocalizedText>{article.title}</LocalizedText>
           </h3>
-          <p className="mt-3 line-clamp-2 flex-1 text-body text-ink-600">{article.excerpt}</p>
+          <p className="mt-3 line-clamp-2 flex-1 text-body text-ink-600"><LocalizedText>{article.excerpt}</LocalizedText></p>
         </div>
       </article>
     </Link>

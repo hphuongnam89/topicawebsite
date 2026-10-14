@@ -1,7 +1,9 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "@/components/i18n/LocalizedImage";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -124,29 +126,29 @@ export function HeroSection({ data }: HeroSectionProps) {
         >
           <Container className="grid gap-9 py-9 sm:gap-12 sm:py-12 lg:min-h-[39rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-12 lg:py-14">
             <div className="flex min-w-0 flex-col justify-center min-h-[24rem] max-[380px]:min-h-[28rem] lg:min-h-0 lg:py-8 lg:pr-2">
-              <h1
+              <LocalizedElement as="h1"
                 id="homepage-title"
                 aria-label={active.title}
                 className="hero-title-reveal mb-6 max-w-[17ch] font-display text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.04] font-bold tracking-[-0.03em] text-balance text-white"
                 style={{ "--hero-delay": "160ms" } as React.CSSProperties}
               >
-                {titleParts ? (
+                <LocalizedText>{titleParts ? (
                   <>
-                    <span className="block">{titleParts[1]}</span>
+                    <span className="block"><LocalizedText>{titleParts[1]}</LocalizedText></span>
                     <span className="hero-title-accent block">
-                      {titleParts[2]} {titleParts[3]}
+                      <LocalizedText>{titleParts[2]}</LocalizedText> <LocalizedText>{titleParts[3]}</LocalizedText>
                     </span>
                   </>
                 ) : (
                   active.title
-                )}
-              </h1>
+                )}</LocalizedText>
+              </LocalizedElement>
 
               <p
                 className="hero-copy-reveal mb-7 max-w-[58ch] text-body-lg text-white/80"
                 style={{ "--hero-delay": "220ms" } as React.CSSProperties}
               >
-                {active.description}
+                <LocalizedText>{active.description}</LocalizedText>
               </p>
 
               <div
@@ -174,7 +176,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                         ) : undefined
                       }
                     >
-                      {label}
+                      <LocalizedText>{label}</LocalizedText>
                     </ButtonLink>
                   );
                 })}
@@ -214,13 +216,13 @@ export function HeroSection({ data }: HeroSectionProps) {
               />
             </div>
 
-            <div
+            <LocalizedElement as="div"
               className="col-span-full -mt-5 flex justify-center gap-2 lg:-mt-8"
               role="group"
               aria-label="Chọn banner giới thiệu"
             >
               {slides.map((slide, index) => (
-                <button
+                <LocalizedElement as="button"
                   key={slide.title}
                   type="button"
                   onClick={() => setActiveSlide(index)}
@@ -234,9 +236,9 @@ export function HeroSection({ data }: HeroSectionProps) {
                     }`}
                     aria-hidden="true"
                   />
-                </button>
+                </LocalizedElement>
               ))}
-            </div>
+            </LocalizedElement>
           </Container>
         </motion.div>
       </AnimatePresence>

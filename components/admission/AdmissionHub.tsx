@@ -1,5 +1,6 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -68,12 +69,12 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
         <Container className="relative z-10">
           <div className="max-w-measure mx-auto text-center">
             <span className="mb-4 inline-block rounded-full border border-gold-400/40 bg-navy-900/60 px-3.5 py-1 text-xs font-semibold tracking-wider text-gold-300 uppercase backdrop-blur-xs">
-              Năm học 2026-2027
-            </span>
-            <h1 className="mb-6 font-display text-display text-white md:text-[4rem]">Tuyển sinh</h1>
+              <LocalizedText>Năm học 2026-2027
+            </LocalizedText></span>
+            <h1 className="mb-6 font-display text-display text-white md:text-[4rem]"><LocalizedText>Tuyển sinh</LocalizedText></h1>
             <p className="mx-auto mb-10 max-w-2xl text-body-lg text-white/80">
-              {page.excerpt ||
-                "Khám phá các chương trình đào tạo chất lượng cao tại Topica. Chúng tôi chào đón những sinh viên đam mê học hỏi, sẵn sàng kiến tạo tương lai."}
+              <LocalizedText>{page.excerpt ||
+                "Khám phá các chương trình đào tạo chất lượng cao tại Topica. Chúng tôi chào đón những sinh viên đam mê học hỏi, sẵn sàng kiến tạo tương lai."}</LocalizedText>
             </p>
             <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
               <ButtonLink
@@ -83,16 +84,16 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                 external
                 className="w-full justify-center"
               >
-                Đăng ký xét tuyển
-              </ButtonLink>
+                <LocalizedText>Đăng ký xét tuyển
+              </LocalizedText></ButtonLink>
               <ButtonLink
                 href="/lien-he/"
                 variant="secondary"
                 size="lg"
                 className="w-full justify-center border-white/30 text-white hover:bg-white/10"
               >
-                Nhận tư vấn
-              </ButtonLink>
+                <LocalizedText>Nhận tư vấn
+              </LocalizedText></ButtonLink>
             </div>
           </div>
         </Container>
@@ -144,20 +145,20 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
 
       <Section className="bg-canvas">
         <Container>
-          <SectionHeading>Kỳ tuyển sinh</SectionHeading>
+          <SectionHeading><LocalizedText>Kỳ tuyển sinh</LocalizedText></SectionHeading>
           {rounds.length ? (
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {rounds.map((round) => (
                 <article key={round.id} className="rounded-xl border border-line-200 bg-canvas p-5 shadow-2xs">
-                  <h3 className="text-h4 font-bold text-navy-950">{round.name}</h3>
+                  <h3 className="text-h4 font-bold text-navy-950"><LocalizedText>{round.name}</LocalizedText></h3>
                   <p className="mt-2 text-ink-700">
-                    {round.status === "open"
+                    <LocalizedText>{round.status === "open"
                       ? "Đang nhận hồ sơ"
                       : round.status === "planned"
                         ? "Chưa mở nhận hồ sơ"
-                        : "Đã đóng nhận hồ sơ"}
+                        : "Đã đóng nhận hồ sơ"}</LocalizedText>
                   </p>
-                  <p className="mt-2 text-ink-700">Hạn hồ sơ: {formatDateVN(round.deadlineAt)}</p>
+                  <p className="mt-2 text-ink-700"><LocalizedText>Hạn hồ sơ: </LocalizedText><LocalizedText>{formatDateVN(round.deadlineAt)}</LocalizedText></p>
                   <ButtonLink
                     className="mt-4"
                     href={round.status === "open" ? round.applicationUrl : "/lien-he/"}
@@ -165,9 +166,9 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                       round.status === "open" && round.applicationUrl.startsWith("https://")
                     }
                   >
-                    {round.status === "open"
+                    <LocalizedText>{round.status === "open"
                       ? "Xem hướng dẫn nộp hồ sơ"
-                      : "Nhận tư vấn kỳ tuyển sinh"}
+                      : "Nhận tư vấn kỳ tuyển sinh"}</LocalizedText>
                   </ButtonLink>
                 </article>
               ))}
@@ -175,17 +176,17 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
           ) : (
             <div className="mt-6 flex flex-col gap-4 rounded-xl border border-line-200 bg-surface-subtle/60 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div className="text-ink-700">
-                <p className="font-semibold text-navy-950">Kế hoạch tiếp nhận hồ sơ năm 2026</p>
+                <p className="font-semibold text-navy-950"><LocalizedText>Kế hoạch tiếp nhận hồ sơ năm 2026</LocalizedText></p>
                 <p className="mt-1 text-body-sm text-ink-600">
-                  Chưa có kỳ tuyển sinh đang mở được công bố tại đây.{" "}
+                  <LocalizedText>Chưa có kỳ tuyển sinh đang mở được công bố tại đây.</LocalizedText><LocalizedText>{" "}</LocalizedText>
                   <Link className="font-medium text-navy-800 underline hover:text-navy-950" href="/lien-he/">
-                    Liên hệ để xác nhận lịch nhận hồ sơ.
-                  </Link>
+                    <LocalizedText>Liên hệ để xác nhận lịch nhận hồ sơ.
+                  </LocalizedText></Link>
                 </p>
               </div>
               <ButtonLink href="/lien-he/" variant="secondary" size="sm" className="shrink-0">
-                Nhận thông báo kỳ mới
-              </ButtonLink>
+                <LocalizedText>Nhận thông báo kỳ mới
+              </LocalizedText></ButtonLink>
             </div>
           )}
         </Container>
@@ -194,10 +195,10 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
       <Section className="bg-paper">
         <Container>
           <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <SectionHeading className="mb-0">Tin tuyển sinh mới nhất</SectionHeading>
+            <SectionHeading className="mb-0"><LocalizedText>Tin tuyển sinh mới nhất</LocalizedText></SectionHeading>
             <ButtonLink href="/tin-tuc-tuyen-sinh/" variant="secondary" size="sm">
-              Xem tất cả
-            </ButtonLink>
+              <LocalizedText>Xem tất cả
+            </LocalizedText></ButtonLink>
           </div>
 
           {articles.length > 0 ? (
@@ -214,8 +215,8 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
             </div>
           ) : (
             <div className="rounded-lg border border-line-200 bg-canvas py-12 text-center text-ink-600">
-              Hiện chưa có tin tức tuyển sinh mới.
-            </div>
+              <LocalizedText>Hiện chưa có tin tức tuyển sinh mới.
+            </LocalizedText></div>
           )}
         </Container>
       </Section>
@@ -223,7 +224,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
       {/* Admission Timeline */}
       <Section className="border-y border-line-100 bg-canvas">
         <Container>
-          <SectionHeading align="center">Quy trình xét tuyển</SectionHeading>
+          <SectionHeading align="center"><LocalizedText>Quy trình xét tuyển</LocalizedText></SectionHeading>
           <div className="mx-auto mt-12 max-w-4xl">
             <div className="relative">
               {/* Desktop timeline line */}
@@ -241,8 +242,8 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                       {index + 1}
                     </div>
                     <div className="pt-2 md:pt-0 md:text-center">
-                      <h4 className="text-h4 mb-2 text-ink-950">{step.title}</h4>
-                      <p className="text-body-sm text-ink-600">{step.description}</p>
+                      <h4 className="text-h4 mb-2 text-ink-950"><LocalizedText>{step.title}</LocalizedText></h4>
+                      <p className="text-body-sm text-ink-600"><LocalizedText>{step.description}</LocalizedText></p>
                     </div>
                   </div>
                 ))}
@@ -261,19 +262,19 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
           <div className="mx-auto max-w-3xl">
             <div className="mb-10 text-center">
               <SectionHeading align="center" className="mb-4">
-                Câu hỏi thường gặp
-              </SectionHeading>
+                <LocalizedText>Câu hỏi thường gặp
+              </LocalizedText></SectionHeading>
               <p className="text-ink-600">
-                Những thắc mắc phổ biến của thí sinh và phụ huynh về kỳ tuyển sinh.
-              </p>
+                <LocalizedText>Những thắc mắc phổ biến của thí sinh và phụ huynh về kỳ tuyển sinh.
+              </LocalizedText></p>
             </div>
 
             <FAQAccordion faqs={faqData} />
 
             <div className="mt-8 text-center">
               <ButtonLink href="/nhung-cau-hoi-thuong-gap/" variant="secondary">
-                Xem tất cả câu hỏi
-              </ButtonLink>
+                <LocalizedText>Xem tất cả câu hỏi
+              </LocalizedText></ButtonLink>
             </div>
           </div>
         </Container>

@@ -15,7 +15,8 @@
 
 # next.js
 /.next/
-/.next-qa-*/
+/.next-*/
+/.manus/
 /.tsconfig-qa-*.json
 /public/qa-uploads/
 /public/uploads/

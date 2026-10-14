@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import {
   CheckCircle2,
@@ -121,7 +122,7 @@ export function StatusBadge({
           aria-hidden="true"
         />
       )}
-      <span>{children || style.label}</span>
+      <span><LocalizedText>{children || style.label}</LocalizedText></span>
     </span>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import {
   Button,
@@ -40,15 +41,15 @@ export default function DesignSystemPage() {
         <Container>
           <div className="max-w-3xl">
             <div className="flex items-center gap-2 mb-3">
-              <Badge variant="navy">Topica Design System v3.0</Badge>
-              <StatusBadge variant="verified">Chuẩn học thuật PXU</StatusBadge>
+              <Badge variant="navy"><LocalizedText>Topica Design System v3.0</LocalizedText></Badge>
+              <StatusBadge variant="verified"><LocalizedText>Chuẩn học thuật PXU</LocalizedText></StatusBadge>
             </div>
             <h1 className="font-serif text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl lg:text-5xl">
-              Quy chuẩn Thiết kế & Hệ thống Thành phần
-            </h1>
+              <LocalizedText>Quy chuẩn Thiết kế & Hệ thống Thành phần
+            </LocalizedText></h1>
             <p className="mt-4 text-body-lg text-ink-600 leading-relaxed">
-              Ngôn ngữ thiết kế học thuật, hiện đại, gần gũi và minh bạch. Đồng bộ nhận diện thương hiệu giữa Viện Đào tạo Quốc tế Topica và Trường Đại học Phú Xuân (PXU).
-            </p>
+              <LocalizedText>Ngôn ngữ thiết kế học thuật, hiện đại, gần gũi và minh bạch. Đồng bộ nhận diện thương hiệu giữa Viện Đào tạo Quốc tế Topica và Trường Đại học Phú Xuân (PXU).
+            </LocalizedText></p>
           </div>
         </Container>
       </div>
@@ -66,37 +67,37 @@ export default function DesignSystemPage() {
             {/* Navy Card */}
             <div className="rounded-lg border border-line-200 bg-canvas p-4 shadow-xs">
               <div className="h-20 w-full rounded-md bg-navy-900 flex items-end p-3 text-white font-mono text-xs">
-                #00264D
-              </div>
-              <h4 className="mt-3 font-semibold text-ink-950">Navy chính (Primary)</h4>
-              <p className="text-body-sm text-ink-600">Header/Footer, Tiêu đề chính, Nút chính trên nền sáng.</p>
+                <LocalizedText>#00264D
+              </LocalizedText></div>
+              <h4 className="mt-3 font-semibold text-ink-950"><LocalizedText>Navy chính (Primary)</LocalizedText></h4>
+              <p className="text-body-sm text-ink-600"><LocalizedText>Header/Footer, Tiêu đề chính, Nút chính trên nền sáng.</LocalizedText></p>
             </div>
 
             {/* Secondary Blue Card */}
             <div className="rounded-lg border border-line-200 bg-canvas p-4 shadow-xs">
               <div className="h-20 w-full rounded-md bg-navy-secondary flex items-end p-3 text-white font-mono text-xs">
-                #16466B
-              </div>
-              <h4 className="mt-3 font-semibold text-ink-950">Xanh bổ trợ (Secondary)</h4>
-              <p className="text-body-sm text-ink-600">Mảng phụ, icon khối chuyên đề, chuyển sắc tinh tế.</p>
+                <LocalizedText>#16466B
+              </LocalizedText></div>
+              <h4 className="mt-3 font-semibold text-ink-950"><LocalizedText>Xanh bổ trợ (Secondary)</LocalizedText></h4>
+              <p className="text-body-sm text-ink-600"><LocalizedText>Mảng phụ, icon khối chuyên đề, chuyển sắc tinh tế.</LocalizedText></p>
             </div>
 
             {/* Gold Card */}
             <div className="rounded-lg border border-line-200 bg-canvas p-4 shadow-xs">
               <div className="h-20 w-full rounded-md bg-gold-500 flex items-end p-3 text-navy-950 font-mono text-xs font-semibold">
-                #B78744
-              </div>
-              <h4 className="mt-3 font-semibold text-ink-950">Vàng Gold (Accent)</h4>
-              <p className="text-body-sm text-ink-600">Điểm nhấn nhận diện logo, CTA Đăng ký xét tuyển nổi bật.</p>
+                <LocalizedText>#B78744
+              </LocalizedText></div>
+              <h4 className="mt-3 font-semibold text-ink-950"><LocalizedText>Vàng Gold (Accent)</LocalizedText></h4>
+              <p className="text-body-sm text-ink-600"><LocalizedText>Điểm nhấn nhận diện logo, CTA Đăng ký xét tuyển nổi bật.</LocalizedText></p>
             </div>
 
             {/* Surface Paper Card */}
             <div className="rounded-lg border border-line-200 bg-canvas p-4 shadow-xs">
               <div className="h-20 w-full rounded-md bg-surface-subtle border border-line-200 flex items-end p-3 text-ink-800 font-mono text-xs">
-                #F3F6FA / #FFFFFF
-              </div>
-              <h4 className="mt-3 font-semibold text-ink-950">Nền phân đoạn (Surfaces)</h4>
-              <p className="text-body-sm text-ink-600">Canvas trắng và xám xanh nhạt tạo độ tương phản êm dịu.</p>
+                <LocalizedText>#F3F6FA / #FFFFFF
+              </LocalizedText></div>
+              <h4 className="mt-3 font-semibold text-ink-950"><LocalizedText>Nền phân đoạn (Surfaces)</LocalizedText></h4>
+              <p className="text-body-sm text-ink-600"><LocalizedText>Canvas trắng và xám xanh nhạt tạo độ tương phản êm dịu.</LocalizedText></p>
             </div>
           </div>
         </section>
@@ -111,25 +112,25 @@ export default function DesignSystemPage() {
 
           <div className="rounded-xl border border-line-200 bg-surface-subtle p-6 space-y-6 sm:p-8">
             <div className="space-y-2 border-b border-line-200 pb-6">
-              <span className="text-xs font-mono uppercase tracking-wider text-ink-400">Display / H1 Serif — Font Lora</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-ink-400"><LocalizedText>Display / H1 Serif — Font Lora</LocalizedText></span>
               <h2 className="font-serif text-3xl font-bold text-ink-950 sm:text-4xl">
-                Cử nhân Trực tuyến Trường Đại học Phú Xuân
-              </h2>
-              <p className="text-body-sm text-ink-600 font-mono">Lora · Bold · Vùng đọc 60-75 ký tự/dòng</p>
+                <LocalizedText>Cử nhân Trực tuyến Trường Đại học Phú Xuân
+              </LocalizedText></h2>
+              <p className="text-body-sm text-ink-600 font-mono"><LocalizedText>Lora · Bold · Vùng đọc 60-75 ký tự/dòng</LocalizedText></p>
             </div>
 
             <div className="space-y-2 border-b border-line-200 pb-6">
-              <span className="text-xs font-mono uppercase tracking-wider text-ink-400">Heading 2 / H2 Serif</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-ink-400"><LocalizedText>Heading 2 / H2 Serif</LocalizedText></span>
               <h3 className="font-serif text-2xl font-bold text-ink-950">
-                5 Ngành đào tạo đón đầu kỷ nguyên số & kinh tế tri thức
-              </h3>
+                <LocalizedText>5 Ngành đào tạo đón đầu kỷ nguyên số & kinh tế tri thức
+              </LocalizedText></h3>
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-ink-400">Body Text — Be Vietnam Pro</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-ink-400"><LocalizedText>Body Text — Be Vietnam Pro</LocalizedText></span>
               <p className="text-body text-ink-body leading-relaxed max-w-3xl">
-                Chương trình đào tạo đại học từ xa theo phương thức E-Learning kết hợp công nghệ hiện đại, lịch học linh hoạt dành cho người đi làm. Văn bằng cử nhân do Trường Đại học Phú Xuân cấp, không ghi hình thức đào tạo theo Thông tư 27/2019/TT-BGDĐT.
-              </p>
+                <LocalizedText>Chương trình đào tạo đại học từ xa theo phương thức E-Learning kết hợp công nghệ hiện đại, lịch học linh hoạt dành cho người đi làm. Văn bằng cử nhân do Trường Đại học Phú Xuân cấp, không ghi hình thức đào tạo theo Thông tư 27/2019/TT-BGDĐT.
+              </LocalizedText></p>
             </div>
           </div>
         </section>
@@ -144,23 +145,23 @@ export default function DesignSystemPage() {
 
           <div className="rounded-xl border border-line-200 bg-canvas p-6 space-y-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="primary">Nút Primary Navy</Button>
-              <Button variant="accent">Nút Accent Gold</Button>
-              <Button variant="secondary">Nút Secondary Viền</Button>
-              <Button variant="outline">Nút Outline</Button>
-              <Button variant="tertiary">Nút Tertiary Link</Button>
-              <Button variant="ghost">Nút Ghost</Button>
-              <Button variant="destructive">Nút Destructive</Button>
+              <Button variant="primary"><LocalizedText>Nút Primary Navy</LocalizedText></Button>
+              <Button variant="accent"><LocalizedText>Nút Accent Gold</LocalizedText></Button>
+              <Button variant="secondary"><LocalizedText>Nút Secondary Viền</LocalizedText></Button>
+              <Button variant="outline"><LocalizedText>Nút Outline</LocalizedText></Button>
+              <Button variant="tertiary"><LocalizedText>Nút Tertiary Link</LocalizedText></Button>
+              <Button variant="ghost"><LocalizedText>Nút Ghost</LocalizedText></Button>
+              <Button variant="destructive"><LocalizedText>Nút Destructive</LocalizedText></Button>
             </div>
 
             <div className="border-t border-line-200 pt-6">
-              <h4 className="text-body font-semibold text-ink-950 mb-3">Các trạng thái tương tác (States):</h4>
+              <h4 className="text-body font-semibold text-ink-950 mb-3"><LocalizedText>Các trạng thái tương tác (States):</LocalizedText></h4>
               <div className="flex flex-wrap items-center gap-4">
-                <Button variant="primary" loading>Đang tải dữ liệu</Button>
-                <Button variant="accent" disabled>Vô hiệu hóa (Disabled)</Button>
-                <Button variant="primary" size="sm">Kích cỡ Nhỏ (SM)</Button>
-                <Button variant="primary" size="default">Kích cỡ Tiêu chuẩn</Button>
-                <Button variant="primary" size="lg">Kích cỡ Lớn (LG)</Button>
+                <Button variant="primary" loading><LocalizedText>Đang tải dữ liệu</LocalizedText></Button>
+                <Button variant="accent" disabled><LocalizedText>Vô hiệu hóa (Disabled)</LocalizedText></Button>
+                <Button variant="primary" size="sm"><LocalizedText>Kích cỡ Nhỏ (SM)</LocalizedText></Button>
+                <Button variant="primary" size="default"><LocalizedText>Kích cỡ Tiêu chuẩn</LocalizedText></Button>
+                <Button variant="primary" size="lg"><LocalizedText>Kích cỡ Lớn (LG)</LocalizedText></Button>
               </div>
             </div>
           </div>
@@ -176,7 +177,7 @@ export default function DesignSystemPage() {
 
           <div className="rounded-xl border border-line-200 bg-canvas p-6 space-y-6 sm:p-8">
             <div className="space-y-3">
-              <h4 className="text-body font-semibold text-ink-950">Status Badges (Trạng thái kỳ tuyển sinh & kiểm định):</h4>
+              <h4 className="text-body font-semibold text-ink-950"><LocalizedText>Status Badges (Trạng thái kỳ tuyển sinh & kiểm định):</LocalizedText></h4>
               <div className="flex flex-wrap items-center gap-3">
                 <StatusBadge variant="active" />
                 <StatusBadge variant="upcoming" />
@@ -189,14 +190,14 @@ export default function DesignSystemPage() {
             </div>
 
             <div className="border-t border-line-200 pt-6 space-y-3">
-              <h4 className="text-body font-semibold text-ink-950">Context Badges:</h4>
+              <h4 className="text-body font-semibold text-ink-950"><LocalizedText>Context Badges:</LocalizedText></h4>
               <div className="flex flex-wrap items-center gap-3">
-                <Badge variant="default">132 Tín chỉ</Badge>
-                <Badge variant="navy">Trường Đại học Phú Xuân</Badge>
-                <Badge variant="brand">Topica Uni</Badge>
-                <Badge variant="success">Học bổng 30%</Badge>
-                <Badge variant="warning">Hạn nộp 30/10</Badge>
-                <Badge variant="outline">Bằng Cử nhân PXU</Badge>
+                <Badge variant="default"><LocalizedText>132 Tín chỉ</LocalizedText></Badge>
+                <Badge variant="navy"><LocalizedText>Trường Đại học Phú Xuân</LocalizedText></Badge>
+                <Badge variant="brand"><LocalizedText>Topica Uni</LocalizedText></Badge>
+                <Badge variant="success"><LocalizedText>Học bổng 30%</LocalizedText></Badge>
+                <Badge variant="warning"><LocalizedText>Hạn nộp 30/10</LocalizedText></Badge>
+                <Badge variant="outline"><LocalizedText>Bằng Cử nhân PXU</LocalizedText></Badge>
               </div>
             </div>
           </div>
@@ -251,8 +252,8 @@ export default function DesignSystemPage() {
 
               <div className="pt-2">
                 <Button variant="primary" type="button">
-                  Gửi yêu cầu thử nghiệm
-                </Button>
+                  <LocalizedText>Gửi yêu cầu thử nghiệm
+                </LocalizedText></Button>
               </div>
             </form>
           </div>
@@ -268,20 +269,20 @@ export default function DesignSystemPage() {
 
           <div className="space-y-4 max-w-3xl">
             <Alert variant="info" title="Thông tin pháp lý văn bằng">
-              Văn bằng do Trường Đại học Phú Xuân cấp, thuộc hệ thống văn bằng quốc gia, có giá trị pháp lý tương đương văn bằng chính quy và đủ điều kiện học tiếp lên Thạc sĩ.
-            </Alert>
+              <LocalizedText>Văn bằng do Trường Đại học Phú Xuân cấp, thuộc hệ thống văn bằng quốc gia, có giá trị pháp lý tương đương văn bằng chính quy và đủ điều kiện học tiếp lên Thạc sĩ.
+            </LocalizedText></Alert>
 
             <Alert variant="warning" title="Hạn nộp hồ sơ đợt 1/2026">
-              Hạn nhận hồ sơ xét tuyển đến hết ngày 30/10/2026. Số lượng chỉ tiêu có hạn, ưu tiên hồ sơ nộp sớm.
-            </Alert>
+              <LocalizedText>Hạn nhận hồ sơ xét tuyển đến hết ngày 30/10/2026. Số lượng chỉ tiêu có hạn, ưu tiên hồ sơ nộp sớm.
+            </LocalizedText></Alert>
 
             <Alert variant="success" title="Đăng ký tư vấn thành công!">
-              Cảm ơn bạn. Chuyên viên tuyển sinh sẽ liên hệ qua điện thoại trong vòng 24 giờ làm việc.
-            </Alert>
+              <LocalizedText>Cảm ơn bạn. Chuyên viên tuyển sinh sẽ liên hệ qua điện thoại trong vòng 24 giờ làm việc.
+            </LocalizedText></Alert>
 
             <Alert variant="error" title="Không thể kết nối đến máy chủ">
-              Vui lòng kiểm tra lại kết nối mạng hoặc liên hệ Hotline miễn cước 1800 646 857 để được hỗ trợ tức thì.
-            </Alert>
+              <LocalizedText>Vui lòng kiểm tra lại kết nối mạng hoặc liên hệ Hotline miễn cước 1800 646 857 để được hỗ trợ tức thì.
+            </LocalizedText></Alert>
           </div>
         </section>
 
@@ -298,30 +299,30 @@ export default function DesignSystemPage() {
             <Card variant="default">
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <Badge variant="navy">Cử nhân E-Learning</Badge>
+                  <Badge variant="navy"><LocalizedText>Cử nhân E-Learning</LocalizedText></Badge>
                   <StatusBadge variant="active" />
                 </div>
-                <CardTitle>Công nghệ thông tin</CardTitle>
-                <CardDescription>Chuyên ngành Đồ hoạ kỹ thuật số</CardDescription>
+                <CardTitle><LocalizedText>Công nghệ thông tin</LocalizedText></CardTitle>
+                <CardDescription><LocalizedText>Chuyên ngành Đồ hoạ kỹ thuật số</LocalizedText></CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 text-body-sm text-ink-600">
-                  <p>• Thời gian: 3.5 – 4.0 năm (Người có bằng có thể rút ngắn)</p>
-                  <p>• Tổng số tín chỉ: 132 tín chỉ</p>
-                  <p>• Đơn vị cấp bằng: Trường Đại học Phú Xuân (PXU)</p>
+                  <p><LocalizedText>• Thời gian: 3.5 – 4.0 năm (Người có bằng có thể rút ngắn)</LocalizedText></p>
+                  <p><LocalizedText>• Tổng số tín chỉ: 132 tín chỉ</LocalizedText></p>
+                  <p><LocalizedText>• Đơn vị cấp bằng: Trường Đại học Phú Xuân (PXU)</LocalizedText></p>
                 </div>
               </CardContent>
               <CardFooter className="justify-between border-t border-line-100 pt-4">
-                <span className="font-semibold text-navy-900">600.000 đ / tín chỉ</span>
+                <span className="font-semibold text-navy-900"><LocalizedText>600.000 đ / tín chỉ</LocalizedText></span>
                 <ButtonLink href="/nganh-dao-tao/cong-nghe-thong-tin/" variant="outline" size="sm">
-                  Xem chi tiết
-                </ButtonLink>
+                  <LocalizedText>Xem chi tiết
+                </LocalizedText></ButtonLink>
               </CardFooter>
             </Card>
 
             {/* Skeleton Loading Card */}
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-ink-400">Loading State (Skeleton Shimmer)</span>
+              <span className="text-xs font-mono uppercase tracking-wider text-ink-400"><LocalizedText>Loading State (Skeleton Shimmer)</LocalizedText></span>
               <SkeletonCard />
             </div>
           </div>
@@ -350,17 +351,17 @@ export default function DesignSystemPage() {
           <div className="rounded-xl border border-line-200 bg-canvas p-6 sm:p-8 max-w-3xl">
             <Accordion type="single" defaultValue="item-1">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Học đại học từ xa có được cấp bằng chính quy không?</AccordionTrigger>
+                <AccordionTrigger><LocalizedText>Học đại học từ xa có được cấp bằng chính quy không?</LocalizedText></AccordionTrigger>
                 <AccordionContent>
-                  Theo Thông tư 27/2019/TT-BGDĐT của Bộ Giáo dục và Đào tạo, văn bằng đại học hiện nay không còn ghi hình thức đào tạo (chính quy, vừa làm vừa học hay từ xa) trên văn bằng cử nhân. Người tốt nghiệp được cấp bằng Cử nhân Trường Đại học Phú Xuân có đầy đủ giá trị pháp lý để nâng ngạch, thi công chức và học cao học.
-                </AccordionContent>
+                  <LocalizedText>Theo Thông tư 27/2019/TT-BGDĐT của Bộ Giáo dục và Đào tạo, văn bằng đại học hiện nay không còn ghi hình thức đào tạo (chính quy, vừa làm vừa học hay từ xa) trên văn bằng cử nhân. Người tốt nghiệp được cấp bằng Cử nhân Trường Đại học Phú Xuân có đầy đủ giá trị pháp lý để nâng ngạch, thi công chức và học cao học.
+                </LocalizedText></AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2">
-                <AccordionTrigger>Thời gian hoàn thành khóa học là bao lâu?</AccordionTrigger>
+                <AccordionTrigger><LocalizedText>Thời gian hoàn thành khóa học là bao lâu?</LocalizedText></AccordionTrigger>
                 <AccordionContent>
-                  Thời gian đào tạo tiêu chuẩn là 3.5 – 4 năm đối với học viên tốt nghiệp THPT. Với học viên đã có bằng Trung cấp, Cao đẳng hoặc Đại học khác, thời gian có thể rút ngắn xuống còn 1.5 – 2.5 năm nhờ cơ chế xét miễn giảm và công nhận tín chỉ tương đương.
-                </AccordionContent>
+                  <LocalizedText>Thời gian đào tạo tiêu chuẩn là 3.5 – 4 năm đối với học viên tốt nghiệp THPT. Với học viên đã có bằng Trung cấp, Cao đẳng hoặc Đại học khác, thời gian có thể rút ngắn xuống còn 1.5 – 2.5 năm nhờ cơ chế xét miễn giảm và công nhận tín chỉ tương đương.
+                </LocalizedText></AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>

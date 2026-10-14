@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn";
 import { ButtonLink } from "@/components/ui/Button";
 
@@ -14,18 +15,18 @@ export function ArticleInlineCTA({ className }: ArticleInlineCTAProps) {
       )}
     >
       <h3 className="mb-2 font-display text-h3 text-ink-950">
-        Bạn quan tâm đến chương trình đào tạo?
-      </h3>
+        <LocalizedText>Bạn quan tâm đến chương trình đào tạo?
+      </LocalizedText></h3>
       <p className="mb-6 text-body text-ink-800">
-        Đăng ký nhận tư vấn miễn phí từ chuyên viên tuyển sinh Topica.
-      </p>
+        <LocalizedText>Đăng ký nhận tư vấn miễn phí từ chuyên viên tuyển sinh Topica.
+      </LocalizedText></p>
       <div className="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <ButtonLink href="/dang-ky" variant="primary" className="w-full justify-center">
-          Nhận tư vấn
-        </ButtonLink>
+          <LocalizedText>Nhận tư vấn
+        </LocalizedText></ButtonLink>
         <ButtonLink href="/nganh-dao-tao" variant="secondary" className="w-full justify-center">
-          Xem ngành đào tạo
-        </ButtonLink>
+          <LocalizedText>Xem ngành đào tạo
+        </LocalizedText></ButtonLink>
       </div>
     </aside>
   );

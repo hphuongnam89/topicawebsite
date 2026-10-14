@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
+import Link from "@/components/i18n/LocalizedLink";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
 
@@ -20,7 +22,7 @@ export function ProgramInPageNav({ program }: { program: ProgramDetail }) {
   ];
 
   return (
-    <nav
+    <LocalizedElement as="nav"
       aria-label="Mục lục trang ngành"
       className="sticky top-16 z-20 border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-elevated)]/95 backdrop-blur-md transition-shadow"
     >
@@ -28,8 +30,8 @@ export function ProgramInPageNav({ program }: { program: ProgramDetail }) {
         <div className="flex items-center gap-1 overflow-x-auto py-2.5 px-4 sm:px-0 text-xs font-semibold sm:text-sm no-scrollbar">
           <span className="hidden items-center gap-2 pr-3 text-[var(--color-academic-muted)] lg:flex shrink-0">
             <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-academic-accent)]" />
-            Nội dung:
-          </span>
+            <LocalizedText>Nội dung:
+          </LocalizedText></span>
           <div className="flex items-center gap-1.5 shrink-0">
             {navItems.map((item) => (
               <a
@@ -37,7 +39,7 @@ export function ProgramInPageNav({ program }: { program: ProgramDetail }) {
                 href={item.href}
                 className="rounded-md px-3 py-1.5 text-[var(--color-academic-muted)] transition-colors hover:bg-[var(--color-academic-paper)] hover:text-[var(--color-academic-ink)] focus-visible:outline-2 focus-visible:outline-[var(--color-academic-focus)] whitespace-nowrap"
               >
-                {item.label}
+                <LocalizedText>{item.label}</LocalizedText>
               </a>
             ))}
           </div>
@@ -46,11 +48,11 @@ export function ProgramInPageNav({ program }: { program: ProgramDetail }) {
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               className="text-xs font-semibold text-[var(--color-academic-accent-strong)] hover:underline whitespace-nowrap"
             >
-              Xem biểu phí & học bổng →
-            </Link>
+              <LocalizedText>Xem biểu phí & học bổng →
+            </LocalizedText></Link>
           </div>
         </div>
       </Container>
-    </nav>
+    </LocalizedElement>
   );
 }

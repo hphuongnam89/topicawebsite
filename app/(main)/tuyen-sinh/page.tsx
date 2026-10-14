@@ -10,7 +10,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: page?.seo?.title || page?.title || "Tuyển sinh",
     description: page?.seo?.description || page?.excerpt || undefined,
-    alternates: { canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tuyen-sinh` },
+    alternates: {
+      canonical: page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tuyen-sinh`,
+      languages: { vi: "/tuyen-sinh", en: "/en/admissions" },
+    },
   };
 }
 

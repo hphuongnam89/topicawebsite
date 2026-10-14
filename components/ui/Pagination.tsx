@@ -1,5 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { cn } from "./cn";
 
@@ -68,7 +70,7 @@ export function Pagination({
   };
 
   return (
-    <nav
+    <LocalizedElement as="nav"
       aria-label="Điều hướng trang"
       className={cn("flex flex-wrap items-center justify-center gap-1 sm:gap-2", className)}
       {...props}
@@ -84,7 +86,7 @@ export function Pagination({
         disabled={currentPage >= totalPages}
         direction="next"
       />
-    </nav>
+    </LocalizedElement>
   );
 }
 
@@ -109,7 +111,7 @@ function PaginationEllipsis() {
   return (
     <span className="flex h-9 w-9 items-center justify-center text-ink-400 sm:h-10 sm:w-10">
       <MoreHorizontal className="h-4 w-4" />
-      <span className="sr-only">Thêm trang</span>
+      <span className="sr-only"><LocalizedText>Thêm trang</LocalizedText></span>
     </span>
   );
 }
@@ -128,13 +130,13 @@ function PaginationNavButton({
 
   if (disabled || !href) {
     return (
-      <button
+      <LocalizedElement as="button"
         disabled
         aria-label={label}
         className="text-ink-300 flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg border border-line-200 bg-paper sm:h-10 sm:w-10"
       >
         <Icon className="h-5 w-5" />
-      </button>
+      </LocalizedElement>
     );
   }
 

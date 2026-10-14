@@ -1,6 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
+import Image from "@/components/i18n/LocalizedImage";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 
@@ -31,20 +33,20 @@ export function PartnersSection() {
               id="partners-title"
               className="font-display text-h2 font-bold text-navy-900 uppercase"
             >
-              NHÀ TUYỂN DỤNG & ĐỐI TÁC
-            </h2>
+              <LocalizedText>NHÀ TUYỂN DỤNG & ĐỐI TÁC
+            </LocalizedText></h2>
             <div className="mx-auto mt-4 mb-6 h-[3px] w-12 bg-gold-500" />
             <p className="mx-auto max-w-[47.5rem] text-body-lg text-ink-600">
-              Viện đào tạo Quốc tế Topica tự hào là đối tác của các đại học, viện nghiên cứu, doanh
+              <LocalizedText>Viện đào tạo Quốc tế Topica tự hào là đối tác của các đại học, viện nghiên cứu, doanh
               nghiệp và tập đoàn hàng đầu trong nước và quốc tế.
-            </p>
+            </LocalizedText></p>
           </div>
         </ScrollReveal>
       </Container>
 
       {/* Marquee Area - Full width with gradient fading edges */}
       <ScrollReveal variant="slideInRight">
-        <div
+        <LocalizedElement as="div"
           className="partners-marquee group relative mx-auto flex w-full max-w-[1400px] [scrollbar-width:none] overflow-hidden [&::-webkit-scrollbar]:hidden"
           role="region"
           aria-label="Danh sách đối tác của Topica"
@@ -73,7 +75,7 @@ export function PartnersSection() {
               </div>
             ))}
           </div>
-        </div>
+        </LocalizedElement>
       </ScrollReveal>
     </section>
   );

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { ChevronDown } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
@@ -13,14 +14,14 @@ export function LearningOutcomes({ program }: { program: ProgramDetail }) {
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              Chuẩn đầu ra
-            </p>
+              <LocalizedText>Chuẩn đầu ra
+            </LocalizedText></p>
             <h2
               id="outcomes-title"
               className="mt-3 max-w-[13ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              {program.outcomes.length} năng lực sau tốt nghiệp
-            </h2>
+              {program.outcomes.length} <LocalizedText>năng lực sau tốt nghiệp
+            </LocalizedText></h2>
           </div>
           <div className="border-t border-[var(--color-academic-rule-strong)]">
             {program.outcomes.map((outcome) => (
@@ -30,10 +31,10 @@ export function LearningOutcomes({ program }: { program: ProgramDetail }) {
               >
                 <summary className="grid cursor-pointer list-none grid-cols-[4rem_minmax(0,1fr)_1.25rem] items-center gap-3 py-5 marker:content-none sm:grid-cols-[5rem_minmax(0,1fr)_1.25rem]">
                   <span className="text-xs font-bold text-[var(--color-academic-accent-strong)]">
-                    {outcome.code}
+                    <LocalizedText>{outcome.code}</LocalizedText>
                   </span>
                   <span className="min-w-0 font-semibold text-[var(--color-academic-ink)]">
-                    {outcome.title}
+                    <LocalizedText>{outcome.title}</LocalizedText>
                   </span>
                   <ChevronDown
                     className="h-5 w-5 text-[var(--color-academic-accent-strong)] transition-transform duration-[var(--academic-duration)] group-open:rotate-180"
@@ -41,7 +42,7 @@ export function LearningOutcomes({ program }: { program: ProgramDetail }) {
                   />
                 </summary>
                 <p className="pr-8 pb-6 pl-[5rem] leading-7 text-[var(--color-academic-muted)] sm:pl-[6rem]">
-                  {outcome.description}
+                  <LocalizedText>{outcome.description}</LocalizedText>
                 </p>
               </details>
             ))}

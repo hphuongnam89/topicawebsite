@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { useEffect, useState } from "react";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/components/ui/cn";
@@ -68,8 +69,8 @@ export function MobileStickyBar() {
           size="default"
           className="flex-1 min-h-[44px] font-semibold"
         >
-          Nhận tư vấn
-        </ButtonLink>
+          <LocalizedText>Nhận tư vấn
+        </LocalizedText></ButtonLink>
         <ButtonLink
           href="https://www.tuyensinh.topicauni.edu.vn/"
           variant="accent"
@@ -77,8 +78,8 @@ export function MobileStickyBar() {
           className="flex-1 font-bold min-h-[44px]"
           external
         >
-          Đăng ký xét tuyển
-        </ButtonLink>
+          <LocalizedText>Đăng ký xét tuyển
+        </LocalizedText></ButtonLink>
       </div>
     </div>
   );

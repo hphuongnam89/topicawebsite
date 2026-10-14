@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical:
         page?.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tuyen-sinh/hoc-phi-hoc-bong`,
+      languages: { vi: "/tuyen-sinh/hoc-phi-hoc-bong", en: "/en/tuition" },
     },
   };
 }

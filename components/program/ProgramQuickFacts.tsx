@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
@@ -15,14 +16,14 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)]">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              Thông tin nhanh
-            </p>
+              <LocalizedText>Thông tin nhanh
+            </LocalizedText></p>
             <h2
               id="facts-title"
               className="mt-3 text-2xl font-semibold text-[var(--color-academic-ink)]"
             >
-              Thông tin chương trình
-            </h2>
+              <LocalizedText>Thông tin chương trình
+            </LocalizedText></h2>
           </div>
           <dl className="grid min-w-0 gap-px border border-[var(--color-academic-rule)] bg-[var(--color-academic-rule)] sm:grid-cols-2 xl:grid-cols-4">
             {publicFacts.map((fact) => (
@@ -42,15 +43,15 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
                       aria-hidden="true"
                     />
                   )}
-                  {fact.label}
+                  <LocalizedText>{fact.label}</LocalizedText>
                 </dt>
                 <dd className="mt-3 text-xl font-semibold text-[var(--color-academic-ink)]">
-                  {fact.value}
-                  {fact.note && (
+                  <LocalizedText>{fact.value}</LocalizedText>
+                  <LocalizedText>{fact.note && (
                     <span className="mt-2 block text-xs leading-5 font-normal text-[var(--color-academic-muted)]">
-                      {fact.note}
+                      <LocalizedText>{fact.note}</LocalizedText>
                     </span>
-                  )}
+                  )}</LocalizedText>
                 </dd>
               </div>
             ))}

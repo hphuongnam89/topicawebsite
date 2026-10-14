@@ -1,7 +1,9 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
-import Image, { ImageProps } from "next/image";
+import Image, { ImageProps } from "@/components/i18n/LocalizedImage";
 import { GraduationCap } from "lucide-react";
 import { cn } from "./cn";
 
@@ -47,7 +49,7 @@ export function ImageWithFallback({
     }
 
     return (
-      <div
+      <LocalizedElement as="div"
         className={cn(
           "flex h-full w-full flex-col items-center justify-center bg-surface-subtle border border-line-200 text-ink-600 p-4 text-center",
           aspectClass,
@@ -59,8 +61,8 @@ export function ImageWithFallback({
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-paper text-navy-800 shadow-xs mb-2">
           <GraduationCap className="h-6 w-6 text-navy-800" aria-hidden="true" />
         </div>
-        <span className="text-body-sm font-medium text-ink-700">{fallbackText}</span>
-      </div>
+        <span className="text-body-sm font-medium text-ink-700"><LocalizedText>{fallbackText}</LocalizedText></span>
+      </LocalizedElement>
     );
   }
 

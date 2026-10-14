@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/guards";
-import { getUsers, createUser, deleteUser, getUserByUsername, updateUser } from "@/lib/db";
+import {
+  getUsers,
+  createUser,
+  deleteUser,
+  getUserByUsername,
+  updateUser,
+  getUserById,
+  getDb,
+} from "@/lib/db";
 import { hashPassword, MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 import crypto from "node:crypto";
 import { isSameOrigin } from "@/lib/security/request";
@@ -75,28 +83,66 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Thiếu ID hoặc họ tên." }, { status: 400 });
     }
 
-    const updates: { name?: string; role?: string; password_hash?: string } = {
-      name: name.trim(),
-      role: role === "admin" ? "admin" : "editor",
-    };
-
     if (password && password.trim().length > 0) {
-      if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH)
+      if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH) {
         return NextResponse.json(
           { error: `Mật khẩu phải có tối thiểu ${MIN_PASSWORD_LENGTH} ký tự.` },
           { status: 400 },
         );
-      updates.password_hash = hashPassword(password);
+      }
     }
 
-    updateUser(id, updates);
-    recordAdminAudit(auth.user, "update", "user", id, [
-      "name",
-      "role",
-      ...(password?.trim() ? ["password"] : []),
-    ]);
+    const db = getDb();
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      const targetUser = getUserById(id);
+      if (!targetUser) {
+        db.exec("ROLLBACK");
+        return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
+      }
 
-    return NextResponse.json({ success: true });
+      const updates: { name?: string; role?: string; password_hash?: string } = {
+        name: name.trim(),
+        role: role === "admin" ? "admin" : "editor",
+      };
+
+      if (targetUser.role === "admin" && updates.role !== "admin") {
+        const adminCount = (
+          db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get() as {
+            count: number;
+          }
+        ).count;
+        if (adminCount <= 1) {
+          db.exec("ROLLBACK");
+          return NextResponse.json(
+            { error: "Không thể hạ quyền quản trị viên duy nhất còn lại trong hệ thống." },
+            { status: 400 },
+          );
+        }
+      }
+
+      if (password && password.trim().length > 0) {
+        updates.password_hash = hashPassword(password);
+      }
+
+      const updated = updateUser(id, updates);
+      if (!updated) {
+        db.exec("ROLLBACK");
+        return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
+      }
+
+      recordAdminAudit(auth.user, "update", "user", id, [
+        "name",
+        "role",
+        ...(password?.trim() ? ["password"] : []),
+      ]);
+
+      db.exec("COMMIT");
+      return NextResponse.json({ success: true });
+    } catch (innerError) {
+      db.exec("ROLLBACK");
+      throw innerError;
+    }
   } catch (error) {
     console.error("Update user error:", error);
     return NextResponse.json({ error: "Lỗi cập nhật tài khoản." }, { status: 500 });
@@ -120,8 +166,41 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Không thể xóa tài khoản này." }, { status: 400 });
   }
 
-  const deleted = deleteUser(id);
-  if (!deleted) return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
-  recordAdminAudit(auth.user, "delete", "user", id, ["account"]);
-  return NextResponse.json({ success: true });
+  const db = getDb();
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    const targetUser = getUserById(id);
+    if (!targetUser) {
+      db.exec("ROLLBACK");
+      return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
+    }
+
+    if (targetUser.role === "admin") {
+      const adminCount = (
+        db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get() as {
+          count: number;
+        }
+      ).count;
+      if (adminCount <= 1) {
+        db.exec("ROLLBACK");
+        return NextResponse.json(
+          { error: "Không thể xóa quản trị viên duy nhất còn lại trong hệ thống." },
+          { status: 400 },
+        );
+      }
+    }
+
+    const deleted = deleteUser(id);
+    if (!deleted) {
+      db.exec("ROLLBACK");
+      return NextResponse.json({ error: "Không tìm thấy tài khoản." }, { status: 404 });
+    }
+    recordAdminAudit(auth.user, "delete", "user", id, ["account"]);
+    db.exec("COMMIT");
+    return NextResponse.json({ success: true });
+  } catch (innerError) {
+    db.exec("ROLLBACK");
+    console.error("Delete user error:", innerError);
+    return NextResponse.json({ error: "Lỗi xóa tài khoản." }, { status: 500 });
+  }
 }

@@ -1,3 +1,5 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import React from "react";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
@@ -53,10 +55,11 @@ interface TrustSectionProps {
 const defaultIcons = [GraduationCap, Award, Globe, Users, MapPin, Shield];
 
 export function TrustSection({ data }: TrustSectionProps) {
-  const items = data && data.length > 0 ? data : trustItems;
+  const items = Array.isArray(data) && data.length > 0 ? data : trustItems;
 
   return (
-    <section
+    <LocalizedElement
+      as="section"
       className="border-y border-navy-800 bg-navy-950 py-4 sm:py-6"
       aria-label="Dấu ấn Topica"
     >
@@ -78,12 +81,14 @@ export function TrustSection({ data }: TrustSectionProps) {
                   strokeWidth={1.7}
                   aria-hidden="true"
                 />
-                <p className="text-body-sm leading-snug font-semibold text-white/90">{item.label}</p>
+                <p className="text-body-sm leading-snug font-semibold text-white/90">
+                  <LocalizedText>{item.label}</LocalizedText>
+                </p>
               </ScrollReveal>
             );
           })}
         </div>
       </Container>
-    </section>
+    </LocalizedElement>
   );
 }

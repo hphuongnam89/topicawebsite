@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { Metadata } from "next";
 import { cms } from "@/lib/cms";
 import { Container } from "@/components/ui/Container";
@@ -5,7 +6,7 @@ import { SearchForm } from "@/components/search/SearchForm";
 import { SearchResultCard } from "@/components/search/SearchResultCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { EmptyState } from "@/components/ui/EmptyState";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -31,7 +32,7 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className="min-h-screen bg-canvas pt-8 pb-24 lg:pt-16">
       <Container size="narrow">
         <div className="mb-12 text-center">
-          <h1 className="mb-8 font-display text-display text-ink-950">Tìm kiếm</h1>
+          <h1 className="mb-8 font-display text-display text-ink-950"><LocalizedText>Tìm kiếm</LocalizedText></h1>
           <SearchForm initialQuery={q} />
         </div>
 
@@ -54,8 +55,8 @@ async function SearchResults({ query, page }: { query?: string; page: number }) 
     return (
       <div className="py-12 text-center">
         <h3 className="mb-4 font-display text-h3 font-bold text-ink-950">
-          Gợi ý tìm kiếm phổ biến
-        </h3>
+          <LocalizedText>Gợi ý tìm kiếm phổ biến
+        </LocalizedText></h3>
         <div className="flex flex-wrap justify-center gap-2">
           {["Học phí", "Công nghệ thông tin", "Xét tuyển học bạ", "Văn bằng 2", "Học bổng"].map(
             (term) => (
@@ -64,7 +65,7 @@ async function SearchResults({ query, page }: { query?: string; page: number }) 
                 href={`/tim-kiem?q=${encodeURIComponent(term)}`}
                 className="rounded-full border border-line-200 bg-paper px-4 py-2 text-body-sm font-medium text-ink-800 transition-colors hover:border-gold-500 hover:text-navy-900"
               >
-                {term}
+                <LocalizedText>{term}</LocalizedText>
               </Link>
             ),
           )}
@@ -94,8 +95,8 @@ async function SearchResults({ query, page }: { query?: string; page: number }) 
     <div>
       <div className="mb-6 flex items-center justify-between border-b border-line-200 pb-4">
         <h2 className="text-body font-semibold text-ink-950">
-          Tìm thấy {result.total} kết quả cho &quot;{query}&quot;
-        </h2>
+          <LocalizedText>Tìm thấy </LocalizedText>{result.total} <LocalizedText>kết quả cho &quot;</LocalizedText><LocalizedText>{query}</LocalizedText><LocalizedText>&quot;
+        </LocalizedText></h2>
       </div>
 
       <div className="relative flex flex-col">

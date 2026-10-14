@@ -1,8 +1,9 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import type { CmsPage } from "@/lib/cms";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { WordPressContent } from "./WordPressContent";
-import Image from "next/image";
+import Image from "@/components/i18n/LocalizedImage";
 import { AdmissionCTA } from "@/components/sections/AdmissionCTA";
 import { CredentialSamples } from "./CredentialSamples";
 import { FacilitiesDirectory } from "./FacilitiesDirectory";
@@ -56,8 +57,8 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
             <FacilitiesDirectory />
           ) : (
             <p className="text-center text-body text-ink-600 italic">
-              Nội dung đang được cập nhật.
-            </p>
+              <LocalizedText>Nội dung đang được cập nhật.
+            </LocalizedText></p>
           )}
         </Container>
       </section>

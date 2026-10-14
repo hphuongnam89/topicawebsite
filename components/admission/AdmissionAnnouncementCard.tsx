@@ -1,5 +1,6 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn"
-import Link from "next/link"
+import Link from "@/components/i18n/LocalizedLink"
 import { StatusBadge, type StatusBadgeVariant } from "@/components/ui/StatusBadge"
 
 export interface AdmissionAnnouncementCardProps {
@@ -31,22 +32,22 @@ export function AdmissionAnnouncementCard({
       )}
     >
       <div className="mb-3 flex flex-wrap items-center gap-3">
-        {category && (
+        <LocalizedText>{category && (
           <span className="text-xs font-medium uppercase tracking-wider text-brand-600">
-            {category}
+            <LocalizedText>{category}</LocalizedText>
           </span>
-        )}
-        <span className="text-xs text-ink-400">{date}</span>
+        )}</LocalizedText>
+        <span className="text-xs text-ink-400"><LocalizedText>{date}</LocalizedText></span>
         {status && <StatusBadge variant={status} />}
       </div>
       <h3 className="mb-2 line-clamp-2 text-body-lg font-semibold text-ink-950 group-hover:text-brand-700">
-        {title}
+        <LocalizedText>{title}</LocalizedText>
       </h3>
-      {summary && (
+      <LocalizedText>{summary && (
         <p className="mt-auto line-clamp-2 text-body-sm text-ink-600">
-          {summary}
+          <LocalizedText>{summary}</LocalizedText>
         </p>
-      )}
+      )}</LocalizedText>
     </Link>
   )
 }

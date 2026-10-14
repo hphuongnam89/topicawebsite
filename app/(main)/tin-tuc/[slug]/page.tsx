@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cms } from "@/lib/cms";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -209,7 +210,7 @@ function renderArticle(article: Article) {
           {processedHtml ? (
             <Prose html={processedHtml} />
           ) : (
-            <p className="text-ink-600 italic">Nội dung đang được cập nhật...</p>
+            <p className="text-ink-600 italic"><LocalizedText>Nội dung đang được cập nhật...</LocalizedText></p>
           )}
 
           <div className="my-12">
@@ -219,14 +220,14 @@ function renderArticle(article: Article) {
           {/* Tags */}
           {article.tags.length > 0 && (
             <div className="mt-12 flex items-center gap-2 border-t border-line-200 pt-8">
-              <span className="text-body-sm font-semibold text-ink-950">Tags:</span>
+              <span className="text-body-sm font-semibold text-ink-950"><LocalizedText>Tags:</LocalizedText></span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <span
                     key={tag.slug}
                     className="rounded bg-line-100 px-2 py-1 text-body-sm text-ink-800"
                   >
-                    #{tag.title}
+                    <LocalizedText>#</LocalizedText><LocalizedText>{tag.title}</LocalizedText>
                   </span>
                 ))}
               </div>
@@ -269,8 +270,8 @@ async function renderCategory(category: Category, page: number) {
           </div>
         ) : (
           <div className="py-24 text-center">
-            <h3 className="text-h4 mb-2 font-bold text-ink-950">Chuyên mục chưa có bài viết</h3>
-            <p className="text-ink-600">Vui lòng quay lại sau.</p>
+            <h3 className="text-h4 mb-2 font-bold text-ink-950"><LocalizedText>Chuyên mục chưa có bài viết</LocalizedText></h3>
+            <p className="text-ink-600"><LocalizedText>Vui lòng quay lại sau.</LocalizedText></p>
           </div>
         )}
       </Container>

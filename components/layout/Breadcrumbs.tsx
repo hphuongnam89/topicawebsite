@@ -1,5 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/components/ui/cn";
 import { env } from "@/lib/env";
@@ -43,7 +45,7 @@ export function Breadcrumbs({ items, className, includeSchema = true }: Breadcru
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <nav aria-label="Breadcrumb" className={cn("w-full py-2", className)}>
+      <LocalizedElement as="nav" aria-label="Breadcrumb" className={cn("w-full py-2", className)}>
         <ol className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-body-sm text-ink-600">
           {items.map((item, index) => {
             const isLast = index === items.length - 1;
@@ -52,19 +54,19 @@ export function Breadcrumbs({ items, className, includeSchema = true }: Breadcru
               <React.Fragment key={index}>
                 <li className="inline-flex items-center">
                   {isLast ? (
-                    <span
+                    <LocalizedElement as="span"
                       className="font-semibold text-ink-950 truncate max-w-[220px] sm:max-w-none"
                       aria-current="page"
                       title={item.label}
                     >
-                      {item.label}
-                    </span>
+                      <LocalizedText>{item.label}</LocalizedText>
+                    </LocalizedElement>
                   ) : (
                     <Link
                       href={item.href || "/"}
                       className="transition-colors hover:text-brand-700 hover:underline"
                     >
-                      {item.label}
+                      <LocalizedText>{item.label}</LocalizedText>
                     </Link>
                   )}
                 </li>
@@ -77,7 +79,7 @@ export function Breadcrumbs({ items, className, includeSchema = true }: Breadcru
             );
           })}
         </ol>
-      </nav>
+      </LocalizedElement>
     </>
   );
 }

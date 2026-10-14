@@ -4,39 +4,70 @@ import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
 import { recordAdminAudit } from "@/lib/services/admin-audit";
+import { z } from "zod";
 
-export interface HomepageHeroSettings {
-  badge: string;
-  title: string;
-  description: string;
-  bgImage: string;
-  videoUrl?: string;
-  ctaPrimaryText: string;
-  ctaPrimaryLink: string;
-  ctaSecondaryText: string;
-  ctaSecondaryLink: string;
-  showLeadForm: boolean;
-}
+export const homepageHeroSchema = z
+  .object({
+    badge: z.string().trim().min(1).max(300),
+    title: z.string().trim().min(1).max(300),
+    description: z.string().trim().max(1000),
+    bgImage: z.string().trim().min(1).max(2000),
+    videoUrl: z.string().trim().max(2000).optional(),
+    ctaPrimaryText: z.string().trim().min(1).max(100),
+    ctaPrimaryLink: z.string().trim().min(1).max(1000),
+    ctaSecondaryText: z.string().trim().min(1).max(100),
+    ctaSecondaryLink: z.string().trim().min(1).max(1000),
+    showLeadForm: z.boolean(),
+  })
+  .strict();
 
-export interface TrustItemSetting {
-  label: string;
-}
+export const trustItemSchema = z
+  .object({
+    label: z.string().trim().min(1).max(200),
+  })
+  .strict();
 
-export interface TestimonialSetting {
-  id: string;
-  name: string;
-  role: string;
-  quote: string;
-  program: string;
-  avatar?: string;
-}
+export const testimonialSchema = z
+  .object({
+    id: z.string().trim().min(1).max(100),
+    name: z.string().trim().min(1).max(200),
+    role: z.string().trim().max(200),
+    quote: z.string().trim().min(1).max(2000),
+    program: z.string().trim().max(200),
+    avatar: z.string().trim().max(2000).optional(),
+  })
+  .strict();
 
-export interface AdmissionStepSetting {
-  step: number;
-  title: string;
-  description: string;
-  icon: string;
-}
+export const admissionStepSchema = z
+  .object({
+    step: z.number().int().min(1).max(20),
+    title: z.string().trim().min(1).max(200),
+    description: z.string().trim().max(1000),
+    icon: z.string().trim().min(1).max(100),
+  })
+  .strict();
+
+export const homepageUpdateSchema = z
+  .object({
+    hero: homepageHeroSchema.optional(),
+    trustItems: z.array(trustItemSchema).optional(),
+    testimonials: z.array(testimonialSchema).optional(),
+    admissionSteps: z.array(admissionStepSchema).optional(),
+  })
+  .strict()
+  .refine(
+    (data) =>
+      data.hero !== undefined ||
+      data.trustItems !== undefined ||
+      data.testimonials !== undefined ||
+      data.admissionSteps !== undefined,
+    { message: "Cần ít nhất một trường để cập nhật" },
+  );
+
+export type HomepageHeroSettings = z.infer<typeof homepageHeroSchema>;
+export type TrustItemSetting = z.infer<typeof trustItemSchema>;
+export type TestimonialSetting = z.infer<typeof testimonialSchema>;
+export type AdmissionStepSetting = z.infer<typeof admissionStepSchema>;
 
 const DEFAULT_HERO: HomepageHeroSettings = {
   badge: "Trực thuộc Trường Đại học Phú Xuân — Thành viên EQuest",
@@ -122,8 +153,16 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const body = await request.json();
-    const { hero, trustItems, testimonials, admissionSteps } = body;
+    const rawBody = await request.json().catch(() => null);
+    const parsed = homepageUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Dữ liệu cấu hình trang chủ không hợp lệ." },
+        { status: 422 },
+      );
+    }
+
+    const { hero, trustItems, testimonials, admissionSteps } = parsed.data;
 
     if (hero) {
       setSetting("homepage_hero", hero);

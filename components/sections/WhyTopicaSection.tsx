@@ -1,9 +1,11 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 /* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V5
  * genre: editorial · macrostructure: Bento Grid · theme: custom Topica academic
  * section: S2 Hanging · features: F1 Bento · proof: T4 Stat strip · cta: C1 + C3
  */
 
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import {
   ArrowRight,
   BadgeCheck,
@@ -89,23 +91,23 @@ function SectionHeader() {
     <header className="max-w-4xl pb-12 lg:pb-16">
       <ScrollReveal>
         <p className="text-body-sm font-semibold tracking-[0.12em] text-gold-700 uppercase">
-          Lý do để bạn tự tin bắt đầu
-        </p>
+          <LocalizedText>Lý do để bạn tự tin bắt đầu
+        </LocalizedText></p>
       </ScrollReveal>
       <ScrollReveal delay={0.06}>
         <h2
           id="why-topica-title"
           className="mt-5 font-display text-[clamp(2.125rem,5vw,4rem)] leading-[1.12] font-semibold tracking-[-0.025em] text-ink-950"
         >
-          <span className="block">Học linh hoạt hôm nay.</span>
-          <span className="block text-navy-900">Vững vàng sự nghiệp ngày mai.</span>
+          <span className="block"><LocalizedText>Học linh hoạt hôm nay.</LocalizedText></span>
+          <span className="block text-navy-900"><LocalizedText>Vững vàng sự nghiệp ngày mai.</LocalizedText></span>
         </h2>
       </ScrollReveal>
       <ScrollReveal delay={0.18}>
         <p className="mt-6 max-w-[65ch] text-body-lg text-ink-600">
-          Topica mang đến lộ trình đại học từ xa được thiết kế cho người bận rộn, với trải nghiệm
+          <LocalizedText>Topica mang đến lộ trình đại học từ xa được thiết kế cho người bận rộn, với trải nghiệm
           học tập hiện đại và sự đồng hành xuyên suốt.
-        </p>
+        </LocalizedText></p>
       </ScrollReveal>
     </header>
   );
@@ -114,16 +116,16 @@ function SectionHeader() {
 function CardVisual({ visual }: { visual: BenefitVisual }) {
   if (visual === "learning-flow") {
     return (
-      <ol
+      <LocalizedElement as="ol"
         aria-label="Lộ trình học tập trực tuyến"
         className="mt-8 grid grid-cols-1 gap-4 border-t border-line-200 pt-6 sm:grid-cols-4 sm:gap-x-5 sm:gap-y-6"
       >
         {learningSteps.map((step, index) => (
           <li key={step} className="relative min-w-0">
             <span className="block text-body-sm font-semibold text-navy-900">
-              {String(index + 1).padStart(2, "0")}
+              <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
             </span>
-            <span className="mt-1 block text-body-sm font-medium text-ink-800">{step}</span>
+            <span className="mt-1 block text-body-sm font-medium text-ink-800"><LocalizedText>{step}</LocalizedText></span>
             {index < learningSteps.length - 1 && (
               <ArrowRight
                 aria-hidden="true"
@@ -132,7 +134,7 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
             )}
           </li>
         ))}
-      </ol>
+      </LocalizedElement>
     );
   }
 
@@ -141,8 +143,8 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
       <div className="mt-8 flex items-start gap-3 border-t border-line-200 pt-5">
         <BadgeCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
         <p className="text-body-sm text-ink-600">
-          Thông tin công nhận và điều kiện chương trình được công khai minh bạch.
-        </p>
+          <LocalizedText>Thông tin công nhận và điều kiện chương trình được công khai minh bạch.
+        </LocalizedText></p>
       </div>
     );
   }
@@ -154,9 +156,9 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
           <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-100 text-navy-900">
             <Check className="h-3.5 w-3.5" />
           </span>
-          <span className="text-body-sm font-medium text-ink-800">{label}</span>
+          <span className="text-body-sm font-medium text-ink-800"><LocalizedText>{label}</LocalizedText></span>
           <span className="h-px flex-1 bg-line-200" />
-          <span className="text-body-sm font-semibold text-navy-900">0{index + 1}</span>
+          <span className="text-body-sm font-semibold text-navy-900"><LocalizedText>0</LocalizedText>{index + 1}</span>
         </div>
       ))}
     </div>
@@ -175,16 +177,16 @@ export function BenefitCard({ item, index }: { item: BenefitItem; index: number 
         <div className="flex items-center gap-3">
           <Icon aria-hidden="true" className="h-6 w-6 text-navy-900" strokeWidth={1.7} />
           <p className="text-body-sm font-semibold tracking-[0.1em] text-ink-600 uppercase">
-            {item.eyebrow}
+            <LocalizedText>{item.eyebrow}</LocalizedText>
           </p>
         </div>
         <h3
           id={`benefit-${index}`}
           className="mt-6 font-display text-[clamp(1.625rem,2.5vw,2.25rem)] leading-tight font-semibold text-ink-950"
         >
-          {item.title}
+          <LocalizedText>{item.title}</LocalizedText>
         </h3>
-        <p className="mt-3 max-w-[58ch] text-body text-ink-600">{item.description}</p>
+        <p className="mt-3 max-w-[58ch] text-body text-ink-600"><LocalizedText>{item.description}</LocalizedText></p>
         <div className="mt-auto">
           <CardVisual visual={item.visual} />
         </div>
@@ -213,34 +215,34 @@ export function FeaturedSupportCard() {
           <UsersRound aria-hidden="true" className="h-6 w-6" strokeWidth={1.7} />
         </div>
         <p className="mt-10 text-body-sm font-semibold tracking-[0.1em] text-gold-400 uppercase">
-          Không học một mình
-        </p>
+          <LocalizedText>Không học một mình
+        </LocalizedText></p>
         <h3
           id="support-title"
           className="mt-4 font-display text-[clamp(1.875rem,3vw,2.75rem)] leading-[1.15] font-semibold text-white"
         >
-          Đồng hành cùng bạn đến đích
-        </h3>
+          <LocalizedText>Đồng hành cùng bạn đến đích
+        </LocalizedText></h3>
         <p className="mt-5 text-body text-white/75">
-          Giảng viên, cố vấn học tập và đội ngũ hỗ trợ luôn sẵn sàng giúp bạn duy trì tiến độ trong
+          <LocalizedText>Giảng viên, cố vấn học tập và đội ngũ hỗ trợ luôn sẵn sàng giúp bạn duy trì tiến độ trong
           suốt hành trình học.
-        </p>
-        <ul className="mt-8 flex flex-wrap gap-2.5" aria-label="Các hình thức hỗ trợ">
+        </LocalizedText></p>
+        <LocalizedElement as="ul" className="mt-8 flex flex-wrap gap-2.5" aria-label="Các hình thức hỗ trợ">
           {proofPoints.map((proof) => (
             <li
               key={proof}
               className="rounded-full border border-white/15 bg-white/5 px-3.5 py-2 text-body-sm text-white/85"
             >
-              {proof}
+              <LocalizedText>{proof}</LocalizedText>
             </li>
           ))}
-        </ul>
+        </LocalizedElement>
         <Link
           href="/gioi-thieu/"
           className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-gold-400/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400"
         >
-          Gặp đội ngũ giảng viên và cố vấn
-          <ArrowRight
+          <LocalizedText>Gặp đội ngũ giảng viên và cố vấn
+          </LocalizedText><ArrowRight
             aria-hidden="true"
             className="ml-2 h-4 w-4 transition-transform duration-[var(--duration-base)] group-hover/link:translate-x-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
           />
@@ -298,15 +300,15 @@ export function ConsultationCTA() {
             id="consultation-cta-title"
             className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.15] font-semibold text-ink-950"
           >
-            Lộ trình phù hợp với bạn bắt đầu từ một cuộc tư vấn.
-          </h3>
+            <LocalizedText>Lộ trình phù hợp với bạn bắt đầu từ một cuộc tư vấn.
+          </LocalizedText></h3>
           <p className="mt-4 max-w-[62ch] text-body text-ink-600">
-            Để lại thông tin, đội ngũ tư vấn sẽ hỗ trợ bạn chọn ngành, hiểu điều kiện xét tuyển và
+            <LocalizedText>Để lại thông tin, đội ngũ tư vấn sẽ hỗ trợ bạn chọn ngành, hiểu điều kiện xét tuyển và
             xây dựng kế hoạch học phù hợp.
-          </p>
+          </LocalizedText></p>
           <p className="mt-5 text-body-sm text-ink-600">
-            Thông tin của bạn được bảo mật và chỉ dùng để hỗ trợ tư vấn tuyển sinh.
-          </p>
+            <LocalizedText>Thông tin của bạn được bảo mật và chỉ dùng để hỗ trợ tư vấn tuyển sinh.
+          </LocalizedText></p>
         </div>
         <div className="flex min-w-0 flex-col items-start gap-4 lg:items-end">
           <ButtonLink
@@ -315,15 +317,15 @@ export function ConsultationCTA() {
             rightIcon={<ArrowRight aria-hidden="true" className="h-4 w-4" />}
             className="w-full sm:w-auto"
           >
-            Nhận tư vấn miễn phí
-          </ButtonLink>
+            <LocalizedText>Nhận tư vấn miễn phí
+          </LocalizedText></ButtonLink>
           <ButtonLink
             href="/tuyen-sinh/"
             variant="tertiary"
             className="h-auto min-h-11 px-0 underline decoration-line-200 underline-offset-8 hover:decoration-gold-700"
           >
-            Xem các chương trình đào tạo
-          </ButtonLink>
+            <LocalizedText>Xem các chương trình đào tạo
+          </LocalizedText></ButtonLink>
         </div>
       </div>
     </ScrollReveal>

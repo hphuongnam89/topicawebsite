@@ -1,5 +1,7 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { useState, useMemo } from "react";
 import { FAQAccordion } from "@/components/sections/FAQAccordion";
 import { Search } from "lucide-react";
@@ -49,10 +51,10 @@ export function FAQHub({ categories }: FAQHubProps) {
       <div className="mb-12">
         <div className="relative mx-auto mb-8 max-w-2xl">
           <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-ink-400" />
-          <input
+          <LocalizedElement as="input"
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm câu hỏi (VD: học phí, xét tuyển...)"
             className="w-full rounded-full border-2 border-line-200 bg-canvas py-3 pr-6 pl-12 text-body font-medium text-ink-950 transition-colors outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           />
@@ -69,8 +71,8 @@ export function FAQHub({ categories }: FAQHubProps) {
                   : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-700",
               )}
             >
-              Tất cả
-            </button>
+              <LocalizedText>Tất cả
+            </LocalizedText></button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
@@ -82,7 +84,7 @@ export function FAQHub({ categories }: FAQHubProps) {
                     : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-700",
                 )}
               >
-                {cat.title}
+                <LocalizedText>{cat.title}</LocalizedText>
               </button>
             ))}
           </div>
@@ -96,7 +98,7 @@ export function FAQHub({ categories }: FAQHubProps) {
             <div key={cat.id} className="scroll-mt-24" id={cat.id}>
               {filteredCategories.length > 1 && (
                 <h3 className="mb-6 inline-block border-b-2 border-brand-500 pb-2 font-display text-h3 font-bold text-ink-950">
-                  {cat.title}
+                  <LocalizedText>{cat.title}</LocalizedText>
                 </h3>
               )}
               <div className="rounded-xl border border-line-200 bg-canvas p-4 shadow-sm sm:p-6 lg:p-8">
@@ -107,14 +109,14 @@ export function FAQHub({ categories }: FAQHubProps) {
         ) : (
           <div className="rounded-xl border border-line-200 bg-paper py-12 text-center">
             <p className="text-body-lg font-medium text-ink-600">
-              Không tìm thấy câu hỏi nào phù hợp với &quot;{searchQuery}&quot;
-            </p>
+              <LocalizedText>Không tìm thấy câu hỏi nào phù hợp với &quot;</LocalizedText><LocalizedText>{searchQuery}</LocalizedText><LocalizedText>&quot;
+            </LocalizedText></p>
             <button
               onClick={() => setSearchQuery("")}
               className="mt-4 font-semibold text-brand-700 hover:underline"
             >
-              Xóa bộ lọc
-            </button>
+              <LocalizedText>Xóa bộ lọc
+            </LocalizedText></button>
           </div>
         )}
       </div>

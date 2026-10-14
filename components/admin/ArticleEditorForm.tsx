@@ -46,6 +46,7 @@ export interface ArticleFormData {
   seo_title: string;
   seo_description: string;
   published_at: string;
+  updated_at?: string;
 }
 
 interface ArticleEditorFormProps {
@@ -148,12 +149,16 @@ export function ArticleEditorForm({
     try {
       const url = isEdit ? `/api/admin/articles/${formData.id}` : "/api/admin/articles";
       const method = isEdit ? "PUT" : "POST";
-      const { id: _id, ...payload } = formData;
+      const { id: _id, updated_at, ...payload } = formData;
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(isEdit ? payload : formData),
+        body: JSON.stringify(
+          isEdit
+            ? { ...payload, expected_updated_at: updated_at || initialData?.updated_at }
+            : formData,
+        ),
       });
 
       const data = await res.json();

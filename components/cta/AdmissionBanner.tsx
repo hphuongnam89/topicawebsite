@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
@@ -35,13 +36,13 @@ export function AdmissionBanner({
     >
       <Container>
         <div className="max-w-measure mx-auto flex flex-col items-center">
-          <h2 className="mb-6 font-display text-display md:text-h1">{heading}</h2>
-          <p className="mb-8 text-body-lg opacity-90">{description}</p>
+          <h2 className="mb-6 font-display text-display md:text-h1"><LocalizedText>{heading}</LocalizedText></h2>
+          <p className="mb-8 text-body-lg opacity-90"><LocalizedText>{description}</LocalizedText></p>
           <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
             <ButtonLink href={primaryHref} variant={isDark ? "accent" : "primary"} size="lg" className="w-full justify-center">
-              {primaryLabel}
+              <LocalizedText>{primaryLabel}</LocalizedText>
             </ButtonLink>
-            {secondaryHref && secondaryLabel && (
+            <LocalizedText>{secondaryHref && secondaryLabel && (
               <ButtonLink
                 href={secondaryHref}
                 variant="secondary"
@@ -53,9 +54,9 @@ export function AdmissionBanner({
                 )}
                 size="lg"
               >
-                {secondaryLabel}
+                <LocalizedText>{secondaryLabel}</LocalizedText>
               </ButtonLink>
-            )}
+            )}</LocalizedText>
           </div>
         </div>
       </Container>

@@ -24,7 +24,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
   const categories = getCategories();
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <ArticleEditorForm
         isEdit={true}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
@@ -43,6 +43,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
           seo_title: article.seo_title || "",
           seo_description: article.seo_description || "",
           published_at: article.published_at || new Date().toISOString(),
+          updated_at: article.updated_at,
         }}
       />
     </div>

@@ -18,7 +18,7 @@ interface CategoryItem {
   article_count?: number;
 }
 
-function generateSlug(text: string): string {
+export function generateSlug(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
@@ -32,24 +32,33 @@ function generateSlug(text: string): string {
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [uncategorizedArticleCount, setUncategorizedArticleCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await fetch("/api/admin/categories");
       if (res.ok) {
         const data = await res.json();
         setCategories(data.categories || []);
+        setUncategorizedArticleCount(data.uncategorizedArticleCount || 0);
+        setError(null);
+      } else {
+        setError(`Không thể tải danh mục (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`);
       }
     } catch (err) {
       console.error(err);
+      setError("Lỗi kết nối khi tải danh mục. Vui lòng kiểm tra mạng và thử lại.");
     } finally {
       setLoading(false);
     }
@@ -62,12 +71,18 @@ export default function AdminCategoriesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setName(val);
-    if (!slug) setSlug(generateSlug(val));
+    if (!slugManuallyEdited) {
+      setSlug(generateSlug(val));
+    }
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSlug(val);
+    setSlugManuallyEdited(val.trim().length > 0);
   };
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -90,6 +105,7 @@ export default function AdminCategoriesPage() {
       setMessage({ type: "success", text: `Đã tạo danh mục "${name}" thành công!` });
       setName("");
       setSlug("");
+      setSlugManuallyEdited(false);
       setDescription("");
       fetchCategories();
     } catch (err: any) {
@@ -129,6 +145,11 @@ export default function AdminCategoriesPage() {
           <p className="mt-0.5 text-body-sm text-ink-500">
             Quản lý và phân loại các chuyên mục bài viết trên website Topica.
           </p>
+          {uncategorizedArticleCount > 0 && (
+            <p className="mt-1 text-sm text-amber-800">
+              Ngoài các danh mục: {uncategorizedArticleCount} bài chưa phân loại.
+            </p>
+          )}
         </div>
       </div>
 
@@ -179,7 +200,7 @@ export default function AdminCategoriesPage() {
                 type="text"
                 required
                 value={slug}
-                onChange={(e) => setSlug(generateSlug(e.target.value))}
+                onChange={handleSlugChange}
                 placeholder="goc-sinh-vien"
                 className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 font-mono text-xs text-ink-950 focus:border-brand-600 focus:outline-none"
               />
@@ -211,6 +232,22 @@ export default function AdminCategoriesPage() {
 
         {/* Right 2 Cols: Categories List Table */}
         <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs lg:col-span-2">
+          {error && categories.length > 0 && (
+            <div className="flex items-center justify-between border-b border-amber-200 bg-amber-50 p-4 text-xs text-amber-800">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                <span>{error}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => fetchCategories()}
+                className="inline-flex items-center gap-1 font-semibold underline hover:text-amber-900"
+              >
+                <RefreshCw className="h-3 w-3" />
+                <span>Thử lại</span>
+              </button>
+            </div>
+          )}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-body-sm">
               <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
@@ -231,10 +268,27 @@ export default function AdminCategoriesPage() {
                       </div>
                     </td>
                   </tr>
+                ) : error && categories.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-12 text-center">
+                      <div className="mx-auto max-w-sm rounded-lg border border-red-200 bg-red-50 p-6 text-red-800">
+                        <AlertCircle className="mx-auto mb-2 h-8 w-8 text-red-600" />
+                        <p className="font-semibold">{error}</p>
+                        <button
+                          type="button"
+                          onClick={() => fetchCategories()}
+                          className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 focus:outline-2 focus:outline-red-600"
+                        >
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          <span>Thử lại</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ) : categories.length === 0 ? (
                   <tr>
                     <td colSpan={4} className="py-12 text-center text-ink-500">
-                      Chưa có danh mục nào.
+                      Chưa có danh mục nào. Hãy tạo danh mục đầu tiên bằng biểu mẫu bên trái!
                     </td>
                   </tr>
                 ) : (

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { cn } from "@/components/ui/cn"
 import { ButtonLink } from "@/components/ui/Button"
 import { PhoneCall } from "lucide-react"
@@ -26,13 +27,13 @@ export function ConsultationCTA({
         <PhoneCall size={28} />
       </div>
       <div className="flex-1 text-center sm:text-left">
-        <h3 className="mb-2 text-h3 text-ink-950">{heading}</h3>
-        <p className="text-body text-ink-600">{description}</p>
+        <h3 className="mb-2 text-h3 text-ink-950"><LocalizedText>{heading}</LocalizedText></h3>
+        <p className="text-body text-ink-600"><LocalizedText>{description}</LocalizedText></p>
       </div>
       <div className="shrink-0">
         <ButtonLink href={href} variant="primary">
-          Liên hệ ngay
-        </ButtonLink>
+          <LocalizedText>Liên hệ ngay
+        </LocalizedText></ButtonLink>
       </div>
     </div>
   )

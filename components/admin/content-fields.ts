@@ -67,6 +67,7 @@ export const fieldLabels: Record<string, string> = {
   content_html: "Nội dung",
   featured_image: "Ảnh đại diện",
   status: "Trạng thái nội dung",
+  category_id: "Chuyên mục",
 };
 const source = ["source"];
 export const contentFields: Record<ContentType, string[]> = {
@@ -147,10 +148,11 @@ export const contentFields: Record<ContentType, string[]> = {
     "service_urls",
     ...source,
   ],
-  article: ["title", "slug", "excerpt", "content_html", "featured_image"],
+  article: ["title", "slug", "category_id", "excerpt", "content_html", "featured_image"],
   page: ["title", "slug", "excerpt", "content_html", "featured_image"],
 };
 export const numberFields = new Set([
+  "category_id",
   "unit_price_per_credit",
   "total_credits",
   "total_tuition",

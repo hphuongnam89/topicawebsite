@@ -1,3 +1,5 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { ChevronDown } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
@@ -15,20 +17,20 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              Khung chương trình
-            </p>
+              <LocalizedText>Khung chương trình
+            </LocalizedText></p>
             <h2
               id="curriculum-title"
               className="mt-3 max-w-[14ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              {creditFact
+              <LocalizedText>{creditFact
                 ? `${creditFact.value}, đọc theo từng học kỳ`
-                : "Khung chương trình đào tạo"}
+                : "Khung chương trình đào tạo"}</LocalizedText>
             </h2>
             <p className="mt-5 max-w-md leading-7 text-[var(--color-academic-muted)]">
-              Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng
+              <LocalizedText>Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng
               chương trình nguồn.
-            </p>
+            </LocalizedText></p>
           </div>
 
           <div className="min-w-0 border-t border-[var(--color-academic-rule-strong)]">
@@ -41,13 +43,13 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-6 marker:content-none">
                   <span className="min-w-0">
                     <span className="block text-lg font-semibold text-[var(--color-academic-ink)]">
-                      {group.name}
+                      <LocalizedText>{group.name}</LocalizedText>
                     </span>
                     <span className="mt-1 block text-sm text-[var(--color-academic-muted)]">
-                      {group.credits === null
+                      <LocalizedText>{group.credits === null
                         ? "Không tính vào khối lượng tích lũy"
-                        : `${group.credits} tín chỉ`}
-                      {group.selection ? ` · ${group.selection}` : ""}
+                        : `${group.credits} tín chỉ`}</LocalizedText>
+                      <LocalizedText>{group.selection ? ` · ${group.selection}` : ""}</LocalizedText>
                     </span>
                   </span>
                   <ChevronDown
@@ -58,11 +60,11 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
 
                 <div className="pb-7">
                   <div className="hidden grid-cols-[7.5rem_minmax(0,1fr)_5rem] gap-4 border-b border-[var(--color-academic-rule)] pb-2 text-xs font-bold tracking-[0.1em] text-[var(--color-academic-muted)] uppercase sm:grid">
-                    <span>Mã học phần</span>
-                    <span>Tên học phần</span>
-                    <span className="text-right">Tín chỉ</span>
+                    <span><LocalizedText>Mã học phần</LocalizedText></span>
+                    <span><LocalizedText>Tên học phần</LocalizedText></span>
+                    <span className="text-right"><LocalizedText>Tín chỉ</LocalizedText></span>
                   </div>
-                  <ul
+                  <LocalizedElement as="ul"
                     className="divide-y divide-[var(--color-academic-rule)]"
                     aria-label={`Học phần ${group.name}`}
                   >
@@ -72,34 +74,34 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                         className="grid min-w-0 gap-2 py-4 sm:grid-cols-[7.5rem_minmax(0,1fr)_5rem] sm:gap-4"
                       >
                         <code className="text-xs font-semibold text-[var(--color-academic-accent-strong)]">
-                          {item.code}
+                          <LocalizedText>{item.code}</LocalizedText>
                         </code>
                         <div className="min-w-0">
                           <p className="leading-6 font-medium text-[var(--color-academic-ink)]">
-                            {item.name}
+                            <LocalizedText>{item.name}</LocalizedText>
                           </p>
                           <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
-                            {item.requirement}
-                            {item.prerequisite ? ` · Học trước: ${item.prerequisite}` : ""}
+                            <LocalizedText>{item.requirement}</LocalizedText>
+                            <LocalizedText>{item.prerequisite ? ` · Học trước: ${item.prerequisite}` : ""}</LocalizedText>
                           </p>
-                          {item.detail && (
+                          <LocalizedText>{item.detail && (
                             <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
-                              {item.detail}
+                              <LocalizedText>{item.detail}</LocalizedText>
                             </p>
-                          )}
-                          {item.note && (
+                          )}</LocalizedText>
+                          <LocalizedText>{item.note && (
                             <p className="mt-2 text-xs leading-5 text-[var(--color-academic-warning)]">
-                              Cần xác nhận: {item.note}
+                              <LocalizedText>Cần xác nhận: </LocalizedText><LocalizedText>{item.note}</LocalizedText>
                             </p>
-                          )}
+                          )}</LocalizedText>
                         </div>
                         <span className="text-sm font-semibold text-[var(--color-academic-ink)] sm:text-right">
-                          <span className="sm:hidden">Tín chỉ: </span>
-                          {item.credits ?? "—"}
+                          <span className="sm:hidden"><LocalizedText>Tín chỉ: </LocalizedText></span>
+                          <LocalizedText>{item.credits ?? "—"}</LocalizedText>
                         </span>
                       </li>
                     ))}
-                  </ul>
+                  </LocalizedElement>
                 </div>
               </details>
             ))}

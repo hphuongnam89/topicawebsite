@@ -11,6 +11,7 @@ import {
   Trash2,
   ExternalLink,
   RefreshCw,
+  AlertCircle,
 } from "lucide-react";
 
 interface PageItem {
@@ -27,26 +28,31 @@ interface PageItem {
 export default function AdminPagesPage() {
   const [pages, setPages] = useState<PageItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const fetchPages = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/pages");
       if (res.ok) {
         const data = await res.json();
         setPages(data.pages || []);
+        setError(null);
+      } else {
+        setError(`Không thể tải danh sách trang (HTTP ${res.status}). Vui lòng thử lại.`);
       }
     } catch (error) {
       console.error("Error fetching pages:", error);
+      setError("Lỗi kết nối khi tải danh sách trang. Vui lòng kiểm tra mạng và thử lại.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPages();
   }, []);
 
@@ -115,6 +121,24 @@ export default function AdminPagesPage() {
         </div>
       </div>
 
+      {/* Error banner when background refresh fails */}
+      {error && pages.length > 0 && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4 text-body-sm text-amber-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-600" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchPages()}
+            className="inline-flex items-center gap-1 text-xs font-semibold underline hover:text-amber-900"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Thử lại</span>
+          </button>
+        </div>
+      )}
+
       {/* Pages Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
@@ -136,6 +160,23 @@ export default function AdminPagesPage() {
                     <div className="flex items-center justify-center gap-2">
                       <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
                       <span>Đang tải danh sách...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : error && pages.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-12 text-center">
+                    <div className="mx-auto max-w-md rounded-lg border border-red-200 bg-red-50 p-6 text-red-800">
+                      <AlertCircle className="mx-auto mb-2 h-8 w-8 text-red-600" />
+                      <p className="font-semibold">{error}</p>
+                      <button
+                        type="button"
+                        onClick={() => fetchPages()}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 focus:outline-2 focus:outline-red-600"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        <span>Thử lại</span>
+                      </button>
                     </div>
                   </td>
                 </tr>

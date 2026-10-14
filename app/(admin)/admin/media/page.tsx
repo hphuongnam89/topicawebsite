@@ -29,19 +29,25 @@ export default function AdminMediaPage() {
   const [search, setSearch] = useState("");
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [deletingKey, setDeletingKey] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchMedia = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await fetch("/api/admin/media");
       if (res.ok) {
         const data = await res.json();
         setMedia(data.media || []);
+        setError(null);
+      } else {
+        setError(`Không thể tải thư viện media (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`);
       }
     } catch (err) {
       console.error(err);
+      setError("Lỗi kết nối khi tải thư viện media. Vui lòng kiểm tra mạng và thử lại.");
     } finally {
       setLoading(false);
     }
@@ -199,6 +205,24 @@ export default function AdminMediaPage() {
         />
       </div>
 
+      {/* Error banner when background refresh fails */}
+      {error && media.length > 0 && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4 text-body-sm text-amber-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-600" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchMedia()}
+            className="inline-flex items-center gap-1 text-xs font-semibold underline hover:text-amber-900"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Thử lại</span>
+          </button>
+        </div>
+      )}
+
       {/* Media Grid */}
       {loading ? (
         <div className="flex h-64 items-center justify-center">
@@ -207,13 +231,30 @@ export default function AdminMediaPage() {
             <span>Đang tải thư viện media...</span>
           </div>
         </div>
+      ) : error && media.length === 0 ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-12 text-center text-red-800">
+          <AlertCircle className="mx-auto mb-3 h-10 w-10 text-red-600" />
+          <p className="font-semibold">{error}</p>
+          <button
+            type="button"
+            onClick={() => fetchMedia()}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 focus:outline-2 focus:outline-red-600"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Thử lại</span>
+          </button>
+        </div>
       ) : filteredMedia.length === 0 ? (
         <div className="rounded-xl border border-dashed border-line-300 bg-white p-12 text-center text-ink-500">
           <ImageIcon className="mx-auto mb-3 h-12 w-12 text-ink-300" />
-          <p className="font-semibold text-ink-800">Chưa có tệp nào trong thư viện.</p>
-          <p className="mt-1 text-xs text-ink-400">
-            Bấm &quot;Tải tệp mới&quot; để thêm tệp vào hệ thống.
+          <p className="font-semibold text-ink-800">
+            {search ? "Không tìm thấy tệp nào phù hợp." : "Chưa có tệp nào trong thư viện."}
           </p>
+          {!search && (
+            <p className="mt-1 text-xs text-ink-400">
+              Bấm &quot;Tải tệp mới&quot; để thêm tệp vào hệ thống.
+            </p>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

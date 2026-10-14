@@ -1,5 +1,7 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
 
@@ -51,12 +53,12 @@ function CountUpValue({ value, suffix = "" }: Pick<TrustMetric, "value" | "suffi
       className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold text-ink-950 tabular-nums"
     >
       <span aria-hidden="true">
-        {visualValue}
-        {suffix}
+        <LocalizedText>{visualValue}</LocalizedText>
+        <LocalizedText>{suffix}</LocalizedText>
       </span>
       <span className="sr-only">
-        {accessibleValue}
-        {suffix}
+        <LocalizedText>{accessibleValue}</LocalizedText>
+        <LocalizedText>{suffix}</LocalizedText>
       </span>
     </span>
   );
@@ -67,7 +69,7 @@ export function TrustMetrics({ metrics, fallbackStatements }: TrustMetricsProps)
   const items = hasVerifiedMetrics ? metrics : fallbackStatements;
 
   return (
-    <section
+    <LocalizedElement as="section"
       aria-label={hasVerifiedMetrics ? "Dấu ấn của Topica" : "Cam kết trải nghiệm học tập"}
       className="mt-6 rounded-[1.5rem] border border-line-200 bg-elevated px-6 py-3 sm:px-8 lg:px-10"
     >
@@ -85,14 +87,14 @@ export function TrustMetrics({ metrics, fallbackStatements }: TrustMetricsProps)
                 <CountUpValue value={metric.value} suffix={metric.suffix} />
               ) : (
                 <span className="text-body-sm font-semibold tracking-[0.08em] text-brand-700 uppercase">
-                  Cam kết
-                </span>
+                  <LocalizedText>Cam kết
+                </LocalizedText></span>
               )}
-              <p className="text-body-sm font-medium text-ink-800">{label}</p>
+              <p className="text-body-sm font-medium text-ink-800"><LocalizedText>{label}</LocalizedText></p>
             </div>
           );
         })}
       </div>
-    </section>
+    </LocalizedElement>
   );
 }

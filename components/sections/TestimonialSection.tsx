@@ -1,7 +1,9 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { useCallback, useEffect, useRef, useState, KeyboardEvent } from "react";
-import Image from "next/image";
+import Image from "@/components/i18n/LocalizedImage";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -88,7 +90,7 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
         <ScrollReveal variant="scaleIn">
           <div className="group relative mt-12 flex justify-center">
-            <div
+            <LocalizedElement as="div"
               ref={scrollRef}
               className="flex w-full snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-8 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
               onScroll={handleScroll}
@@ -105,9 +107,9 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                 >
                   <div className="flex h-full flex-col rounded-lg border border-line-200 bg-paper p-6 transition-all hover:border-gold-300 hover:shadow-md">
                     <div className="font-display text-[3rem] leading-none text-gold-500">
-                      &quot;
-                    </div>
-                    <p className="mt-2 flex-grow text-body text-ink-800">{testimonial.quote}</p>
+                      <LocalizedText>&quot;
+                    </LocalizedText></div>
+                    <p className="mt-2 flex-grow text-body text-ink-800"><LocalizedText>{testimonial.quote}</LocalizedText></p>
 
                     <div className="mt-6 flex items-center gap-4">
                       {testimonial.avatar ? (
@@ -120,47 +122,47 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                         />
                       ) : (
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold-100 font-semibold text-navy-900">
-                          {testimonial.name.charAt(0)}
+                          <LocalizedText>{testimonial.name.charAt(0)}</LocalizedText>
                         </div>
                       )}
                       <div>
-                        <div className="font-semibold text-ink-950">{testimonial.name}</div>
-                        <div className="text-body-sm text-ink-600">{testimonial.role}</div>
-                        {testimonial.program && (
+                        <div className="font-semibold text-ink-950"><LocalizedText>{testimonial.name}</LocalizedText></div>
+                        <div className="text-body-sm text-ink-600"><LocalizedText>{testimonial.role}</LocalizedText></div>
+                        <LocalizedText>{testimonial.program && (
                           <div className="text-body-sm font-medium text-gold-700">
-                            {testimonial.program}
+                            <LocalizedText>{testimonial.program}</LocalizedText>
                           </div>
-                        )}
+                        )}</LocalizedText>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-            </div>
+            </LocalizedElement>
 
-            <button
+            <LocalizedElement as="button"
               onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
               className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 focus-visible:outline-navy-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
               disabled={activeIndex === 0}
               aria-label="Chia sẻ trước"
             >
               <ChevronLeft className="h-5 w-5 text-ink-800" />
-            </button>
+            </LocalizedElement>
 
-            <button
+            <LocalizedElement as="button"
               onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
               className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 focus-visible:outline-navy-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
               disabled={activeIndex === items.length - 1}
               aria-label="Chia sẻ tiếp theo"
             >
               <ChevronRight className="h-5 w-5 text-ink-800" />
-            </button>
+            </LocalizedElement>
           </div>
         </ScrollReveal>
 
         <div className="mt-4 flex justify-center gap-2">
           {items.map((_, index) => (
-            <button
+            <LocalizedElement as="button"
               key={index}
               onClick={() => scrollToIndex(index)}
               className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-navy-500"
@@ -173,7 +175,7 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                   index === activeIndex ? "w-6 bg-navy-900" : "bg-line-200",
                 )}
               />
-            </button>
+            </LocalizedElement>
           ))}
         </div>
       </Container>

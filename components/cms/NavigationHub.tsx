@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import Link from "@/components/i18n/LocalizedLink";
 import type { NavGroup } from "@/data/navigation";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
@@ -30,7 +31,7 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                     id={`hub-${group.id}-${idx}`}
                     className="font-display text-h3 text-ink-950 font-bold"
                   >
-                    {column.heading}
+                    <LocalizedText>{column.heading}</LocalizedText>
                   </h2>
                 </div>
 
@@ -43,7 +44,7 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                           className="group flex items-center justify-between py-2.5 px-3 rounded-lg text-ink-800 hover:text-brand-800 hover:bg-brand-50/60 transition-colors"
                         >
                           <span className="font-medium text-body-sm group-hover:translate-x-0.5 transition-transform">
-                            {item.label}
+                            <LocalizedText>{item.label}</LocalizedText>
                           </span>
                           <ChevronRight className="w-4 h-4 text-ink-400 group-hover:text-brand-600 shrink-0 opacity-70 group-hover:opacity-100 transition-all" />
                         </Link>
@@ -63,14 +64,14 @@ export function NavigationHub({ group }: { group: NavGroup }) {
               <div className="max-w-2xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-gold-300 text-xs font-semibold uppercase tracking-wider mb-3">
                   <Sparkles className="w-3.5 h-3.5" />
-                  Hỗ trợ thông tin trực tiếp
-                </div>
+                  <LocalizedText>Hỗ trợ thông tin trực tiếp
+                </LocalizedText></div>
                 <h3 className="text-h3 font-display font-bold text-white mb-2">
-                  Bạn cần giải đáp thêm về {group.label}?
-                </h3>
+                  <LocalizedText>Bạn cần giải đáp thêm về </LocalizedText><LocalizedText>{group.label}</LocalizedText><LocalizedText>?
+                </LocalizedText></h3>
                 <p className="text-white/80 text-body-sm leading-relaxed">
-                  Đội ngũ chuyên viên tuyển sinh và quản lý đào tạo luôn sẵn sàng hỗ trợ bạn lựa chọn ngành học, thủ tục xét tuyển và chính sách học phí phù hợp nhất.
-                </p>
+                  <LocalizedText>Đội ngũ chuyên viên tuyển sinh và quản lý đào tạo luôn sẵn sàng hỗ trợ bạn lựa chọn ngành học, thủ tục xét tuyển và chính sách học phí phù hợp nhất.
+                </LocalizedText></p>
               </div>
 
               <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[30rem] lg:shrink-0">
@@ -82,16 +83,16 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                   className="w-full justify-center"
                 >
-                  Đăng ký xét tuyển
-                </ButtonLink>
+                  <LocalizedText>Đăng ký xét tuyển
+                </LocalizedText></ButtonLink>
                 <ButtonLink
                   href="/tuyen-sinh/hoc-phi-hoc-bong/"
                   variant="secondary"
                   size="default"
                   className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20"
                 >
-                  Học phí 2026
-                </ButtonLink>
+                  <LocalizedText>Học phí 2026
+                </LocalizedText></ButtonLink>
                 <ButtonLink
                   href="/lien-he/"
                   variant="secondary"
@@ -99,8 +100,8 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                   leftIcon={<PhoneCall className="w-4 h-4" />}
                   className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20 sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
                 >
-                  Nhận tư vấn
-                </ButtonLink>
+                  <LocalizedText>Nhận tư vấn
+                </LocalizedText></ButtonLink>
               </div>
             </div>
           </div>

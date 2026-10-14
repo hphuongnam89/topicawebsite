@@ -1,3 +1,5 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import * as React from "react";
 import { AlertCircle, ChevronDown } from "lucide-react";
 import { cn } from "./cn";
@@ -34,11 +36,11 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className={className}>
         <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
-          {label}
-          {required && <span className="ml-1 text-error" aria-hidden="true">*</span>}
+          <LocalizedText>{label}</LocalizedText>
+          {required && <span className="ml-1 text-error" aria-hidden="true"><LocalizedText>*</LocalizedText></span>}
         </label>
         <div className="relative">
-          <select
+          <LocalizedElement as="select"
             id={id}
             ref={ref}
             required={required}
@@ -55,32 +57,32 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             )}
             {...props}
           >
-            {placeholder && (
+            <LocalizedText>{placeholder && (
               <option value="" disabled>
-                {placeholder}
+                <LocalizedText>{placeholder}</LocalizedText>
               </option>
-            )}
+            )}</LocalizedText>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.label}
+                <LocalizedText>{option.label}</LocalizedText>
               </option>
             ))}
-          </select>
+          </LocalizedElement>
           <div className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-ink-400">
             <ChevronDown className="h-5 w-5" aria-hidden="true" />
           </div>
         </div>
-        {error && (
+        <LocalizedText>{error && (
           <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
             <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span>{error}</span>
+            <span><LocalizedText>{error}</LocalizedText></span>
           </div>
-        )}
-        {!error && helperText && (
+        )}</LocalizedText>
+        <LocalizedText>{!error && helperText && (
           <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
-            {helperText}
+            <LocalizedText>{helperText}</LocalizedText>
           </p>
-        )}
+        )}</LocalizedText>
       </div>
     );
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "./cn";
@@ -43,7 +44,7 @@ export function Accordion({
   return (
     <AccordionContext.Provider value={{ openValues, toggleItem }}>
       <div className={cn("divide-y divide-line-200 border-y border-line-200", className)} {...props}>
-        {children}
+        <LocalizedText>{children}</LocalizedText>
       </div>
     </AccordionContext.Provider>
   );
@@ -64,7 +65,7 @@ export function AccordionItem({ value, className, children, ...props }: Accordio
   return (
     <ItemContext.Provider value={{ value, isOpen }}>
       <div className={cn("py-1", className)} {...props}>
-        {children}
+        <LocalizedText>{children}</LocalizedText>
       </div>
     </ItemContext.Provider>
   );
@@ -96,7 +97,7 @@ export function AccordionTrigger({
       )}
       {...props}
     >
-      <span className="pr-4">{children}</span>
+      <span className="pr-4"><LocalizedText>{children}</LocalizedText></span>
       <span
         className={cn(
           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-paper text-ink-600 transition-transform duration-[var(--duration-base)]",
@@ -130,7 +131,7 @@ export function AccordionContent({
       )}
       {...props}
     >
-      {children}
+      <LocalizedText>{children}</LocalizedText>
     </div>
   );
 }

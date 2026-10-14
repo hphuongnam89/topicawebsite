@@ -1,5 +1,6 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown } from "lucide-react";
@@ -54,7 +55,7 @@ export function FAQAccordion({ faqs, allowMultiple = false }: FAQAccordionProps)
                 isOpen ? "text-brand-700" : "text-ink-950 hover:text-brand-700"
               )}
             >
-              <span className="text-body-lg pr-4">{faq.question}</span>
+              <span className="text-body-lg pr-4"><LocalizedText>{faq.question}</LocalizedText></span>
               <span className={cn(
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors",
                 isOpen ? "bg-brand-50 text-brand-700" : "bg-paper text-ink-400 group-hover:bg-line-100"

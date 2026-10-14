@@ -44,6 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: program.summary,
       alternates: {
         canonical: canonicalUrl,
+        languages: {
+          vi: canonicalUrl,
+          en: mappedProgramId ? `/en/programs/${mappedProgramId}` : "/en",
+        },
       },
       openGraph: {
         title: `${program.officialName} – ${program.marketingLabel}`,

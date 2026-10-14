@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/guards";
-import { getArticleById, deleteArticle } from "@/lib/db";
+import { getArticleById, deleteArticle, getDb } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
 import { articleUpdateSchema } from "@/lib/validation/admin";
@@ -31,25 +31,75 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
   const { id } = await params;
   const articleId = Number(id);
+  if (!Number.isSafeInteger(articleId) || articleId < 1)
+    return NextResponse.json({ error: "ID không hợp lệ" }, { status: 400 });
 
   try {
-    const parsed = articleUpdateSchema.safeParse(await request.json());
+    const parsed = articleUpdateSchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
-    const updated = updateArticleFromInput(articleId, parsed.data);
 
-    if (!updated) {
-      return NextResponse.json({ error: "Không tìm thấy bài viết để cập nhật." }, { status: 404 });
+    const db = getDb();
+    db.exec("BEGIN IMMEDIATE");
+    try {
+      const current = getArticleById(articleId);
+      if (!current) {
+        db.exec("ROLLBACK");
+        return NextResponse.json(
+          { error: "Không tìm thấy bài viết để cập nhật." },
+          { status: 404 },
+        );
+      }
+      if (
+        current.status === "published" ||
+        parsed.data.status === "published" ||
+        getRevisions("article", String(articleId)).length
+      ) {
+        db.exec("ROLLBACK");
+        return NextResponse.json(
+          { error: "Tạo bản nháp revision để sửa và duyệt nội dung công khai" },
+          { status: 409 },
+        );
+      }
+      if (
+        !parsed.data.expected_updated_at ||
+        parsed.data.expected_updated_at !== current.updated_at
+      ) {
+        db.exec("ROLLBACK");
+        return NextResponse.json(
+          { error: "Bài viết đã thay đổi hoặc thiếu phiên bản. Tải lại trước khi lưu." },
+          { status: 409 },
+        );
+      }
+      const updated = updateArticleFromInput(articleId, parsed.data);
+      if (!updated) {
+        db.exec("ROLLBACK");
+        return NextResponse.json(
+          { error: "Không tìm thấy bài viết để cập nhật." },
+          { status: 404 },
+        );
+      }
+      recordAdminAudit(
+        auth.user,
+        "update",
+        "article",
+        String(articleId),
+        Object.keys(parsed.data).filter((k) => k !== "expected_updated_at"),
+      );
+
+      db.exec("COMMIT");
+
+      revalidatePath("/");
+      revalidatePath("/tin-tuc");
+      if (updated.slug) {
+        revalidatePath(`/tin-tuc/${updated.slug}`);
+      }
+
+      return NextResponse.json({ success: true, article: updated });
+    } catch (innerError) {
+      db.exec("ROLLBACK");
+      throw innerError;
     }
-    recordAdminAudit(auth.user, "update", "article", String(articleId), Object.keys(parsed.data));
-
-    revalidatePath("/");
-    revalidatePath("/tin-tuc");
-    if (updated.slug) {
-      revalidatePath(`/tin-tuc/${updated.slug}`);
-    }
-
-    return NextResponse.json({ success: true, article: updated });
   } catch (error: unknown) {
     console.error("Update article error:", error);
     if (

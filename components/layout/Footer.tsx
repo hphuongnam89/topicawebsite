@@ -1,5 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
+import Link from "@/components/i18n/LocalizedLink";
+import Image from "@/components/i18n/LocalizedImage";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import {
@@ -48,7 +50,7 @@ export function Footer({
             {primaryNav.map((group) => (
               <div key={group.id} className="min-w-0">
                 <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
-                  {group.label}
+                  <LocalizedText>{group.label}</LocalizedText>
                 </h2>
                 <ul className="space-y-2.5">
                   {group.columns.flatMap((column) => column.items).map((item) => (
@@ -60,7 +62,7 @@ export function Footer({
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
                       >
-                        {item.label}
+                        <LocalizedText>{item.label}</LocalizedText>
                       </Link>
                     </li>
                   ))}
@@ -70,8 +72,8 @@ export function Footer({
 
             <div className="min-w-0">
               <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
-                Tiện ích & Chính sách
-              </h2>
+                <LocalizedText>Tiện ích & Chính sách
+              </LocalizedText></h2>
               <ul className="space-y-2.5">
                 {utilityFooterLinks.map((link) => (
                   <li key={link.href}>
@@ -82,7 +84,7 @@ export function Footer({
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
                     >
-                      {link.label}
+                      <LocalizedText>{link.label}</LocalizedText>
                     </Link>
                   </li>
                 ))}
@@ -91,15 +93,15 @@ export function Footer({
 
             <div className="min-w-0 border-t border-line-200 pt-8 sm:col-span-2 md:col-span-3 xl:col-span-7">
               <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
-                Liên hệ
-              </h2>
+                <LocalizedText>Liên hệ
+              </LocalizedText></h2>
               <ul className="grid gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4">
                 {campuses.map((campus) => (
                   <li key={`${campus.city}-${campus.address}`} className="flex gap-2.5">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
                     <p className="text-body-sm text-ink-600">
-                      <span className="font-medium text-ink-950">{campus.city}: </span>
-                      {campus.address}
+                      <span className="font-medium text-ink-950"><LocalizedText>{campus.city}</LocalizedText><LocalizedText>: </LocalizedText></span>
+                      <LocalizedText>{campus.address}</LocalizedText>
                     </p>
                   </li>
                 ))}
@@ -107,21 +109,21 @@ export function Footer({
                 <li className="flex items-start gap-2.5">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
                   <div className="text-body-sm text-ink-600">
-                    <span className="font-medium text-ink-950">Tuyển sinh: </span>
+                    <span className="font-medium text-ink-950"><LocalizedText>Tuyển sinh: </LocalizedText></span>
                     <a
                       href={contactChannels.admissionsHotline.href}
                       className="font-bold text-ink-900 transition-colors hover:text-gold-700"
                     >
-                      {contactChannels.admissionsHotline.value}
+                      <LocalizedText>{contactChannels.admissionsHotline.value}</LocalizedText>
                     </a>
-                    <span className="text-xs text-ink-500"> (Miễn cước)</span>
+                    <span className="text-xs text-ink-500"> <LocalizedText>(Miễn cước)</LocalizedText></span>
                     <br />
-                    <span className="font-medium text-ink-950">Tư vấn nhanh: </span>
+                    <span className="font-medium text-ink-950"><LocalizedText>Tư vấn nhanh: </LocalizedText></span>
                     <a
                       href={contactChannels.admissionsDirect.href}
                       className="font-bold text-ink-900 transition-colors hover:text-gold-700"
                     >
-                      {contactChannels.admissionsDirect.value}
+                      <LocalizedText>{contactChannels.admissionsDirect.value}</LocalizedText>
                     </a>
                   </div>
                 </li>
@@ -130,21 +132,21 @@ export function Footer({
                   <Mail className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
                   <div className="text-body-sm text-ink-600">
                     <div>
-                      <span className="font-medium text-ink-950">Tuyển sinh: </span>
+                      <span className="font-medium text-ink-950"><LocalizedText>Tuyển sinh: </LocalizedText></span>
                       <a
                         href={contactChannels.admissionsEmail.href}
                         className="font-bold text-ink-900 transition-colors hover:text-gold-700"
                       >
-                        {contactChannels.admissionsEmail.value}
+                        <LocalizedText>{contactChannels.admissionsEmail.value}</LocalizedText>
                       </a>
                     </div>
                     <div>
-                      <span className="font-medium text-ink-950">Chung: </span>
+                      <span className="font-medium text-ink-950"><LocalizedText>Chung: </LocalizedText></span>
                       <a
                         href={contactChannels.generalEmail.href}
                         className="font-bold text-ink-900 transition-colors hover:text-gold-700"
                       >
-                        {contactChannels.generalEmail.value}
+                        <LocalizedText>{contactChannels.generalEmail.value}</LocalizedText>
                       </a>
                     </div>
                   </div>
@@ -171,20 +173,20 @@ export function Footer({
 
           {/* Copyright */}
           <p className="text-[12px] text-white/70">
-            © {new Date().getFullYear()} Trường Đại học Phú Xuân. Tất cả quyền được bảo lưu.
-          </p>
+            <LocalizedText>© </LocalizedText>{new Date().getFullYear()} <LocalizedText>Trường Đại học Phú Xuân. Tất cả quyền được bảo lưu.
+          </LocalizedText></p>
 
           {/* Social links */}
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
-              <a
+              <LocalizedElement as="a"
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-500/40 text-gold-400 transition-colors duration-[var(--duration-base)] hover:border-gold-400 hover:bg-gold-400 hover:text-navy-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
               >
                 <SocialIcon type={social.icon} />
-              </a>
+              </LocalizedElement>
             ))}
           </div>
         </Container>

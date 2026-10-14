@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import * as React from "react";
 import { cn } from "./cn";
 
@@ -23,7 +24,7 @@ export function Container({
       )}
       {...props}
     >
-      {children}
+      <LocalizedText>{children}</LocalizedText>
     </Component>
   );
 }

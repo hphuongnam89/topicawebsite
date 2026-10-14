@@ -1,5 +1,7 @@
 "use client";
 
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { useState } from "react";
 import { Link2, Share2, Check } from "lucide-react";
 import { cn } from "@/components/ui/cn";
@@ -42,23 +44,23 @@ export function ArticleShare({ title, className }: ArticleShareProps) {
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="text-body-sm font-medium text-ink-600 mr-2">Chia sẻ:</span>
-      <button
+      <span className="text-body-sm font-medium text-ink-600 mr-2"><LocalizedText>Chia sẻ:</LocalizedText></span>
+      <LocalizedElement as="button"
         onClick={handleCopyLink}
         className="p-2 rounded-full hover:bg-paper text-ink-600 hover:text-ink-950 transition-colors"
         aria-label="Copy link"
         title="Sao chép liên kết"
       >
         {copied ? <Check className="w-4 h-4 text-green-600" /> : <Link2 className="w-4 h-4" />}
-      </button>
-      <button
+      </LocalizedElement>
+      <LocalizedElement as="button"
         onClick={handleNativeShare}
         className="p-2 rounded-full hover:bg-paper text-ink-600 hover:text-ink-950 transition-colors"
         aria-label="Share article"
         title="Chia sẻ"
       >
         <Share2 className="w-4 h-4" />
-      </button>
+      </LocalizedElement>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
 
@@ -17,18 +18,18 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
         <div className="grid gap-5 border-b border-[var(--color-academic-rule-strong)] pb-8 md:grid-cols-2 md:items-end">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              Lộ trình học tập
-            </p>
+              <LocalizedText>Lộ trình học tập
+            </LocalizedText></p>
             <h2
               id="roadmap-title"
               className="mt-3 text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              {title}
+              <LocalizedText>{title}</LocalizedText>
             </h2>
           </div>
           <p className="max-w-xl leading-7 text-[var(--color-academic-muted)] md:justify-self-end">
-            Xem các học phần tiêu biểu và số tín chỉ được trình bày theo từng học kỳ bên dưới.
-          </p>
+            <LocalizedText>Xem các học phần tiêu biểu và số tín chỉ được trình bày theo từng học kỳ bên dưới.
+          </LocalizedText></p>
         </div>
 
         <ol className="mt-10 grid min-w-0 gap-px border border-[var(--color-academic-rule)] bg-[var(--color-academic-rule)] md:grid-cols-2 xl:grid-cols-3">
@@ -40,17 +41,17 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold tracking-[0.12em] text-[var(--color-academic-muted)] uppercase">
-                    Học kỳ {semester.term}
+                    <LocalizedText>Học kỳ </LocalizedText>{semester.term}
                   </p>
                   <h3 className="mt-2 text-2xl font-semibold text-[var(--color-academic-ink)]">
-                    {semester.phase}
+                    <LocalizedText>{semester.phase}</LocalizedText>
                   </h3>
                 </div>
                 <div className="shrink-0 text-right">
                   <span className="block text-3xl font-semibold tracking-[-0.04em] text-[var(--color-academic-accent-strong)]">
                     {semester.credits}
                   </span>
-                  <span className="text-xs text-[var(--color-academic-muted)]">tín chỉ</span>
+                  <span className="text-xs text-[var(--color-academic-muted)]"><LocalizedText>tín chỉ</LocalizedText></span>
                 </div>
               </div>
               <ul className="mt-6 space-y-3 text-sm leading-6 text-[var(--color-academic-muted)]">
@@ -59,7 +60,7 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
                     key={highlight}
                     className="border-l-2 border-[var(--color-academic-accent)] pl-3"
                   >
-                    {highlight}
+                    <LocalizedText>{highlight}</LocalizedText>
                   </li>
                 ))}
               </ul>

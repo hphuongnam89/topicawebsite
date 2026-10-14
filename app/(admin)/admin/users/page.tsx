@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Shield,
   ShieldCheck,
+  AlertCircle,
   X
 } from "lucide-react";
 
@@ -36,17 +37,23 @@ export default function AdminUsersPage() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await fetch("/api/admin/users");
       if (res.ok) {
         const data = await res.json();
         setUsers(data.users || []);
+        setLoadError(null);
+      } else {
+        setLoadError(`Không thể tải danh sách tài khoản (HTTP ${res.status}). Vui lòng thử lại.`);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
+      setLoadError("Lỗi kết nối khi tải danh sách tài khoản. Vui lòng kiểm tra mạng và thử lại.");
     } finally {
       setLoading(false);
     }
@@ -60,9 +67,15 @@ export default function AdminUsersPage() {
         if (res.ok && !ignore) {
           const data = await res.json();
           setUsers(data.users || []);
+          setLoadError(null);
+        } else if (!ignore) {
+          setLoadError(`Không thể tải danh sách tài khoản (HTTP ${res.status}). Vui lòng thử lại.`);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
+        if (!ignore) {
+          setLoadError("Lỗi kết nối khi tải danh sách tài khoản. Vui lòng kiểm tra mạng và thử lại.");
+        }
       } finally {
         if (!ignore) {
           setLoading(false);
@@ -172,6 +185,24 @@ export default function AdminUsersPage() {
         </button>
       </div>
 
+      {/* Error banner when background refresh fails */}
+      {loadError && users.length > 0 && (
+        <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-4 text-body-sm text-amber-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-600" />
+            <span>{loadError}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchUsers()}
+            className="inline-flex items-center gap-1 text-xs font-semibold underline hover:text-amber-900"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Thử lại</span>
+          </button>
+        </div>
+      )}
+
       {/* Users Table */}
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
@@ -191,6 +222,23 @@ export default function AdminUsersPage() {
                     <div className="flex items-center justify-center gap-2">
                       <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
                       <span>Đang tải danh sách...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : loadError && users.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-12 text-center">
+                    <div className="mx-auto max-w-md rounded-lg border border-red-200 bg-red-50 p-6 text-red-800">
+                      <AlertCircle className="mx-auto mb-2 h-8 w-8 text-red-600" />
+                      <p className="font-semibold">{loadError}</p>
+                      <button
+                        type="button"
+                        onClick={() => fetchUsers()}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 focus:outline-2 focus:outline-red-600"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" />
+                        <span>Thử lại</span>
+                      </button>
                     </div>
                   </td>
                 </tr>

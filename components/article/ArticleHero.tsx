@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import Image from "@/components/i18n/LocalizedImage";
 import { cn } from "@/components/ui/cn";
 import type { ImageAsset } from "@/lib/cms/types";
 
@@ -24,11 +25,11 @@ export function ArticleHero({ image, title, caption, className }: ArticleHeroPro
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
         />
       </div>
-      {caption && (
+      <LocalizedText>{caption && (
         <figcaption className="mt-3 text-center text-body-sm text-ink-600 italic">
-          {caption}
+          <LocalizedText>{caption}</LocalizedText>
         </figcaption>
-      )}
+      )}</LocalizedText>
     </figure>
   );
 }

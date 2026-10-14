@@ -1,3 +1,4 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import { Search, PhoneCall, FileText, CheckCircle, GraduationCap } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -69,10 +70,10 @@ export function AdmissionTimeline() {
                           <IconComponent className="h-6 w-6 text-gold-300" />
                         </div>
                         <h3 className="mt-2 text-left font-semibold text-white lg:text-center">
-                          {step.title}
+                          <LocalizedText>{step.title}</LocalizedText>
                         </h3>
                         <p className="mt-1 max-w-[180px] text-left text-body-sm text-white/70 lg:mx-auto lg:text-center">
-                          {step.description}
+                          <LocalizedText>{step.description}</LocalizedText>
                         </p>
                       </div>
                     </div>
@@ -86,8 +87,8 @@ export function AdmissionTimeline() {
         <ScrollReveal delay={0.12}>
         <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-white/15 bg-navy-900/80 px-5 py-6 text-center shadow-lg shadow-black/10 lg:mt-16 sm:px-8 sm:py-7">
           <p className="text-body-sm font-semibold text-gold-300">
-            Sẵn sàng bắt đầu lộ trình của bạn?
-          </p>
+            <LocalizedText>Sẵn sàng bắt đầu lộ trình của bạn?
+          </LocalizedText></p>
           <div className="mx-auto mt-4 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
             <ButtonLink
               href="https://www.tuyensinh.topicauni.edu.vn/"
@@ -96,16 +97,16 @@ export function AdmissionTimeline() {
               size="lg"
               className="w-full justify-center hover:-translate-y-0.5 hover:shadow-md"
             >
-              Đăng ký xét tuyển
-            </ButtonLink>
+              <LocalizedText>Đăng ký xét tuyển
+            </LocalizedText></ButtonLink>
             <ButtonLink
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               variant="secondary"
               size="lg"
               className="w-full justify-center border-white/30 bg-white/5 text-white hover:-translate-y-0.5 hover:border-gold-300 hover:bg-white/10 hover:shadow-md"
             >
-              Tra cứu học phí & học bổng
-            </ButtonLink>
+              <LocalizedText>Tra cứu học phí & học bổng
+            </LocalizedText></ButtonLink>
           </div>
         </div>
         </ScrollReveal>

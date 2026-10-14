@@ -42,19 +42,30 @@ const DEFAULT_SETTINGS: SiteSettingsData = {
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<SiteSettingsData>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const updateSettings = (patch: Partial<SiteSettingsData>) => {
+    setSettings((prev) => ({ ...prev, ...patch }));
+    setDirty(true);
+  };
 
   const fetchSettings = async () => {
     try {
       setLoading(true);
+      setLoadError(null);
       const res = await fetch("/api/admin/settings");
-      if (res.ok) {
-        const data = await res.json();
-        if (data.settings) setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+      if (!res.ok) {
+        throw new Error(`Lỗi tải cài đặt: HTTP ${res.status}`);
       }
-    } catch (err) {
+      const data = await res.json();
+      if (data.settings) setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+      setDirty(false);
+    } catch (err: any) {
       console.error(err);
+      setLoadError(err.message || "Không thể tải cài đặt website.");
     } finally {
       setLoading(false);
     }
@@ -66,10 +77,25 @@ export default function AdminSettingsPage() {
     })();
   }, []);
 
-  
+  useEffect(() => {
+    const warn = (event: BeforeUnloadEvent) => {
+      if (!dirty) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
+    };
+  }, [dirty]);
+
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setSaving(true);
     setMessage(null);
 
@@ -83,6 +109,7 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Không thể lưu cài đặt.");
 
+      setDirty(false);
       setMessage({ type: "success", text: "Đã lưu cài đặt website thành công!" });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message || "Lỗi lưu cài đặt." });
@@ -97,6 +124,30 @@ export default function AdminSettingsPage() {
         <div className="flex items-center gap-2 text-ink-500">
           <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
           <span>Đang tải cài đặt...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="p-6 lg:p-10 max-w-4xl mx-auto">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900 shadow-sm">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-6 w-6 text-red-600 shrink-0 mt-0.5" />
+            <div className="space-y-3">
+              <h2 className="text-lg font-bold">Không thể tải cấu hình hệ thống</h2>
+              <p className="text-sm text-red-700">{loadError}</p>
+              <button
+                type="button"
+                onClick={fetchSettings}
+                className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 transition-colors"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Thử tải lại
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -118,15 +169,22 @@ export default function AdminSettingsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={saving}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
-        >
-          {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          <span>{saving ? "Đang lưu..." : "Lưu cài đặt"}</span>
-        </button>
+        <div className="flex items-center gap-3">
+          {dirty && (
+            <span className="rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800">
+              Có thay đổi chưa lưu
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+          >
+            {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            <span>{saving ? "Đang lưu..." : "Lưu cài đặt"}</span>
+          </button>
+        </div>
       </div>
 
       {message && (
@@ -161,7 +219,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.hotline}
-              onChange={(e) => setSettings({ ...settings, hotline: e.target.value })}
+              onChange={(e) => updateSettings({ hotline: e.target.value })}
               placeholder="1800 646466"
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -174,7 +232,7 @@ export default function AdminSettingsPage() {
             <input
               type="email"
               value={settings.email}
-              onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+              onChange={(e) => updateSettings({ email: e.target.value })}
               placeholder="tuyensinh@topica.edu.vn"
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -187,7 +245,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.address}
-              onChange={(e) => setSettings({ ...settings, address: e.target.value })}
+              onChange={(e) => updateSettings({ address: e.target.value })}
               placeholder="Tầng 5, Tòa nhà HITC..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -208,7 +266,7 @@ export default function AdminSettingsPage() {
             <input
               type="url"
               value={settings.facebook}
-              onChange={(e) => setSettings({ ...settings, facebook: e.target.value })}
+              onChange={(e) => updateSettings({ facebook: e.target.value })}
               placeholder="https://www.facebook.com/..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -221,7 +279,7 @@ export default function AdminSettingsPage() {
             <input
               type="url"
               value={settings.youtube}
-              onChange={(e) => setSettings({ ...settings, youtube: e.target.value })}
+              onChange={(e) => updateSettings({ youtube: e.target.value })}
               placeholder="https://www.youtube.com/..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -234,7 +292,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.zalo}
-              onChange={(e) => setSettings({ ...settings, zalo: e.target.value })}
+              onChange={(e) => updateSettings({ zalo: e.target.value })}
               placeholder="https://zalo.me/..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -255,7 +313,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.siteTitle}
-              onChange={(e) => setSettings({ ...settings, siteTitle: e.target.value })}
+              onChange={(e) => updateSettings({ siteTitle: e.target.value })}
               placeholder="Viện Đào tạo Quốc tế Topica..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -268,7 +326,7 @@ export default function AdminSettingsPage() {
             <textarea
               rows={3}
               value={settings.siteDescription}
-              onChange={(e) => setSettings({ ...settings, siteDescription: e.target.value })}
+              onChange={(e) => updateSettings({ siteDescription: e.target.value })}
               placeholder="Mô tả tóm tắt thương hiệu Topica..."
               className="w-full rounded-lg border border-line-200 bg-white p-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -293,7 +351,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.telegramBotToken || ""}
-              onChange={(e) => setSettings({ ...settings, telegramBotToken: e.target.value })}
+              onChange={(e) => updateSettings({ telegramBotToken: e.target.value })}
               placeholder="VD: 7123456789:AAHKz..."
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 font-mono text-xs text-ink-950 focus:border-brand-600 focus:outline-none"
             />
@@ -306,7 +364,7 @@ export default function AdminSettingsPage() {
             <input
               type="text"
               value={settings.telegramChatId || ""}
-              onChange={(e) => setSettings({ ...settings, telegramChatId: e.target.value })}
+              onChange={(e) => updateSettings({ telegramChatId: e.target.value })}
               placeholder="VD: -1001234567890 hoặc 12345678"
               className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 font-mono text-xs text-ink-950 focus:border-brand-600 focus:outline-none"
             />

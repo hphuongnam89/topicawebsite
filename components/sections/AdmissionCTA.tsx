@@ -1,5 +1,6 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
@@ -16,35 +17,35 @@ export function AdmissionCTA() {
           <div className="mb-8 h-1 w-16 rounded-full bg-brand-500" />
 
           <h2 className="mb-6 font-display text-h1 text-white">
-            Bạn đã sẵn sàng cho bước tiếp theo?
-          </h2>
+            <LocalizedText>Bạn đã sẵn sàng cho bước tiếp theo?
+          </LocalizedText></h2>
 
           <p className="mb-10 text-body-lg text-white/70">
-            Đăng ký xét tuyển trực tuyến hoặc nhận tư vấn từ chuyên viên tuyển sinh Topica.
-          </p>
+            <LocalizedText>Đăng ký xét tuyển trực tuyến hoặc nhận tư vấn từ chuyên viên tuyển sinh Topica.
+          </LocalizedText></p>
 
           <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
             <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="accent" external className="w-full justify-center">
-              Đăng ký xét tuyển
-            </ButtonLink>
+              <LocalizedText>Đăng ký xét tuyển
+            </LocalizedText></ButtonLink>
             <ButtonLink
               href="/lien-he/"
               size="lg"
               variant="secondary"
               className="w-full justify-center border-white/30 text-white hover:bg-white/10 hover:text-white"
             >
-              Nhận tư vấn
-            </ButtonLink>
+              <LocalizedText>Nhận tư vấn
+            </LocalizedText></ButtonLink>
           </div>
 
           <div className="mt-6 text-xs text-white/60">
-            Tìm hiểu thêm về{" "}
+            <LocalizedText>Tìm hiểu thêm về</LocalizedText><LocalizedText>{" "}</LocalizedText>
             <Link
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               className="text-gold-400 underline underline-offset-4 hover:text-gold-300 transition-colors"
             >
-              Biểu phí & Học bổng năm 2026
-            </Link>
+              <LocalizedText>Biểu phí & Học bổng năm 2026
+            </LocalizedText></Link>
           </div>
         </ScrollReveal>
       </Container>

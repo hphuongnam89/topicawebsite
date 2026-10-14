@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import Link from "@/components/i18n/LocalizedLink";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ArticleCard } from "@/components/news/ArticleCard";
@@ -28,8 +29,8 @@ export async function NewsPreview() {
               href="/tin-tuc/"
               className="font-semibold text-navy-900 transition-colors hover:text-gold-700 md:pb-2"
             >
-              Xem tất cả tin tức
-            </Link>
+              <LocalizedText>Xem tất cả tin tức
+            </LocalizedText></Link>
           </div>
         </ScrollReveal>
 
@@ -51,7 +52,7 @@ export async function NewsPreview() {
             </div>
           </ScrollReveal>
         ) : (
-          <p className="text-center text-body text-ink-600">Tin tức đang được cập nhật.</p>
+          <p className="text-center text-body text-ink-600"><LocalizedText>Tin tức đang được cập nhật.</LocalizedText></p>
         )}
       </Container>
     </section>

@@ -1,5 +1,7 @@
+import { LocalizedText } from "@/components/i18n/LocalizedText";
+import { LocalizedElement } from "@/components/i18n/LocalizedElement";
 import { ArrowDown, ArrowRight, BookOpen, CreditCard, GraduationCap } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/i18n/LocalizedLink";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import type { ProgramDetail } from "@/data/program-details";
@@ -30,31 +32,31 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
     <header className="program-hero border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-canvas)]">
       <Container className="grid min-h-[38rem] min-w-0 gap-0 px-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
         <div className="program-hero-copy min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
-          <nav aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
+          <LocalizedElement as="nav" aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
             <ol className="flex min-w-0 flex-wrap gap-x-2 gap-y-1">
               <li>
                 <Link className="whitespace-nowrap underline-offset-4 hover:underline" href="/">
-                  Trang chủ
-                </Link>
+                  <LocalizedText>Trang chủ
+                </LocalizedText></Link>
               </li>
-              <li aria-hidden="true">/</li>
+              <li aria-hidden="true"><LocalizedText>/</LocalizedText></li>
               <li>
                 <Link
                   className="whitespace-nowrap underline-offset-4 hover:underline"
                   href="/nganh-dao-tao/"
                 >
-                  Ngành đào tạo
-                </Link>
+                  <LocalizedText>Ngành đào tạo
+                </LocalizedText></Link>
               </li>
-              <li aria-hidden="true">/</li>
+              <li aria-hidden="true"><LocalizedText>/</LocalizedText></li>
               <li aria-current="page" className="min-w-0 [overflow-wrap:anywhere] break-words">
-                {program.officialName}
+                <LocalizedText>{program.officialName}</LocalizedText>
               </li>
             </ol>
-          </nav>
+          </LocalizedElement>
 
           <p className="mb-4 text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-            {program.heroLabel}
+            <LocalizedText>{program.heroLabel}</LocalizedText>
           </p>
           <h1
             className={`max-w-full font-display font-semibold tracking-[-0.03em] break-words text-[var(--color-academic-ink)] sm:max-w-[16ch] ${
@@ -63,13 +65,13 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 : "text-[clamp(2rem,4vw+0.5rem,3rem)] leading-[1.15]"
             }`}
           >
-            {program.officialName}
+            <LocalizedText>{program.officialName}</LocalizedText>
           </h1>
           <p className="mt-4 text-lg font-semibold text-[var(--color-academic-accent-strong)] sm:text-xl">
-            {program.marketingLabel}
+            <LocalizedText>{program.marketingLabel}</LocalizedText>
           </p>
           <p className="mt-5 max-w-2xl text-base leading-7 text-[var(--color-academic-muted)] sm:text-lg">
-            {program.summary}
+            <LocalizedText>{program.summary}</LocalizedText>
           </p>
 
           <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
@@ -79,8 +81,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
             >
-              Đăng ký xét tuyển
-            </ButtonLink>
+              <LocalizedText>Đăng ký xét tuyển
+            </LocalizedText></ButtonLink>
             <ButtonLink
               href="#chuong-trinh"
               size="lg"
@@ -88,8 +90,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
-              Xem chương trình
-            </ButtonLink>
+              <LocalizedText>Xem chương trình
+            </LocalizedText></ButtonLink>
             <ButtonLink
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               size="lg"
@@ -97,8 +99,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)] sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
             >
-              Tra cứu học phí
-            </ButtonLink>
+              <LocalizedText>Tra cứu học phí
+            </LocalizedText></ButtonLink>
           </div>
         </div>
 
@@ -108,8 +110,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             className="absolute inset-x-0 top-0 h-1 bg-[var(--color-academic-accent)] lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"
           />
           <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-muted)] uppercase">
-            Hồ sơ học thuật
-          </p>
+            <LocalizedText>Hồ sơ học thuật
+          </LocalizedText></p>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
             <div className="border-b border-[var(--color-academic-rule)] pb-8">
               <GraduationCap
@@ -117,10 +119,10 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 aria-hidden="true"
               />
               <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {creditValue ?? "—"}
+                <LocalizedText>{creditValue ?? "—"}</LocalizedText>
               </p>
               <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {creditValue ? "tín chỉ tích lũy" : "tín chỉ · chờ hồ sơ"}
+                <LocalizedText>{creditValue ? "tín chỉ tích lũy" : "tín chỉ · chờ hồ sơ"}</LocalizedText>
               </p>
             </div>
             <div className="border-b border-[var(--color-academic-rule)] pb-8">
@@ -129,10 +131,10 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                 aria-hidden="true"
               />
               <p className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--color-academic-ink)]">
-                {termValue ?? "—"}
+                <LocalizedText>{termValue ?? "—"}</LocalizedText>
               </p>
               <p className="mt-1 text-sm text-[var(--color-academic-muted)]">
-                {termValue ? duration?.value : "học kỳ · chờ hồ sơ"}
+                <LocalizedText>{termValue ? duration?.value : "học kỳ · chờ hồ sơ"}</LocalizedText>
               </p>
             </div>
           </div>
@@ -147,8 +149,8 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
                       : ""
                   }`}
                 >
-                  <dt className="text-[var(--color-academic-muted)]">{item.label}</dt>
-                  <dd className="font-semibold text-[var(--color-academic-ink)]">{item.value}</dd>
+                  <dt className="text-[var(--color-academic-muted)]"><LocalizedText>{item.label}</LocalizedText></dt>
+                  <dd className="font-semibold text-[var(--color-academic-ink)]"><LocalizedText>{item.value}</LocalizedText></dd>
                 </div>
               ))}
             </dl>
