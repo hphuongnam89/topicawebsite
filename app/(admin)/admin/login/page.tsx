@@ -36,9 +36,8 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // Redirect cleanly to admin dashboard
-      router.push("/admin");
-      router.refresh();
+      // Force full window navigation to ensure session cookie is sent and bypass client router cache
+      window.location.href = "/admin";
     } catch (err) {
       console.error(err);
       setError("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
