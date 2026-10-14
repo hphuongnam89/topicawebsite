@@ -85,7 +85,7 @@ export function toUtcIso(input: string | Date | number): string {
 export function isWithinInterval(
   now: string | Date | number,
   start: string | Date | number,
-  end?: string | Date | number | null
+  end?: string | Date | number | null,
 ): boolean {
   const nowDate = parseDate(now);
   const startDate = parseDate(start);

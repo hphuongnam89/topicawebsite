@@ -12,7 +12,7 @@ export async function generateMetadata({
   searchParams,
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-} = {}): Promise<Metadata> {
+}): Promise<Metadata> {
   const [page, locale] = await Promise.all([
     cms.getPageByPath("gioi-thieu").catch(() => null),
     resolveRequestLocale(searchParams),

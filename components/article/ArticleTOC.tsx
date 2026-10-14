@@ -99,7 +99,9 @@ export function ArticleTOC({ headings }: ArticleTOCProps) {
           className="flex w-full items-center justify-between px-4 py-3 text-body-sm font-medium text-ink-950"
           aria-expanded={isExpanded}
         >
-          <span><LocalizedText>Nội dung bài viết</LocalizedText></span>
+          <span>
+            <LocalizedText>Nội dung bài viết</LocalizedText>
+          </span>
           {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
         {isExpanded && (
@@ -112,8 +114,8 @@ export function ArticleTOC({ headings }: ArticleTOCProps) {
       {/* Desktop view */}
       <div className="sticky top-[calc(var(--height-header,5.5rem)+1.5rem)] hidden lg:block">
         <h2 className="mb-4 text-body font-medium tracking-wider text-ink-950 uppercase">
-          <LocalizedText>Nội dung chính
-        </LocalizedText></h2>
+          <LocalizedText>Nội dung chính</LocalizedText>
+        </h2>
         <div className="border-l-2 border-line-200 pl-4">
           <TOCList headings={headings} activeId={activeId} onItemClick={handleClick} />
         </div>

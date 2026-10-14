@@ -12,13 +12,7 @@ import {
 import { cn } from "./cn";
 
 export type StatusBadgeVariant =
-  | "active"
-  | "upcoming"
-  | "closed"
-  | "new"
-  | "verified"
-  | "featured"
-  | "expired";
+  "active" | "upcoming" | "closed" | "new" | "verified" | "featured" | "expired";
 
 export interface StatusBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant: StatusBadgeVariant;
@@ -117,12 +111,11 @@ export function StatusBadge({
       {showIcon ? (
         <IconComponent className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       ) : (
-        <span
-          className={cn("h-1.5 w-1.5 shrink-0 rounded-full", style.dotBg)}
-          aria-hidden="true"
-        />
+        <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", style.dotBg)} aria-hidden="true" />
       )}
-      <span><LocalizedText>{children || style.label}</LocalizedText></span>
+      <span>
+        <LocalizedText>{children || style.label}</LocalizedText>
+      </span>
     </span>
   );
 }

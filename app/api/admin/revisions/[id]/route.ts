@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { isSameOrigin } from "@/lib/security/request";
 import { transitionRevision, WorkflowError } from "@/lib/services/revisions";
@@ -13,7 +14,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (!Number.isSafeInteger(id) || id < 1)
     return NextResponse.json({ error: "ID không hợp lệ" }, { status: 400 });
   try {
-    const parsed = transitionInputSchema.safeParse(await request.json());
+    const parsed = transitionInputSchema.safeParse(await readBoundedJson(request, 65_536));
     if (!parsed.success)
       return NextResponse.json({ error: "Thao tác không hợp lệ" }, { status: 422 });
     const { action, ...options } = parsed.data;

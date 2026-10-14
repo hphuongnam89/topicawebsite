@@ -24,7 +24,7 @@ interface CheckResult {
 const checkUrlStatus = (
   url: string,
   maxRedirects = 5,
-  redirectCount = 0
+  redirectCount = 0,
 ): Promise<{
   initialStatus: number;
   finalStatus: number;
@@ -46,7 +46,9 @@ const checkUrlStatus = (
       });
     }
 
-    const fullUrl = url.startsWith("http") ? url : `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+    const fullUrl = url.startsWith("http")
+      ? url
+      : `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
 
     try {
       const parsedSite = new URL(SITE_URL);
@@ -106,7 +108,7 @@ const checkUrlStatus = (
             redirects: redirectCount,
             ok,
           });
-        }
+        },
       );
 
       req.on("timeout", () => {
@@ -185,7 +187,9 @@ async function runLinkAudit() {
         linksToTest.set(`/${p.slug}/`, `Public Page DB: ${p.title}`);
       });
 
-      const articles = db.prepare("SELECT slug, title FROM articles WHERE status = 'published'").all() as any[];
+      const articles = db
+        .prepare("SELECT slug, title FROM articles WHERE status = 'published'")
+        .all() as any[];
       articles.forEach((a) => {
         linksToTest.set(`/tin-tuc/${a.slug}/`, `Article DB: ${a.title}`);
       });
@@ -248,7 +252,9 @@ async function runLinkAudit() {
     const res = await checkUrlStatus(url);
     if (res.ok) {
       if (res.redirects > 0) {
-        console.log(`🔀 [${res.initialStatus} ➔ ${res.finalStatus}] ${url} ➔ ${res.finalUrl} (${source})`);
+        console.log(
+          `🔀 [${res.initialStatus} ➔ ${res.finalStatus}] ${url} ➔ ${res.finalUrl} (${source})`,
+        );
         redirectPassed++;
       } else {
         console.log(`✅ [${res.finalStatus}] ${url} (${source})`);

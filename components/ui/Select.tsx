@@ -15,18 +15,7 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   (
-    {
-      className,
-      label,
-      error,
-      helperText,
-      id,
-      options,
-      placeholder,
-      required,
-      disabled,
-      ...props
-    },
+    { className, label, error, helperText, id, options, placeholder, required, disabled, ...props },
     ref,
   ) => {
     const errorId = `${id}-error`;
@@ -37,10 +26,15 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       <div className={className}>
         <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
           <LocalizedText>{label}</LocalizedText>
-          {required && <span className="ml-1 text-error" aria-hidden="true"><LocalizedText>*</LocalizedText></span>}
+          {required && (
+            <span className="ml-1 text-error" aria-hidden="true">
+              <LocalizedText>*</LocalizedText>
+            </span>
+          )}
         </label>
         <div className="relative">
-          <LocalizedElement as="select"
+          <LocalizedElement
+            as="select"
             id={id}
             ref={ref}
             required={required}
@@ -53,15 +47,17 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
               isInvalid
                 ? "border-error text-error hover:border-error focus:border-error focus:outline-error"
                 : "border-line-200 hover:border-navy-500 focus:border-navy-900",
-              disabled && "cursor-not-allowed bg-paper text-ink-400 border-line-200",
+              disabled && "cursor-not-allowed border-line-200 bg-paper text-ink-400",
             )}
             {...props}
           >
-            <LocalizedText>{placeholder && (
-              <option value="" disabled>
-                <LocalizedText>{placeholder}</LocalizedText>
-              </option>
-            )}</LocalizedText>
+            <LocalizedText>
+              {placeholder && (
+                <option value="" disabled>
+                  <LocalizedText>{placeholder}</LocalizedText>
+                </option>
+              )}
+            </LocalizedText>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 <LocalizedText>{option.label}</LocalizedText>
@@ -72,17 +68,23 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             <ChevronDown className="h-5 w-5" aria-hidden="true" />
           </div>
         </div>
-        <LocalizedText>{error && (
-          <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
-            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span><LocalizedText>{error}</LocalizedText></span>
-          </div>
-        )}</LocalizedText>
-        <LocalizedText>{!error && helperText && (
-          <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
-            <LocalizedText>{helperText}</LocalizedText>
-          </p>
-        )}</LocalizedText>
+        <LocalizedText>
+          {error && (
+            <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>
+                <LocalizedText>{error}</LocalizedText>
+              </span>
+            </div>
+          )}
+        </LocalizedText>
+        <LocalizedText>
+          {!error && helperText && (
+            <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
+              <LocalizedText>{helperText}</LocalizedText>
+            </p>
+          )}
+        </LocalizedText>
       </div>
     );
   },

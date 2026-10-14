@@ -213,7 +213,10 @@ export default function AdminPagesPage() {
                 </tr>
               ) : (
                 filteredPages.map((page) => (
-                  <tr key={`${page.source ?? "legacy"}-${page.id}`} className="transition-colors hover:bg-slate-50/70">
+                  <tr
+                    key={`${page.source ?? "legacy"}-${page.id}`}
+                    className="transition-colors hover:bg-slate-50/70"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="max-w-md min-w-0">

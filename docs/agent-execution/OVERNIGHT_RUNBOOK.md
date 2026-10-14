@@ -95,4 +95,3 @@ giữ nguyên các trường khác; ID được ghi ở log sau khi tạo thành
 dừng scheduler thất bại, ghi lỗi và thông báo; các lượt đến sau deadline vẫn
 phải thoát mà không sửa dự án. Nếu hoàn thành hết phần được phép sớm, chốt báo
 cáo và dừng sớm. Không duy trì vòng lặp vô hạn khi chỉ còn blocker bên ngoài.
-

@@ -27,26 +27,35 @@ export function computeLegacyMigrationChecksum(m: Migration): string {
 export function verifyAppliedMigrationChecksums(db: DatabaseSync): {
   valid: boolean;
   drifted: Array<{ version: number; name: string; recorded: string; expected: string }>;
+  unknown: Array<{ version: number; name: string }>;
+  legacy: Array<{ version: number; name: string }>;
 } {
   const applied = getAppliedMigrations(db);
   const drifted: Array<{ version: number; name: string; recorded: string; expected: string }> = [];
+  const unknown: Array<{ version: number; name: string }> = [];
+  const legacy: Array<{ version: number; name: string }> = [];
 
   for (const record of applied) {
     const migration = ALL_MIGRATIONS.find((m) => m.version === record.version);
-    if (!migration) continue;
+    if (!migration) {
+      unknown.push({ version: record.version, name: record.name });
+      continue;
+    }
     const currentChecksum = computeMigrationChecksum(migration);
     const legacyChecksum = computeLegacyMigrationChecksum(migration);
-    if (record.checksum !== currentChecksum && record.checksum !== legacyChecksum) {
+    if (record.name !== migration.name || (record.checksum !== currentChecksum && record.checksum !== legacyChecksum)) {
       drifted.push({
         version: record.version,
         name: record.name,
         recorded: record.checksum,
         expected: currentChecksum,
       });
+    } else if (record.checksum === legacyChecksum) {
+      legacy.push({ version: record.version, name: record.name });
     }
   }
 
-  return { valid: drifted.length === 0, drifted };
+  return { valid: drifted.length === 0 && unknown.length === 0, drifted, unknown, legacy };
 }
 
 export function getTableCounts(db: DatabaseSync): Record<string, number> {
@@ -102,6 +111,12 @@ export function runMigrations(
 
   const appliedList = getAppliedMigrations(db);
   const driftCheck = verifyAppliedMigrationChecksums(db);
+  if (driftCheck.unknown.length > 0) {
+    const migration = driftCheck.unknown[0];
+    throw new Error(
+      `Database có migration v${migration.version} (${migration.name}) không có trong phiên bản code này. Dừng để tránh chạy migration trên schema mới hơn.`,
+    );
+  }
   if (!driftCheck.valid) {
     const d = driftCheck.drifted[0];
     throw new Error(

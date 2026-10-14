@@ -139,7 +139,7 @@ export function sanitizeWordPressHtml(value: string): SanitizedHtml {
 export function wordpressText(value: string): string {
   const preprocessed = stripWordPressShortcodes(value || "");
   return cleanWordPressEntities(
-    sanitizeHtml(preprocessed, { allowedTags: [], allowedAttributes: {} })
+    sanitizeHtml(preprocessed, { allowedTags: [], allowedAttributes: {} }),
   )
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
@@ -149,4 +149,3 @@ export function wordpressText(value: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
-

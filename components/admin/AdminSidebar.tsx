@@ -90,7 +90,10 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       const anchor = target?.closest("a[href]") as HTMLAnchorElement | null;
       if (!anchor || anchor.target === "_blank") return;
       const destination = new URL(anchor.href, window.location.href);
-      if (destination.origin !== window.location.origin || destination.href === window.location.href)
+      if (
+        destination.origin !== window.location.origin ||
+        destination.href === window.location.href
+      )
         return;
       if (!window.confirm("Bạn có thay đổi chưa lưu. Rời trang sẽ mất dữ liệu, tiếp tục?")) {
         event.preventDefault();

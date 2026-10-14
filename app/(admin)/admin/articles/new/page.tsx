@@ -13,7 +13,7 @@ export default async function NewArticlePage() {
   const categories = getCategories();
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <ArticleEditorForm
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         isEdit={false}

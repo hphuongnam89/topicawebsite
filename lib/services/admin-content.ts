@@ -1,6 +1,6 @@
 import "server-only";
 import { getArticles, getCategories, getDb } from "@/lib/db";
-import type { ContentRevisionRecord } from "@/lib/db/types";
+import type { ContentRevisionRecord, ProgramRecord } from "@/lib/db/types";
 import { getPublishedRevision, getRevisions } from "./revisions";
 
 type RevisionRow = ContentRevisionRecord & { payload: string };
@@ -39,11 +39,13 @@ function payloadOf(row: RevisionRow): Record<string, unknown> {
   }
 }
 
-export function getRevisionOnlyArticles(options: {
-  search?: string;
-  categoryId?: number;
-  status?: string;
-} = {}) {
+export function getRevisionOnlyArticles(
+  options: {
+    search?: string;
+    categoryId?: number;
+    status?: string;
+  } = {},
+) {
   const categories = getCategories();
   const categoryMap = new Map(categories.map((c) => [c.id, c]));
 
@@ -93,7 +95,10 @@ export function getRevisionOnlyArticles(options: {
     })
     .filter((row) => {
       const needle = options.search?.trim().toLocaleLowerCase("vi");
-      if (needle && !`${row.title} ${row.excerpt ?? ""} ${row.slug}`.toLocaleLowerCase("vi").includes(needle))
+      if (
+        needle &&
+        !`${row.title} ${row.excerpt ?? ""} ${row.slug}`.toLocaleLowerCase("vi").includes(needle)
+      )
         return false;
       if (options.categoryId !== undefined && row.category_id !== options.categoryId) return false;
       if (options.status && row.status !== options.status) {
@@ -104,11 +109,13 @@ export function getRevisionOnlyArticles(options: {
     });
 }
 
-export function getAllAdminArticles(options: {
-  search?: string;
-  categoryId?: number;
-  status?: string;
-} = {}) {
+export function getAllAdminArticles(
+  options: {
+    search?: string;
+    categoryId?: number;
+    status?: string;
+  } = {},
+) {
   const legacy = getArticles({
     search: options.search,
     categoryId: options.categoryId,
@@ -124,8 +131,8 @@ export function getAllAdminArticles(options: {
     const isPublished = art.status === "published" || Boolean(publishedRev);
     const hasDraft = Boolean(
       latestRev &&
-        (latestRev.workflow_state !== "published" ||
-          (publishedRev && latestRev.version > publishedRev.version)),
+      (latestRev.workflow_state !== "published" ||
+        (publishedRev && latestRev.version > publishedRev.version)),
     );
     return {
       ...art,
@@ -214,7 +221,11 @@ export function getRevisionOnlyPages(options: { search?: string } = {}) {
         published_version: publishedRev?.version ?? null,
       };
     })
-    .filter((row) => !needle || `${row.title} ${row.slug} ${row.excerpt ?? ""}`.toLocaleLowerCase("vi").includes(needle));
+    .filter(
+      (row) =>
+        !needle ||
+        `${row.title} ${row.slug} ${row.excerpt ?? ""}`.toLocaleLowerCase("vi").includes(needle),
+    );
 }
 
 export interface AdminProgramItem {
@@ -223,12 +234,12 @@ export interface AdminProgramItem {
   major: string;
   code: string;
   slug: string;
-  degree_name: string;
-  awarding_institution: string;
+  degree_name: string | null;
+  awarding_institution: string | null;
   group_id: string;
   group_name: string;
-  credits: number;
-  semesters: number;
+  credits: number | null;
+  semesters: number | null;
   status: "published" | "draft";
   workflow_state: string;
   has_draft: boolean;
@@ -247,6 +258,94 @@ const GROUP_NAMES: Record<string, string> = {
   language: "Ngôn ngữ",
 };
 
+function parseProgramData(value: unknown): Record<string, unknown> {
+  if (typeof value === "string") {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return {};
+    }
+  }
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function optionalText(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function optionalNumber(value: unknown): number | null {
+  const parsed = typeof value === "number" ? value : Number(value);
+  return value !== null && value !== "" && Number.isFinite(parsed) ? parsed : null;
+}
+
+function parseProgramArray(value: unknown): unknown[] {
+  if (typeof value === "string") {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(value) ? value : [];
+}
+
+function toAdminProgram({
+  id,
+  title,
+  base,
+  data,
+  revision,
+  published,
+  source,
+}: {
+  id: string;
+  title: string;
+  base?: ProgramRecord;
+  data: Record<string, unknown>;
+  revision?: ContentRevisionRecord;
+  published: ContentRevisionRecord | null;
+  source: AdminProgramItem["source"];
+}): AdminProgramItem {
+  const duration = parseProgramData(data.duration_credits);
+  const groupId = String(
+    data.group_id ??
+      data.group ??
+      (id === "it" ? "technology" : id === "english" || id === "chinese" ? "language" : "business"),
+  );
+  const isPublished = Boolean(published);
+
+  return {
+    id,
+    name: String(data.name || title),
+    major: String(data.major || title),
+    code: String(data.code || ""),
+    slug: String(data.slug || id),
+    degree_name: optionalText(data.degree_name),
+    awarding_institution: optionalText(data.awarding_institution),
+    group_id: groupId,
+    group_name: GROUP_NAMES[groupId] || "Kinh tế & Quản lý",
+    credits: optionalNumber(duration.credits),
+    semesters: optionalNumber(duration.semesters),
+    status: isPublished ? "published" : "draft",
+    workflow_state: revision?.workflow_state ?? (isPublished ? "published" : "draft"),
+    has_draft:
+      !isPublished ||
+      Boolean(
+        revision &&
+        (revision.version > (published?.version ?? 0) || revision.workflow_state !== "published"),
+      ),
+    version: revision?.version ?? base?.version ?? 1,
+    careers_count: parseProgramArray(data.careers).length,
+    curriculum_count: parseProgramArray(data.curriculum).length,
+    faqs_count: parseProgramArray(data.faqs).length,
+    summary: String(data.summary || ""),
+    updated_at: revision?.updated_at ?? base?.updated_at ?? base?.created_at ?? "",
+    source,
+  };
+}
+
 export function getAdminPrograms(
   options: { search?: string; group?: string } = {},
 ): AdminProgramItem[] {
@@ -254,162 +353,36 @@ export function getAdminPrograms(
   const needle = options.search?.trim().toLocaleLowerCase("vi");
   const filterGroup = options.group?.trim();
 
-  const baseRows = db.prepare("SELECT * FROM programs ORDER BY id ASC").all() as any[];
+  const baseRows = db
+    .prepare("SELECT * FROM programs ORDER BY id ASC")
+    .all() as unknown as ProgramRecord[];
   const revRows = latestRevisionRows("program");
-
-  const items: AdminProgramItem[] = [];
-
-  for (const row of baseRows) {
-    const publishedRev = getPublishedRevision("program", row.id);
-    const revisions = getRevisions("program", row.id);
-    const latestRev = revisions[0] || null;
-
-    const revPayload = latestRev ? payloadOf(latestRev) : null;
-    const activeData = revPayload || row;
-
-    let durationCredits: { credits?: number; semesters?: number } = {};
-    try {
-      durationCredits =
-        typeof activeData.duration_credits === "string"
-          ? JSON.parse(activeData.duration_credits)
-          : activeData.duration_credits || {};
-    } catch {}
-
-    let careers: any[] = [];
-    try {
-      careers =
-        typeof activeData.careers === "string"
-          ? JSON.parse(activeData.careers)
-          : activeData.careers || [];
-    } catch {}
-
-    let curriculum: any[] = [];
-    try {
-      curriculum =
-        typeof activeData.curriculum === "string"
-          ? JSON.parse(activeData.curriculum)
-          : activeData.curriculum || [];
-    } catch {}
-
-    let faqs: any[] = [];
-    try {
-      faqs =
-        typeof activeData.faqs === "string" ? JSON.parse(activeData.faqs) : activeData.faqs || [];
-    } catch {}
-
-    const isPublished = Boolean(publishedRev);
-    const hasDraft =
-      !isPublished ||
-      Boolean(
-        latestRev &&
-          (latestRev.version > (publishedRev?.version ?? 0) ||
-            latestRev.workflow_state !== "published"),
-      );
-
-    const status: "published" | "draft" = isPublished ? "published" : "draft";
-    const workflow_state = latestRev?.workflow_state ?? (isPublished ? "published" : "draft");
-    const groupId = String(activeData.group_id ?? activeData.group ?? "business");
-
-    items.push({
+  const items = baseRows.map((row) => {
+    const revision = getRevisions("program", row.id)[0];
+    const published = getPublishedRevision("program", row.id);
+    return toAdminProgram({
       id: row.id,
-      name: String(activeData.name || row.name),
-      major: String(activeData.major || row.major),
-      code: String(activeData.code || row.code),
-      slug: String(activeData.slug || row.slug),
-      degree_name: String(activeData.degree_name || row.degree_name || "Cử nhân"),
-      awarding_institution: String(
-        activeData.awarding_institution || row.awarding_institution || "Trường Đại học Phú Xuân",
-      ),
-      group_id: groupId,
-      group_name:
-        GROUP_NAMES[groupId] ||
-        (groupId === "technology"
-          ? "Công nghệ thông tin"
-          : groupId === "language"
-            ? "Ngôn ngữ"
-            : "Kinh tế & Quản lý"),
-      credits: Number(durationCredits.credits) || 126,
-      semesters: Number(durationCredits.semesters) || 9,
-      status,
-      workflow_state,
-      has_draft: hasDraft,
-      version: latestRev?.version ?? row.version ?? 1,
-      careers_count: Array.isArray(careers) ? careers.length : 0,
-      curriculum_count: Array.isArray(curriculum) ? curriculum.length : 0,
-      faqs_count: Array.isArray(faqs) ? faqs.length : 0,
-      summary: String(activeData.summary || ""),
-      updated_at: latestRev?.updated_at ?? row.updated_at ?? row.created_at,
+      title: row.name,
+      base: row,
+      data: revision ? payloadOf(revision) : (row as unknown as Record<string, unknown>),
+      revision,
+      published,
       source: "base",
     });
-  }
-
-  for (const row of revRows) {
-    const payload = payloadOf(row);
-    const publishedRev = getPublishedRevision("program", row.entity_id);
-    const isPublished = Boolean(publishedRev);
-    const hasDraft =
-      !isPublished ||
-      row.version > (publishedRev?.version ?? 0) ||
-      row.workflow_state !== "published";
-
-    let durationCredits: { credits?: number; semesters?: number } = {};
-    try {
-      durationCredits =
-        typeof payload.duration_credits === "string"
-          ? JSON.parse(payload.duration_credits)
-          : (payload.duration_credits as any) || {};
-    } catch {}
-
-    let careers: any[] = [];
-    try {
-      careers =
-        typeof payload.careers === "string"
-          ? JSON.parse(payload.careers)
-          : (payload.careers as any) || [];
-    } catch {}
-
-    let curriculum: any[] = [];
-    try {
-      curriculum =
-        typeof payload.curriculum === "string"
-          ? JSON.parse(payload.curriculum)
-          : (payload.curriculum as any) || [];
-    } catch {}
-
-    let faqs: any[] = [];
-    try {
-      faqs =
-        typeof payload.faqs === "string"
-          ? JSON.parse(payload.faqs)
-          : (payload.faqs as any) || [];
-    } catch {}
-
-    const groupId = String(payload.group_id ?? payload.group ?? "business");
-
-    items.push({
-      id: row.entity_id,
-      name: String(payload.name || row.title),
-      major: String(payload.major || row.title),
-      code: String(payload.code || ""),
-      slug: String(payload.slug || row.entity_id),
-      degree_name: String(payload.degree_name || "Cử nhân"),
-      awarding_institution: String(payload.awarding_institution || "Trường Đại học Phú Xuân"),
-      group_id: groupId,
-      group_name: GROUP_NAMES[groupId] || "Kinh tế & Quản lý",
-      credits: Number(durationCredits.credits) || 126,
-      semesters: Number(durationCredits.semesters) || 9,
-      status: isPublished ? "published" : "draft",
-      workflow_state: row.workflow_state,
-      has_draft: hasDraft,
-      version: row.version,
-      careers_count: Array.isArray(careers) ? careers.length : 0,
-      curriculum_count: Array.isArray(curriculum) ? curriculum.length : 0,
-      faqs_count: Array.isArray(faqs) ? faqs.length : 0,
-      summary: String(payload.summary || ""),
-      updated_at: row.updated_at,
-      source: "revision",
-    });
-  }
+  });
+  items.push(
+    ...revRows.map((row) => {
+      const published = getPublishedRevision("program", row.entity_id);
+      return toAdminProgram({
+        id: row.entity_id,
+        title: row.title,
+        data: payloadOf(row),
+        revision: row,
+        published,
+        source: "revision",
+      });
+    }),
+  );
 
   return items.filter((item) => {
     if (filterGroup && filterGroup !== "all" && item.group_id !== filterGroup) return false;
@@ -423,4 +396,3 @@ export function getAdminPrograms(
     return true;
   });
 }
-

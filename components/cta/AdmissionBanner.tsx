@@ -36,27 +36,38 @@ export function AdmissionBanner({
     >
       <Container>
         <div className="max-w-measure mx-auto flex flex-col items-center">
-          <h2 className="mb-6 font-display text-display md:text-h1"><LocalizedText>{heading}</LocalizedText></h2>
-          <p className="mb-8 text-body-lg opacity-90"><LocalizedText>{description}</LocalizedText></p>
+          <h2 className="mb-6 font-display text-display md:text-h1">
+            <LocalizedText>{heading}</LocalizedText>
+          </h2>
+          <p className="mb-8 text-body-lg opacity-90">
+            <LocalizedText>{description}</LocalizedText>
+          </p>
           <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
-            <ButtonLink href={primaryHref} variant={isDark ? "accent" : "primary"} size="lg" className="w-full justify-center">
+            <ButtonLink
+              href={primaryHref}
+              variant={isDark ? "accent" : "primary"}
+              size="lg"
+              className="w-full justify-center"
+            >
               <LocalizedText>{primaryLabel}</LocalizedText>
             </ButtonLink>
-            <LocalizedText>{secondaryHref && secondaryLabel && (
-              <ButtonLink
-                href={secondaryHref}
-                variant="secondary"
-                className={cn(
-                  isDark
-                    ? "border-line-200 text-white hover:bg-white/10"
-                    : "border-white/30 text-white hover:bg-white/10",
-                  "w-full justify-center",
-                )}
-                size="lg"
-              >
-                <LocalizedText>{secondaryLabel}</LocalizedText>
-              </ButtonLink>
-            )}</LocalizedText>
+            <LocalizedText>
+              {secondaryHref && secondaryLabel && (
+                <ButtonLink
+                  href={secondaryHref}
+                  variant="secondary"
+                  className={cn(
+                    isDark
+                      ? "border-line-200 text-white hover:bg-white/10"
+                      : "border-white/30 text-white hover:bg-white/10",
+                    "w-full justify-center",
+                  )}
+                  size="lg"
+                >
+                  <LocalizedText>{secondaryLabel}</LocalizedText>
+                </ButtonLink>
+              )}
+            </LocalizedText>
           </div>
         </div>
       </Container>

@@ -27,12 +27,21 @@ describe("LeadForm", () => {
   test("submits an undecided program without optional email or education", async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined);
     render(<LeadForm onSubmit={onSubmit} />);
-    fireEvent.change(screen.getByLabelText(/Họ tên/), {target:{value:"QA FIXTURE ONLY"}});
-    fireEvent.change(screen.getByLabelText(/Số điện thoại/), {target:{value:"0900000000"}});
-    fireEvent.change(screen.getByLabelText(/Ngành quan tâm/), {target:{value:"undecided"}});
+    fireEvent.change(screen.getByLabelText(/Họ tên/), { target: { value: "QA FIXTURE ONLY" } });
+    fireEvent.change(screen.getByLabelText(/Số điện thoại/), { target: { value: "0900000000" } });
+    fireEvent.change(screen.getByLabelText(/Ngành quan tâm/), { target: { value: "undecided" } });
     fireEvent.click(screen.getByRole("checkbox"));
-    fireEvent.click(screen.getByRole("button", {name:"Đăng ký tư vấn miễn phí"}));
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({program:"undecided",email:undefined,educationLevel:undefined,consent:true})));
+    fireEvent.click(screen.getByRole("button", { name: "Đăng ký tư vấn miễn phí" }));
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          program: "undecided",
+          email: undefined,
+          educationLevel: undefined,
+          consent: true,
+        }),
+      ),
+    );
     expect(screen.queryByText(/24 giờ/)).not.toBeInTheDocument();
   });
 });

@@ -86,9 +86,14 @@ export async function generateMetadata(): Promise<Metadata> {
     if (p === "/en" || p.startsWith("/en/")) locale = "en";
   } catch {}
 
-  const settings = getSetting<{ siteTitle?: string; siteDescription?: string }>("site_settings", {});
+  const settings = getSetting<{ siteTitle?: string; siteDescription?: string }>(
+    "site_settings",
+    {},
+  );
   const rawTitle = (settings.siteTitle?.trim() || "Viện Đào tạo Quốc tế Topica") as string;
-  const rawDescription = (settings.siteDescription?.trim() || DEFAULT_METADATA.description || "") as string;
+  const rawDescription = (settings.siteDescription?.trim() ||
+    DEFAULT_METADATA.description ||
+    "") as string;
 
   const title = locale === "en" ? translateText(rawTitle, "en") : rawTitle;
   const description = locale === "en" ? translateText(rawDescription, "en") : rawDescription;

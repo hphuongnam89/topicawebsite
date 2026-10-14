@@ -31,12 +31,16 @@ export function SectionHeading({
       <Component className={cn("font-display text-h2 font-bold text-ink-950", titleClassName)}>
         <LocalizedText>{title ?? children}</LocalizedText>
       </Component>
-      {align === "center" && <div aria-hidden="true" className="mx-auto mt-4 h-[3px] w-12 bg-brand-500" />}
-      <LocalizedText>{subtitle && (
-        <p className={cn("mt-3 font-sans text-body-lg text-ink-600", subtitleClassName)}>
-          <LocalizedText>{subtitle}</LocalizedText>
-        </p>
-      )}</LocalizedText>
+      {align === "center" && (
+        <div aria-hidden="true" className="mx-auto mt-4 h-[3px] w-12 bg-brand-500" />
+      )}
+      <LocalizedText>
+        {subtitle && (
+          <p className={cn("mt-3 font-sans text-body-lg text-ink-600", subtitleClassName)}>
+            <LocalizedText>{subtitle}</LocalizedText>
+          </p>
+        )}
+      </LocalizedText>
     </div>
   );
 }

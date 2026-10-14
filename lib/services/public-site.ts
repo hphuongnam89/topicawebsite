@@ -32,14 +32,15 @@ export function hasManagedContent(type: EntityType, id?: string): boolean {
        ORDER BY version DESC, id DESC LIMIT 1`,
     )
     .get(...params) as
-    | { workflow_state: string; published_at: string | null; expired_at: string | null }
-    | undefined;
+    { workflow_state: string; published_at: string | null; expired_at: string | null } | undefined;
   if (!revision) return false;
   if (revision.workflow_state === "archived" && revision.published_at) return true;
   if (revision.workflow_state !== "published" || !revision.published_at) return false;
   const now = Date.now();
-  return Date.parse(revision.published_at) <= now &&
-    (!revision.expired_at || Date.parse(revision.expired_at) > now);
+  return (
+    Date.parse(revision.published_at) <= now &&
+    (!revision.expired_at || Date.parse(revision.expired_at) > now)
+  );
 }
 
 export function getLivePrograms(): Program[] {
@@ -141,7 +142,11 @@ export function getLiveProgramDetail(path: string): ProgramDetail | null {
     { label: "Trình độ", value: "Đại học", status: "verified" },
     { label: "Hình thức", value: current.form, status: "verified" },
     { label: "Văn bằng", value: current.degreeName, status: "verified" },
-    { label: "Thời gian", value: `${current.durationCredits.semesters} học kỳ`, status: "verified" },
+    {
+      label: "Thời gian",
+      value: `${current.durationCredits.semesters} học kỳ`,
+      status: "verified",
+    },
     {
       label: "Khối lượng",
       value: `${current.durationCredits.credits} tín chỉ`,
@@ -149,8 +154,12 @@ export function getLiveProgramDetail(path: string): ProgramDetail | null {
       status: "verified",
     },
     { label: "Đơn vị cấp bằng", value: current.awardingInstitution, status: "verified" },
-    ...(current.language ? [{ label: "Ngôn ngữ", value: current.language, status: "verified" as const }] : []),
-    ...(current.courseCount ? [{ label: "Số học phần", value: current.courseCount, status: "verified" as const }] : []),
+    ...(current.language
+      ? [{ label: "Ngôn ngữ", value: current.language, status: "verified" as const }]
+      : []),
+    ...(current.courseCount
+      ? [{ label: "Số học phần", value: current.courseCount, status: "verified" as const }]
+      : []),
   ];
 
   const facts = baseDetail
@@ -161,8 +170,14 @@ export function getLiveProgramDetail(path: string): ProgramDetail | null {
     : defaultFacts;
 
   let semesters =
-    current.semesters && current.semesters.length > 0 ? current.semesters : (baseDetail?.semesters ?? []);
-  if ((!semesters || semesters.length === 0) && current.curriculum && current.curriculum.length > 0) {
+    current.semesters && current.semesters.length > 0
+      ? current.semesters
+      : (baseDetail?.semesters ?? []);
+  if (
+    (!semesters || semesters.length === 0) &&
+    current.curriculum &&
+    current.curriculum.length > 0
+  ) {
     semesters = current.curriculum.map((term: any, index: number) => ({
       term: index + 1,
       credits: term.credits ?? 0,
@@ -180,22 +195,36 @@ export function getLiveProgramDetail(path: string): ProgramDetail | null {
     marketingLabel: current.marketingLabel || baseDetail?.marketingLabel || current.major,
     code: current.code,
     summary: current.summary || baseDetail?.summary || "",
-    heroLabel: current.heroLabel || baseDetail?.heroLabel || "Chương trình đào tạo · Kế hoạch 9 học kỳ",
+    heroLabel:
+      current.heroLabel || baseDetail?.heroLabel || "Chương trình đào tạo · Kế hoạch 9 học kỳ",
     evidenceLevel: baseDetail?.evidenceLevel || "academic_source",
     source: {
-      label: current.source || baseDetail?.source.label || "Quyết định mở ngành & Kiểm định chất lượng",
+      label:
+        current.source || baseDetail?.source.label || "Quyết định mở ngành & Kiểm định chất lượng",
       reference: baseDetail?.source.reference || "Hồ sơ chương trình đào tạo",
       reviewedAt: baseDetail?.source.reviewedAt || new Date().toISOString().slice(0, 10),
     },
     facts,
-    curriculum: current.curriculum && current.curriculum.length > 0 ? current.curriculum : (baseDetail?.curriculum ?? []),
+    curriculum:
+      current.curriculum && current.curriculum.length > 0
+        ? current.curriculum
+        : (baseDetail?.curriculum ?? []),
     semesters,
-    outcomes: current.outcomes && current.outcomes.length > 0 ? current.outcomes : (baseDetail?.outcomes ?? []),
-    careers: current.careers && current.careers.length > 0 ? current.careers : (baseDetail?.careers ?? []),
-    furtherStudy: current.furtherStudy !== undefined ? current.furtherStudy : (baseDetail?.furtherStudy ?? null),
-    admissions: current.admissions !== undefined ? current.admissions : (baseDetail?.admissions ?? null),
-    graduation: current.graduation !== undefined ? current.graduation : (baseDetail?.graduation ?? null),
-    confirmations: current.confirmations ?? (baseDetail?.confirmations ?? []),
+    outcomes:
+      current.outcomes && current.outcomes.length > 0
+        ? current.outcomes
+        : (baseDetail?.outcomes ?? []),
+    careers:
+      current.careers && current.careers.length > 0 ? current.careers : (baseDetail?.careers ?? []),
+    furtherStudy:
+      current.furtherStudy !== undefined
+        ? current.furtherStudy
+        : (baseDetail?.furtherStudy ?? null),
+    admissions:
+      current.admissions !== undefined ? current.admissions : (baseDetail?.admissions ?? null),
+    graduation:
+      current.graduation !== undefined ? current.graduation : (baseDetail?.graduation ?? null),
+    confirmations: current.confirmations ?? baseDetail?.confirmations ?? [],
   };
 }
 
@@ -248,9 +277,7 @@ export function getLiveScholarships(): readonly ScholarshipPolicy[] {
     return {
       id: row.id,
       title: row.name,
-      percentage: isPercent
-        ? `${value}%`
-        : `${new Intl.NumberFormat("vi-VN").format(value)} đ`,
+      percentage: isPercent ? `${value}%` : `${new Intl.NumberFormat("vi-VN").format(value)} đ`,
       percentageValue: isPercent ? value / 100 : 0,
       scope: row.scope === "first_year" ? "first_year" : "full_course",
       tag: "Học bổng Topica",
@@ -264,11 +291,13 @@ export function getLiveScholarships(): readonly ScholarshipPolicy[] {
 export type ContactChannels = Record<keyof typeof contactChannels, ContactChannel>;
 export function getLiveContact(): { channels: ContactChannels; locations: typeof campuses } {
   const org = getPublicOrganization();
-  const settings = getSetting<Partial<{
-    hotline: string;
-    email: string;
-    address: string;
-  }>>("site_settings", {});
+  const settings = getSetting<
+    Partial<{
+      hotline: string;
+      email: string;
+      address: string;
+    }>
+  >("site_settings", {});
   const hasConfiguredSettings = Object.keys(settings).length > 0;
   if (!org && !hasManagedContent("organization")) {
     const phone = settings.hotline?.trim() || contactChannels.admissionsHotline.value;
@@ -341,7 +370,11 @@ export function getLiveContact(): { channels: ContactChannels; locations: typeof
         admissionsEmail: mailChannel(email),
         generalEmail: mailChannel(email),
       },
-      locations: locations.map((row) => ({ city: row.city, address: row.address, phone: row.hotline })),
+      locations: locations.map((row) => ({
+        city: row.city,
+        address: row.address,
+        phone: row.hotline,
+      })),
     };
   }
   return {

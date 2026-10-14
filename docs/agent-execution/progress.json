@@ -54,9 +54,7 @@
       "title": "Cô lập DB/test/build/notification",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R00"
-      ],
+      "depends_on": ["R00"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -96,9 +94,7 @@
       "title": "Backup và restore",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R01"
-      ],
+      "depends_on": ["R01"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -134,9 +130,7 @@
       "title": "Sổ nội dung chính thức",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R00"
-      ],
+      "depends_on": ["R00"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -163,9 +157,7 @@
       "title": "Danh tính/contact/cổng dịch vụ",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R03"
-      ],
+      "depends_on": ["R03"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -197,9 +189,7 @@
       "title": "Hợp đồng chương trình/học phí",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R03"
-      ],
+      "depends_on": ["R03"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -231,10 +221,7 @@
       "title": "Tài liệu/HTML/metadata",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R02",
-        "R03"
-      ],
+      "depends_on": ["R02", "R03"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -267,10 +254,7 @@
       "title": "IA/route/journey",
       "priority": "P1",
       "status": "verified",
-      "depends_on": [
-        "R04",
-        "R05"
-      ],
+      "depends_on": ["R04", "R05"],
       "owner": "antigravity",
       "reviewer": null,
       "source_version": "head",
@@ -282,11 +266,7 @@
         "app/not-found.tsx",
         "__tests__/journeys/route-map-and-journeys.test.ts"
       ],
-      "checks": [
-        "vitest-route-journeys-pass",
-        "typecheck-pass",
-        "lint-pass"
-      ],
+      "checks": ["vitest-route-journeys-pass", "typecheck-pass", "lint-pass"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -298,9 +278,7 @@
       "title": "Concept/thiết kế/prototype",
       "priority": "P1",
       "status": "planned",
-      "depends_on": [
-        "R07"
-      ],
+      "depends_on": ["R07"],
       "owner": null,
       "reviewer": null,
       "source_version": null,
@@ -315,9 +293,7 @@
       "title": "Token/component states",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R08"
-      ],
+      "depends_on": ["R08"],
       "owner": "antigravity",
       "reviewer": null,
       "source_version": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc + dirty; 04-restore-workspace/source-manifest.json; UI immutable copy fingerprint afe7e3333ca2fdcb3fbf0a2c74242e072b41fd678854f7cb6a784364b1abe50a",
@@ -327,11 +303,7 @@
         "__tests__/qa/a11y-responsive-quality.test.ts",
         "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md"
       ],
-      "checks": [
-        "vitest-contrast-pass",
-        "typecheck-pass",
-        "lint-pass"
-      ],
+      "checks": ["vitest-contrast-pass", "typecheck-pass", "lint-pass"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -344,10 +316,7 @@
       "title": "Shell/menu/sticky",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R09",
-        "R04"
-      ],
+      "depends_on": ["R09", "R04"],
       "owner": "antigravity",
       "reviewer": null,
       "source_version": "f5a6b34709b6f4a88df0e2db10348f7f959ae8bc + dirty; 04-restore-workspace/source-manifest.json; UI immutable copy fingerprint afe7e3333ca2fdcb3fbf0a2c74242e072b41fd678854f7cb6a784364b1abe50a",
@@ -360,11 +329,7 @@
         "__tests__/components/MobileNavAndShell.test.tsx",
         "docs/evidence/overnight-2026-10-12/04-restore-workspace/HANDOFF.md"
       ],
-      "checks": [
-        "vitest-mobilenav-shell-pass",
-        "typecheck-pass",
-        "lint-pass"
-      ],
+      "checks": ["vitest-mobilenav-shell-pass", "typecheck-pass", "lint-pass"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -381,12 +346,7 @@
       "title": "Trang chủ",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R10",
-        "R05",
-        "R06",
-        "R16"
-      ],
+      "depends_on": ["R10", "R05", "R06", "R16"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -431,11 +391,7 @@
       "title": "Danh mục và 5 ngành",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R10",
-        "R05",
-        "R16"
-      ],
+      "depends_on": ["R10", "R05", "R16"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -476,12 +432,7 @@
       "title": "Tuyển sinh/học phí",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R10",
-        "R05",
-        "R06",
-        "R16"
-      ],
+      "depends_on": ["R10", "R05", "R06", "R16"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -520,11 +471,7 @@
       "title": "Nội dung/search/hỗ trợ",
       "priority": "P1",
       "status": "verified",
-      "depends_on": [
-        "R10",
-        "R06",
-        "R07"
-      ],
+      "depends_on": ["R10", "R06", "R07"],
       "owner": "antigravity",
       "reviewer": null,
       "source_version": "head",
@@ -537,11 +484,7 @@
         "app/sitemap.ts",
         "__tests__/components/ContentPagesAndSearch.test.tsx"
       ],
-      "checks": [
-        "vitest-content-search-pass",
-        "typecheck-pass",
-        "lint-pass"
-      ],
+      "checks": ["vitest-content-search-pass", "typecheck-pass", "lint-pass"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -557,11 +500,7 @@
       "title": "Form và lead API",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R01",
-        "R10",
-        "R16"
-      ],
+      "depends_on": ["R01", "R10", "R16"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -598,13 +537,7 @@
       "title": "Model CMS/migration",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R01",
-        "R02",
-        "R03",
-        "R05",
-        "R07"
-      ],
+      "depends_on": ["R01", "R02", "R03", "R05", "R07"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -648,9 +581,7 @@
       "title": "Workflow/quyền/preview",
       "priority": "P1",
       "status": "verified",
-      "depends_on": [
-        "R16"
-      ],
+      "depends_on": ["R16"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -658,9 +589,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -672,9 +601,7 @@
       "title": "Lịch/hết hạn/cache",
       "priority": "P1",
       "status": "implemented",
-      "depends_on": [
-        "R17"
-      ],
+      "depends_on": ["R17"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -682,9 +609,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -696,10 +621,7 @@
       "title": "CMS UX/media",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R17",
-        "R09"
-      ],
+      "depends_on": ["R17", "R09"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -707,9 +629,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -721,9 +641,7 @@
       "title": "Nghiên cứu người dùng",
       "priority": "P1",
       "status": "planned",
-      "depends_on": [
-        "R08"
-      ],
+      "depends_on": ["R08"],
       "owner": null,
       "reviewer": null,
       "source_version": null,
@@ -760,9 +678,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -774,10 +690,7 @@
       "title": "QA automation",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R01",
-        "R21"
-      ],
+      "depends_on": ["R01", "R21"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -804,12 +717,8 @@
       "title": "UI/accessibility/performance",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R22"
-      ],
-      "requires_milestones": [
-        "R25:staging_ready"
-      ],
+      "depends_on": ["R22"],
+      "requires_milestones": ["R25:staging_ready"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -818,9 +727,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -833,15 +740,8 @@
       "title": "QA/UAT/release candidate",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R20",
-        "R21",
-        "R23",
-        "R27"
-      ],
-      "requires_milestones": [
-        "R25:staging_ready"
-      ],
+      "depends_on": ["R20", "R21", "R23", "R27"],
+      "requires_milestones": ["R25:staging_ready"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -849,9 +749,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -863,33 +761,20 @@
       "title": "Staging/release/rollback",
       "priority": "P1",
       "status": "planned",
-      "depends_on": [
-        "R02",
-        "R21",
-        "R27"
-      ],
-      "completion_requires": [
-        "R25:release_complete"
-      ],
+      "depends_on": ["R02", "R21", "R27"],
+      "completion_requires": ["R25:release_complete"],
       "milestones": [
         {
           "id": "staging_ready",
           "status": "planned",
-          "depends_on": [
-            "R02",
-            "R21",
-            "R27"
-          ],
+          "depends_on": ["R02", "R21", "R27"],
           "evidence": [],
           "accepted_at": null
         },
         {
           "id": "release_complete",
           "status": "planned",
-          "depends_on": [
-            "R24",
-            "R25:staging_ready"
-          ],
+          "depends_on": ["R24", "R25:staging_ready"],
           "evidence": [],
           "accepted_at": null
         }
@@ -908,10 +793,7 @@
       "title": "Bàn giao/vận hành",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R19",
-        "R25"
-      ],
+      "depends_on": ["R19", "R25"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -919,9 +801,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -933,10 +813,7 @@
       "title": "Analytics trước phát hành",
       "priority": "P1",
       "status": "in_progress",
-      "depends_on": [
-        "R15",
-        "R21"
-      ],
+      "depends_on": ["R15", "R21"],
       "owner": "Codex",
       "reviewer": null,
       "source_version": "completion-07; build z-dfCLfZfOGKVHtq48mcX; dirty source fingerprint af766dbc76b773682110d1b05762c95c0b162a124e11a36c86c616543030c8ec",
@@ -944,9 +821,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [
@@ -958,11 +833,7 @@
       "title": "Đo lường 30 ngày thật",
       "priority": "P2",
       "status": "planned",
-      "depends_on": [
-        "R25",
-        "R26",
-        "R27"
-      ],
+      "depends_on": ["R25", "R26", "R27"],
       "owner": null,
       "reviewer": null,
       "source_version": null,
@@ -1015,9 +886,7 @@
         "docs/evidence/completion-2026-10-12/HANDOFF.md",
         "docs/evidence/completion-2026-10-12/final-build-manifest.json"
       ],
-      "checks": [
-        "completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"
-      ],
+      "checks": ["completion-07: scoped checks/evidence in HANDOFF.md; not whole-task acceptance"],
       "blockers": [],
       "accepted_at": null,
       "notes": [

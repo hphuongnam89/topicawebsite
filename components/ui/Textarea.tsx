@@ -4,8 +4,7 @@ import * as React from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "./cn";
 
-export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   error?: string;
   helperText?: string;
@@ -13,20 +12,7 @@ export interface TextareaProps
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  (
-    {
-      className,
-      label,
-      error,
-      helperText,
-      id,
-      required,
-      disabled,
-      rows = 4,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ className, label, error, helperText, id, required, disabled, rows = 4, ...props }, ref) => {
     const errorId = `${id}-error`;
     const helperId = `${id}-helper`;
     const isInvalid = !!error;
@@ -35,10 +21,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className={className}>
         <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
           <LocalizedText>{label}</LocalizedText>
-          {required && <span className="ml-1 text-error" aria-hidden="true"><LocalizedText>*</LocalizedText></span>}
+          {required && (
+            <span className="ml-1 text-error" aria-hidden="true">
+              <LocalizedText>*</LocalizedText>
+            </span>
+          )}
         </label>
         <div className="relative">
-          <LocalizedElement as="textarea"
+          <LocalizedElement
+            as="textarea"
             id={id}
             ref={ref}
             rows={rows}
@@ -52,22 +43,28 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               isInvalid
                 ? "border-error text-error hover:border-error focus:border-error focus:outline-error"
                 : "border-line-200 hover:border-navy-500 focus:border-navy-900",
-              disabled && "cursor-not-allowed bg-paper text-ink-400 border-line-200",
+              disabled && "cursor-not-allowed border-line-200 bg-paper text-ink-400",
             )}
             {...props}
           />
         </div>
-        <LocalizedText>{error && (
-          <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
-            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span><LocalizedText>{error}</LocalizedText></span>
-          </div>
-        )}</LocalizedText>
-        <LocalizedText>{!error && helperText && (
-          <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
-            <LocalizedText>{helperText}</LocalizedText>
-          </p>
-        )}</LocalizedText>
+        <LocalizedText>
+          {error && (
+            <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>
+                <LocalizedText>{error}</LocalizedText>
+              </span>
+            </div>
+          )}
+        </LocalizedText>
+        <LocalizedText>
+          {!error && helperText && (
+            <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
+              <LocalizedText>{helperText}</LocalizedText>
+            </p>
+          )}
+        </LocalizedText>
       </div>
     );
   },

@@ -30,7 +30,9 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
         ]}
       />
 
-      <section className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}>
+      <section
+        className={`cms-content cms-content--${page.slug} bg-canvas py-12 sm:py-16 lg:py-20`}
+      >
         <Container size="default">
           {page.featuredImage && (
             <figure className="mb-12 overflow-hidden rounded-xl">
@@ -57,8 +59,8 @@ export function CmsPageView({ page, parent, showAdmissionCTA = true }: CmsPageVi
             <FacilitiesDirectory />
           ) : (
             <p className="text-center text-body text-ink-600 italic">
-              <LocalizedText>Nội dung đang được cập nhật.
-            </LocalizedText></p>
+              <LocalizedText>Nội dung đang được cập nhật.</LocalizedText>
+            </p>
           )}
         </Container>
       </section>

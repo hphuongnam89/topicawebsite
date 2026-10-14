@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser, requireAdmin } from "@/lib/auth/guards";
 import { getPageById, updatePage, deletePage, getDb } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
@@ -23,7 +24,9 @@ export async function PUT(request: Request, context: Context) {
   const id = Number((await context.params).id);
   if (!Number.isSafeInteger(id) || id < 1)
     return NextResponse.json({ error: "ID không hợp lệ" }, { status: 400 });
-  const parsed = pageUpdateSchema.safeParse(await request.json().catch(() => null));
+  const parsed = pageUpdateSchema.safeParse(
+    await readBoundedJson(request, 2_097_152).catch(() => null),
+  );
   if (!parsed.success)
     return NextResponse.json({ error: "Thông tin trang không hợp lệ" }, { status: 422 });
   const db = getDb();

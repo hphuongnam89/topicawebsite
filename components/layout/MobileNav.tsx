@@ -113,9 +113,12 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             className="fixed top-0 right-0 bottom-0 z-[70] flex w-full max-w-[360px] flex-col bg-canvas shadow-md"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-line-100 px-4 py-3 bg-navy-900 text-white">
-              <span className="text-body-sm font-semibold text-white"><LocalizedText>Menu Điều Hướng</LocalizedText></span>
-              <LocalizedElement as="button"
+            <div className="flex items-center justify-between border-b border-line-100 bg-navy-900 px-4 py-3 text-white">
+              <span className="text-body-sm font-semibold text-white">
+                <LocalizedText>Menu Điều Hướng</LocalizedText>
+              </span>
+              <LocalizedElement
+                as="button"
                 ref={closeButtonRef}
                 onClick={onClose}
                 aria-label="Đóng menu"
@@ -126,7 +129,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             </div>
 
             {/* Navigation */}
-            <LocalizedElement as="nav" className="flex-1 overflow-y-auto px-4 py-4" aria-label="Điều hướng">
+            <LocalizedElement
+              as="nav"
+              className="flex-1 overflow-y-auto px-4 py-4"
+              aria-label="Điều hướng"
+            >
               <ul className="space-y-1">
                 {primaryNav.map((group) => (
                   <li key={group.id}>
@@ -172,7 +179,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                                             <Link
                                               href={item.href}
                                               onClick={onClose}
-                                              className="block rounded-md px-3 py-2.5 text-body-sm text-ink-700 transition-colors hover:bg-navy-50 hover:text-navy-900 font-medium"
+                                              className="block rounded-md px-3 py-2.5 text-body-sm font-medium text-ink-700 transition-colors hover:bg-navy-50 hover:text-navy-900"
                                             >
                                               <LocalizedText>{item.label}</LocalizedText>
                                             </Link>
@@ -202,37 +209,51 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             </LocalizedElement>
 
             {/* CTA Footer */}
-            <div className="space-y-3 border-t border-line-100 px-4 py-4 bg-paper/50">
-              <div className="flex items-center justify-between text-xs text-ink-600 px-1 pb-1">
-                <Link href="/he-thong/" onClick={onClose} className="hover:text-brand-700 font-medium">
-                  <LocalizedText>Cổng Elearning
-                </LocalizedText></Link>
-                <span><LocalizedText>•</LocalizedText></span>
+            <div className="space-y-3 border-t border-line-100 bg-paper/50 px-4 py-4">
+              <div className="flex items-center justify-between px-1 pb-1 text-xs text-ink-600">
+                <Link
+                  href="/he-thong/"
+                  onClick={onClose}
+                  className="font-medium hover:text-brand-700"
+                >
+                  <LocalizedText>Cổng Elearning</LocalizedText>
+                </Link>
+                <span>
+                  <LocalizedText>•</LocalizedText>
+                </span>
                 <a
                   href="https://www.tuyensinh.topicauni.edu.vn/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-brand-700 font-medium"
+                  className="font-medium hover:text-brand-700"
                 >
-                  <LocalizedText>Tra cứu xét tuyển
-                </LocalizedText></a>
-                <span><LocalizedText>•</LocalizedText></span>
-                <Link href="/tuyen-sinh/hoc-phi-hoc-bong/" onClick={onClose} className="hover:text-brand-700 font-medium">
-                  <LocalizedText>Học phí
-                </LocalizedText></Link>
+                  <LocalizedText>Tra cứu xét tuyển</LocalizedText>
+                </a>
+                <span>
+                  <LocalizedText>•</LocalizedText>
+                </span>
+                <Link
+                  href="/tuyen-sinh/hoc-phi-hoc-bong/"
+                  onClick={onClose}
+                  className="font-medium hover:text-brand-700"
+                >
+                  <LocalizedText>Học phí</LocalizedText>
+                </Link>
               </div>
 
-              <LocalizedText>{applyAction?.href && (
-                <ButtonLink
-                  href={applyAction.href}
-                  external={applyAction.external}
-                  variant="accent"
-                  className="w-full font-bold"
-                  onClick={onClose}
-                >
-                  <LocalizedText>{applyAction.label}</LocalizedText>
-                </ButtonLink>
-              )}</LocalizedText>
+              <LocalizedText>
+                {applyAction?.href && (
+                  <ButtonLink
+                    href={applyAction.href}
+                    external={applyAction.external}
+                    variant="accent"
+                    className="w-full font-bold"
+                    onClick={onClose}
+                  >
+                    <LocalizedText>{applyAction.label}</LocalizedText>
+                  </ButtonLink>
+                )}
+              </LocalizedText>
               {consultAction && (
                 <ButtonLink
                   href="/lien-he/"

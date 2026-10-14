@@ -1,7 +1,13 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { BoundedRateLimiter, getClientIp } from "@/lib/security/rate-limit";
 import { MIN_PASSWORD_LENGTH, hashPassword, verifyPassword } from "@/lib/auth/password";
-import { ALL_MIGRATIONS, computeMigrationChecksum, verifyAppliedMigrationChecksums } from "@/lib/db/migrations";
+import {
+  ALL_MIGRATIONS,
+  computeMigrationChecksum,
+  computeLegacyMigrationChecksum,
+  runMigrations,
+  verifyAppliedMigrationChecksums,
+} from "@/lib/db/migrations";
 import { DatabaseSync } from "node:sqlite";
 
 describe("Backend Audit Remediation Verification (F-01..F-10)", () => {
@@ -112,15 +118,51 @@ describe("Backend Audit Remediation Verification (F-01..F-10)", () => {
       `);
 
       // Insert a tampered checksum for migration 1
-      db.prepare(`
+      db.prepare(
+        `
         INSERT INTO schema_migrations VALUES (1, '001_core_legacy_baseline', '2026-10-14', 'tampered_bad_checksum', 10);
-      `).run();
+      `,
+      ).run();
 
       const verification = verifyAppliedMigrationChecksums(db);
       expect(verification.valid).toBe(false);
       expect(verification.drifted.length).toBe(1);
       expect(verification.drifted[0].version).toBe(1);
 
+      db.close();
+    });
+
+    test("legacy checksums are reported as unverified, not drifted", () => {
+      const db = new DatabaseSync(":memory:");
+      db.exec(`CREATE TABLE schema_migrations (
+        version INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT NOT NULL,
+        checksum TEXT NOT NULL, execution_time_ms INTEGER NOT NULL
+      )`);
+      const migration = ALL_MIGRATIONS[0];
+      db.prepare("INSERT INTO schema_migrations VALUES (?, ?, ?, ?, ?)").run(
+        migration.version,
+        migration.name,
+        "2026-10-14",
+        computeLegacyMigrationChecksum(migration),
+        10,
+      );
+
+      const verification = verifyAppliedMigrationChecksums(db);
+      expect(verification.valid).toBe(true);
+      expect(verification.legacy).toEqual([{ version: migration.version, name: migration.name }]);
+      db.close();
+    });
+
+    test("unknown applied migration versions stop migration execution", () => {
+      const db = new DatabaseSync(":memory:");
+      db.exec(`CREATE TABLE schema_migrations (
+        version INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT NOT NULL,
+        checksum TEXT NOT NULL, execution_time_ms INTEGER NOT NULL
+      )`);
+      db.prepare("INSERT INTO schema_migrations VALUES (999, 'future', '2026-10-14', 'abc', 10)").run();
+
+      expect(verifyAppliedMigrationChecksums(db).unknown).toEqual([{ version: 999, name: "future" }]);
+      expect(() => runMigrations(db, { skipBackup: true })).toThrow(/không có trong phiên bản code này/);
       db.close();
     });
   });

@@ -17,20 +17,24 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              <LocalizedText>Khung chương trình
-            </LocalizedText></p>
+              <LocalizedText>Khung chương trình</LocalizedText>
+            </p>
             <h2
               id="curriculum-title"
               className="mt-3 max-w-[14ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              <LocalizedText>{creditFact
-                ? `${creditFact.value}, đọc theo từng học kỳ`
-                : "Khung chương trình đào tạo"}</LocalizedText>
+              <LocalizedText>
+                {creditFact
+                  ? `${creditFact.value}, đọc theo từng học kỳ`
+                  : "Khung chương trình đào tạo"}
+              </LocalizedText>
             </h2>
             <p className="mt-5 max-w-md leading-7 text-[var(--color-academic-muted)]">
-              <LocalizedText>Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng
-              chương trình nguồn.
-            </LocalizedText></p>
+              <LocalizedText>
+                Danh sách dưới đây giữ nguyên mã, tên, số tín chỉ và điều kiện lựa chọn trong bảng
+                chương trình nguồn.
+              </LocalizedText>
+            </p>
           </div>
 
           <div className="min-w-0 border-t border-[var(--color-academic-rule-strong)]">
@@ -46,10 +50,14 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                       <LocalizedText>{group.name}</LocalizedText>
                     </span>
                     <span className="mt-1 block text-sm text-[var(--color-academic-muted)]">
-                      <LocalizedText>{group.credits === null
-                        ? "Không tính vào khối lượng tích lũy"
-                        : `${group.credits} tín chỉ`}</LocalizedText>
-                      <LocalizedText>{group.selection ? ` · ${group.selection}` : ""}</LocalizedText>
+                      <LocalizedText>
+                        {group.credits === null
+                          ? "Không tính vào khối lượng tích lũy"
+                          : `${group.credits} tín chỉ`}
+                      </LocalizedText>
+                      <LocalizedText>
+                        {group.selection ? ` · ${group.selection}` : ""}
+                      </LocalizedText>
                     </span>
                   </span>
                   <ChevronDown
@@ -60,11 +68,18 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
 
                 <div className="pb-7">
                   <div className="hidden grid-cols-[7.5rem_minmax(0,1fr)_5rem] gap-4 border-b border-[var(--color-academic-rule)] pb-2 text-xs font-bold tracking-[0.1em] text-[var(--color-academic-muted)] uppercase sm:grid">
-                    <span><LocalizedText>Mã học phần</LocalizedText></span>
-                    <span><LocalizedText>Tên học phần</LocalizedText></span>
-                    <span className="text-right"><LocalizedText>Tín chỉ</LocalizedText></span>
+                    <span>
+                      <LocalizedText>Mã học phần</LocalizedText>
+                    </span>
+                    <span>
+                      <LocalizedText>Tên học phần</LocalizedText>
+                    </span>
+                    <span className="text-right">
+                      <LocalizedText>Tín chỉ</LocalizedText>
+                    </span>
                   </div>
-                  <LocalizedElement as="ul"
+                  <LocalizedElement
+                    as="ul"
                     className="divide-y divide-[var(--color-academic-rule)]"
                     aria-label={`Học phần ${group.name}`}
                   >
@@ -82,21 +97,30 @@ export function CurriculumExplorer({ program }: { program: ProgramDetail }) {
                           </p>
                           <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
                             <LocalizedText>{item.requirement}</LocalizedText>
-                            <LocalizedText>{item.prerequisite ? ` · Học trước: ${item.prerequisite}` : ""}</LocalizedText>
+                            <LocalizedText>
+                              {item.prerequisite ? ` · Học trước: ${item.prerequisite}` : ""}
+                            </LocalizedText>
                           </p>
-                          <LocalizedText>{item.detail && (
-                            <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
-                              <LocalizedText>{item.detail}</LocalizedText>
-                            </p>
-                          )}</LocalizedText>
-                          <LocalizedText>{item.note && (
-                            <p className="mt-2 text-xs leading-5 text-[var(--color-academic-warning)]">
-                              <LocalizedText>Cần xác nhận: </LocalizedText><LocalizedText>{item.note}</LocalizedText>
-                            </p>
-                          )}</LocalizedText>
+                          <LocalizedText>
+                            {item.detail && (
+                              <p className="mt-1 text-xs leading-5 text-[var(--color-academic-muted)]">
+                                <LocalizedText>{item.detail}</LocalizedText>
+                              </p>
+                            )}
+                          </LocalizedText>
+                          <LocalizedText>
+                            {item.note && (
+                              <p className="mt-2 text-xs leading-5 text-[var(--color-academic-warning)]">
+                                <LocalizedText>Cần xác nhận: </LocalizedText>
+                                <LocalizedText>{item.note}</LocalizedText>
+                              </p>
+                            )}
+                          </LocalizedText>
                         </div>
                         <span className="text-sm font-semibold text-[var(--color-academic-ink)] sm:text-right">
-                          <span className="sm:hidden"><LocalizedText>Tín chỉ: </LocalizedText></span>
+                          <span className="sm:hidden">
+                            <LocalizedText>Tín chỉ: </LocalizedText>
+                          </span>
                           <LocalizedText>{item.credits ?? "—"}</LocalizedText>
                         </span>
                       </li>

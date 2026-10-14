@@ -3,19 +3,23 @@
 Next.js 16 App Router website for Topica University.
 
 ## Requirements
+
 - Node.js >= 22.5
 - npm >= 10
 
 ## Setup
+
 ```bash
 npm install
 npm run dev
 ```
 
 ## Environment Variables
+
 Copy `.env.example` to `.env.local` and configure your API keys.
 
 ## Scripts
+
 - `npm run dev`: Start dev server
 - `npm run build`: Production build
 - `npm run test`: Unit tests

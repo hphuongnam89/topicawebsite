@@ -25,16 +25,7 @@ interface LeadItem {
   created_at: string;
 }
 
-function escapeCsvCell(value: unknown): string {
-  if (value === null || value === undefined) return '""';
-  let str = String(value);
-  // Protect against spreadsheet formula injection (=, +, -, @, tab, CR)
-  if (/^[=+\-@\t\r]/.test(str)) {
-    str = "'" + str;
-  }
-  const escaped = str.replace(/"/g, '""');
-  return `"${escaped}"`;
-}
+import { escapeCsvCell } from "@/lib/utils";
 
 export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<LeadItem[]>([]);
@@ -68,7 +59,9 @@ export default function AdminLeadsPage() {
         setTotalPages(data.totalPages || 1);
         setError(null);
       } else {
-        setError(`Không thể tải danh sách lead (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`);
+        setError(
+          `Không thể tải danh sách lead (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`,
+        );
       }
     } catch (err) {
       console.error(err);
@@ -207,7 +200,7 @@ export default function AdminLeadsPage() {
   ];
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -218,7 +211,8 @@ export default function AdminLeadsPage() {
             </h1>
           </div>
           <p className="mt-1 text-body-sm text-ink-500">
-            Tổng cộng <span className="font-semibold text-ink-900">{total}</span> hồ sơ / yêu cầu đăng ký tư vấn.
+            Tổng cộng <span className="font-semibold text-ink-900">{total}</span> hồ sơ / yêu cầu
+            đăng ký tư vấn.
           </p>
         </div>
 
@@ -226,17 +220,21 @@ export default function AdminLeadsPage() {
           <button
             onClick={() => exportCSV("all")}
             disabled={exporting || total === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-body-sm font-semibold text-white shadow-xs hover:bg-navy-800 disabled:opacity-50 transition-all focus:outline-2 focus:outline-navy-900"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-body-sm font-semibold text-white shadow-xs transition-all hover:bg-navy-800 focus:outline-2 focus:outline-navy-900 disabled:opacity-50"
             title="Xuất toàn bộ kết quả phù hợp với bộ lọc hiện tại"
           >
-            {exporting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4 text-white" />}
+            {exporting ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 text-white" />
+            )}
             <span>Xuất toàn bộ CSV ({total})</span>
           </button>
           {totalPages > 1 && (
             <button
               onClick={() => exportCSV("page")}
               disabled={exporting || leads.length === 0}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3.5 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs hover:bg-paper disabled:opacity-50 transition-all focus:outline-2 focus:outline-navy-900"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-line-200 bg-white px-3.5 py-2.5 text-body-sm font-semibold text-ink-800 shadow-xs transition-all hover:bg-paper focus:outline-2 focus:outline-navy-900 disabled:opacity-50"
               title="Chỉ xuất các dòng trên trang này"
             >
               <span>Xuất trang này ({leads.length})</span>
@@ -247,10 +245,10 @@ export default function AdminLeadsPage() {
 
       {message && (
         <div
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -276,7 +274,7 @@ export default function AdminLeadsPage() {
               className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-colors focus:outline-2 focus:outline-navy-900 ${
                 selectedStatus === tab.key
                   ? "bg-brand-700 text-white"
-                  : "bg-white text-ink-600 hover:bg-slate-100 border border-line-200"
+                  : "border border-line-200 bg-white text-ink-600 hover:bg-slate-100"
               }`}
             >
               {tab.label}
@@ -286,13 +284,13 @@ export default function AdminLeadsPage() {
 
         {/* Search Bar */}
         <form onSubmit={handleSearchSubmit} className="relative max-w-md">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-ink-400" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Tìm theo họ tên, SĐT hoặc email..."
-            className="h-10 w-full rounded-lg border border-line-200 bg-white pl-9 pr-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-line-200 bg-white pr-3 pl-9 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
           />
         </form>
       </div>
@@ -319,7 +317,7 @@ export default function AdminLeadsPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold text-ink-500 uppercase">
               <tr>
                 <th className="px-6 py-3.5">Họ tên & Liên hệ</th>
                 <th className="px-4 py-3.5">Ngành & Ghi chú</th>
@@ -363,13 +361,15 @@ export default function AdminLeadsPage() {
                 </tr>
               ) : (
                 leads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={lead.id} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="font-semibold text-ink-950">{lead.fullname}</div>
                       <div className="mt-1 flex flex-col gap-0.5 text-xs text-ink-600">
                         <span className="flex items-center gap-1 font-medium text-brand-700">
                           <Phone className="h-3 w-3" />
-                          <a href={`tel:${lead.phone}`} className="hover:underline">{lead.phone}</a>
+                          <a href={`tel:${lead.phone}`} className="hover:underline">
+                            {lead.phone}
+                          </a>
                         </span>
                         {lead.email && (
                           <span className="flex items-center gap-1 text-ink-500">
@@ -386,7 +386,7 @@ export default function AdminLeadsPage() {
                         <span>{lead.program || "Chưa chọn ngành"}</span>
                       </div>
                       {lead.notes && (
-                        <p className="mt-1 text-xs text-ink-500 max-w-xs">{lead.notes}</p>
+                        <p className="mt-1 max-w-xs text-xs text-ink-500">{lead.notes}</p>
                       )}
                     </td>
 
@@ -395,14 +395,14 @@ export default function AdminLeadsPage() {
                         value={lead.status}
                         disabled={updatingId === lead.id}
                         onChange={(e) => handleStatusChange(lead.id, e.target.value as any)}
-                        className={`rounded-lg border px-2.5 py-1 text-xs font-semibold focus:outline-none transition-colors ${
+                        className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors focus:outline-none ${
                           lead.status === "new"
-                            ? "bg-amber-50 text-amber-800 border-amber-300"
+                            ? "border-amber-300 bg-amber-50 text-amber-800"
                             : lead.status === "contacted"
-                            ? "bg-blue-50 text-blue-800 border-blue-300"
-                            : lead.status === "consulted"
-                            ? "bg-emerald-50 text-emerald-800 border-emerald-300"
-                            : "bg-slate-100 text-slate-600 border-slate-300"
+                              ? "border-blue-300 bg-blue-50 text-blue-800"
+                              : lead.status === "consulted"
+                                ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                                : "border-slate-300 bg-slate-100 text-slate-600"
                         }`}
                       >
                         <option value="new">Mới</option>
@@ -412,15 +412,15 @@ export default function AdminLeadsPage() {
                       </select>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500">
+                    <td className="px-4 py-4 text-xs whitespace-nowrap text-ink-500">
                       {new Date(lead.created_at).toLocaleString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => handleDelete(lead.id, lead.fullname)}
                         disabled={deletingId === lead.id}
-                        className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                        className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                         title="Xóa lead"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -435,7 +435,7 @@ export default function AdminLeadsPage() {
 
         {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-line-200 px-6 py-3 bg-slate-50">
+          <div className="flex items-center justify-between border-t border-line-200 bg-slate-50 px-6 py-3">
             <span className="text-xs text-ink-500">
               Trang {page} / {totalPages}
             </span>

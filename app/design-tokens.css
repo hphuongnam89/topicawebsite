@@ -11,7 +11,7 @@
      COLOR PALETTE - NAVY (Primary Academic)
      ============================================ */
   --color-navy-950: #001a3d;
-  --color-navy-900: #00264d;  /* Main brand navy from PXU */
+  --color-navy-900: #00264d; /* Main brand navy from PXU */
   --color-navy-800: #0a3566;
   --color-navy-700: #134780;
   --color-navy-600: #1d5999;
@@ -32,9 +32,9 @@
   --color-gold-950: #422f14;
   --color-gold-900: #6b4f28;
   --color-gold-800: #8a6226;
-  --color-gold-700: #946727;  /* Dark gold for text on light bg - WCAG AA compliant (4.88:1) */
+  --color-gold-700: #946727; /* Dark gold for text on light bg - WCAG AA compliant (4.88:1) */
   --color-gold-600: #a97d3d;
-  --color-gold-500: #b78744;  /* Brand gold from logo */
+  --color-gold-500: #b78744; /* Brand gold from logo */
   --color-gold-400: #c49f63;
   --color-gold-300: #d8b67c;
   --color-gold-200: #e8d1a8;
@@ -54,18 +54,18 @@
   /* ============================================
      TEXT & INK (Neutral Academic Palette)
      ============================================ */
-  --color-ink-950: #11100e;  /* Deepest contrast heading ink */
-  --color-ink-900: #1c1a17;  /* High-emphasis text & dark UI */
-  --color-ink-800: #292620;  /* Standard title/body contrast */
-  --color-ink-700: #3d3a33;  /* Secondary strong text */
-  --color-ink-600: #625e58;  /* Muted secondary descriptions */
-  --color-ink-500: #6b665f;  /* Captions with contrast on paper */
-  --color-ink-400: #8996a0;  /* Placeholders & hairline borders */
-  --color-ink-300: #b5b0a7;  /* Inactive & disabled text */
-  --color-ink-200: #ddd8cf;  /* Very soft divider ink */
-  --color-ink-100: #ece8e1;  /* Light tint background */
-  --color-ink-50: #f7f5f1;   /* Paper tint ink */
-  --color-ink-0: #ffffff;    /* Reverse pure white ink */
+  --color-ink-950: #11100e; /* Deepest contrast heading ink */
+  --color-ink-900: #1c1a17; /* High-emphasis text & dark UI */
+  --color-ink-800: #292620; /* Standard title/body contrast */
+  --color-ink-700: #3d3a33; /* Secondary strong text */
+  --color-ink-600: #625e58; /* Muted secondary descriptions */
+  --color-ink-500: #6b665f; /* Captions with contrast on paper */
+  --color-ink-400: #8996a0; /* Placeholders & hairline borders */
+  --color-ink-300: #b5b0a7; /* Inactive & disabled text */
+  --color-ink-200: #ddd8cf; /* Very soft divider ink */
+  --color-ink-100: #ece8e1; /* Light tint background */
+  --color-ink-50: #f7f5f1; /* Paper tint ink */
+  --color-ink-0: #ffffff; /* Reverse pure white ink */
   --color-ink-body: #243447; /* High-legibility body ink for long texts */
 
   /* ============================================
@@ -117,17 +117,17 @@
      SPACING & LAYOUT
      ============================================ */
   --spacing-unit: 0.25rem;
-  
+
   /* Container & Grid */
   --width-container: 77.5rem;
   --width-measure: 47.5rem;
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --section-space: clamp(4rem, 8vw, 7.5rem);
-  
+
   /* Header Heights */
   --height-header: 5rem;
   --height-header-compact: 4rem;
-  
+
   /* Control Heights */
   --height-control-sm: 2.5rem;
   --height-control: 3rem;
@@ -158,7 +158,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

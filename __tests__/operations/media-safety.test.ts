@@ -57,6 +57,8 @@ test("media list includes files written by the upload service", async () => {
   const response = await GET();
   expect(response.status).toBe(200);
   const body = await response.json();
-  expect(body.media).toEqual(expect.arrayContaining([expect.objectContaining({ name, access: "public" })]));
+  expect(body.media).toEqual(
+    expect.arrayContaining([expect.objectContaining({ name, access: "public" })]),
+  );
   fs.rmSync(path.join(directory, name), { force: true });
 });

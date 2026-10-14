@@ -44,22 +44,26 @@ export function ArticleShare({ title, className }: ArticleShareProps) {
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <span className="text-body-sm font-medium text-ink-600 mr-2"><LocalizedText>Chia sẻ:</LocalizedText></span>
-      <LocalizedElement as="button"
+      <span className="mr-2 text-body-sm font-medium text-ink-600">
+        <LocalizedText>Chia sẻ:</LocalizedText>
+      </span>
+      <LocalizedElement
+        as="button"
         onClick={handleCopyLink}
-        className="p-2 rounded-full hover:bg-paper text-ink-600 hover:text-ink-950 transition-colors"
+        className="rounded-full p-2 text-ink-600 transition-colors hover:bg-paper hover:text-ink-950"
         aria-label="Copy link"
         title="Sao chép liên kết"
       >
-        {copied ? <Check className="w-4 h-4 text-green-600" /> : <Link2 className="w-4 h-4" />}
+        {copied ? <Check className="h-4 w-4 text-green-600" /> : <Link2 className="h-4 w-4" />}
       </LocalizedElement>
-      <LocalizedElement as="button"
+      <LocalizedElement
+        as="button"
         onClick={handleNativeShare}
-        className="p-2 rounded-full hover:bg-paper text-ink-600 hover:text-ink-950 transition-colors"
+        className="rounded-full p-2 text-ink-600 transition-colors hover:bg-paper hover:text-ink-950"
         aria-label="Share article"
         title="Chia sẻ"
       >
-        <Share2 className="w-4 h-4" />
+        <Share2 className="h-4 w-4" />
       </LocalizedElement>
     </div>
   );

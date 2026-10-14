@@ -1,8 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { getDb } from "@/lib/db";
 import { cmsDomainFixture } from "@/__tests__/fixtures/cms-domain";
-import { getLivePrograms, getLiveProgramDetail, isKnownProgramPath } from "@/lib/services/public-site";
-import { createDraftRevision, submitRevisionForReview, approveRevision, publishRevision } from "@/lib/services/revisions";
+import {
+  getLivePrograms,
+  getLiveProgramDetail,
+  isKnownProgramPath,
+} from "@/lib/services/public-site";
+import {
+  createDraftRevision,
+  submitRevisionForReview,
+  approveRevision,
+  publishRevision,
+} from "@/lib/services/revisions";
 
 describe("Dynamic CMS Programs Management", () => {
   const actorId = "admin";
@@ -93,7 +102,8 @@ describe("Dynamic CMS Programs Management", () => {
         degree_name: "Bằng Cử nhân do Trường Đại học Phú Xuân cấp",
         awarding_institution: "Trường Đại học Phú Xuân",
         duration_credits: JSON.stringify({ credits: 130, semesters: 9 }),
-        summary: "Đào tạo chuyên sâu về phân tích dữ liệu lớn, mô hình ngôn ngữ lớn (LLM) và học sâu.",
+        summary:
+          "Đào tạo chuyên sâu về phân tích dữ liệu lớn, mô hình ngôn ngữ lớn (LLM) và học sâu.",
         source: "Quyết định mở ngành số 123/QĐ-ĐHPX năm 2026",
         careers: [
           "Kỹ sư Khoa học dữ liệu (Data Scientist)",
@@ -106,9 +116,24 @@ describe("Dynamic CMS Programs Management", () => {
             name: "Học kỳ 1",
             credits: 15,
             courses: [
-              { code: "DSAI.101", name: "Nhập môn Khoa học Dữ liệu", credits: 3, requirement: "Bắt buộc" },
-              { code: "DSAI.102", name: "Đại số tuyến tính cho AI", credits: 3, requirement: "Bắt buộc" },
-              { code: "DSAI.103", name: "Lập trình Python căn bản", credits: 3, requirement: "Bắt buộc" },
+              {
+                code: "DSAI.101",
+                name: "Nhập môn Khoa học Dữ liệu",
+                credits: 3,
+                requirement: "Bắt buộc",
+              },
+              {
+                code: "DSAI.102",
+                name: "Đại số tuyến tính cho AI",
+                credits: 3,
+                requirement: "Bắt buộc",
+              },
+              {
+                code: "DSAI.103",
+                name: "Lập trình Python căn bản",
+                credits: 3,
+                requirement: "Bắt buộc",
+              },
             ],
           },
         ],

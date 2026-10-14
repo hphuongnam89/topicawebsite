@@ -5,7 +5,10 @@ import NotFound from "@/app/not-found";
 import { CmsPageView } from "@/components/cms/CmsPageView";
 import robots from "@/app/robots";
 import sitemap from "@/app/sitemap";
-vi.mock("next/server", async importOriginal => ({...await importOriginal<typeof import("next/server")>(), connection:async()=>{}}));
+vi.mock("next/server", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/server")>()),
+  connection: async () => {},
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -67,12 +70,7 @@ describe("Task R14: Các trang nội dung, tìm kiếm, hỗ trợ và sitemap",
         contentHtml: "<p>Topica cam kết mang lại chất lượng đào tạo hàng đầu.</p>",
       };
 
-      render(
-        <CmsPageView
-          page={mockPage}
-          parent={{ label: "Về Topica", href: "/gioi-thieu/" }}
-        />,
-      );
+      render(<CmsPageView page={mockPage} parent={{ label: "Về Topica", href: "/gioi-thieu/" }} />);
 
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Tầm nhìn và Sứ mạng");
       expect(screen.getByText("Về Topica")).toBeInTheDocument();

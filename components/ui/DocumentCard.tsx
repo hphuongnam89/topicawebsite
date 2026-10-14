@@ -34,9 +34,9 @@ export function DocumentCard({
   const hasValidView = Boolean(viewUrl && viewUrl !== "#" && viewUrl.trim() !== "");
   const isInternalView = Boolean(
     hasValidView &&
-      viewUrl?.startsWith("/") &&
-      !viewUrl.endsWith(".pdf") &&
-      !viewUrl.endsWith(".docx")
+    viewUrl?.startsWith("/") &&
+    !viewUrl.endsWith(".pdf") &&
+    !viewUrl.endsWith(".docx"),
   );
 
   return (
@@ -53,28 +53,51 @@ export function DocumentCard({
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <h4 className="text-body font-semibold text-ink-950"><LocalizedText>{title}</LocalizedText></h4>
+        <h4 className="text-body font-semibold text-ink-950">
+          <LocalizedText>{title}</LocalizedText>
+        </h4>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-body-sm text-ink-600">
-          <LocalizedText>{type && <span><LocalizedText>{type}</LocalizedText></span>}</LocalizedText>
-          <LocalizedText>{date && <span><LocalizedText>{date}</LocalizedText></span>}</LocalizedText>
-          <LocalizedText>{hasValidDownload && fileSize && <span><LocalizedText>{fileSize}</LocalizedText></span>}</LocalizedText>
+          <LocalizedText>
+            {type && (
+              <span>
+                <LocalizedText>{type}</LocalizedText>
+              </span>
+            )}
+          </LocalizedText>
+          <LocalizedText>
+            {date && (
+              <span>
+                <LocalizedText>{date}</LocalizedText>
+              </span>
+            )}
+          </LocalizedText>
+          <LocalizedText>
+            {hasValidDownload && fileSize && (
+              <span>
+                <LocalizedText>{fileSize}</LocalizedText>
+              </span>
+            )}
+          </LocalizedText>
         </div>
       </div>
 
       {/* Actions */}
       <div className="flex shrink-0 items-center gap-2">
-        {hasValidView && (
-          isInternalView ? (
+        {hasValidView &&
+          (isInternalView ? (
             <Link
               href={viewUrl!}
               className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md border border-line-200 px-0 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900 sm:h-9 sm:w-32 sm:px-2"
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline"><LocalizedText>Xem văn bản</LocalizedText></span>
+              <span className="hidden sm:inline">
+                <LocalizedText>Xem văn bản</LocalizedText>
+              </span>
             </Link>
           ) : (
-            <LocalizedElement as="a"
+            <LocalizedElement
+              as="a"
               href={viewUrl!}
               target="_blank"
               rel="noopener noreferrer"
@@ -82,27 +105,31 @@ export function DocumentCard({
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline"><LocalizedText>Xem</LocalizedText></span>
+              <span className="hidden sm:inline">
+                <LocalizedText>Xem</LocalizedText>
+              </span>
             </LocalizedElement>
-          )
-        )}
+          ))}
 
         {hasValidDownload && (
-          <LocalizedElement as="a"
+          <LocalizedElement
+            as="a"
             href={downloadUrl!}
             download
             className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md bg-navy-900 px-0 text-body-sm font-medium text-white transition-colors hover:bg-navy-800 sm:h-9 sm:w-32 sm:px-2"
             aria-label={`Tải xuống: ${title}`}
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline"><LocalizedText>Tải xuống</LocalizedText></span>
+            <span className="hidden sm:inline">
+              <LocalizedText>Tải xuống</LocalizedText>
+            </span>
           </LocalizedElement>
         )}
 
         {!hasValidView && !hasValidDownload && (
-          <span className="inline-flex items-center text-xs text-ink-500 bg-line-100 px-2.5 py-1 rounded font-medium">
-            <LocalizedText>Bản số đang cập nhật
-          </LocalizedText></span>
+          <span className="inline-flex items-center rounded bg-line-100 px-2.5 py-1 text-xs font-medium text-ink-500">
+            <LocalizedText>Bản số đang cập nhật</LocalizedText>
+          </span>
         )}
       </div>
     </div>

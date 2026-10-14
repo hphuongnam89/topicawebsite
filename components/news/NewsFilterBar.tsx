@@ -64,8 +64,8 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
               : "border border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-500",
           )}
         >
-          <LocalizedText>Tất cả
-        </LocalizedText></button>
+          <LocalizedText>Tất cả</LocalizedText>
+        </button>
         {categories.map((cat) => (
           <button
             key={cat.id}
@@ -83,7 +83,8 @@ export function NewsFilterBar({ categories }: NewsFilterBarProps) {
       </div>
 
       <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80">
-        <LocalizedElement as="input"
+        <LocalizedElement
+          as="input"
           type="search"
           placeholder="Tìm kiếm bài viết..."
           value={searchValue}

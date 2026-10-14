@@ -19,9 +19,13 @@ export function PageHeader({ title, subtitle, breadcrumbs }: PageHeaderProps) {
           <h1 className="mt-6 font-display text-3xl font-bold tracking-tight text-ink-950 sm:text-4xl lg:text-h1">
             <LocalizedText>{title}</LocalizedText>
           </h1>
-          <LocalizedText>{subtitle && (
-            <p className="mt-4 max-w-3xl font-sans text-body-lg text-ink-600"><LocalizedText>{subtitle}</LocalizedText></p>
-          )}</LocalizedText>
+          <LocalizedText>
+            {subtitle && (
+              <p className="mt-4 max-w-3xl font-sans text-body-lg text-ink-600">
+                <LocalizedText>{subtitle}</LocalizedText>
+              </p>
+            )}
+          </LocalizedText>
         </ScrollReveal>
       </Container>
     </section>

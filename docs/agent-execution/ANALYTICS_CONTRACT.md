@@ -1,11 +1,11 @@
 # Analytics hiện có — 12/10/2026
 
-| Sự kiện | Khi ghi | Payload |
-| --- | --- | --- |
-| page view | Public pathname đổi | Path allowlist, bỏ query/hash, nhóm slug lạ |
-| `cta_click` | Nhấn link xét tuyển/tư vấn/tel/mail | Path, button enum admission/consultation/contact |
-| `search` | Vào trang tìm kiếm | Path trang, không từ khóa |
-| `form_submit` | Server commit lead mới | Program ID, path an toàn, environment; duplicate không ghi thêm |
+| Sự kiện       | Khi ghi                             | Payload                                                         |
+| ------------- | ----------------------------------- | --------------------------------------------------------------- |
+| page view     | Public pathname đổi                 | Path allowlist, bỏ query/hash, nhóm slug lạ                     |
+| `cta_click`   | Nhấn link xét tuyển/tư vấn/tel/mail | Path, button enum admission/consultation/contact                |
+| `search`      | Vào trang tìm kiếm                  | Path trang, không từ khóa                                       |
+| `form_submit` | Server commit lead mới              | Program ID, path an toàn, environment; duplicate không ghi thêm |
 
 API event strict, body tối đa 4KB; metadata storage chỉ button enum. Không lưu tên/điện thoại/email/nội dung form/raw URL/session ID. Event lỗi không ảnh hưởng tư vấn. QA dùng DB riêng và `environment=test`, page views cũng DB riêng; không gộp vào production.
 

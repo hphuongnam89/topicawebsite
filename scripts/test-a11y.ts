@@ -67,7 +67,9 @@ async function runAccessibilityAudit() {
     const passed = ratio >= pair.min;
     const formattedRatio = ratio.toFixed(2) + ":1";
     if (passed) {
-      console.log(`✅ [ĐẠT] ${pair.name} (${pair.fg} / ${pair.bg}): ${formattedRatio} (Yêu cầu >= ${pair.min}:1)`);
+      console.log(
+        `✅ [ĐẠT] ${pair.name} (${pair.fg} / ${pair.bg}): ${formattedRatio} (Yêu cầu >= ${pair.min}:1)`,
+      );
     } else {
       console.error(`❌ [KHÔNG ĐẠT] ${pair.name}: ${formattedRatio} (Yêu cầu >= ${pair.min}:1)`);
       auditFailed = true;
@@ -83,14 +85,20 @@ async function runAccessibilityAudit() {
   if (fs.existsSync(globalsCssPath)) {
     const cssContent = fs.readFileSync(globalsCssPath, "utf-8");
     if (cssContent.includes("prefers-reduced-motion: reduce")) {
-      console.log("✅ [ĐẠT] CSS chứa khai báo @media (prefers-reduced-motion: reduce) bảo vệ người dùng nhạy cảm chuyển động.");
+      console.log(
+        "✅ [ĐẠT] CSS chứa khai báo @media (prefers-reduced-motion: reduce) bảo vệ người dùng nhạy cảm chuyển động.",
+      );
     } else {
-      console.error("❌ [KHÔNG ĐẠT] Thiếu khai báo prefers-reduced-motion: reduce trong globals.css.");
+      console.error(
+        "❌ [KHÔNG ĐẠT] Thiếu khai báo prefers-reduced-motion: reduce trong globals.css.",
+      );
       auditFailed = true;
     }
 
     if (cssContent.includes(":focus-visible")) {
-      console.log("✅ [ĐẠT] CSS định nghĩa rõ ràng :focus-visible outline cho điều hướng bàn phím.");
+      console.log(
+        "✅ [ĐẠT] CSS định nghĩa rõ ràng :focus-visible outline cho điều hướng bàn phím.",
+      );
     } else {
       console.error("❌ [KHÔNG ĐẠT] Thiếu quy tắc :focus-visible trong globals.css.");
       auditFailed = true;
@@ -107,17 +115,21 @@ async function runAccessibilityAudit() {
 
     // a. Kiểm tra Skip to Main Content Link
     if (homeHtml.includes('href="#main-content"') && homeHtml.includes('id="main-content"')) {
-      console.log("✅ [ĐẠT] Skip link tồn tại (href=\"#main-content\") và trỏ đúng id=\"main-content\".");
+      console.log(
+        '✅ [ĐẠT] Skip link tồn tại (href="#main-content") và trỏ đúng id="main-content".',
+      );
     } else {
-      console.error("❌ [KHÔNG ĐẠT] Thiếu Skip link (#main-content) hoặc thẻ <main id=\"main-content\">.");
+      console.error(
+        '❌ [KHÔNG ĐẠT] Thiếu Skip link (#main-content) hoặc thẻ <main id="main-content">.',
+      );
       auditFailed = true;
     }
 
     // b. Kiểm tra thuộc tính ngôn ngữ lang="vi"
     if (homeHtml.includes('lang="vi"')) {
-      console.log("✅ [ĐẠT] Thẻ <html> khai báo đúng ngôn ngữ tiếng Việt (lang=\"vi\").");
+      console.log('✅ [ĐẠT] Thẻ <html> khai báo đúng ngôn ngữ tiếng Việt (lang="vi").');
     } else {
-      console.error("❌ [KHÔNG ĐẠT] Thẻ <html> thiếu thuộc tính lang=\"vi\".");
+      console.error('❌ [KHÔNG ĐẠT] Thẻ <html> thiếu thuộc tính lang="vi".');
       auditFailed = true;
     }
 
@@ -139,7 +151,9 @@ async function runAccessibilityAudit() {
     });
 
     if (imgWithoutAlt === 0) {
-      console.log(`✅ [ĐẠT] 100% hình ảnh (${imgTags.length} ảnh) đều có thuộc tính alt hỗ trợ Screen Reader.`);
+      console.log(
+        `✅ [ĐẠT] 100% hình ảnh (${imgTags.length} ảnh) đều có thuộc tính alt hỗ trợ Screen Reader.`,
+      );
     } else {
       console.warn(`⚠️ [CẢNH BÁO] Có ${imgWithoutAlt}/${imgTags.length} ảnh thiếu thuộc tính alt.`);
       // Nếu có ảnh thiếu alt không có giá trị rỗng, có thể cảnh báo
@@ -147,7 +161,9 @@ async function runAccessibilityAudit() {
 
     // e. Kiểm tra ARIA attributes
     if (homeHtml.includes("aria-label") || homeHtml.includes("aria-expanded")) {
-      console.log("✅ [ĐẠT] Giao diện sử dụng đầy đủ các thuộc tính ARIA (aria-label, aria-expanded, role).");
+      console.log(
+        "✅ [ĐẠT] Giao diện sử dụng đầy đủ các thuộc tính ARIA (aria-label, aria-expanded, role).",
+      );
     } else {
       console.error("❌ [KHÔNG ĐẠT] Không tìm thấy thuộc tính ARIA trong mã nguồn render.");
       auditFailed = true;

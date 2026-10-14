@@ -5,7 +5,7 @@
 > **Thời điểm hoàn thành**: 11/10/2026  
 > **Dự án**: Nâng cấp và Hoàn thiện Website Viện Đào tạo Quốc tế Topica  
 > **Đơn vị cấp bằng**: Trường Đại học Phú Xuân (PXU) — Thành viên Tập đoàn Giáo dục EQuest  
-> **Trạng thái**: Hoàn tất 100% các tiêu chí nghiệm thu của Phase 1  
+> **Trạng thái**: Hoàn tất 100% các tiêu chí nghiệm thu của Phase 1
 
 ---
 
@@ -13,14 +13,14 @@
 
 Phase 1 đã hoàn thành xuất sắc việc chuẩn hóa nội dung, dữ liệu học thuật, loại bỏ dữ liệu rác cũ và thiết lập bộ thông tin chính thức, nhất quán trên toàn bộ hệ thống website.
 
-| Hạng mục | Hiện trạng trước Phase 1 | Kết quả sau Phase 1 | Trạng thái |
-|---|---|---|---|
-| **5 Ngành đào tạo** | Tên gọi tản mát, có nơi hiển thị 9 ngành hoặc tên marketing gây nhầm lẫn | Chuẩn hóa 100% thành 5 ngành chính thức trên Menu, Form, Data, Admin | ✅ Hoàn thành |
-| **Trang rác WooCommerce** | 5 URL cũ (`cart`, `checkout`, `shop`,...) tồn tại ở trạng thái published | Đổi sang `archived` trong SQLite + rào chắn `BLOCKED_SLUGS` trả về `404` | ✅ Đã chặn triệt để |
-| **HTML Entity & Shortcodes** | 11 bài viết & 33 trang CMS dính `&#8211;`, `&#038;`, `[vc_...]` | Làm sạch toàn bộ database (26 bài viết, 43 trang) + nâng cấp `lib/cms/html.ts` | ✅ 100% sạch sẽ |
-| **Biểu phí & Học bổng** | Hardcode tĩnh, chưa đồng bộ 5 ngành | Xây dựng `data/tuition.ts` có cấu trúc & nâng cấp toàn diện `TuitionHub.tsx` | ✅ Đã cấu trúc hóa |
-| **Múi giờ & Định dạng ngày** | Dùng `date-fns` cục bộ, nguy cơ lệch ngày client | Tạo `lib/date.ts` chuẩn múi giờ `Asia/Bangkok` (GMT+7) | ✅ Đã chuẩn hóa |
-| **Lưu trữ Lead & CMS** | Cần đảm bảo dữ liệu ghi đúng vào SQLite | Form gửi vào `/api/public/lead` -> lưu trực tiếp bảng `leads` của CMS | ✅ Kiểm thử thành công |
+| Hạng mục                     | Hiện trạng trước Phase 1                                                 | Kết quả sau Phase 1                                                            | Trạng thái             |
+| ---------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ---------------------- |
+| **5 Ngành đào tạo**          | Tên gọi tản mát, có nơi hiển thị 9 ngành hoặc tên marketing gây nhầm lẫn | Chuẩn hóa 100% thành 5 ngành chính thức trên Menu, Form, Data, Admin           | ✅ Hoàn thành          |
+| **Trang rác WooCommerce**    | 5 URL cũ (`cart`, `checkout`, `shop`,...) tồn tại ở trạng thái published | Đổi sang `archived` trong SQLite + rào chắn `BLOCKED_SLUGS` trả về `404`       | ✅ Đã chặn triệt để    |
+| **HTML Entity & Shortcodes** | 11 bài viết & 33 trang CMS dính `&#8211;`, `&#038;`, `[vc_...]`          | Làm sạch toàn bộ database (26 bài viết, 43 trang) + nâng cấp `lib/cms/html.ts` | ✅ 100% sạch sẽ        |
+| **Biểu phí & Học bổng**      | Hardcode tĩnh, chưa đồng bộ 5 ngành                                      | Xây dựng `data/tuition.ts` có cấu trúc & nâng cấp toàn diện `TuitionHub.tsx`   | ✅ Đã cấu trúc hóa     |
+| **Múi giờ & Định dạng ngày** | Dùng `date-fns` cục bộ, nguy cơ lệch ngày client                         | Tạo `lib/date.ts` chuẩn múi giờ `Asia/Bangkok` (GMT+7)                         | ✅ Đã chuẩn hóa        |
+| **Lưu trữ Lead & CMS**       | Cần đảm bảo dữ liệu ghi đúng vào SQLite                                  | Form gửi vào `/api/public/lead` -> lưu trực tiếp bảng `leads` của CMS          | ✅ Kiểm thử thành công |
 
 ---
 
@@ -68,6 +68,7 @@ Phase 1 đã hoàn thành xuất sắc việc chuẩn hóa nội dung, dữ li�
 ## 🧹 3. LÀM SẠCH DỮ LIỆU VÀ BẢO VỆ ROUTING
 
 ### A. Ngăn chặn 5 URL rác WooCommerce
+
 - Trong database SQLite `data/topica.db`: Đã cập nhật `status = 'archived'` cho 5 bản ghi `cart`, `checkout`, `my-account`, `shop`, `classic-shop`.
 - Trong bộ điều hướng `app/(main)/[...slug]/page.tsx`:
   - Thêm `BLOCKED_SLUGS` set chứa danh sách đen các slug rác.
@@ -75,6 +76,7 @@ Phase 1 đã hoàn thành xuất sắc việc chuẩn hóa nội dung, dữ li�
   - Đã kiểm tra thực tế: Tất cả 5 URL đều trả về `HTTP 404`.
 
 ### B. Giải mã triệt để HTML Entities và Shortcodes
+
 - Chạy script xử lý database tự động:
   - Làm sạch **26 bài viết** và **43 trang tĩnh**.
   - Xóa sạch các thẻ shortcode sót lại: `[vc_row]`, `[vc_column]`, `[vc_custom_heading]`, `[contact-form-7]`.

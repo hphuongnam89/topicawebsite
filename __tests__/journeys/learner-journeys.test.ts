@@ -21,8 +21,12 @@ describe("Phase 5: 6 Core Learner Journeys & User Acceptance", () => {
       programs.forEach((prog) => {
         const detail = getProgramDetail(prog.slug);
         expect(detail).toBeDefined();
-        expect(detail?.facts.some((f) => f.label === "Văn bằng" && f.value.includes("Cử nhân"))).toBe(true);
-        expect(detail?.facts.some((f) => f.label === "Mã ngành" && f.status === "verified")).toBe(true);
+        expect(
+          detail?.facts.some((f) => f.label === "Văn bằng" && f.value.includes("Cử nhân")),
+        ).toBe(true);
+        expect(detail?.facts.some((f) => f.label === "Mã ngành" && f.status === "verified")).toBe(
+          true,
+        );
       });
     });
   });

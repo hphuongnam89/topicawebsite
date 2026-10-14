@@ -5,7 +5,7 @@
 > **Thời điểm hoàn thành**: 11/10/2026  
 > **Dự án**: Nâng cấp và Hoàn thiện Website Viện Đào tạo Quốc tế Topica  
 > **Đơn vị cấp bằng**: Trường Đại học Phú Xuân (PXU) — Thành viên Tập đoàn Giáo dục EQuest  
-> **Trạng thái**: Hoàn tất 100% các tiêu chí nghiệm thu của Phase 2  
+> **Trạng thái**: Hoàn tất 100% các tiêu chí nghiệm thu của Phase 2
 
 ---
 
@@ -14,6 +14,7 @@
 Phase 2 đã tái cấu trúc toàn diện kiến trúc thông tin (Information Architecture - IA) của website theo hướng **lấy người học làm trung tâm (Learner-centric)**. Mọi trang, menu, tiện ích và nút bấm đều được thiết kế để giải đáp câu hỏi của người học một cách trực quan, mạch lạc và **không có bất kỳ ngõ cụt nào (Zero-Dead-End Policy)**.
 
 ### 6 Trụ cột điều hướng chính (Primary Navigation):
+
 1. **Về Topica** (`/gioi-thieu/`): Tổng quan Viện Topica, Tập đoàn EQuest, Lịch sử, Tầm nhìn - Sứ mạng, Triết lý giáo dục, Cơ cấu tổ chức, Cơ sở vật chất.
 2. **Ngành học** (`/nganh-dao-tao/`): 5 chương trình cử nhân trọng điểm (Quản trị kinh doanh, Quản trị du lịch và lữ hành, CNTT - Đồ họa kỹ thuật số, Ngôn ngữ Anh, Ngôn ngữ Trung Quốc).
 3. **Tuyển sinh & Học phí** (`/tuyen-sinh/`): Thông báo tuyển sinh, Biểu phí 2026, Chính sách học bổng, Đề án tuyển sinh, Hướng dẫn nộp hồ sơ, FAQ tuyển sinh.
@@ -22,6 +23,7 @@ Phase 2 đã tái cấu trúc toàn diện kiến trúc thông tin (Information 
 6. **Chất lượng & Công khai** (`/dam-bao-chat-luong/`): Ba công khai, Báo cáo thường niên, Mẫu phôi văn bằng chứng chỉ Phú Xuân, Khảo thí & ĐBCL, Bộ quy trình biểu mẫu.
 
 ### Thanh tiện ích chuyên biệt (Header Utility Bar):
+
 - **Hotline tuyển sinh chính thức**: `1800 646 857` (Miễn cước, nhận diện thương hiệu).
 - **Email tuyển sinh**: `tuyensinh@topicauni.edu.vn`.
 - **Cổng Elearning sinh viên**: `/he-thong/` (Dành cho sinh viên đang học).
@@ -35,11 +37,11 @@ Phase 2 đã tái cấu trúc toàn diện kiến trúc thông tin (Information 
 
 Để người học không bị bối rối giữa các loại tương tác, hệ thống đã chuẩn hóa 3 nhóm hành động rõ rệt:
 
-| Nhãn nút (CTA Label) | Định dạng (Style) | Mục đích & Điểm đến |
-|---|---|---|
-| **Đăng ký xét tuyển** | Nút chính (Primary - Gold/Brand), icon ArrowRight | Dành cho thí sinh sẵn sàng nộp hồ sơ chính thức -> Cổng xét tuyển trực tuyến của trường (`https://www.tuyensinh.topicauni.edu.vn/`). |
-| **Nhận tư vấn** | Nút phụ (Secondary - Ghost/Outline), icon Phone/Message | Dành cho người học muốn tìm hiểu thêm về ngành/học phí -> Mở form tư vấn trực tiếp (`LeadForm`) hoặc liên hệ (`/lien-he/`). |
-| **Tra cứu hồ sơ** | Nút tiện ích (Utility/Tertiary), icon FileCheck | Dành cho thí sinh đã đăng ký kiểm tra tình trạng duyệt hồ sơ -> Cổng tra cứu tuyển sinh. |
+| Nhãn nút (CTA Label)  | Định dạng (Style)                                       | Mục đích & Điểm đến                                                                                                                  |
+| --------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Đăng ký xét tuyển** | Nút chính (Primary - Gold/Brand), icon ArrowRight       | Dành cho thí sinh sẵn sàng nộp hồ sơ chính thức -> Cổng xét tuyển trực tuyến của trường (`https://www.tuyensinh.topicauni.edu.vn/`). |
+| **Nhận tư vấn**       | Nút phụ (Secondary - Ghost/Outline), icon Phone/Message | Dành cho người học muốn tìm hiểu thêm về ngành/học phí -> Mở form tư vấn trực tiếp (`LeadForm`) hoặc liên hệ (`/lien-he/`).          |
+| **Tra cứu hồ sơ**     | Nút tiện ích (Utility/Tertiary), icon FileCheck         | Dành cho thí sinh đã đăng ký kiểm tra tình trạng duyệt hồ sơ -> Cổng tra cứu tuyển sinh.                                             |
 
 ---
 
@@ -88,6 +90,7 @@ flowchart TD
 ```
 
 ### Chi tiết từng hành trình:
+
 1. **Hành trình 1 (Chọn ngành)**: Từ trang chủ hoặc Mega menu -> Trang chi tiết ngành (`/[slug]`) -> Người học duyệt qua Quick Facts, Khung học phần từng kỳ, Nghề nghiệp sau tốt nghiệp -> Xem đơn giá tín chỉ -> Bấm "Nhận tư vấn" hoặc "Đăng ký xét tuyển" ngay tại Sticky bar cố định dưới chân trang.
 2. **Hành trình 2 (Xét tuyển)**: Người học xem các mốc thời gian tuyển sinh -> Kiểm tra yêu cầu bằng tốt nghiệp THPT/Trung cấp/Cao đẳng -> Chuẩn bị bản sao công chứng -> Chuyển sang Cổng nộp hồ sơ xét tuyển online của Trường Đại học Phú Xuân.
 3. **Hành trình 3 (Chi phí)**: Người học truy cập `/tuyen-sinh/hoc-phi-hoc-bong/` -> Đối chiếu đơn giá 750k - 850k/tín chỉ cho 5 ngành -> Đọc 3 cam kết minh bạch (thu theo tín chỉ thực, không tăng quá 10%/năm, trả góp 0%) -> Chọn 1 trong 3 gói học bổng phù hợp (Tài năng, Khuyến học, Tiếp bước tương lai).

@@ -192,7 +192,7 @@ function DomainPreview({
         ) : (
           <div className="p-6 sm:p-10">
             {typeof payload.summary === "string" && payload.summary && (
-              <div className="mb-6 rounded-lg bg-slate-50 p-4 border border-line-200">
+              <div className="mb-6 rounded-lg border border-line-200 bg-slate-50 p-4">
                 <p className="text-xs font-semibold text-ink-500 uppercase">Tóm tắt chương trình</p>
                 <p className="mt-1 text-sm leading-6 text-ink-900">{payload.summary}</p>
               </div>

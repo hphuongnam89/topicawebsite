@@ -12,7 +12,7 @@ interface PerfMetric {
 
 const fetchWithTiming = (
   url: string,
-  redirectCount = 0
+  redirectCount = 0,
 ): Promise<{ html: string; ttfb: number; sizeBytes: number; status: number }> => {
   return new Promise((resolve, reject) => {
     if (redirectCount > 3) {
@@ -24,7 +24,11 @@ const fetchWithTiming = (
     client
       .get(url, (res) => {
         // Handle 301, 302, 307, 308 redirects
-        if (res.statusCode && [301, 302, 307, 308].includes(res.statusCode) && res.headers.location) {
+        if (
+          res.statusCode &&
+          [301, 302, 307, 308].includes(res.statusCode) &&
+          res.headers.location
+        ) {
           const redirectUrl = res.headers.location.startsWith("http")
             ? res.headers.location
             : `${SITE_URL}${res.headers.location}`;
@@ -110,7 +114,9 @@ async function runLighthouseAudit() {
       });
 
       // 5. Meta Description
-      const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i);
+      const descMatch = html.match(
+        /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i,
+      );
       const desc = descMatch ? descMatch[1].trim() : "";
       metrics.push({
         name: "Meta Description",

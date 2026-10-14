@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { createCategory, deleteCategory } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const parsed = categorySchema.safeParse(await request.json());
+    const parsed = categorySchema.safeParse(await readBoundedJson(request));
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu danh mục không hợp lệ." }, { status: 422 });
     const { name, slug, description } = parsed.data;

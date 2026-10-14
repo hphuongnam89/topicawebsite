@@ -27,40 +27,39 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const resolvedParams = await params;
+import { buildLocalizedMetadata, resolveRequestLocale } from "@/lib/i18n/metadata";
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const [resolvedParams, locale] = await Promise.all([params, resolveRequestLocale(searchParams)]);
   const slug = resolvedParams.slug;
 
   // Try Article first
   const article = await cms.getArticleBySlug(slug).catch(() => null);
   if (article) {
-    return {
+    return buildLocalizedMetadata({
+      locale,
       title: article.seo?.title || article.title,
       description: article.seo?.description || article.excerpt,
+      viPath: `/tin-tuc/${article.slug}`,
+      enPath: `/en/tin-tuc/${article.slug}`,
       openGraph: {
-        title: article.seo?.title || article.title,
-        description: article.seo?.description || article.excerpt,
         type: "article",
         publishedTime: article.publishedAt,
         images: article.featuredImage ? [article.featuredImage.url] : [],
       },
-      alternates: {
-        canonical:
-          article.seo?.canonicalUrl || `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${article.slug}`,
-      },
-    };
+    });
   }
 
   // Try Category
   const category = await cms.getCategoryBySlug(slug).catch(() => null);
   if (category) {
-    return {
+    return buildLocalizedMetadata({
+      locale,
       title: category.title,
       description: category.description || `Tin tức và sự kiện thuộc chuyên mục ${category.title}`,
-      alternates: {
-        canonical: `${env.NEXT_PUBLIC_SITE_URL}/tin-tuc/${category.slug}`,
-      },
-    };
+      viPath: `/tin-tuc/${category.slug}`,
+      enPath: `/en/tin-tuc/${category.slug}`,
+    });
   }
 
   return {};
@@ -210,7 +209,9 @@ function renderArticle(article: Article) {
           {processedHtml ? (
             <Prose html={processedHtml} />
           ) : (
-            <p className="text-ink-600 italic"><LocalizedText>Nội dung đang được cập nhật...</LocalizedText></p>
+            <p className="text-ink-600 italic">
+              <LocalizedText>Nội dung đang được cập nhật...</LocalizedText>
+            </p>
           )}
 
           <div className="my-12">
@@ -220,14 +221,17 @@ function renderArticle(article: Article) {
           {/* Tags */}
           {article.tags.length > 0 && (
             <div className="mt-12 flex items-center gap-2 border-t border-line-200 pt-8">
-              <span className="text-body-sm font-semibold text-ink-950"><LocalizedText>Tags:</LocalizedText></span>
+              <span className="text-body-sm font-semibold text-ink-950">
+                <LocalizedText>Tags:</LocalizedText>
+              </span>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
                   <span
                     key={tag.slug}
                     className="rounded bg-line-100 px-2 py-1 text-body-sm text-ink-800"
                   >
-                    <LocalizedText>#</LocalizedText><LocalizedText>{tag.title}</LocalizedText>
+                    <LocalizedText>#</LocalizedText>
+                    <LocalizedText>{tag.title}</LocalizedText>
                   </span>
                 ))}
               </div>
@@ -270,8 +274,12 @@ async function renderCategory(category: Category, page: number) {
           </div>
         ) : (
           <div className="py-24 text-center">
-            <h3 className="text-h4 mb-2 font-bold text-ink-950"><LocalizedText>Chuyên mục chưa có bài viết</LocalizedText></h3>
-            <p className="text-ink-600"><LocalizedText>Vui lòng quay lại sau.</LocalizedText></p>
+            <h3 className="text-h4 mb-2 font-bold text-ink-950">
+              <LocalizedText>Chuyên mục chưa có bài viết</LocalizedText>
+            </h3>
+            <p className="text-ink-600">
+              <LocalizedText>Vui lòng quay lại sau.</LocalizedText>
+            </p>
           </div>
         )}
       </Container>

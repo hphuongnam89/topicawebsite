@@ -67,6 +67,7 @@ function main() {
       const appliedSet = new Set(applied.map((a) => a.version));
       const driftCheck = verifyAppliedMigrationChecksums(db);
       const driftedSet = new Set(driftCheck.drifted.map((d) => d.version));
+      const legacySet = new Set(driftCheck.legacy.map((m) => m.version));
 
       console.log("\n--- TRẠNG THÁI MIGRATION ---");
       for (const m of ALL_MIGRATIONS) {
@@ -76,6 +77,8 @@ function main() {
         let mark: string;
         if (isDrifted) {
           mark = `[✗ CHECKSUM DRIFT / MISMATCH]`;
+        } else if (legacySet.has(m.version)) {
+          mark = `[⚠ LEGACY CHECKSUM / NOT CONTENT-VERIFIED at ${appRecord?.applied_at}]`;
         } else if (isApplied) {
           mark = `[✓ APPLIED & VERIFIED at ${appRecord?.applied_at} (${appRecord?.execution_time_ms}ms)]`;
         } else {
@@ -84,8 +87,18 @@ function main() {
         console.log(`v${m.version}: ${m.name.padEnd(35)} ${mark}`);
       }
 
+      for (const migration of driftCheck.unknown) {
+        console.log(`v${migration.version}: ${migration.name.padEnd(35)} [✗ UNKNOWN VERSION]`);
+      }
+
       if (!driftCheck.valid) {
-        console.log("\n⚠️ CẢNH BÁO: Phát hiện migration đã bị sửa đổi nội dung sau khi áp dụng!");
+        console.log("\n⚠️ CẢNH BÁO: Migration ledger không khớp với phiên bản code hiện tại.");
+        process.exitCode = 1;
+      }
+      if (driftCheck.legacy.length > 0) {
+        console.log(
+          "\n⚠️ Một số checksum đời cũ chỉ xác thực version/tên, chưa xác thực nội dung migration.",
+        );
       }
 
       const counts = getTableCounts(db);

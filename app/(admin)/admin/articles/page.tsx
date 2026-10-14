@@ -301,7 +301,10 @@ export default function AdminArticlesPage() {
                 </tr>
               ) : (
                 articles.map((art) => (
-                  <tr key={`${art.source ?? "legacy"}-${art.id}`} className="transition-colors hover:bg-slate-50/70">
+                  <tr
+                    key={`${art.source ?? "legacy"}-${art.id}`}
+                    className="transition-colors hover:bg-slate-50/70"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md border border-line-200 bg-slate-100">
@@ -364,7 +367,7 @@ export default function AdminArticlesPage() {
                           </span>
                         )}
                         {art.is_featured === 1 && (
-                          <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700 border border-amber-200">
+                          <span className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
                             Nổi bật
                           </span>
                         )}

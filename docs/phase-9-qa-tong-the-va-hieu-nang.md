@@ -20,6 +20,7 @@ Tất cả các script kiểm thử tạm thời (`placeholder`) từ các phase
 ## 2. Chi tiết Kết quả Triển khai theo 4 Trụ cột QA
 
 ### 2.1. Giao diện & Độ phản hồi Responsive (Responsive Layout & Reflow)
+
 - **Kiểm thử đa Breakpoint**:
   - Đã kiểm tra và tối ưu hiển thị trên các dải kích thước màn hình: **320px, 360px, 390px (iPhone 12/13/14), 768px (iPad/Tablet), 1024px (Laptop), 1440px (Desktop)**.
   - **Zero Horizontal Overflow**: Sử dụng `overflow-x: clip` và bố cục container thông minh, loại bỏ 100% hiện tượng cuộn ngang ngoài ý muốn trên thiết bị di động.
@@ -33,6 +34,7 @@ Tất cả các script kiểm thử tạm thời (`placeholder`) từ các phase
 ---
 
 ### 2.2. Khả năng tiếp cận WCAG 2.2 AA (Accessibility & Inclusivity)
+
 - **Tỷ lệ Tương phản Màu sắc (Color Contrast Ratio)**:
   - Sử dụng thuật toán đo độ chói tương đối (Relative Luminance) theo đúng công thức chuẩn của W3C.
   - Kết quả kiểm định các cặp màu chủ đạo:
@@ -59,6 +61,7 @@ Tất cả các script kiểm thử tạm thời (`placeholder`) từ các phase
 ---
 
 ### 2.3. Chức năng, Toàn vẹn Dữ liệu & Bảo vệ Thông tin Người học
+
 - **Kiểm thử Liên kết Tự động (Link Integrity Audit)**:
   - Thay thế placeholder bằng script thực tế `scripts/test-links.ts` (`npm run test:links`).
   - Quét và kiểm tra đồng thời **138 liên kết duy nhất** trên toàn website (gồm danh bạ navigation, 5 trang ngành học, toàn bộ bài viết, các trang pháp lý, sitemap, robots, llms).
@@ -74,6 +77,7 @@ Tất cả các script kiểm thử tạm thời (`placeholder`) từ các phase
 ---
 
 ### 2.4. Hiệu năng & Tối ưu hóa Tìm kiếm (Performance & SEO Web Vitals)
+
 - **Tối ưu Tải trang Lab**:
   - Thời gian phản hồi máy chủ (**TTFB - Time to First Byte**): **80ms – 170ms** trên máy chủ phát triển cục bộ (vượt chỉ tiêu lab < 500ms).
   - Tải trước font chữ hệ thống không gây giật layout (**Zero CLS**) nhờ `next/font/google` (`Be_Vietnam_Pro` và `Lora`).
@@ -87,16 +91,16 @@ Tất cả các script kiểm thử tạm thời (`placeholder`) từ các phase
 
 ## 3. Bảng Tổng hợp Kết quả Kiểm định Kỹ thuật
 
-| Lệnh Kiểm tra | Công cụ / Script | Mục tiêu | Kết quả Thực tế | Đánh giá |
-|---|---|---|---|:---:|
-| `npm run typecheck` | TypeScript 5 Compiler | Kiểm tra kiểu dữ liệu tĩnh trên toàn bộ dự án | **0 lỗi (Zero Errors)** | ✅ ĐẠT |
-| `npm run lint` | ESLint 9 + Next.js Plugin | Kiểm tra quy chuẩn mã nguồn & React Best Practices | **0 lỗi, 0 cảnh báo (Clean)** | ✅ ĐẠT |
-| `npm run test` | Vitest 4 | Kiểm thử chức năng, CMS, UI, Hành trình & A11y | **8/8 test files, 50/50 tests PASS** | ✅ ĐẠT |
-| `npm run test:seo` | TSX SEO Validator | Kiểm tra tính sẵn sàng của 17 routes cốt lõi | **17/17 routes trả về HTTP 200 OK** | ✅ ĐẠT |
-| `npm run test:links` | TSX Link Auditor | Quét toàn bộ liên kết nội bộ, bài viết, sitemap | **138/138 links hợp lệ (0 broken link, 0 '#')** | ✅ ĐẠT |
-| `npm run test:a11y` | TSX WCAG Auditor | Đo tương phản màu sắc, skip link, alt, ARIA | **100% tiêu chí WCAG 2.2 AA PASSED** | ✅ ĐẠT |
-| `npm run test:lighthouse` | TSX Web Vitals Auditor | Đo TTFB, payload size, canonical, SEO meta | **Lab Score: Perf 96, A11y 98, SEO 100** | ✅ ĐẠT |
-| `npm run build` | Next.js 16 (Turbopack) | Đóng gói bản phát hành Production tối ưu | **Compiled successfully; 42/42 routes OK** | ✅ ĐẠT |
+| Lệnh Kiểm tra             | Công cụ / Script          | Mục tiêu                                           | Kết quả Thực tế                                 | Đánh giá |
+| ------------------------- | ------------------------- | -------------------------------------------------- | ----------------------------------------------- | :------: |
+| `npm run typecheck`       | TypeScript 5 Compiler     | Kiểm tra kiểu dữ liệu tĩnh trên toàn bộ dự án      | **0 lỗi (Zero Errors)**                         |  ✅ ĐẠT  |
+| `npm run lint`            | ESLint 9 + Next.js Plugin | Kiểm tra quy chuẩn mã nguồn & React Best Practices | **0 lỗi, 0 cảnh báo (Clean)**                   |  ✅ ĐẠT  |
+| `npm run test`            | Vitest 4                  | Kiểm thử chức năng, CMS, UI, Hành trình & A11y     | **8/8 test files, 50/50 tests PASS**            |  ✅ ĐẠT  |
+| `npm run test:seo`        | TSX SEO Validator         | Kiểm tra tính sẵn sàng của 17 routes cốt lõi       | **17/17 routes trả về HTTP 200 OK**             |  ✅ ĐẠT  |
+| `npm run test:links`      | TSX Link Auditor          | Quét toàn bộ liên kết nội bộ, bài viết, sitemap    | **138/138 links hợp lệ (0 broken link, 0 '#')** |  ✅ ĐẠT  |
+| `npm run test:a11y`       | TSX WCAG Auditor          | Đo tương phản màu sắc, skip link, alt, ARIA        | **100% tiêu chí WCAG 2.2 AA PASSED**            |  ✅ ĐẠT  |
+| `npm run test:lighthouse` | TSX Web Vitals Auditor    | Đo TTFB, payload size, canonical, SEO meta         | **Lab Score: Perf 96, A11y 98, SEO 100**        |  ✅ ĐẠT  |
+| `npm run build`           | Next.js 16 (Turbopack)    | Đóng gói bản phát hành Production tối ưu           | **Compiled successfully; 42/42 routes OK**      |  ✅ ĐẠT  |
 
 ---
 

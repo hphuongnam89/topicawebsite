@@ -93,8 +93,8 @@ export function Header({
         href="#main-content"
         className="fixed top-4 left-4 z-[100] -translate-y-20 rounded-md bg-navy-900 px-4 py-2 text-body-sm font-semibold text-white transition-transform focus:translate-y-0"
       >
-        <LocalizedText>Chuyển đến nội dung chính
-      </LocalizedText></a>
+        <LocalizedText>Chuyển đến nội dung chính</LocalizedText>
+      </a>
 
       <header
         ref={headerRef}
@@ -107,23 +107,28 @@ export function Header({
         <div className="border-b border-white/10">
           <div className="mx-auto flex max-w-[var(--width-container)] items-center justify-between px-4 py-2 text-xs sm:px-6 lg:px-8">
             <div className="flex items-center gap-1 sm:gap-4">
-              <LocalizedElement as="a"
+              <LocalizedElement
+                as="a"
                 href={contactChannels.admissionsHotline.href}
                 className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 text-white/75 transition-colors hover:text-white sm:min-h-6 sm:min-w-0"
                 title={contactChannels.admissionsHotline.label}
               >
                 <Phone className="h-3.5 w-3.5 text-gold-400" aria-hidden="true" />
                 <span className="hidden sm:inline">
-                  <LocalizedText>Hotline: </LocalizedText><LocalizedText>{contactChannels.admissionsHotline.value}</LocalizedText>
+                  <LocalizedText>Hotline: </LocalizedText>
+                  <LocalizedText>{contactChannels.admissionsHotline.value}</LocalizedText>
                 </span>
               </LocalizedElement>
-              <LocalizedElement as="a"
+              <LocalizedElement
+                as="a"
                 href={contactChannels.admissionsEmail.href}
                 className="hidden min-h-6 items-center gap-1.5 text-white/75 transition-colors hover:text-white lg:flex"
                 title={contactChannels.admissionsEmail.label}
               >
                 <Mail className="h-3.5 w-3.5 text-gold-400" aria-hidden="true" />
-                <span className="hidden lg:inline"><LocalizedText>{contactChannels.admissionsEmail.value}</LocalizedText></span>
+                <span className="hidden lg:inline">
+                  <LocalizedText>{contactChannels.admissionsEmail.value}</LocalizedText>
+                </span>
               </LocalizedElement>
             </div>
             <div className="flex items-center gap-2.5 text-white/75 sm:gap-4">
@@ -131,25 +136,33 @@ export function Header({
                 href="/he-thong/"
                 className="flex min-h-11 items-center transition-colors hover:text-white sm:min-h-6"
               >
-                <LocalizedText>Cổng Elearning
-              </LocalizedText></Link>
-              <span className="text-white/20"><LocalizedText>|</LocalizedText></span>
-              <LocalizedElement as="a"
+                <LocalizedText>Cổng Elearning</LocalizedText>
+              </Link>
+              <span className="text-white/20">
+                <LocalizedText>|</LocalizedText>
+              </span>
+              <LocalizedElement
+                as="a"
                 href="https://elib.pxu.edu.vn/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex min-h-11 items-center transition-colors hover:text-white sm:min-h-6"
                 title="Thư viện điện tử Trường Đại học Phú Xuân"
               >
-                <LocalizedText>Thư viện số</LocalizedText><span className="hidden lg:inline"><LocalizedText>&nbsp;(E-LIB)</LocalizedText></span>
+                <LocalizedText>Thư viện số</LocalizedText>
+                <span className="hidden lg:inline">
+                  <LocalizedText>&nbsp;(E-LIB)</LocalizedText>
+                </span>
               </LocalizedElement>
-              <span className="hidden text-white/20 sm:inline"><LocalizedText>|</LocalizedText></span>
+              <span className="hidden text-white/20 sm:inline">
+                <LocalizedText>|</LocalizedText>
+              </span>
               <Link
                 href="/tuyen-sinh/hoc-phi-hoc-bong/"
                 className="hidden min-h-6 items-center transition-colors hover:text-white sm:flex"
               >
-                <LocalizedText>Học phí 2026
-              </LocalizedText></Link>
+                <LocalizedText>Học phí 2026</LocalizedText>
+              </Link>
               <LanguageSwitcher />
             </div>
           </div>
@@ -189,7 +202,11 @@ export function Header({
           </Link>
 
           {/* Desktop Navigation */}
-          <LocalizedElement as="nav" className="hidden items-center gap-1 xl:flex" aria-label="Điều hướng chính">
+          <LocalizedElement
+            as="nav"
+            className="hidden items-center gap-1 xl:flex"
+            aria-label="Điều hướng chính"
+          >
             {primaryNav.map((group) => (
               <div
                 key={group.id}
@@ -225,7 +242,8 @@ export function Header({
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <LocalizedElement as="button"
+            <LocalizedElement
+              as="button"
               type="button"
               onClick={() => setSearchOpen((open) => !open)}
               aria-label="Tìm kiếm"
@@ -240,17 +258,19 @@ export function Header({
               )}
             </LocalizedElement>
 
-            <LocalizedText>{applyAction?.href && (
-              <ButtonLink
-                href={applyAction.href}
-                external={applyAction.external}
-                variant="accent"
-                size="default"
-                className="hidden sm:inline-flex"
-              >
-                <LocalizedText>{applyAction.label}</LocalizedText>
-              </ButtonLink>
-            )}</LocalizedText>
+            <LocalizedText>
+              {applyAction?.href && (
+                <ButtonLink
+                  href={applyAction.href}
+                  external={applyAction.external}
+                  variant="accent"
+                  size="default"
+                  className="hidden sm:inline-flex"
+                >
+                  <LocalizedText>{applyAction.label}</LocalizedText>
+                </ButtonLink>
+              )}
+            </LocalizedText>
 
             {/* Mobile menu button */}
             <Button
@@ -274,9 +294,10 @@ export function Header({
               className="absolute top-full right-4 left-4 z-20 mt-2 flex items-center gap-2 rounded-lg border border-navy-700 bg-white p-2 shadow-lg sm:left-auto sm:w-80"
             >
               <label htmlFor="header-search-input" className="sr-only">
-                <LocalizedText>Từ khóa tìm kiếm
-              </LocalizedText></label>
-              <LocalizedElement as="input"
+                <LocalizedText>Từ khóa tìm kiếm</LocalizedText>
+              </label>
+              <LocalizedElement
+                as="input"
                 id="header-search-input"
                 name="q"
                 type="search"
@@ -284,7 +305,8 @@ export function Header({
                 placeholder="Bạn muốn tìm gì?"
                 className="min-w-0 flex-1 rounded-md border border-line-200 bg-white px-3 py-2 text-body-sm text-ink-950 outline-none focus:border-navy-500 focus:ring-2 focus:ring-navy-500/20"
               />
-              <LocalizedElement as="button"
+              <LocalizedElement
+                as="button"
                 type="submit"
                 aria-label="Tìm kiếm"
                 className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gold-500 text-navy-900 transition-colors hover:bg-gold-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500"

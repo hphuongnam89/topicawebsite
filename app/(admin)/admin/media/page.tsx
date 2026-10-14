@@ -43,7 +43,9 @@ export default function AdminMediaPage() {
         setMedia(data.media || []);
         setError(null);
       } else {
-        setError(`Không thể tải thư viện media (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`);
+        setError(
+          `Không thể tải thư viện media (mã phản hồi HTTP ${res.status}). Vui lòng thử lại.`,
+        );
       }
     } catch (err) {
       console.error(err);

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getDb, createLead } from "@/lib/db";
+import { generateSlug, escapeCsvCell } from "@/lib/utils";
 
 const authContext = {
   user: {
@@ -45,18 +46,6 @@ beforeEach(() => {
 });
 
 describe("CMS-08: Vietnamese slug generation and continuous typing", () => {
-  function generateSlug(text: string): string {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[đĐ]/g, "d")
-      .replace(/[^a-z0-9\s-]/g, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
-  }
-
   test("generates valid slug for Vietnamese and special characters", () => {
     expect(generateSlug("QA Browser Category")).toBe("qa-browser-category");
     expect(generateSlug("Thông Tin Tuyển Sinh & Đào Tạo")).toBe("thong-tin-tuyen-sinh-dao-tao");
@@ -100,22 +89,12 @@ describe("CMS-08: Vietnamese slug generation and continuous typing", () => {
 });
 
 describe("CMS-09 & CMS-10: Lead Export and CSV Safety", () => {
-  function escapeCsvCell(value: unknown): string {
-    if (value === null || value === undefined) return '""';
-    let str = String(value);
-    if (/^[=+\-@\t\r]/.test(str)) {
-      str = "'" + str;
-    }
-    const escaped = str.replace(/"/g, '""');
-    return `"${escaped}"`;
-  }
-
   test("escapeCsvCell protects against formula injection and quotes", () => {
     expect(escapeCsvCell('QA "Quoted"')).toBe('"QA ""Quoted"""');
-    expect(escapeCsvCell("=2+3")).toBe("\"'=2+3\"");
-    expect(escapeCsvCell("+SUM(A1)")).toBe("\"'+SUM(A1)\"");
-    expect(escapeCsvCell("-10")).toBe("\"'-10\"");
-    expect(escapeCsvCell("@test")).toBe("\"'@test\"");
+    expect(escapeCsvCell("=2+3")).toBe('"\'=2+3"');
+    expect(escapeCsvCell("+SUM(A1)")).toBe('"\'+SUM(A1)"');
+    expect(escapeCsvCell("-10")).toBe('"\'-10"');
+    expect(escapeCsvCell("@test")).toBe('"\'@test"');
     expect(escapeCsvCell("a,b")).toBe('"a,b"');
     expect(escapeCsvCell("line1\nline2")).toBe('"line1\nline2"');
   });

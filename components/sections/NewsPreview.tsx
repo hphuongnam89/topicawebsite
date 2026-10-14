@@ -29,8 +29,8 @@ export async function NewsPreview() {
               href="/tin-tuc/"
               className="font-semibold text-navy-900 transition-colors hover:text-gold-700 md:pb-2"
             >
-              <LocalizedText>Xem tất cả tin tức
-            </LocalizedText></Link>
+              <LocalizedText>Xem tất cả tin tức</LocalizedText>
+            </Link>
           </div>
         </ScrollReveal>
 
@@ -52,7 +52,9 @@ export async function NewsPreview() {
             </div>
           </ScrollReveal>
         ) : (
-          <p className="text-center text-body text-ink-600"><LocalizedText>Tin tức đang được cập nhật.</LocalizedText></p>
+          <p className="text-center text-body text-ink-600">
+            <LocalizedText>Tin tức đang được cập nhật.</LocalizedText>
+          </p>
         )}
       </Container>
     </section>

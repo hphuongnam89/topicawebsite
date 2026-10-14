@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { getArticles, getArticleBySlug } from "@/lib/db";
 import { getAllAdminArticles } from "@/lib/services/admin-content";
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const parsed = articleCreateSchema.safeParse(await request.json());
+    const parsed = articleCreateSchema.safeParse(await readBoundedJson(request, 2_097_152));
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
     if (parsed.data.status === "published")

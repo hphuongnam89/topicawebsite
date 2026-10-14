@@ -195,7 +195,15 @@ export interface DocumentRecord {
 
 export interface ContentRevisionRecord {
   id: number;
-  entity_type: "article" | "page" | "program" | "tuition_policy" | "admission_round" | "organization" | "scholarship" | "document";
+  entity_type:
+    | "article"
+    | "page"
+    | "program"
+    | "tuition_policy"
+    | "admission_round"
+    | "organization"
+    | "scholarship"
+    | "document";
   entity_id: string;
   version: number;
   title: string;

@@ -10,7 +10,7 @@ import {
   Shield,
   ShieldCheck,
   AlertCircle,
-  X
+  X,
 } from "lucide-react";
 
 interface UserItem {
@@ -26,13 +26,13 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     id: "",
     username: "",
     password: "",
     name: "",
-    role: "editor"
+    role: "editor",
   });
 
   const [saving, setSaving] = useState(false);
@@ -74,7 +74,9 @@ export default function AdminUsersPage() {
       } catch (error) {
         console.error("Error fetching users:", error);
         if (!ignore) {
-          setLoadError("Lỗi kết nối khi tải danh sách tài khoản. Vui lòng kiểm tra mạng và thử lại.");
+          setLoadError(
+            "Lỗi kết nối khi tải danh sách tài khoản. Vui lòng kiểm tra mạng và thử lại.",
+          );
         }
       } finally {
         if (!ignore) {
@@ -97,12 +99,12 @@ export default function AdminUsersPage() {
 
   const handleOpenEdit = (user: UserItem) => {
     setIsEditMode(true);
-    setFormData({ 
-      id: user.id, 
-      username: user.username, 
+    setFormData({
+      id: user.id,
+      username: user.username,
       password: "", // empty password means no change
-      name: user.name, 
-      role: user.role 
+      name: user.name,
+      role: user.role,
     });
     setError(null);
     setIsModalOpen(true);
@@ -113,17 +115,17 @@ export default function AdminUsersPage() {
       alert("Bạn không thể xóa tài khoản Quản trị viên gốc.");
       return;
     }
-    
+
     if (!window.confirm(`Bạn có chắc chắn muốn xóa người dùng "${username}"?`)) {
       return;
     }
-    
+
     try {
       const res = await fetch(`/api/admin/users?id=${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
         setUsers((prev) => prev.filter((u) => u.id !== id));
       } else {
@@ -164,11 +166,11 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-5xl mx-auto space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl flex items-center gap-3">
+          <h1 className="flex items-center gap-3 font-display text-2xl font-bold text-ink-950 sm:text-3xl">
             <Users className="h-8 w-8 text-brand-700" />
             Quản lý Tài khoản (Users)
           </h1>
@@ -178,7 +180,7 @@ export default function AdminUsersPage() {
         </div>
         <button
           onClick={handleOpenNew}
-          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 transition-all"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
         >
           <PlusCircle className="h-4 w-4" />
           <span>Thêm người dùng</span>
@@ -207,13 +209,15 @@ export default function AdminUsersPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold text-ink-500 uppercase">
               <tr>
                 <th className="px-6 py-3.5">Người dùng</th>
                 <th className="px-4 py-3.5">Vai trò</th>
-                  <th className="px-4 py-3.5 hidden sm:table-cell">Ngày tạo</th>
-                  <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
-                </tr>
+                <th className="hidden px-4 py-3.5 sm:table-cell">Ngày tạo</th>
+                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-3.5 text-right shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                  Thao tác
+                </th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
               {loading ? (
@@ -250,7 +254,7 @@ export default function AdminUsersPage() {
                 </tr>
               ) : (
                 users.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={user.id} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
                         <span className="font-semibold text-ink-950">{user.name}</span>
@@ -266,20 +270,24 @@ export default function AdminUsersPage() {
                             : "bg-slate-100 text-slate-700"
                         }`}
                       >
-                        {user.role === "admin" ? <ShieldCheck className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
+                        {user.role === "admin" ? (
+                          <ShieldCheck className="h-3 w-3" />
+                        ) : (
+                          <Shield className="h-3 w-3" />
+                        )}
                         {user.role === "admin" ? "Quản trị viên" : "Biên tập viên"}
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden sm:table-cell">
+                    <td className="hidden px-4 py-4 text-xs whitespace-nowrap text-ink-500 sm:table-cell">
                       {new Date(user.created_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                    <td className="sticky right-0 z-10 bg-white px-6 py-4 text-right whitespace-nowrap shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(user)}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-slate-100 hover:text-brand-700 transition-colors"
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-100 hover:text-brand-700"
                           title="Chỉnh sửa"
                         >
                           <Edit className="h-4 w-4" />
@@ -287,7 +295,7 @@ export default function AdminUsersPage() {
                         {user.id !== "admin_root" && (
                           <button
                             onClick={() => handleDelete(user.id, user.username)}
-                            className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                            className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                             title="Xóa người dùng"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -305,25 +313,23 @@ export default function AdminUsersPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/50 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-line-200 bg-white shadow-xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/50 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-2xl border border-line-200 bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
               <h2 className="font-display text-lg font-bold text-ink-950">
                 {isEditMode ? "Chỉnh sửa Tài khoản" : "Thêm Tài khoản mới"}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-full p-1.5 text-ink-500 hover:bg-slate-100 transition-colors"
+                className="rounded-full p-1.5 text-ink-500 transition-colors hover:bg-slate-100"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 p-6">
               {error && (
-                <div className="rounded-lg bg-error/10 p-3 text-sm text-error">
-                  {error}
-                </div>
+                <div className="rounded-lg bg-error/10 p-3 text-sm text-error">{error}</div>
               )}
 
               <div className="space-y-1">
@@ -375,20 +381,20 @@ export default function AdminUsersPage() {
                 </select>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-700 hover:bg-slate-100 transition-colors"
+                  className="rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-700 transition-colors hover:bg-slate-100"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center justify-center rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+                  className="inline-flex items-center justify-center rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
                 >
-                  {saving ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
+                  {saving ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : null}
                   Lưu tài khoản
                 </button>
               </div>

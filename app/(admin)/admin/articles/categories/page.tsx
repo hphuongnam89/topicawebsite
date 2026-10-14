@@ -1,14 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  FolderTree,
-  Plus,
-  Trash2,
-  RefreshCw,
-  AlertCircle,
-  CheckCircle,
-} from "lucide-react";
+import { FolderTree, Plus, Trash2, RefreshCw, AlertCircle, CheckCircle } from "lucide-react";
+
+import { generateSlug } from "@/lib/utils";
 
 interface CategoryItem {
   id: number;
@@ -16,18 +11,6 @@ interface CategoryItem {
   slug: string;
   description: string | null;
   article_count?: number;
-}
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[đĐ]/g, "d")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
 }
 
 export default function AdminCategoriesPage() {
@@ -135,7 +118,7 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       <div className="flex items-center gap-2">
         <FolderTree className="h-6 w-6 text-brand-700" />
         <div>
@@ -155,10 +138,10 @@ export default function AdminCategoriesPage() {
 
       {message && (
         <div
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -172,14 +155,14 @@ export default function AdminCategoriesPage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left 1 Col: Create Form */}
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs h-fit space-y-4">
-          <h2 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3">
+        <div className="h-fit space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+          <h2 className="border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
             Thêm Danh mục Mới
           </h2>
 
           <form onSubmit={handleAddCategory} className="space-y-4">
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="mb-1 block text-body-sm font-semibold text-ink-900">
                 Tên danh mục <span className="text-error">*</span>
               </label>
               <input
@@ -193,7 +176,7 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="mb-1 block text-body-sm font-semibold text-ink-900">
                 Đường dẫn tĩnh (Slug) <span className="text-error">*</span>
               </label>
               <input
@@ -207,7 +190,7 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div>
-              <label className="block text-body-sm font-semibold text-ink-900 mb-1">
+              <label className="mb-1 block text-body-sm font-semibold text-ink-900">
                 Mô tả ngắn
               </label>
               <textarea
@@ -222,9 +205,13 @@ export default function AdminCategoriesPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white hover:bg-brand-800 disabled:opacity-70 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-700 py-2.5 text-body-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-70"
             >
-              {submitting ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              {submitting ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
               <span>{submitting ? "Đang thêm..." : "Thêm danh mục"}</span>
             </button>
           </form>
@@ -250,7 +237,7 @@ export default function AdminCategoriesPage() {
           )}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-body-sm">
-              <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+              <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold text-ink-500 uppercase">
                 <tr>
                   <th className="px-6 py-3.5">Tên danh mục</th>
                   <th className="px-4 py-3.5">Đường dẫn (Slug)</th>
@@ -293,16 +280,16 @@ export default function AdminCategoriesPage() {
                   </tr>
                 ) : (
                   categories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={cat.id} className="transition-colors hover:bg-slate-50/70">
                       <td className="px-6 py-4 font-semibold text-ink-950">
                         {cat.name}
                         {cat.description && (
-                          <p className="text-xs font-normal text-ink-500 mt-0.5">{cat.description}</p>
+                          <p className="mt-0.5 text-xs font-normal text-ink-500">
+                            {cat.description}
+                          </p>
                         )}
                       </td>
-                      <td className="px-4 py-4 font-mono text-xs text-ink-600">
-                        /{cat.slug}
-                      </td>
+                      <td className="px-4 py-4 font-mono text-xs text-ink-600">/{cat.slug}</td>
                       <td className="px-4 py-4 text-center">
                         <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                           {cat.article_count || 0}
@@ -312,7 +299,7 @@ export default function AdminCategoriesPage() {
                         <button
                           onClick={() => handleDelete(cat.id, cat.name)}
                           disabled={deletingId === cat.id}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
                           title="Xóa danh mục"
                         >
                           <Trash2 className="h-4 w-4" />

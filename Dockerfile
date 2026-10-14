@@ -36,16 +36,17 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/lib ./lib
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY package.json package-lock.json ./
 
-RUN mkdir -p /app/data /app/public/uploads /app/seed-data && chown -R nextjs:nodejs /app/data /app/public/uploads /app/seed-data
+RUN npm ci --omit=dev
+
+RUN mkdir -p /app/data /app/public/uploads && chown -R nextjs:nodejs /app/data /app/public/uploads
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 
 USER root
 
@@ -54,4 +55,4 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["sh", "-c", "if [ ! -f /app/data/topica.db ]; then if [ -f /app/seed-data/topica.db ]; then cp /app/seed-data/topica.db /app/data/topica.db; else npm run db:migrate; fi; fi; chown -R nextjs:nodejs /app/data /app/public/uploads; su nextjs -s /bin/sh -c 'PORT=3000 npm start'"]
+CMD ["sh", "-c", "if [ ! -f /app/data/topica.db ]; then npm run db:migrate; fi; chown -R nextjs:nodejs /app/data /app/public/uploads; su nextjs -s /bin/sh -c 'PORT=3000 npm start'"]

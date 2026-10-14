@@ -118,8 +118,12 @@ describe("Task R13: Tuyển sinh và Học phí (Mobile Cards & Bảng biểu ph
           name: "Mẫu Bảng điểm tốt nghiệp Cử nhân — Trường Đại học Phú Xuân",
         }),
       ).toBeInTheDocument();
-      expect(screen.queryByRole("link", { name: /xem tài liệu|tải xuống/i })).not.toBeInTheDocument();
-      expect(screen.queryByText(/Xem nguồn học phí và ưu đãi trên website Topica/)).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: /xem tài liệu|tải xuống/i }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/Xem nguồn học phí và ưu đãi trên website Topica/),
+      ).not.toBeInTheDocument();
       expect(screen.queryByText(/Phiên bản 1\.0/)).not.toBeInTheDocument();
       const documentCards = container.querySelectorAll("figure");
       expect(documentCards).toHaveLength(2);

@@ -25,20 +25,20 @@ Toàn bộ tokens được khai báo tập trung và tối ưu trong `app/design
 
 ### 2.1. Bảng màu (Color Palette)
 
-| Phân loại | Tên Token | Mã màu Hex | Ứng dụng cụ thể |
-|---|---|---|---|
-| **Navy chính** | `--color-navy-900` | `#00264D` | Header, Footer, tiêu đề học thuật, nút chính trên nền sáng |
-| **Navy phụ** | `--color-navy-secondary` | `#16466B` | Mảng phụ, icon chuyên đề, liên kết thứ cấp |
-| **Navy đậm** | `--color-navy-950` | `#001A3D` | Khối tương phản cao, nền tối học thuật |
-| **Gold Accent** | `--color-gold-500` | `#B78744` | Điểm nhấn logo, CTA Đăng ký xét tuyển, sao đánh giá |
-| **Gold Dark (AA)** | `--color-gold-700` | `#9A6F33` | Chữ vàng trên nền sáng đạt độ tương phản WCAG AA |
-| **Nền chính** | `--color-canvas` | `#FFFFFF` | Nền đọc văn bản, vùng thở |
-| **Nền phân đoạn** | `--color-surface-subtle` | `#F3F6FA` | Khối nội dung phụ, bảng biểu, thẻ thống kê |
-| **Nền giấy ấm** | `--color-paper` | `#F7F5F1` | Nền tài liệu, trích dẫn, khối học vụ |
-| **Chữ tiêu đề** | `--color-ink-950` | `#11100E` | H1, H2, H3 có độ tương phản tuyệt đối |
-| **Chữ nội dung** | `--color-ink-body` | `#243447` | Văn bản dài (dễ đọc, giảm mỏi mắt) |
-| **Chữ mô tả** | `--color-ink-600` | `#625E58` | Mô tả phụ, ngày đăng, chú thích |
-| **Đường kẻ / Viền** | `--color-line-200` | `#DDD8CF` | Viền thẻ, đường ngăn cách phần tử |
+| Phân loại           | Tên Token                | Mã màu Hex | Ứng dụng cụ thể                                            |
+| ------------------- | ------------------------ | ---------- | ---------------------------------------------------------- |
+| **Navy chính**      | `--color-navy-900`       | `#00264D`  | Header, Footer, tiêu đề học thuật, nút chính trên nền sáng |
+| **Navy phụ**        | `--color-navy-secondary` | `#16466B`  | Mảng phụ, icon chuyên đề, liên kết thứ cấp                 |
+| **Navy đậm**        | `--color-navy-950`       | `#001A3D`  | Khối tương phản cao, nền tối học thuật                     |
+| **Gold Accent**     | `--color-gold-500`       | `#B78744`  | Điểm nhấn logo, CTA Đăng ký xét tuyển, sao đánh giá        |
+| **Gold Dark (AA)**  | `--color-gold-700`       | `#9A6F33`  | Chữ vàng trên nền sáng đạt độ tương phản WCAG AA           |
+| **Nền chính**       | `--color-canvas`         | `#FFFFFF`  | Nền đọc văn bản, vùng thở                                  |
+| **Nền phân đoạn**   | `--color-surface-subtle` | `#F3F6FA`  | Khối nội dung phụ, bảng biểu, thẻ thống kê                 |
+| **Nền giấy ấm**     | `--color-paper`          | `#F7F5F1`  | Nền tài liệu, trích dẫn, khối học vụ                       |
+| **Chữ tiêu đề**     | `--color-ink-950`        | `#11100E`  | H1, H2, H3 có độ tương phản tuyệt đối                      |
+| **Chữ nội dung**    | `--color-ink-body`       | `#243447`  | Văn bản dài (dễ đọc, giảm mỏi mắt)                         |
+| **Chữ mô tả**       | `--color-ink-600`        | `#625E58`  | Mô tả phụ, ngày đăng, chú thích                            |
+| **Đường kẻ / Viền** | `--color-line-200`       | `#DDD8CF`  | Viền thẻ, đường ngăn cách phần tử                          |
 
 ### 2.2. Typography (Chữ & Bố cục văn bản)
 
@@ -107,13 +107,13 @@ Tất cả thành phần được đóng gói chuẩn module TypeScript, hỗ tr
 
 ## 5. Kết quả Kiểm thử & Nghiệm thu Kỹ thuật
 
-| Tiêu chí | Kết quả | Trạng thái |
-|---|---|---|
-| **TypeScript Typecheck** | `npx tsc --noEmit` hoàn tất với **0 lỗi** | ✅ Đạt |
-| **Unit Tests Vitest** | **22/22 tests passed** (Bổ sung 10 tests mới cho Design System) | ✅ Đạt |
-| **SEO & Routing Check** | **8/8 routes trả về 200 OK** (`test:seo`) | ✅ Đạt |
-| **Design System URL** | `http://localhost:3000/design-system` trả về **200 OK** | ✅ Đạt |
-| **Tiêu chuẩn màu & tiếp cận** | Tương phản chữ/nền đạt chuẩn WCAG AA; không phụ thuộc màu đơn lẻ | ✅ Đạt |
+| Tiêu chí                      | Kết quả                                                          | Trạng thái |
+| ----------------------------- | ---------------------------------------------------------------- | ---------- |
+| **TypeScript Typecheck**      | `npx tsc --noEmit` hoàn tất với **0 lỗi**                        | ✅ Đạt     |
+| **Unit Tests Vitest**         | **22/22 tests passed** (Bổ sung 10 tests mới cho Design System)  | ✅ Đạt     |
+| **SEO & Routing Check**       | **8/8 routes trả về 200 OK** (`test:seo`)                        | ✅ Đạt     |
+| **Design System URL**         | `http://localhost:3000/design-system` trả về **200 OK**          | ✅ Đạt     |
+| **Tiêu chuẩn màu & tiếp cận** | Tương phản chữ/nền đạt chuẩn WCAG AA; không phụ thuộc màu đơn lẻ | ✅ Đạt     |
 
 ---
 

@@ -34,31 +34,51 @@ export function EmptyState({
       role="status"
       {...props}
     >
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-paper text-navy-800 shadow-xs mb-4">
-        <LocalizedText>{icon || <SearchX className="h-7 w-7 text-navy-800" aria-hidden="true" />}</LocalizedText>
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-paper text-navy-800 shadow-xs">
+        <LocalizedText>
+          {icon || <SearchX className="h-7 w-7 text-navy-800" aria-hidden="true" />}
+        </LocalizedText>
       </div>
       <h3 className="font-serif text-h3 font-bold text-ink-950 sm:text-2xl">
         <LocalizedText>{title}</LocalizedText>
       </h3>
-      <LocalizedText>{description && (
-        <p className="mt-2 max-w-md text-body-sm text-ink-600 leading-relaxed sm:text-body">
-          <LocalizedText>{description}</LocalizedText>
-        </p>
-      )}</LocalizedText>
-      <LocalizedText>{(actionHref || secondaryActionHref) && (
-        <div className="mt-6 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
-          <LocalizedText>{actionHref && actionLabel && (
-            <ButtonLink href={actionHref} variant="primary" size="default" className="w-full justify-center">
-              <LocalizedText>{actionLabel}</LocalizedText>
-            </ButtonLink>
-          )}</LocalizedText>
-          <LocalizedText>{secondaryActionHref && secondaryActionLabel && (
-            <ButtonLink href={secondaryActionHref} variant="outline" size="default" className="w-full justify-center">
-              <LocalizedText>{secondaryActionLabel}</LocalizedText>
-            </ButtonLink>
-          )}</LocalizedText>
-        </div>
-      )}</LocalizedText>
+      <LocalizedText>
+        {description && (
+          <p className="mt-2 max-w-md text-body-sm leading-relaxed text-ink-600 sm:text-body">
+            <LocalizedText>{description}</LocalizedText>
+          </p>
+        )}
+      </LocalizedText>
+      <LocalizedText>
+        {(actionHref || secondaryActionHref) && (
+          <div className="mt-6 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
+            <LocalizedText>
+              {actionHref && actionLabel && (
+                <ButtonLink
+                  href={actionHref}
+                  variant="primary"
+                  size="default"
+                  className="w-full justify-center"
+                >
+                  <LocalizedText>{actionLabel}</LocalizedText>
+                </ButtonLink>
+              )}
+            </LocalizedText>
+            <LocalizedText>
+              {secondaryActionHref && secondaryActionLabel && (
+                <ButtonLink
+                  href={secondaryActionHref}
+                  variant="outline"
+                  size="default"
+                  className="w-full justify-center"
+                >
+                  <LocalizedText>{secondaryActionLabel}</LocalizedText>
+                </ButtonLink>
+              )}
+            </LocalizedText>
+          </div>
+        )}
+      </LocalizedText>
     </div>
   );
 }

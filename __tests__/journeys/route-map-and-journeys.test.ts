@@ -29,7 +29,8 @@ describe("Task R07: Route Map, IA và 6 Hành trình Quyết định", () => {
       const programsGroup = navigationData.primary.find((g) => g.id === "programs");
       expect(programsGroup).toBeDefined();
 
-      const allProgramHrefs = programsGroup?.columns.flatMap((c) => c.items.map((i) => i.href)) ?? [];
+      const allProgramHrefs =
+        programsGroup?.columns.flatMap((c) => c.items.map((i) => i.href)) ?? [];
       programs.forEach((prog) => {
         expect(allProgramHrefs).toContain(prog.href);
       });
@@ -63,7 +64,7 @@ describe("Task R07: Route Map, IA và 6 Hành trình Quyết định", () => {
         "quan-tri-kinh-doanh": "ba",
         "quan-tri-du-lich": "tourism",
         "du-lich-lu-hanh": "tourism",
-        "cntt": "it",
+        cntt: "it",
         "tieng-anh": "english",
         "tieng-trung": "chinese",
       };
@@ -124,7 +125,8 @@ describe("Task R07: Route Map, IA và 6 Hành trình Quyết định", () => {
     test("Hành trình 3: Chi phí minh bạch 600k/TC và Học bổng", () => {
       const tuitionHref = "/tuyen-sinh/hoc-phi-hoc-bong/";
       const navAdmissions = navigationData.primary.find((g) => g.id === "admissions");
-      const admissionsLinks = navAdmissions?.columns.flatMap((c) => c.items.map((i) => i.href)) ?? [];
+      const admissionsLinks =
+        navAdmissions?.columns.flatMap((c) => c.items.map((i) => i.href)) ?? [];
 
       expect(admissionsLinks).toContain(tuitionHref);
     });

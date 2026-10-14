@@ -5,11 +5,7 @@ import { redirect } from "next/navigation";
 import { PageEditorForm } from "@/components/admin/PageEditorForm";
 import { PageRecord } from "@/lib/db/types";
 
-export default async function EditPagePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function EditPagePage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/admin/login");
@@ -27,7 +23,7 @@ export default async function EditPagePage({
   }
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl p-6 lg:p-10">
       <PageEditorForm
         initialData={{
           id: pageRecord.id,

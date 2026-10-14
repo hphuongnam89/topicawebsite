@@ -112,4 +112,3 @@ Progress thay đổi và lý do (nếu có):
 Next action cụ thể và file cần đọc:
 Automation còn active/đã paused:
 ```
-

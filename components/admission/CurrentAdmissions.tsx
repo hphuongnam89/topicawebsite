@@ -17,7 +17,8 @@ export function CurrentAdmissions() {
   if (rounds.length === 0) return null;
 
   return (
-    <LocalizedElement as="section"
+    <LocalizedElement
+      as="section"
       className="border-b border-line-200 bg-surface-subtle/60 py-5 sm:py-6"
       aria-label="Thông tin kỳ tuyển sinh"
     >
@@ -31,27 +32,33 @@ export function CurrentAdmissions() {
               >
                 <div>
                   <div className="mb-2 flex items-center gap-2">
-                    <Badge variant="navy"><LocalizedText>Kỳ tuyển sinh 2026</LocalizedText></Badge>
+                    <Badge variant="navy">
+                      <LocalizedText>Kỳ tuyển sinh 2026</LocalizedText>
+                    </Badge>
                     <span className="inline-flex items-center gap-1 text-xs font-semibold text-success">
-                      <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
-                      <LocalizedText>Đang nhận hồ sơ
-                    </LocalizedText></span>
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-success" />
+                      <LocalizedText>Đang nhận hồ sơ</LocalizedText>
+                    </span>
                   </div>
                   <h2 className="font-serif text-lg font-bold text-navy-950 sm:text-xl">
                     <LocalizedText>{round.name}</LocalizedText>
                   </h2>
                   <p className="mt-1 text-body-sm text-ink-600">
-                    <LocalizedText>Hạn nộp hồ sơ xét tuyển:</LocalizedText><LocalizedText>{" "}</LocalizedText>
-                    <strong className="text-ink-900"><LocalizedText>{formatDateTimeGMT7(round.deadlineAt)}</LocalizedText></strong> <LocalizedText>(giờ Việt Nam)
-                  </LocalizedText></p>
+                    <LocalizedText>Hạn nộp hồ sơ xét tuyển:</LocalizedText>
+                    <LocalizedText> </LocalizedText>
+                    <strong className="text-ink-900">
+                      <LocalizedText>{formatDateTimeGMT7(round.deadlineAt)}</LocalizedText>
+                    </strong>{" "}
+                    <LocalizedText>(giờ Việt Nam)</LocalizedText>
+                  </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-line-100 flex items-center justify-between">
+                <div className="mt-4 flex items-center justify-between border-t border-line-100 pt-3">
                   <Link
                     className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-navy-800 hover:text-navy-950 hover:underline"
                     href="/tuyen-sinh/"
                   >
-                    <LocalizedText>Xem điều kiện và hướng dẫn
-                    </LocalizedText><ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    <LocalizedText>Xem điều kiện và hướng dẫn</LocalizedText>
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
               </div>

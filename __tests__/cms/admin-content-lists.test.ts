@@ -13,10 +13,14 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-12T11:00:00.000Z"));
   const db = getDb();
-  db.exec("DELETE FROM content_revisions;DELETE FROM audit_logs;DELETE FROM articles;DELETE FROM pages;DELETE FROM users;");
+  db.exec(
+    "DELETE FROM content_revisions;DELETE FROM audit_logs;DELETE FROM articles;DELETE FROM pages;DELETE FROM users;",
+  );
   cmsDomainFixture.up(db);
   for (const role of ["editor", "admin"])
-    db.prepare("INSERT INTO users(id,username,name,role,password_hash,created_at)VALUES(?,?,?,?,?,?)").run(role, role, role, role, "fixture-only", new Date().toISOString());
+    db.prepare(
+      "INSERT INTO users(id,username,name,role,password_hash,created_at)VALUES(?,?,?,?,?,?)",
+    ).run(role, role, role, role, "fixture-only", new Date().toISOString());
 });
 afterEach(() => vi.useRealTimers());
 
@@ -25,12 +29,22 @@ test("admin article list includes revision-only entities", () => {
     entityType: "article",
     entityId: "qa-revision-article",
     title: "QA revision article",
-    payload: { title: "QA revision article", slug: "qa-revision-article", content_html: "<p>Draft</p>" },
+    payload: {
+      title: "QA revision article",
+      slug: "qa-revision-article",
+      content_html: "<p>Draft</p>",
+    },
     actorId: "editor",
     actorName: "editor",
   });
   expect(getRevisionOnlyArticles()).toEqual(
-    expect.arrayContaining([expect.objectContaining({ id: "qa-revision-article", title: "QA revision article", status: "draft" })]),
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: "qa-revision-article",
+        title: "QA revision article",
+        status: "draft",
+      }),
+    ]),
   );
 });
 
@@ -90,7 +104,13 @@ test("admin page list includes revision-only entities and latest state", () => {
     actorName: "editor",
   });
   expect(getRevisionOnlyPages()).toEqual(
-    expect.arrayContaining([expect.objectContaining({ id: "qa-revision-page", title: "QA revision page", status: "draft" })]),
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: "qa-revision-page",
+        title: "QA revision page",
+        status: "draft",
+      }),
+    ]),
   );
 });
 
@@ -157,7 +177,11 @@ test("CMS-07: getAdminArticleStats counts both legacy and workflow published art
     entityType: "article",
     entityId: "workflow-article",
     title: "Workflow article",
-    payload: { title: "Workflow article", slug: "workflow-article", content_html: "<p>Workflow</p>" },
+    payload: {
+      title: "Workflow article",
+      slug: "workflow-article",
+      content_html: "<p>Workflow</p>",
+    },
     actorId: "editor",
     actorName: "editor",
   });

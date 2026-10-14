@@ -29,11 +29,15 @@ export function CampusSection({
           {campuses.map((campus, index) => (
             <ScrollReveal key={`${campus.city}-${campus.address}`} delay={index * 0.1}>
               <article className="flex h-full flex-col rounded-lg border border-line-200 bg-canvas p-5 transition-all hover:border-gold-400 hover:shadow-md sm:p-6">
-                <h3 className="font-sans text-body-lg font-bold text-ink-950"><LocalizedText>{campus.city}</LocalizedText></h3>
+                <h3 className="font-sans text-body-lg font-bold text-ink-950">
+                  <LocalizedText>{campus.city}</LocalizedText>
+                </h3>
 
                 <div className="mt-2 flex items-start gap-2">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-500" />
-                  <span className="text-body-sm text-ink-600"><LocalizedText>{campus.address}</LocalizedText></span>
+                  <span className="text-body-sm text-ink-600">
+                    <LocalizedText>{campus.address}</LocalizedText>
+                  </span>
                 </div>
               </article>
             </ScrollReveal>
@@ -44,7 +48,9 @@ export function CampusSection({
         <div className="mt-8 flex flex-col items-center justify-center gap-4 text-body-sm text-ink-600 sm:flex-row sm:flex-wrap sm:gap-6">
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4 text-gold-500" />
-            <span><LocalizedText>Hotline tư vấn:</LocalizedText></span>
+            <span>
+              <LocalizedText>Hotline tư vấn:</LocalizedText>
+            </span>
             <a
               href={contactChannels.admissionsHotline.href}
               className="font-bold text-navy-900 transition-colors hover:text-gold-700 focus-visible:outline-navy-500"
@@ -54,7 +60,9 @@ export function CampusSection({
           </div>
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4 text-gold-500" />
-            <span><LocalizedText>Tư vấn nhanh:</LocalizedText></span>
+            <span>
+              <LocalizedText>Tư vấn nhanh:</LocalizedText>
+            </span>
             <a
               href={contactChannels.admissionsDirect.href}
               className="font-bold text-navy-900 transition-colors hover:text-gold-700 focus-visible:outline-navy-500"

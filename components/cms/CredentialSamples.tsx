@@ -17,8 +17,10 @@ export function CredentialSamples() {
     <div className="space-y-8">
       <div className="mx-auto max-w-2xl text-center">
         <p className="font-sans text-body-lg text-ink-700">
-          <LocalizedText>Mẫu phôi bằng và mẫu bảng điểm áp dụng cho phương thức đào tạo từ xa.
-        </LocalizedText></p>
+          <LocalizedText>
+            Mẫu phôi bằng và mẫu bảng điểm áp dụng cho phương thức đào tạo từ xa.
+          </LocalizedText>
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

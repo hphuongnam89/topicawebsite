@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { getArticleById, deleteArticle, getDb } from "@/lib/db";
 import { revalidatePath } from "next/cache";
@@ -35,7 +36,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "ID không hợp lệ" }, { status: 400 });
 
   try {
-    const parsed = articleUpdateSchema.safeParse(await request.json().catch(() => null));
+    const parsed = articleUpdateSchema.safeParse(
+      await readBoundedJson(request, 2_097_152).catch(() => null),
+    );
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
 

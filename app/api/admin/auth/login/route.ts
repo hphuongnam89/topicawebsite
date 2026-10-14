@@ -25,11 +25,12 @@ export async function POST(request: Request) {
     } catch {
       return NextResponse.json(
         { error: "Dữ liệu đăng nhập không hợp lệ. Vui lòng thử lại." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { username, password } = (body && typeof body === "object" ? body as Record<string, unknown> : {});
+    const { username, password } =
+      body && typeof body === "object" ? (body as Record<string, unknown>) : {};
 
     if (
       typeof username !== "string" ||
@@ -41,31 +42,37 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.json(
         { error: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu hợp lệ." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const key = clientKey(request, username.trim());
     const limitStatus = loginLimiter.check(key);
     if (!limitStatus.allowed) {
-      return NextResponse.json({ error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." }, {
-        status: 429,
-        headers: { "Retry-After": String(limitStatus.retryAfterSeconds) },
-      });
+      return NextResponse.json(
+        { error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limitStatus.retryAfterSeconds) },
+        },
+      );
     }
 
     const user = getUserByUsername(username.trim());
     if (!user) {
       const recorded = loginLimiter.increment(key);
       if (!recorded.allowed) {
-        return NextResponse.json({ error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." }, {
-          status: 429,
-          headers: { "Retry-After": String(recorded.retryAfterSeconds) },
-        });
+        return NextResponse.json(
+          { error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." },
+          {
+            status: 429,
+            headers: { "Retry-After": String(recorded.retryAfterSeconds) },
+          },
+        );
       }
       return NextResponse.json(
         { error: "Tên đăng nhập hoặc mật khẩu không chính xác." },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -73,14 +80,17 @@ export async function POST(request: Request) {
     if (!isValid) {
       const recorded = loginLimiter.increment(key);
       if (!recorded.allowed) {
-        return NextResponse.json({ error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." }, {
-          status: 429,
-          headers: { "Retry-After": String(recorded.retryAfterSeconds) },
-        });
+        return NextResponse.json(
+          { error: "Quá nhiều lần đăng nhập thất bại. Vui lòng thử lại sau." },
+          {
+            status: 429,
+            headers: { "Retry-After": String(recorded.retryAfterSeconds) },
+          },
+        );
       }
       return NextResponse.json(
         { error: "Tên đăng nhập hoặc mật khẩu không chính xác." },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -104,7 +114,7 @@ export async function POST(request: Request) {
       name: user.name,
       role: user.role,
     });
-    
+
     response.cookies.set("topica_admin_session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -118,7 +128,7 @@ export async function POST(request: Request) {
     console.error("Login error:", error);
     return NextResponse.json(
       { error: "Đã xảy ra lỗi máy chủ trong quá trình đăng nhập." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

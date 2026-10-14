@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { sanitizeWordPressHtml } from "@/lib/cms/html";
@@ -49,22 +50,12 @@ export interface ArticleFormData {
   updated_at?: string;
 }
 
+import { generateSlug } from "@/lib/utils";
+
 interface ArticleEditorFormProps {
   initialData?: ArticleFormData;
   categories: CategoryOption[];
   isEdit?: boolean;
-}
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[đĐ]/g, "d")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
 }
 
 export function ArticleEditorForm({
@@ -75,26 +66,66 @@ export function ArticleEditorForm({
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<ArticleFormData>(
-    initialData || {
-      title: "",
-      slug: "",
-      excerpt: "",
-      content_html: "",
-      featured_image: "",
-      category_id: categories.length > 0 ? categories[0].id : null,
-      tags: "",
-      author_name: "Ban Biên Tập Topica",
-      is_featured: false,
-      status: "draft",
-      seo_title: "",
-      seo_description: "",
-      published_at: new Date().toISOString().slice(0, 16),
-    },
+  const [formData, setFormDataRaw] = useState<ArticleFormData>(
+    initialData
+      ? {
+          ...initialData,
+          excerpt:
+            initialData.excerpt === "null" || !initialData.excerpt ? "" : initialData.excerpt,
+          featured_image:
+            initialData.featured_image === "null" || !initialData.featured_image
+              ? ""
+              : initialData.featured_image,
+          tags: initialData.tags === "null" || !initialData.tags ? "" : initialData.tags,
+          seo_title:
+            initialData.seo_title === "null" || !initialData.seo_title ? "" : initialData.seo_title,
+          seo_description:
+            initialData.seo_description === "null" || !initialData.seo_description
+              ? ""
+              : initialData.seo_description,
+        }
+      : {
+          title: "",
+          slug: "",
+          excerpt: "",
+          content_html: "",
+          featured_image: "",
+          category_id: categories.length > 0 ? categories[0].id : null,
+          tags: "",
+          author_name: "Ban Biên Tập Topica",
+          is_featured: false,
+          status: "draft",
+          seo_title: "",
+          seo_description: "",
+          published_at: new Date().toISOString().slice(0, 16),
+        },
   );
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
+  const setFormData: typeof setFormDataRaw = (updater) => {
+    setDirty(true);
+    setFormDataRaw(updater);
+  };
+
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
+    };
+  }, [dirty]);
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -167,6 +198,8 @@ export function ArticleEditorForm({
       }
 
       setSuccess(isEdit ? "Cập nhật bài viết thành công!" : "Tạo bài viết mới thành công!");
+      setDirty(false);
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
       setTimeout(() => {
         router.push("/admin/articles");
         router.refresh();

@@ -73,15 +73,33 @@ export const programSchema = z.object({
   image: z.string().nullable().optional(),
   language: z.string().nullable().optional(),
   course_count: z.string().nullable().optional(),
-  careers: z.union([z.string(), z.array(z.string())]).nullable().optional(),
-  curriculum: z.union([z.string(), z.array(z.any())]).nullable().optional(),
-  semesters: z.union([z.string(), z.array(z.any())]).nullable().optional(),
-  outcomes: z.union([z.string(), z.array(z.any())]).nullable().optional(),
+  careers: z
+    .union([z.string(), z.array(z.string())])
+    .nullable()
+    .optional(),
+  curriculum: z
+    .union([z.string(), z.array(z.any())])
+    .nullable()
+    .optional(),
+  semesters: z
+    .union([z.string(), z.array(z.any())])
+    .nullable()
+    .optional(),
+  outcomes: z
+    .union([z.string(), z.array(z.any())])
+    .nullable()
+    .optional(),
   admissions: z.string().nullable().optional(),
   graduation: z.string().nullable().optional(),
   further_study: z.string().nullable().optional(),
-  confirmations: z.union([z.string(), z.array(z.string())]).nullable().optional(),
-  faqs: z.union([z.string(), z.array(z.any())]).nullable().optional(),
+  confirmations: z
+    .union([z.string(), z.array(z.string())])
+    .nullable()
+    .optional(),
+  faqs: z
+    .union([z.string(), z.array(z.any())])
+    .nullable()
+    .optional(),
   version: z.number().int().min(1).default(1),
   created_at: isoDateString.optional(),
   updated_at: isoDateString.optional(),

@@ -6,9 +6,7 @@ type AuthResult = { user: SessionUser } | { response: NextResponse };
 
 export async function requireUser(): Promise<AuthResult> {
   const user = await getCurrentUser();
-  return user
-    ? { user }
-    : { response: apiError("Unauthorized", 401, "UNAUTHORIZED") };
+  return user ? { user } : { response: apiError("Unauthorized", 401, "UNAUTHORIZED") };
 }
 
 export async function requireAdmin(): Promise<AuthResult> {

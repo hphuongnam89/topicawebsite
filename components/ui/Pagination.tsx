@@ -70,7 +70,8 @@ export function Pagination({
   };
 
   return (
-    <LocalizedElement as="nav"
+    <LocalizedElement
+      as="nav"
       aria-label="Điều hướng trang"
       className={cn("flex flex-wrap items-center justify-center gap-1 sm:gap-2", className)}
       {...props}
@@ -111,7 +112,9 @@ function PaginationEllipsis() {
   return (
     <span className="flex h-9 w-9 items-center justify-center text-ink-400 sm:h-10 sm:w-10">
       <MoreHorizontal className="h-4 w-4" />
-      <span className="sr-only"><LocalizedText>Thêm trang</LocalizedText></span>
+      <span className="sr-only">
+        <LocalizedText>Thêm trang</LocalizedText>
+      </span>
     </span>
   );
 }
@@ -130,10 +133,11 @@ function PaginationNavButton({
 
   if (disabled || !href) {
     return (
-      <LocalizedElement as="button"
+      <LocalizedElement
+        as="button"
         disabled
         aria-label={label}
-        className="text-ink-300 flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg border border-line-200 bg-paper sm:h-10 sm:w-10"
+        className="flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg border border-line-200 bg-paper text-ink-300 sm:h-10 sm:w-10"
       >
         <Icon className="h-5 w-5" />
       </LocalizedElement>

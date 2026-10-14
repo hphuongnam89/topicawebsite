@@ -103,24 +103,45 @@ export default async function NewsHomepage({ searchParams }: Props) {
         )}
 
         {/* Search Results Summary */}
-        <LocalizedText>{(search || category) && (
-          <div className="mb-8 text-body text-ink-600">
-            <LocalizedText>Tìm thấy </LocalizedText><span className="text-ink-900 font-bold">{articles.length}</span> <LocalizedText>kết quả
-            </LocalizedText><LocalizedText>{search && (
-              <span>
-                <LocalizedText>{" "}</LocalizedText>
-                <LocalizedText>cho từ khóa &quot;</LocalizedText><span className="text-ink-900 font-bold"><LocalizedText>{search}</LocalizedText></span><LocalizedText>&quot;
-              </LocalizedText></span>
-            )}</LocalizedText>
-            <LocalizedText>{category && <span> <LocalizedText>trong chuyên mục này</LocalizedText></span>}</LocalizedText>
-          </div>
-        )}</LocalizedText>
+        <LocalizedText>
+          {(search || category) && (
+            <div className="mb-8 text-body text-ink-600">
+              <LocalizedText>Tìm thấy </LocalizedText>
+              <span className="font-bold text-ink-900">{articles.length}</span>{" "}
+              <LocalizedText>kết quả</LocalizedText>
+              <LocalizedText>
+                {search && (
+                  <span>
+                    <LocalizedText> </LocalizedText>
+                    <LocalizedText>cho từ khóa &quot;</LocalizedText>
+                    <span className="font-bold text-ink-900">
+                      <LocalizedText>{search}</LocalizedText>
+                    </span>
+                    <LocalizedText>&quot;</LocalizedText>
+                  </span>
+                )}
+              </LocalizedText>
+              <LocalizedText>
+                {category && (
+                  <span>
+                    {" "}
+                    <LocalizedText>trong chuyên mục này</LocalizedText>
+                  </span>
+                )}
+              </LocalizedText>
+            </div>
+          )}
+        </LocalizedText>
 
         {/* Articles Grid */}
         {cmsUnavailable ? (
           <div className="rounded-lg border border-line-200 bg-paper px-6 py-12 text-center">
-            <h2 className="font-display text-h3 text-ink-950"><LocalizedText>Tin tức tạm thời chưa khả dụng</LocalizedText></h2>
-            <p className="mt-2 text-body text-ink-600"><LocalizedText>Vui lòng quay lại sau.</LocalizedText></p>
+            <h2 className="font-display text-h3 text-ink-950">
+              <LocalizedText>Tin tức tạm thời chưa khả dụng</LocalizedText>
+            </h2>
+            <p className="mt-2 text-body text-ink-600">
+              <LocalizedText>Vui lòng quay lại sau.</LocalizedText>
+            </p>
           </div>
         ) : articles.length > 0 ? (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

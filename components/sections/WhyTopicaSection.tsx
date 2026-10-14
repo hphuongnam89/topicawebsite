@@ -91,23 +91,29 @@ function SectionHeader() {
     <header className="max-w-4xl pb-12 lg:pb-16">
       <ScrollReveal>
         <p className="text-body-sm font-semibold tracking-[0.12em] text-gold-700 uppercase">
-          <LocalizedText>Lý do để bạn tự tin bắt đầu
-        </LocalizedText></p>
+          <LocalizedText>Lý do để bạn tự tin bắt đầu</LocalizedText>
+        </p>
       </ScrollReveal>
       <ScrollReveal delay={0.06}>
         <h2
           id="why-topica-title"
           className="mt-5 font-display text-[clamp(2.125rem,5vw,4rem)] leading-[1.12] font-semibold tracking-[-0.025em] text-ink-950"
         >
-          <span className="block"><LocalizedText>Học linh hoạt hôm nay.</LocalizedText></span>
-          <span className="block text-navy-900"><LocalizedText>Vững vàng sự nghiệp ngày mai.</LocalizedText></span>
+          <span className="block">
+            <LocalizedText>Học linh hoạt hôm nay.</LocalizedText>
+          </span>
+          <span className="block text-navy-900">
+            <LocalizedText>Vững vàng sự nghiệp ngày mai.</LocalizedText>
+          </span>
         </h2>
       </ScrollReveal>
       <ScrollReveal delay={0.18}>
         <p className="mt-6 max-w-[65ch] text-body-lg text-ink-600">
-          <LocalizedText>Topica mang đến lộ trình đại học từ xa được thiết kế cho người bận rộn, với trải nghiệm
-          học tập hiện đại và sự đồng hành xuyên suốt.
-        </LocalizedText></p>
+          <LocalizedText>
+            Topica mang đến lộ trình đại học từ xa được thiết kế cho người bận rộn, với trải nghiệm
+            học tập hiện đại và sự đồng hành xuyên suốt.
+          </LocalizedText>
+        </p>
       </ScrollReveal>
     </header>
   );
@@ -116,7 +122,8 @@ function SectionHeader() {
 function CardVisual({ visual }: { visual: BenefitVisual }) {
   if (visual === "learning-flow") {
     return (
-      <LocalizedElement as="ol"
+      <LocalizedElement
+        as="ol"
         aria-label="Lộ trình học tập trực tuyến"
         className="mt-8 grid grid-cols-1 gap-4 border-t border-line-200 pt-6 sm:grid-cols-4 sm:gap-x-5 sm:gap-y-6"
       >
@@ -125,7 +132,9 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
             <span className="block text-body-sm font-semibold text-navy-900">
               <LocalizedText>{String(index + 1).padStart(2, "0")}</LocalizedText>
             </span>
-            <span className="mt-1 block text-body-sm font-medium text-ink-800"><LocalizedText>{step}</LocalizedText></span>
+            <span className="mt-1 block text-body-sm font-medium text-ink-800">
+              <LocalizedText>{step}</LocalizedText>
+            </span>
             {index < learningSteps.length - 1 && (
               <ArrowRight
                 aria-hidden="true"
@@ -143,8 +152,10 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
       <div className="mt-8 flex items-start gap-3 border-t border-line-200 pt-5">
         <BadgeCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gold-600" />
         <p className="text-body-sm text-ink-600">
-          <LocalizedText>Thông tin công nhận và điều kiện chương trình được công khai minh bạch.
-        </LocalizedText></p>
+          <LocalizedText>
+            Thông tin công nhận và điều kiện chương trình được công khai minh bạch.
+          </LocalizedText>
+        </p>
       </div>
     );
   }
@@ -156,9 +167,14 @@ function CardVisual({ visual }: { visual: BenefitVisual }) {
           <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-100 text-navy-900">
             <Check className="h-3.5 w-3.5" />
           </span>
-          <span className="text-body-sm font-medium text-ink-800"><LocalizedText>{label}</LocalizedText></span>
+          <span className="text-body-sm font-medium text-ink-800">
+            <LocalizedText>{label}</LocalizedText>
+          </span>
           <span className="h-px flex-1 bg-line-200" />
-          <span className="text-body-sm font-semibold text-navy-900"><LocalizedText>0</LocalizedText>{index + 1}</span>
+          <span className="text-body-sm font-semibold text-navy-900">
+            <LocalizedText>0</LocalizedText>
+            {index + 1}
+          </span>
         </div>
       ))}
     </div>
@@ -186,7 +202,9 @@ export function BenefitCard({ item, index }: { item: BenefitItem; index: number 
         >
           <LocalizedText>{item.title}</LocalizedText>
         </h3>
-        <p className="mt-3 max-w-[58ch] text-body text-ink-600"><LocalizedText>{item.description}</LocalizedText></p>
+        <p className="mt-3 max-w-[58ch] text-body text-ink-600">
+          <LocalizedText>{item.description}</LocalizedText>
+        </p>
         <div className="mt-auto">
           <CardVisual visual={item.visual} />
         </div>
@@ -205,7 +223,7 @@ export function FeaturedSupportCard() {
   return (
     <ScrollReveal
       delay={0.2}
-      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-navy-950 p-6 text-white shadow-xs [background-image:radial-gradient(circle_at_85%_15%,rgba(183,135,68,0.22),transparent_34%)] sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
+      className="order-2 min-w-0 rounded-[1.5rem] border border-white/10 bg-navy-950 [background-image:radial-gradient(circle_at_85%_15%,rgba(183,135,68,0.22),transparent_34%)] p-6 text-white shadow-xs sm:p-8 lg:col-span-4 lg:col-start-9 lg:row-span-2 lg:row-start-1 lg:p-10"
     >
       <article
         className="flex h-full min-h-[30rem] min-w-0 flex-col"
@@ -215,19 +233,25 @@ export function FeaturedSupportCard() {
           <UsersRound aria-hidden="true" className="h-6 w-6" strokeWidth={1.7} />
         </div>
         <p className="mt-10 text-body-sm font-semibold tracking-[0.1em] text-gold-400 uppercase">
-          <LocalizedText>Không học một mình
-        </LocalizedText></p>
+          <LocalizedText>Không học một mình</LocalizedText>
+        </p>
         <h3
           id="support-title"
           className="mt-4 font-display text-[clamp(1.875rem,3vw,2.75rem)] leading-[1.15] font-semibold text-white"
         >
-          <LocalizedText>Đồng hành cùng bạn đến đích
-        </LocalizedText></h3>
+          <LocalizedText>Đồng hành cùng bạn đến đích</LocalizedText>
+        </h3>
         <p className="mt-5 text-body text-white/75">
-          <LocalizedText>Giảng viên, cố vấn học tập và đội ngũ hỗ trợ luôn sẵn sàng giúp bạn duy trì tiến độ trong
-          suốt hành trình học.
-        </LocalizedText></p>
-        <LocalizedElement as="ul" className="mt-8 flex flex-wrap gap-2.5" aria-label="Các hình thức hỗ trợ">
+          <LocalizedText>
+            Giảng viên, cố vấn học tập và đội ngũ hỗ trợ luôn sẵn sàng giúp bạn duy trì tiến độ
+            trong suốt hành trình học.
+          </LocalizedText>
+        </p>
+        <LocalizedElement
+          as="ul"
+          className="mt-8 flex flex-wrap gap-2.5"
+          aria-label="Các hình thức hỗ trợ"
+        >
           {proofPoints.map((proof) => (
             <li
               key={proof}
@@ -241,8 +265,8 @@ export function FeaturedSupportCard() {
           href="/gioi-thieu/"
           className="group/link mt-auto inline-flex min-h-11 items-center self-start rounded-sm border-b border-gold-400/70 pt-10 pb-1 text-body-sm font-semibold whitespace-nowrap text-white transition-colors duration-[var(--duration-base)] hover:border-white focus-visible:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-400"
         >
-          <LocalizedText>Gặp đội ngũ giảng viên và cố vấn
-          </LocalizedText><ArrowRight
+          <LocalizedText>Gặp đội ngũ giảng viên và cố vấn</LocalizedText>
+          <ArrowRight
             aria-hidden="true"
             className="ml-2 h-4 w-4 transition-transform duration-[var(--duration-base)] group-hover/link:translate-x-1 group-focus-visible/link:translate-x-1 motion-reduce:transition-none"
           />
@@ -292,7 +316,7 @@ export function ConsultationCTA() {
   return (
     <ScrollReveal delay={0.1}>
       <div
-        className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] bg-navy-50 border border-navy-100 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10"
+        className="mt-6 grid min-w-0 gap-8 rounded-[1.5rem] border border-navy-100 bg-navy-50 p-6 sm:p-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)] lg:items-end lg:p-10"
         aria-labelledby="consultation-cta-title"
       >
         <div className="min-w-0">
@@ -300,15 +324,19 @@ export function ConsultationCTA() {
             id="consultation-cta-title"
             className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.15] font-semibold text-ink-950"
           >
-            <LocalizedText>Lộ trình phù hợp với bạn bắt đầu từ một cuộc tư vấn.
-          </LocalizedText></h3>
+            <LocalizedText>Lộ trình phù hợp với bạn bắt đầu từ một cuộc tư vấn.</LocalizedText>
+          </h3>
           <p className="mt-4 max-w-[62ch] text-body text-ink-600">
-            <LocalizedText>Để lại thông tin, đội ngũ tư vấn sẽ hỗ trợ bạn chọn ngành, hiểu điều kiện xét tuyển và
-            xây dựng kế hoạch học phù hợp.
-          </LocalizedText></p>
+            <LocalizedText>
+              Để lại thông tin, đội ngũ tư vấn sẽ hỗ trợ bạn chọn ngành, hiểu điều kiện xét tuyển và
+              xây dựng kế hoạch học phù hợp.
+            </LocalizedText>
+          </p>
           <p className="mt-5 text-body-sm text-ink-600">
-            <LocalizedText>Thông tin của bạn được bảo mật và chỉ dùng để hỗ trợ tư vấn tuyển sinh.
-          </LocalizedText></p>
+            <LocalizedText>
+              Thông tin của bạn được bảo mật và chỉ dùng để hỗ trợ tư vấn tuyển sinh.
+            </LocalizedText>
+          </p>
         </div>
         <div className="flex min-w-0 flex-col items-start gap-4 lg:items-end">
           <ButtonLink
@@ -317,15 +345,15 @@ export function ConsultationCTA() {
             rightIcon={<ArrowRight aria-hidden="true" className="h-4 w-4" />}
             className="w-full sm:w-auto"
           >
-            <LocalizedText>Nhận tư vấn miễn phí
-          </LocalizedText></ButtonLink>
+            <LocalizedText>Nhận tư vấn miễn phí</LocalizedText>
+          </ButtonLink>
           <ButtonLink
             href="/tuyen-sinh/"
             variant="tertiary"
             className="h-auto min-h-11 px-0 underline decoration-line-200 underline-offset-8 hover:decoration-gold-700"
           >
-            <LocalizedText>Xem các chương trình đào tạo
-          </LocalizedText></ButtonLink>
+            <LocalizedText>Xem các chương trình đào tạo</LocalizedText>
+          </ButtonLink>
         </div>
       </div>
     </ScrollReveal>

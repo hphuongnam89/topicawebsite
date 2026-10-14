@@ -4,14 +4,18 @@ import { env } from "@/lib/env";
 import { translateText, type Locale } from "@/lib/i18n/translate";
 import { localizedPath } from "@/lib/i18n/routes";
 
-export async function resolveRequestLocale(searchParams?: Promise<Record<string, any>>): Promise<Locale> {
+export async function resolveRequestLocale(
+  searchParams?: Promise<Record<string, any>> | Record<string, any> | any,
+): Promise<Locale> {
   if (searchParams) {
     try {
-      const sp = await searchParams;
-      if (sp?.lang === "en") return "en";
-      if (sp?.lang === "vi") return "vi";
+      const sp = typeof searchParams.then === "function" ? await searchParams : searchParams;
+      const lang = typeof sp.get === "function" ? sp.get("lang") : sp?.lang;
+      if (lang === "en") return "en";
+      if (lang === "vi") return "vi";
     } catch {}
   }
+
   try {
     const h = await headers();
     const topicaLocale = h.get("x-topica-locale");

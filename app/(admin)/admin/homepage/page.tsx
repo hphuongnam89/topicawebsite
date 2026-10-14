@@ -46,8 +46,10 @@ interface TestimonialItem {
 const DEFAULT_HERO: HeroData = {
   badge: "Trực thuộc Trường Đại học Phú Xuân — Thành viên EQuest",
   title: "HỌC CHỦ ĐỘNG —\nKIẾN TẠO TƯƠNG LAI",
-  description: "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
-  bgImage: "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
+  description:
+    "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
+  bgImage:
+    "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
   videoUrl: "",
   ctaPrimaryText: "Đăng ký xét tuyển",
   ctaPrimaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
@@ -92,7 +94,9 @@ export default function AdminHomepageManager() {
     setDirty(true);
   };
 
-  const updateTestimonials = (updater: TestimonialItem[] | ((prev: TestimonialItem[]) => TestimonialItem[])) => {
+  const updateTestimonials = (
+    updater: TestimonialItem[] | ((prev: TestimonialItem[]) => TestimonialItem[]),
+  ) => {
     setTestimonials((prev) => (typeof updater === "function" ? updater(prev) : updater));
     setDirty(true);
   };
@@ -210,7 +214,10 @@ export default function AdminHomepageManager() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Tải video thất bại.");
       updateHero({ videoUrl: data.url });
-      setMessage({ type: "success", text: "Đã tải video giới thiệu lên. Hãy lưu cấu hình để áp dụng." });
+      setMessage({
+        type: "success",
+        text: "Đã tải video giới thiệu lên. Hãy lưu cấu hình để áp dụng.",
+      });
     } catch (err: any) {
       setMessage({ type: "error", text: err.message || "Lỗi tải video lên." });
     } finally {
@@ -232,17 +239,17 @@ export default function AdminHomepageManager() {
 
   if (loadError) {
     return (
-      <div className="p-6 lg:p-10 max-w-4xl mx-auto">
+      <div className="mx-auto max-w-4xl p-6 lg:p-10">
         <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900 shadow-sm">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-6 w-6 text-red-600 shrink-0 mt-0.5" />
+            <AlertCircle className="mt-0.5 h-6 w-6 shrink-0 text-red-600" />
             <div className="space-y-3">
               <h2 className="text-lg font-bold">Không thể tải cấu hình trang chủ</h2>
               <p className="text-sm text-red-700">{loadError}</p>
               <button
                 type="button"
                 onClick={fetchHomepageData}
-                className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-800"
               >
                 <RefreshCw className="h-4 w-4" />
                 Thử tải lại
@@ -255,7 +262,7 @@ export default function AdminHomepageManager() {
   }
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -280,7 +287,7 @@ export default function AdminHomepageManager() {
             type="button"
             onClick={() => handleSave()}
             disabled={saving}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 disabled:opacity-70 transition-all"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800 disabled:opacity-70"
           >
             {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             <span>{saving ? "Đang lưu..." : "Lưu tất cả thay đổi"}</span>
@@ -290,10 +297,10 @@ export default function AdminHomepageManager() {
 
       {message && (
         <div
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -306,10 +313,10 @@ export default function AdminHomepageManager() {
       )}
 
       {/* Section Tabs Switcher */}
-      <div className="flex border-b border-line-200 gap-2">
+      <div className="flex gap-2 border-b border-line-200">
         <button
           onClick={() => setActiveTab("hero")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "hero"
               ? "border-brand-700 text-brand-700"
               : "border-transparent text-ink-500 hover:text-ink-900"
@@ -321,7 +328,7 @@ export default function AdminHomepageManager() {
 
         <button
           onClick={() => setActiveTab("trust")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "trust"
               ? "border-brand-700 text-brand-700"
               : "border-transparent text-ink-500 hover:text-ink-900"
@@ -333,7 +340,7 @@ export default function AdminHomepageManager() {
 
         <button
           onClick={() => setActiveTab("testimonials")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-body-sm font-semibold border-b-2 transition-colors ${
+          className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-body-sm font-semibold transition-colors ${
             activeTab === "testimonials"
               ? "border-brand-700 text-brand-700"
               : "border-transparent text-ink-500 hover:text-ink-900"
@@ -349,17 +356,19 @@ export default function AdminHomepageManager() {
         <div className="space-y-6">
           {/* Live Preview Card */}
           <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Eye className="h-5 w-5 text-brand-700" />
-                <h2 className="font-display text-lg font-bold text-ink-950">Xem trước Trực tiếp (Live Preview)</h2>
+                <h2 className="font-display text-lg font-bold text-ink-950">
+                  Xem trước Trực tiếp (Live Preview)
+                </h2>
               </div>
               <span className="rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-semibold text-emerald-800">
                 Tự động cập nhật khi gõ
               </span>
             </div>
 
-            <div className="relative overflow-hidden rounded-xl border border-slate-700 bg-slate-950 text-white min-h-[340px] p-6 lg:p-10 flex items-center">
+            <div className="relative flex min-h-[340px] items-center overflow-hidden rounded-xl border border-slate-700 bg-slate-950 p-6 text-white lg:p-10">
               <div className="absolute inset-0 z-0">
                 {hero.videoUrl ? (
                   <video
@@ -386,11 +395,11 @@ export default function AdminHomepageManager() {
 
               <div className="relative z-10 max-w-xl space-y-4">
                 {hero.badge && (
-                  <div className="inline-block rounded-full bg-white/10 border border-brand-300/30 px-3.5 py-1 text-xs font-medium text-brand-300 backdrop-blur-sm">
+                  <div className="inline-block rounded-full border border-brand-300/30 bg-white/10 px-3.5 py-1 text-xs font-medium text-brand-300 backdrop-blur-sm">
                     {hero.badge}
                   </div>
                 )}
-                <h2 className="font-display text-2xl font-bold uppercase sm:text-3xl lg:text-4xl text-white whitespace-pre-line leading-tight">
+                <h2 className="font-display text-2xl leading-tight font-bold whitespace-pre-line text-white uppercase sm:text-3xl lg:text-4xl">
                   {hero.title || "TIÊU ĐỀ BANNER"}
                 </h2>
                 <p className="text-body-sm text-white/80">
@@ -415,14 +424,14 @@ export default function AdminHomepageManager() {
           {/* Form */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <Sparkles className="h-4 w-4 text-brand-700" />
                   <span>Nội dung Tiêu đề & Thông điệp</span>
                 </h3>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                     Badge / Nhãn phụ
                   </label>
                   <input
@@ -434,7 +443,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                     Tiêu đề chính (H1) <span className="text-error">*</span>
                   </label>
                   <textarea
@@ -447,7 +456,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                  <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                     Đoạn văn mô tả
                   </label>
                   <textarea
@@ -460,15 +469,15 @@ export default function AdminHomepageManager() {
               </div>
 
               {/* Buttons */}
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <Link2 className="h-4 w-4 text-brand-700" />
                   <span>Các Nút Hành Động (CTA)</span>
                 </h3>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                       Nút chính: Tên nút
                     </label>
                     <input
@@ -479,7 +488,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                       Nút chính: Đường dẫn link
                     </label>
                     <input
@@ -490,7 +499,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                       Nút phụ: Tên nút
                     </label>
                     <input
@@ -501,7 +510,7 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-body-sm font-semibold text-ink-900 mb-1.5">
+                    <label className="mb-1.5 block text-body-sm font-semibold text-ink-900">
                       Nút phụ: Đường dẫn link
                     </label>
                     <input
@@ -517,13 +526,13 @@ export default function AdminHomepageManager() {
 
             {/* Right: Upload Image */}
             <div className="space-y-6">
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <ImageIcon className="h-4 w-4 text-brand-700" />
                   <span>Ảnh Nền Banner</span>
                 </h3>
 
-                <div className="overflow-hidden rounded-lg border border-line-200 aspect-video relative bg-slate-100">
+                <div className="relative aspect-video overflow-hidden rounded-lg border border-line-200 bg-slate-100">
                   {hero.bgImage ? (
                     <img src={hero.bgImage} alt="" className="h-full w-full object-cover" />
                   ) : (
@@ -544,14 +553,18 @@ export default function AdminHomepageManager() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 hover:bg-slate-100 transition-colors"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 transition-colors hover:bg-slate-100"
                 >
-                  {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  {uploading ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
                   <span>{uploading ? "Đang tải lên..." : "Tải ảnh từ máy tính"}</span>
                 </button>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">
+                  <label className="mb-1 block text-xs font-semibold text-ink-900">
                     Hoặc nhập URL ảnh
                   </label>
                   <input
@@ -563,40 +576,81 @@ export default function AdminHomepageManager() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+              <div className="space-y-4 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
+                <h3 className="flex items-center gap-2 border-b border-line-100 pb-3 font-display text-base font-bold text-ink-950">
                   <Upload className="h-4 w-4 text-brand-700" />
                   <span>Video giới thiệu trường</span>
                 </h3>
                 {hero.videoUrl ? (
-                  <video src={hero.videoUrl} poster={hero.bgImage || undefined} controls muted playsInline preload="metadata" className="aspect-video w-full rounded-lg border border-line-200 bg-slate-950 object-contain" />
+                  <video
+                    src={hero.videoUrl}
+                    poster={hero.bgImage || undefined}
+                    controls
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="aspect-video w-full rounded-lg border border-line-200 bg-slate-950 object-contain"
+                  />
                 ) : (
                   <p className="rounded-lg bg-paper p-3 text-xs leading-5 text-ink-600">
-                    Chưa có video. Khi thêm video, ảnh banner hiện tại sẽ làm ảnh dự phòng và poster.
+                    Chưa có video. Khi thêm video, ảnh banner hiện tại sẽ làm ảnh dự phòng và
+                    poster.
                   </p>
                 )}
-                <input type="file" ref={videoInputRef} onChange={handleVideoUpload} accept="video/mp4,video/webm,.mp4,.webm" className="hidden" />
-                <button type="button" onClick={() => videoInputRef.current?.click()} disabled={uploading} className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 hover:bg-slate-100 transition-colors disabled:opacity-60">
-                  {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                  <span>{uploading ? "Đang tải lên..." : hero.videoUrl ? "Thay video giới thiệu" : "Tải video giới thiệu"}</span>
+                <input
+                  type="file"
+                  ref={videoInputRef}
+                  onChange={handleVideoUpload}
+                  accept="video/mp4,video/webm,.mp4,.webm"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={uploading}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 transition-colors hover:bg-slate-100 disabled:opacity-60"
+                >
+                  {uploading ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
+                  <span>
+                    {uploading
+                      ? "Đang tải lên..."
+                      : hero.videoUrl
+                        ? "Thay video giới thiệu"
+                        : "Tải video giới thiệu"}
+                  </span>
                 </button>
                 {hero.videoUrl && (
-                  <button type="button" onClick={() => updateHero({ videoUrl: "" })} className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50">
+                  <button
+                    type="button"
+                    onClick={() => updateHero({ videoUrl: "" })}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50"
+                  >
                     <Trash2 className="h-4 w-4" /> Gỡ video, dùng ảnh banner
                   </button>
                 )}
                 <label className="block text-xs leading-5 text-ink-500">
                   Hoặc nhập URL video MP4/WebM (tối đa 25 MB khi tải lên)
-                  <input type="url" value={hero.videoUrl || ""} onChange={(e) => updateHero({ videoUrl: e.target.value })} placeholder="https://.../gioi-thieu.mp4" className="mt-1 h-9 w-full rounded-lg border border-line-200 bg-white px-3 text-xs text-ink-950 focus:border-brand-600 focus:outline-none" />
+                  <input
+                    type="url"
+                    value={hero.videoUrl || ""}
+                    onChange={(e) => updateHero({ videoUrl: e.target.value })}
+                    placeholder="https://.../gioi-thieu.mp4"
+                    className="mt-1 h-9 w-full rounded-lg border border-line-200 bg-white px-3 text-xs text-ink-950 focus:border-brand-600 focus:outline-none"
+                  />
                 </label>
                 <p className="text-xs leading-5 text-ink-500">
-                  Hero phát video tự động ở chế độ tắt tiếng; ảnh banner vẫn hiện khi thiết bị giảm chuyển động. Bấm “Lưu cấu hình” để áp dụng.
+                  Hero phát video tự động ở chế độ tắt tiếng; ảnh banner vẫn hiện khi thiết bị giảm
+                  chuyển động. Bấm “Lưu cấu hình” để áp dụng.
                 </p>
               </div>
 
               {/* Form Toggle */}
               <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs">
-                <label className="flex items-center gap-3 cursor-pointer">
+                <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
                     checked={hero.showLeadForm}
@@ -608,7 +662,8 @@ export default function AdminHomepageManager() {
                       Hiển thị Form Tư vấn
                     </span>
                     <p className="text-xs text-ink-500">
-                      Form xuất hiện sau thông tin ngành và lộ trình tuyển sinh, không nằm trong Hero.
+                      Form xuất hiện sau thông tin ngành và lộ trình tuyển sinh, không nằm trong
+                      Hero.
                     </p>
                   </div>
                 </label>
@@ -620,7 +675,7 @@ export default function AdminHomepageManager() {
 
       {/* TAB 2: TRUST HIGHLIGHTS */}
       {activeTab === "trust" && (
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-6">
+        <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between border-b border-line-100 pb-3">
             <div>
               <h2 className="font-display text-base font-bold text-ink-950">
@@ -642,8 +697,11 @@ export default function AdminHomepageManager() {
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trustItems.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-3 rounded-lg border border-line-200 p-3 bg-slate-50">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700 text-xs">
+              <div
+                key={idx}
+                className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-3"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">
                   {idx + 1}
                 </div>
                 <input
@@ -659,7 +717,7 @@ export default function AdminHomepageManager() {
                 <button
                   type="button"
                   onClick={() => updateTrustItems(trustItems.filter((_, i) => i !== idx))}
-                  className="text-ink-400 hover:text-error p-1"
+                  className="p-1 text-ink-400 hover:text-error"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -671,7 +729,7 @@ export default function AdminHomepageManager() {
 
       {/* TAB 3: TESTIMONIALS */}
       {activeTab === "testimonials" && (
-        <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-6">
+        <div className="space-y-6 rounded-xl border border-line-200 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between border-b border-line-100 pb-3">
             <div>
               <h2 className="font-display text-base font-bold text-ink-950">
@@ -704,14 +762,19 @@ export default function AdminHomepageManager() {
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {testimonials.map((t, idx) => (
-              <div key={t.id} className="relative rounded-xl border border-line-200 p-5 bg-slate-50/50 space-y-3">
+              <div
+                key={t.id}
+                className="relative space-y-3 rounded-xl border border-line-200 bg-slate-50/50 p-5"
+              >
                 <div className="flex items-center justify-between">
                   <span className="rounded bg-brand-100 px-2 py-0.5 text-xs font-bold text-brand-800">
                     Đánh giá #{idx + 1}
                   </span>
                   <button
                     type="button"
-                    onClick={() => updateTestimonials(testimonials.filter((item) => item.id !== t.id))}
+                    onClick={() =>
+                      updateTestimonials(testimonials.filter((item) => item.id !== t.id))
+                    }
                     className="text-ink-400 hover:text-error"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -720,7 +783,7 @@ export default function AdminHomepageManager() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-ink-900 mb-1">Họ tên</label>
+                    <label className="mb-1 block text-xs font-semibold text-ink-900">Họ tên</label>
                     <input
                       type="text"
                       value={t.name}
@@ -733,7 +796,9 @@ export default function AdminHomepageManager() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-ink-900 mb-1">Chức danh / Vai trò</label>
+                    <label className="mb-1 block text-xs font-semibold text-ink-900">
+                      Chức danh / Vai trò
+                    </label>
                     <input
                       type="text"
                       value={t.role}
@@ -748,7 +813,7 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">Ngành học</label>
+                  <label className="mb-1 block text-xs font-semibold text-ink-900">Ngành học</label>
                   <input
                     type="text"
                     value={t.program}
@@ -762,7 +827,9 @@ export default function AdminHomepageManager() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-ink-900 mb-1">Trích dẫn cảm nhận</label>
+                  <label className="mb-1 block text-xs font-semibold text-ink-900">
+                    Trích dẫn cảm nhận
+                  </label>
                   <textarea
                     rows={3}
                     value={t.quote}

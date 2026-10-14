@@ -15,18 +15,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    {
-      className,
-      label,
-      error,
-      helperText,
-      id,
-      leftIcon,
-      rightIcon,
-      required,
-      disabled,
-      ...props
-    },
+    { className, label, error, helperText, id, leftIcon, rightIcon, required, disabled, ...props },
     ref,
   ) => {
     const errorId = `${id}-error`;
@@ -37,15 +26,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={className}>
         <label htmlFor={id} className="mb-1.5 block text-body-sm font-medium text-ink-800">
           <LocalizedText>{label}</LocalizedText>
-          {required && <span className="ml-1 text-error" aria-hidden="true"><LocalizedText>*</LocalizedText></span>}
+          {required && (
+            <span className="ml-1 text-error" aria-hidden="true">
+              <LocalizedText>*</LocalizedText>
+            </span>
+          )}
         </label>
         <div className="relative">
-          <LocalizedText>{leftIcon && (
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-400">
-              <LocalizedText>{leftIcon}</LocalizedText>
-            </div>
-          )}</LocalizedText>
-          <LocalizedElement as="input"
+          <LocalizedText>
+            {leftIcon && (
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-ink-400">
+                <LocalizedText>{leftIcon}</LocalizedText>
+              </div>
+            )}
+          </LocalizedText>
+          <LocalizedElement
+            as="input"
             id={id}
             ref={ref}
             required={required}
@@ -60,27 +56,35 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               isInvalid
                 ? "border-error text-error hover:border-error focus:border-error focus:outline-error"
                 : "border-line-200 hover:border-navy-500 focus:border-navy-900",
-              disabled && "cursor-not-allowed bg-paper text-ink-400 border-line-200",
+              disabled && "cursor-not-allowed border-line-200 bg-paper text-ink-400",
             )}
             {...props}
           />
-          <LocalizedText>{rightIcon && (
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-400">
-              <LocalizedText>{rightIcon}</LocalizedText>
-            </div>
-          )}</LocalizedText>
+          <LocalizedText>
+            {rightIcon && (
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-400">
+                <LocalizedText>{rightIcon}</LocalizedText>
+              </div>
+            )}
+          </LocalizedText>
         </div>
-        <LocalizedText>{error && (
-          <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
-            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span><LocalizedText>{error}</LocalizedText></span>
-          </div>
-        )}</LocalizedText>
-        <LocalizedText>{!error && helperText && (
-          <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
-            <LocalizedText>{helperText}</LocalizedText>
-          </p>
-        )}</LocalizedText>
+        <LocalizedText>
+          {error && (
+            <div id={errorId} className="mt-1.5 flex items-center gap-1.5 text-body-sm text-error">
+              <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>
+                <LocalizedText>{error}</LocalizedText>
+              </span>
+            </div>
+          )}
+        </LocalizedText>
+        <LocalizedText>
+          {!error && helperText && (
+            <p id={helperId} className="mt-1.5 text-body-sm text-ink-600">
+              <LocalizedText>{helperText}</LocalizedText>
+            </p>
+          )}
+        </LocalizedText>
       </div>
     );
   },

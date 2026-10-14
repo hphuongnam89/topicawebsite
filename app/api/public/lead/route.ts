@@ -81,11 +81,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       id: lead.id,
+      leadId: lead.id,
       duplicate,
       message: duplicate
         ? "Yêu cầu của bạn đã được ghi nhận trước đó."
         : "Đăng ký tư vấn thành công.",
     });
+
   } catch (error) {
     if (error instanceof LeadConflictError) return NextResponse.json({error: error.message}, {status:409});
     console.error("Public lead submit failed");

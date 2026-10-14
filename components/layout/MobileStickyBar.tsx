@@ -67,19 +67,19 @@ export function MobileStickyBar() {
           href="/lien-he/"
           variant="secondary"
           size="default"
-          className="flex-1 min-h-[44px] font-semibold"
+          className="min-h-[44px] flex-1 font-semibold"
         >
-          <LocalizedText>Nhận tư vấn
-        </LocalizedText></ButtonLink>
+          <LocalizedText>Nhận tư vấn</LocalizedText>
+        </ButtonLink>
         <ButtonLink
           href="https://www.tuyensinh.topicauni.edu.vn/"
           variant="accent"
           size="default"
-          className="flex-1 font-bold min-h-[44px]"
+          className="min-h-[44px] flex-1 font-bold"
           external
         >
-          <LocalizedText>Đăng ký xét tuyển
-        </LocalizedText></ButtonLink>
+          <LocalizedText>Đăng ký xét tuyển</LocalizedText>
+        </ButtonLink>
       </div>
     </div>
   );

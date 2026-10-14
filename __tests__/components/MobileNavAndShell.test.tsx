@@ -107,7 +107,9 @@ describe("Task R10: Khung trang, điều hướng, MobileNav và Sticky Bar", ()
       expect(programsTrigger).toHaveAttribute("aria-expanded", "true");
 
       // Kiểm tra sự xuất hiện của các link ngành
-      expect(screen.getByText("Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số")).toBeInTheDocument();
+      expect(
+        screen.getByText("Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số"),
+      ).toBeInTheDocument();
       expect(screen.getByText("Quản trị kinh doanh")).toBeInTheDocument();
 
       // Click lần nữa để đóng

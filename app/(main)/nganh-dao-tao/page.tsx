@@ -30,7 +30,7 @@ export async function generateMetadata({
   searchParams,
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-} = {}): Promise<Metadata> {
+}): Promise<Metadata> {
   const locale = await resolveRequestLocale(searchParams);
   return buildLocalizedMetadata({
     locale,
@@ -56,27 +56,40 @@ export default function ProgramsDirectoryPage() {
       <Container className="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
         {/* Academic Legal Notice */}
         <Alert variant="info" title="Thông tin pháp lý & Giá trị văn bằng tốt nghiệp">
-          <LocalizedText>Văn bằng tốt nghiệp do </LocalizedText><strong><LocalizedText>Trường Đại học Phú Xuân</LocalizedText></strong> <LocalizedText>cấp thuộc hệ thống văn
-          bằng quốc gia. Theo Thông tư 27/2019/TT-BGDĐT của Bộ GD&ĐT, văn bằng cử nhân đại học hiện
-          nay </LocalizedText><strong><LocalizedText>không phân biệt hình thức đào tạo</LocalizedText></strong><LocalizedText>, có giá trị pháp lý tương đương văn
-          bằng chính quy để thi tuyển công chức, nâng bậc lương và học tiếp lên Thạc sĩ, Tiến sĩ.
-        </LocalizedText></Alert>
+          <LocalizedText>Văn bằng tốt nghiệp do </LocalizedText>
+          <strong>
+            <LocalizedText>Trường Đại học Phú Xuân</LocalizedText>
+          </strong>{" "}
+          <LocalizedText>
+            cấp thuộc hệ thống văn bằng quốc gia. Theo Thông tư 27/2019/TT-BGDĐT của Bộ GD&ĐT, văn
+            bằng cử nhân đại học hiện nay{" "}
+          </LocalizedText>
+          <strong>
+            <LocalizedText>không phân biệt hình thức đào tạo</LocalizedText>
+          </strong>
+          <LocalizedText>
+            , có giá trị pháp lý tương đương văn bằng chính quy để thi tuyển công chức, nâng bậc
+            lương và học tiếp lên Thạc sĩ, Tiến sĩ.
+          </LocalizedText>
+        </Alert>
 
         {/* Programs Grid */}
         <div className="space-y-8">
           <div className="flex flex-col justify-between gap-4 border-b border-line-200 pb-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="font-serif text-2xl font-bold text-ink-950 sm:text-3xl">
-                <LocalizedText>Danh mục ngành đào tạo
-              </LocalizedText></h2>
+                <LocalizedText>Danh mục ngành đào tạo</LocalizedText>
+              </h2>
               <p className="mt-1 text-body-sm text-ink-600">
-                <LocalizedText>Toàn bộ chương trình được thiết kế chuẩn tín chỉ, phù hợp cho người đi làm và học
-                viên văn bằng hai.
-              </LocalizedText></p>
+                <LocalizedText>
+                  Toàn bộ chương trình được thiết kế chuẩn tín chỉ, phù hợp cho người đi làm và học
+                  viên văn bằng hai.
+                </LocalizedText>
+              </p>
             </div>
             <ButtonLink href="/tuyen-sinh/" variant="tertiary">
-              <LocalizedText>Xem thông tin kỳ tuyển sinh
-            </LocalizedText></ButtonLink>
+              <LocalizedText>Xem thông tin kỳ tuyển sinh</LocalizedText>
+            </ButtonLink>
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -109,7 +122,9 @@ export default function ProgramsDirectoryPage() {
 
                   <CardBody className="flex flex-1 flex-col p-6">
                     <div className="mb-3 flex items-center justify-between gap-2">
-                      <Badge variant="navy"><LocalizedText>{programGroups[program.group]}</LocalizedText></Badge>
+                      <Badge variant="navy">
+                        <LocalizedText>{programGroups[program.group]}</LocalizedText>
+                      </Badge>
                     </div>
 
                     <h3 className="min-h-[3.5rem] font-serif text-xl font-bold text-ink-950 transition-colors group-hover:text-navy-900">
@@ -119,7 +134,9 @@ export default function ProgramsDirectoryPage() {
                     </h3>
 
                     <p className="mt-1 min-h-4 text-xs font-semibold tracking-wider text-gold-700 uppercase">
-                      <LocalizedText>{specialization ? `Chuyên ngành: ${specialization}` : ""}</LocalizedText>
+                      <LocalizedText>
+                        {specialization ? `Chuyên ngành: ${specialization}` : ""}
+                      </LocalizedText>
                     </p>
 
                     <p className="mt-3 flex-1 text-body-sm leading-relaxed text-ink-600">
@@ -130,41 +147,57 @@ export default function ProgramsDirectoryPage() {
                       <div className="flex items-center justify-between">
                         <span className="flex items-center gap-1.5 text-ink-600">
                           <GraduationCap className="h-3.5 w-3.5 text-navy-800" />
-                          <LocalizedText>Đơn vị cấp bằng:
-                        </LocalizedText></span>
-                        <strong className="text-ink-950"><LocalizedText>ĐH Phú Xuân (PXU)</LocalizedText></strong>
+                          <LocalizedText>Đơn vị cấp bằng:</LocalizedText>
+                        </span>
+                        <strong className="text-ink-950">
+                          <LocalizedText>ĐH Phú Xuân (PXU)</LocalizedText>
+                        </strong>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="flex items-center gap-1.5 text-ink-600">
                           <Clock className="h-3.5 w-3.5 text-navy-800" />
-                          <LocalizedText>Thời gian đào tạo:
-                        </LocalizedText></span>
-                        <span><LocalizedText>Theo lộ trình được công nhận</LocalizedText></span>
+                          <LocalizedText>Thời gian đào tạo:</LocalizedText>
+                        </span>
+                        <span>
+                          <LocalizedText>Theo lộ trình được công nhận</LocalizedText>
+                        </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="flex items-center gap-1.5 text-ink-600">
                           <BookOpen className="h-3.5 w-3.5 text-navy-800" />
-                          <LocalizedText>Khối lượng kiến thức:
-                        </LocalizedText></span>
+                          <LocalizedText>Khối lượng kiến thức:</LocalizedText>
+                        </span>
                         <span>
-                          <LocalizedText>{tuition ? `${tuition.credits} tín chỉ` : "Xem khung chương trình"}</LocalizedText>
+                          <LocalizedText>
+                            {tuition ? `${tuition.credits} tín chỉ` : "Xem khung chương trình"}
+                          </LocalizedText>
                         </span>
                       </div>
                       {tuition && (
                         <div className="flex items-center justify-between font-medium">
-                          <span className="text-ink-600"><LocalizedText>Học phí ước tính:</LocalizedText></span>
+                          <span className="text-ink-600">
+                            <LocalizedText>Học phí ước tính:</LocalizedText>
+                          </span>
                           <span className="font-bold text-navy-900">
-                            <LocalizedText>{tuition.pricePerCredit.toLocaleString("vi-VN")}</LocalizedText> <LocalizedText>đ / tín chỉ
-                          </LocalizedText></span>
+                            <LocalizedText>
+                              {tuition.pricePerCredit.toLocaleString("vi-VN")}
+                            </LocalizedText>{" "}
+                            <LocalizedText>đ / tín chỉ</LocalizedText>
+                          </span>
                         </div>
                       )}
                     </div>
                   </CardBody>
 
                   <CardFooter className="grid w-full grid-cols-1 gap-2 border-t border-line-100 bg-surface-subtle/50 p-4 sm:px-6">
-                    <ButtonLink href={program.href} variant="outline" size="sm" className="w-full justify-center">
-                      <LocalizedText>Chi tiết & Khung học
-                    </LocalizedText></ButtonLink>
+                    <ButtonLink
+                      href={program.href}
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-center"
+                    >
+                      <LocalizedText>Chi tiết & Khung học</LocalizedText>
+                    </ButtonLink>
                     <ButtonLink
                       href="https://www.tuyensinh.topicauni.edu.vn/"
                       variant="accent"
@@ -172,8 +205,8 @@ export default function ProgramsDirectoryPage() {
                       external
                       className="w-full justify-center"
                     >
-                      <LocalizedText>Đăng ký xét tuyển
-                    </LocalizedText></ButtonLink>
+                      <LocalizedText>Đăng ký xét tuyển</LocalizedText>
+                    </ButtonLink>
                   </CardFooter>
                 </Card>
               );
@@ -185,26 +218,40 @@ export default function ProgramsDirectoryPage() {
         <div className="space-y-6">
           <div className="border-b border-line-200 pb-3">
             <span className="text-xs font-semibold tracking-wider text-navy-800 uppercase">
-              <LocalizedText>Đối chiếu chương trình
-            </LocalizedText></span>
+              <LocalizedText>Đối chiếu chương trình</LocalizedText>
+            </span>
             <h3 className="mt-1 font-serif text-2xl font-bold text-ink-950">
-              <LocalizedText>Bảng so sánh nhanh 5 ngành cử nhân
-            </LocalizedText></h3>
+              <LocalizedText>Bảng so sánh nhanh 5 ngành cử nhân</LocalizedText>
+            </h3>
             <p className="mt-1 text-body-sm text-ink-600">
-              <LocalizedText>Tổng hợp nhanh thời lượng, tín chỉ và mức học phí để bạn dễ dàng cân nhắc lựa chọn.
-            </LocalizedText></p>
+              <LocalizedText>
+                Tổng hợp nhanh thời lượng, tín chỉ và mức học phí để bạn dễ dàng cân nhắc lựa chọn.
+              </LocalizedText>
+            </p>
           </div>
 
           <div className="overflow-x-auto rounded-xl border border-line-200 bg-canvas shadow-2xs">
             <table className="w-full min-w-[640px] text-left text-body-sm">
-              <thead className="border-b border-line-200 bg-surface-subtle text-xs font-semibold uppercase text-ink-700">
+              <thead className="border-b border-line-200 bg-surface-subtle text-xs font-semibold text-ink-700 uppercase">
                 <tr>
-                  <th scope="col" className="px-5 py-3.5"><LocalizedText>Ngành đào tạo</LocalizedText></th>
-                  <th scope="col" className="px-5 py-3.5"><LocalizedText>Chuyên ngành</LocalizedText></th>
-                  <th scope="col" className="px-5 py-3.5"><LocalizedText>Đơn vị cấp bằng</LocalizedText></th>
-                  <th scope="col" className="px-5 py-3.5 text-center"><LocalizedText>Tín chỉ</LocalizedText></th>
-                  <th scope="col" className="px-5 py-3.5 text-right"><LocalizedText>Đơn giá / Tín chỉ</LocalizedText></th>
-                  <th scope="col" className="px-5 py-3.5 text-center"><LocalizedText>Khung học</LocalizedText></th>
+                  <th scope="col" className="px-5 py-3.5">
+                    <LocalizedText>Ngành đào tạo</LocalizedText>
+                  </th>
+                  <th scope="col" className="px-5 py-3.5">
+                    <LocalizedText>Chuyên ngành</LocalizedText>
+                  </th>
+                  <th scope="col" className="px-5 py-3.5">
+                    <LocalizedText>Đơn vị cấp bằng</LocalizedText>
+                  </th>
+                  <th scope="col" className="px-5 py-3.5 text-center">
+                    <LocalizedText>Tín chỉ</LocalizedText>
+                  </th>
+                  <th scope="col" className="px-5 py-3.5 text-right">
+                    <LocalizedText>Đơn giá / Tín chỉ</LocalizedText>
+                  </th>
+                  <th scope="col" className="px-5 py-3.5 text-center">
+                    <LocalizedText>Khung học</LocalizedText>
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line-100 text-ink-800">
@@ -229,21 +276,25 @@ export default function ProgramsDirectoryPage() {
                         <LocalizedText>{specialization}</LocalizedText>
                       </td>
                       <td className="px-5 py-4 text-ink-600">
-                        <LocalizedText>ĐH Phú Xuân
-                      </LocalizedText></td>
+                        <LocalizedText>ĐH Phú Xuân</LocalizedText>
+                      </td>
                       <td className="px-5 py-4 text-center font-medium">
                         {tuition?.credits ?? 126}
                       </td>
                       <td className="px-5 py-4 text-right font-semibold text-navy-900">
-                        <LocalizedText>{tuition ? `${tuition.pricePerCredit.toLocaleString("vi-VN")} đ` : "600.000 đ"}</LocalizedText>
+                        <LocalizedText>
+                          {tuition
+                            ? `${tuition.pricePerCredit.toLocaleString("vi-VN")} đ`
+                            : "600.000 đ"}
+                        </LocalizedText>
                       </td>
                       <td className="px-5 py-4 text-center">
                         <Link
                           href={program.href}
                           className="inline-flex items-center gap-1 text-xs font-semibold text-navy-800 hover:text-navy-950 hover:underline"
                         >
-                          <LocalizedText>Xem chi tiết
-                          </LocalizedText><ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                          <LocalizedText>Xem chi tiết</LocalizedText>
+                          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                         </Link>
                       </td>
                     </tr>
@@ -259,53 +310,67 @@ export default function ProgramsDirectoryPage() {
           <div className="mx-auto max-w-5xl">
             <div className="text-center">
               <span className="text-xs font-semibold tracking-wider text-navy-800 uppercase">
-                <LocalizedText>Quyền lợi người học
-              </LocalizedText></span>
+                <LocalizedText>Quyền lợi người học</LocalizedText>
+              </span>
               <h3 className="mt-2 font-serif text-2xl font-bold text-ink-950 sm:text-3xl">
-                <LocalizedText>Vì sao nên chọn học Cử nhân trực tuyến Topica?
-              </LocalizedText></h3>
+                <LocalizedText>Vì sao nên chọn học Cử nhân trực tuyến Topica?</LocalizedText>
+              </h3>
             </div>
             <div className="mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-x-12 gap-y-6 sm:grid-cols-2">
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
                 <div>
-                  <h4 className="font-semibold text-ink-950"><LocalizedText>Tiết kiệm thời gian & Chi phí</LocalizedText></h4>
+                  <h4 className="font-semibold text-ink-950">
+                    <LocalizedText>Tiết kiệm thời gian & Chi phí</LocalizedText>
+                  </h4>
                   <p className="mt-1 text-body-sm text-ink-600">
-                    <LocalizedText>Học mọi lúc mọi nơi trên nền tảng Elearning, không tốn chi phí đi lại và thuê
-                    nhà ở tập trung.
-                  </LocalizedText></p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
-                <div>
-                  <h4 className="font-semibold text-ink-950"><LocalizedText>Văn bằng cử nhân chuẩn quốc gia</LocalizedText></h4>
-                  <p className="mt-1 text-body-sm text-ink-600">
-                    <LocalizedText>Được Bộ Giáo dục và Đào tạo công nhận, đầy đủ quyền lợi học lên cao học hoặc thi
-                    biên chế nhà nước.
-                  </LocalizedText></p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
-                <div>
-                  <h4 className="font-semibold text-ink-950"><LocalizedText>Cơ chế miễn giảm tín chỉ</LocalizedText></h4>
-                  <p className="mt-1 text-body-sm text-ink-600">
-                    <LocalizedText>Người đã có bằng Trung cấp, Cao đẳng hoặc Đại học khác được xét công nhận tín
-                    chỉ để rút ngắn thời gian.
-                  </LocalizedText></p>
+                    <LocalizedText>
+                      Học mọi lúc mọi nơi trên nền tảng Elearning, không tốn chi phí đi lại và thuê
+                      nhà ở tập trung.
+                    </LocalizedText>
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
                 <div>
                   <h4 className="font-semibold text-ink-950">
-                    <LocalizedText>Học phí minh bạch, chia kỳ linh hoạt
-                  </LocalizedText></h4>
+                    <LocalizedText>Văn bằng cử nhân chuẩn quốc gia</LocalizedText>
+                  </h4>
                   <p className="mt-1 text-body-sm text-ink-600">
-                    <LocalizedText>Đóng học phí theo số lượng tín chỉ thực tế đăng ký trong từng kỳ, cam kết không
-                    phát sinh phụ phí ẩn.
-                  </LocalizedText></p>
+                    <LocalizedText>
+                      Được Bộ Giáo dục và Đào tạo công nhận, đầy đủ quyền lợi học lên cao học hoặc
+                      thi biên chế nhà nước.
+                    </LocalizedText>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
+                <div>
+                  <h4 className="font-semibold text-ink-950">
+                    <LocalizedText>Cơ chế miễn giảm tín chỉ</LocalizedText>
+                  </h4>
+                  <p className="mt-1 text-body-sm text-ink-600">
+                    <LocalizedText>
+                      Người đã có bằng Trung cấp, Cao đẳng hoặc Đại học khác được xét công nhận tín
+                      chỉ để rút ngắn thời gian.
+                    </LocalizedText>
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
+                <div>
+                  <h4 className="font-semibold text-ink-950">
+                    <LocalizedText>Học phí minh bạch, chia kỳ linh hoạt</LocalizedText>
+                  </h4>
+                  <p className="mt-1 text-body-sm text-ink-600">
+                    <LocalizedText>
+                      Đóng học phí theo số lượng tín chỉ thực tế đăng ký trong từng kỳ, cam kết
+                      không phát sinh phụ phí ẩn.
+                    </LocalizedText>
+                  </p>
                 </div>
               </div>
             </div>
@@ -317,12 +382,14 @@ export default function ProgramsDirectoryPage() {
           <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
             <div className="max-w-2xl">
               <h3 className="font-serif text-2xl font-bold text-white sm:text-3xl">
-                <LocalizedText>Bạn đang phân vân chưa biết ngành nào phù hợp?
-              </LocalizedText></h3>
+                <LocalizedText>Bạn đang phân vân chưa biết ngành nào phù hợp?</LocalizedText>
+              </h3>
               <p className="mt-2 text-body-sm leading-relaxed text-white/80">
-                <LocalizedText>Hãy liên hệ trực tiếp với chuyên viên tư vấn tuyển sinh Topica để được hướng dẫn
-                chọn ngành, đánh giá điều kiện hồ sơ và nhận kế hoạch học tập cá nhân hóa.
-              </LocalizedText></p>
+                <LocalizedText>
+                  Hãy liên hệ trực tiếp với chuyên viên tư vấn tuyển sinh Topica để được hướng dẫn
+                  chọn ngành, đánh giá điều kiện hồ sơ và nhận kế hoạch học tập cá nhân hóa.
+                </LocalizedText>
+              </p>
             </div>
             <div className="flex w-full max-w-md flex-col gap-3 lg:max-w-[18.25rem]">
               <ButtonLink
@@ -333,16 +400,16 @@ export default function ProgramsDirectoryPage() {
                 className="w-full justify-center"
                 rightIcon={<ArrowRight className="h-4 w-4" />}
               >
-                <LocalizedText>Đăng ký xét tuyển ngay
-              </LocalizedText></ButtonLink>
+                <LocalizedText>Đăng ký xét tuyển ngay</LocalizedText>
+              </ButtonLink>
               <ButtonLink
                 href="/tuyen-sinh/hoc-phi-hoc-bong/"
                 variant="secondary"
                 size="lg"
                 className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20"
               >
-                <LocalizedText>Tra cứu học phí 2026
-              </LocalizedText></ButtonLink>
+                <LocalizedText>Tra cứu học phí 2026</LocalizedText>
+              </ButtonLink>
             </div>
           </div>
         </div>

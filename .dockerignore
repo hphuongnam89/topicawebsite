@@ -1,7 +1,15 @@
 node_modules
 npm-debug.log
-.next
+.next*
 .git
+railway-seed
+data/
+public/uploads/
+backups/
+**/backups/
+scratch/
+.manus/
+.env
+.env.*
 .vscode
-.env*.local
 .DS_Store

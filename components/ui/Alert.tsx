@@ -68,15 +68,21 @@ export function Alert({
       {...props}
     >
       <div className={cn("mt-0.5 shrink-0", config.iconColor)}>
-        <LocalizedText>{icon || <IconComponent className="h-5 w-5" aria-hidden="true" />}</LocalizedText>
+        <LocalizedText>
+          {icon || <IconComponent className="h-5 w-5" aria-hidden="true" />}
+        </LocalizedText>
       </div>
       <div className="min-w-0 flex-1">
-        <LocalizedText>{title && (
-          <h4 className={cn("mb-1 font-semibold text-body", config.titleColor)}>
-            <LocalizedText>{title}</LocalizedText>
-          </h4>
-        )}</LocalizedText>
-        <div className="text-ink-800"><LocalizedText>{children}</LocalizedText></div>
+        <LocalizedText>
+          {title && (
+            <h4 className={cn("mb-1 text-body font-semibold", config.titleColor)}>
+              <LocalizedText>{title}</LocalizedText>
+            </h4>
+          )}
+        </LocalizedText>
+        <div className="text-ink-800">
+          <LocalizedText>{children}</LocalizedText>
+        </div>
       </div>
     </div>
   );

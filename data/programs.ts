@@ -32,26 +32,31 @@ export interface Program {
   targetAudiences: readonly TargetAudienceTrack[];
 }
 
-export const TARGET_AUDIENCE_DEFAULTS: Record<TargetAudienceId, {
-  name: string;
-  durationYears: number;
-  durationSemesters: number;
-  credits: number;
-  description: string;
-}> = {
+export const TARGET_AUDIENCE_DEFAULTS: Record<
+  TargetAudienceId,
+  {
+    name: string;
+    durationYears: number;
+    durationSemesters: number;
+    credits: number;
+    description: string;
+  }
+> = {
   thpt: {
     name: "Tốt nghiệp THPT / Tương đương",
     durationYears: 3.5,
     durationSemesters: 9,
     credits: 126,
-    description: "Khối kiến thức đầy đủ theo khung chương trình chuẩn (chưa bao gồm GDTC và GDQP&AN).",
+    description:
+      "Khối kiến thức đầy đủ theo khung chương trình chuẩn (chưa bao gồm GDTC và GDQP&AN).",
   },
   trung_cap: {
     name: "Tốt nghiệp Trung cấp",
     durationYears: 2.5,
     durationSemesters: 6,
     credits: 84,
-    description: "Liên thông đại học, được xét công nhận chuyển đổi khối kiến thức cơ bản đã tích lũy.",
+    description:
+      "Liên thông đại học, được xét công nhận chuyển đổi khối kiến thức cơ bản đã tích lũy.",
   },
   cao_dang: {
     name: "Tốt nghiệp Cao đẳng",
@@ -65,7 +70,8 @@ export const TARGET_AUDIENCE_DEFAULTS: Record<TargetAudienceId, {
     durationYears: 1.5,
     durationSemesters: 4,
     credits: 56,
-    description: "Được miễn toàn bộ khối kiến thức đại cương và các học phần tương đương đã hoàn thành.",
+    description:
+      "Được miễn toàn bộ khối kiến thức đại cương và các học phần tương đương đã hoàn thành.",
   },
 };
 
@@ -113,7 +119,8 @@ export const programs: readonly Program[] = [
     majorCode: "7340101",
     slug: "quan-tri-kinh-doanh-marketing",
     legacySlugs: ["quan-tri-kinh-doanh"],
-    shortDescription: "Cung cấp kiến thức chuyên sâu về quản trị và chiến lược truyền thông, kinh doanh số hiện đại.",
+    shortDescription:
+      "Cung cấp kiến thức chuyên sâu về quản trị và chiến lược truyền thông, kinh doanh số hiện đại.",
     icon: "Briefcase",
     image: "/images/programs/program-business.webp",
     href: "/quan-tri-kinh-doanh-marketing/",
@@ -152,7 +159,8 @@ export const programs: readonly Program[] = [
     majorCode: "7480201",
     slug: "cong-nghe-thong-tin",
     legacySlugs: ["it", "cntt"],
-    shortDescription: "Đào tạo kỹ sư CNTT với kiến thức nền tảng và chuyên sâu về đồ hoạ kỹ thuật số, đa phương tiện.",
+    shortDescription:
+      "Đào tạo kỹ sư CNTT với kiến thức nền tảng và chuyên sâu về đồ hoạ kỹ thuật số, đa phương tiện.",
     icon: "Monitor",
     image: "/images/programs/program-digital-design.webp",
     href: "/cong-nghe-thong-tin/",
@@ -171,7 +179,8 @@ export const programs: readonly Program[] = [
     majorCode: "7220201",
     slug: "ngon-ngu-anh",
     legacySlugs: ["tieng-anh"],
-    shortDescription: "Phát triển kỹ năng ngoại ngữ toàn diện, đáp ứng nhu cầu giao tiếp quốc tế và thương mại.",
+    shortDescription:
+      "Phát triển kỹ năng ngoại ngữ toàn diện, đáp ứng nhu cầu giao tiếp quốc tế và thương mại.",
     icon: "BookOpen",
     image: "/images/programs/program-english.webp",
     href: "/ngon-ngu-anh/",
@@ -211,20 +220,20 @@ export const programGroups = {
 } as const;
 
 export const PROGRAM_ID_MAP: Record<string, ProgramId> = {
-  "ba": "ba",
+  ba: "ba",
   "quan-tri-kinh-doanh-marketing": "ba",
   "quan-tri-kinh-doanh": "ba",
-  "tourism": "tourism",
+  tourism: "tourism",
   "quan-tri-dich-vu-du-lich-va-lu-hanh": "tourism",
   "quan-tri-du-lich": "tourism",
   "du-lich-lu-hanh": "tourism",
-  "it": "it",
+  it: "it",
   "cong-nghe-thong-tin": "it",
-  "cntt": "it",
-  "english": "english",
+  cntt: "it",
+  english: "english",
   "ngon-ngu-anh": "english",
   "tieng-anh": "english",
-  "chinese": "chinese",
+  chinese: "chinese",
   "ngon-ngu-trung-quoc": "chinese",
   "tieng-trung": "chinese",
 };
@@ -235,9 +244,7 @@ export function getProgramById(id: string): Program | undefined {
 
 export function getProgramBySlug(slug: string): Program | undefined {
   const normalized = slug.replace(/^\/+|\/+$/g, "");
-  return programs.find(
-    (p) => p.slug === normalized || p.legacySlugs?.includes(normalized)
-  );
+  return programs.find((p) => p.slug === normalized || p.legacySlugs?.includes(normalized));
 }
 
 export function getProgramByMajorCode(code: string): Program | undefined {

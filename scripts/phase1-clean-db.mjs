@@ -4,8 +4,10 @@ const db = new DatabaseSync("data/topica.db");
 
 // 1. Dọn dẹp 5 trang WooCommerce rác
 console.log("=== 1. CLEANING JUNK WOOCOMMERCE PAGES ===");
-const junkSlugs = ['cart', 'checkout', 'my-account', 'shop', 'classic-shop'];
-const updateJunkPages = db.prepare(`UPDATE pages SET status = 'archived' WHERE slug IN ('cart', 'checkout', 'my-account', 'shop', 'classic-shop')`);
+const junkSlugs = ["cart", "checkout", "my-account", "shop", "classic-shop"];
+const updateJunkPages = db.prepare(
+  `UPDATE pages SET status = 'archived' WHERE slug IN ('cart', 'checkout', 'my-account', 'shop', 'classic-shop')`,
+);
 const resultJunk = updateJunkPages.run();
 console.log(`Updated ${resultJunk.changes} junk pages to status 'archived'.`);
 
@@ -48,7 +50,9 @@ function cleanString(str) {
 // 3. Làm sạch bảng articles
 console.log("\n=== 2. CLEANING ARTICLES ENTITIES & SHORTCODES ===");
 const articles = db.prepare("SELECT id, title, excerpt, content_html FROM articles").all();
-const updateArticle = db.prepare("UPDATE articles SET title = ?, excerpt = ?, content_html = ? WHERE id = ?");
+const updateArticle = db.prepare(
+  "UPDATE articles SET title = ?, excerpt = ?, content_html = ? WHERE id = ?",
+);
 
 let articlesCleaned = 0;
 for (const a of articles) {
@@ -66,7 +70,9 @@ console.log(`Cleaned ${articlesCleaned} articles.`);
 // 4. Làm sạch bảng pages
 console.log("\n=== 3. CLEANING PAGES ENTITIES & SHORTCODES ===");
 const pages = db.prepare("SELECT id, title, excerpt, content_html FROM pages").all();
-const updatePage = db.prepare("UPDATE pages SET title = ?, excerpt = ?, content_html = ? WHERE id = ?");
+const updatePage = db.prepare(
+  "UPDATE pages SET title = ?, excerpt = ?, content_html = ? WHERE id = ?",
+);
 
 let pagesCleaned = 0;
 for (const p of pages) {
@@ -82,7 +88,15 @@ for (const p of pages) {
 console.log(`Cleaned ${pagesCleaned} pages.`);
 
 // 5. Kiểm tra lại xem còn bài viết hay trang nào sót entity/shortcode không
-const remainingArticles = db.prepare("SELECT COUNT(*) as c FROM articles WHERE title LIKE '%&#%' OR excerpt LIKE '%&#%' OR content_html LIKE '%[vc_%' OR content_html LIKE '%&#%'").get();
-const remainingPages = db.prepare("SELECT COUNT(*) as c FROM pages WHERE (title LIKE '%&#%' OR excerpt LIKE '%&#%' OR content_html LIKE '%[vc_%' OR content_html LIKE '%&#%') AND status != 'archived'").get();
+const remainingArticles = db
+  .prepare(
+    "SELECT COUNT(*) as c FROM articles WHERE title LIKE '%&#%' OR excerpt LIKE '%&#%' OR content_html LIKE '%[vc_%' OR content_html LIKE '%&#%'",
+  )
+  .get();
+const remainingPages = db
+  .prepare(
+    "SELECT COUNT(*) as c FROM pages WHERE (title LIKE '%&#%' OR excerpt LIKE '%&#%' OR content_html LIKE '%[vc_%' OR content_html LIKE '%&#%') AND status != 'archived'",
+  )
+  .get();
 console.log(`Remaining articles with issues: ${remainingArticles.c}`);
 console.log(`Remaining active pages with issues: ${remainingPages.c}`);

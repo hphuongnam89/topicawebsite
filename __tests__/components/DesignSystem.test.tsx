@@ -75,9 +75,7 @@ describe("Design System Components (Phase 3)", () => {
         </Card>,
       );
       expect(screen.getByText("Công nghệ thông tin")).toBeInTheDocument();
-      expect(
-        screen.getByText("Chuyên ngành Đồ hoạ kỹ thuật số"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Chuyên ngành Đồ hoạ kỹ thuật số")).toBeInTheDocument();
       expect(screen.getByText("132 tín chỉ")).toBeInTheDocument();
     });
   });
@@ -134,24 +132,28 @@ describe("Design System Components (Phase 3)", () => {
       expect(screen.getByText("Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
       expect(screen.getByText("Quy chế đào tạo")).toBeInTheDocument();
       expect(screen.getByText("Ban hành: 10/01/2026")).toBeInTheDocument();
-      expect(screen.getByLabelText("Xem tài liệu: Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
-      expect(screen.getByLabelText("Tải xuống: Quy chế đào tạo từ xa trình độ đại học")).toBeInTheDocument();
+      expect(
+        screen.getByLabelText("Xem tài liệu: Quy chế đào tạo từ xa trình độ đại học"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByLabelText("Tải xuống: Quy chế đào tạo từ xa trình độ đại học"),
+      ).toBeInTheDocument();
     });
   });
 
   describe("Pagination Component", () => {
     test("renders navigation controls with active page and page links", () => {
-      render(
-        <Pagination
-          currentPage={2}
-          totalPages={5}
-          baseUrl="/tin-tuc"
-        />,
-      );
+      render(<Pagination currentPage={2} totalPages={5} baseUrl="/tin-tuc" />);
       expect(screen.getByRole("navigation", { name: "Điều hướng trang" })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "2" })).toHaveAttribute("aria-current", "page");
-      expect(screen.getByRole("link", { name: "Trang trước" })).toHaveAttribute("href", "/tin-tuc?page=1");
-      expect(screen.getByRole("link", { name: "Trang tiếp theo" })).toHaveAttribute("href", "/tin-tuc?page=3");
+      expect(screen.getByRole("link", { name: "Trang trước" })).toHaveAttribute(
+        "href",
+        "/tin-tuc?page=1",
+      );
+      expect(screen.getByRole("link", { name: "Trang tiếp theo" })).toHaveAttribute(
+        "href",
+        "/tin-tuc?page=3",
+      );
     });
   });
 });

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { getPages, createPage, getPageBySlug } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
@@ -18,7 +19,9 @@ export async function GET(request: Request) {
   const offset = (page - 1) * limit;
 
   const allPages = [...getPages(), ...getRevisionOnlyPages()].sort((left, right) =>
-    String(right.updated_at ?? right.published_at).localeCompare(String(left.updated_at ?? left.published_at)),
+    String(right.updated_at ?? right.published_at).localeCompare(
+      String(left.updated_at ?? left.published_at),
+    ),
   );
   const total = allPages.length;
   const items = allPages.slice(offset, offset + limit);
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
   if (!isSameOrigin(request))
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   try {
-    const parsed = pageCreateSchema.safeParse(await request.json());
+    const parsed = pageCreateSchema.safeParse(await readBoundedJson(request, 2_097_152));
     if (!parsed.success)
       return NextResponse.json({ error: "Thông tin trang không hợp lệ" }, { status: 422 });
     if (parsed.data.status === "published")

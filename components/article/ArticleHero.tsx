@@ -25,11 +25,13 @@ export function ArticleHero({ image, title, caption, className }: ArticleHeroPro
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
         />
       </div>
-      <LocalizedText>{caption && (
-        <figcaption className="mt-3 text-center text-body-sm text-ink-600 italic">
-          <LocalizedText>{caption}</LocalizedText>
-        </figcaption>
-      )}</LocalizedText>
+      <LocalizedText>
+        {caption && (
+          <figcaption className="mt-3 text-center text-body-sm text-ink-600 italic">
+            <LocalizedText>{caption}</LocalizedText>
+          </figcaption>
+        )}
+      </LocalizedText>
     </figure>
   );
 }

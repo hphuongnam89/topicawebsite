@@ -12,6 +12,8 @@ import type {
 } from "@/lib/db/types";
 import { analyticsEventSchema, auditLogSchema, documentSchema } from "@/lib/validation/cms-schemas";
 
+let lastAnalyticsPruneAt = 0;
+
 // ----------------------------------------------------------------------------
 // PUBLIC DTO CONTRACTS (Sanitized, no secrets, no reviewer notes, no private docs)
 // ----------------------------------------------------------------------------
@@ -233,7 +235,8 @@ export function getPublicPrograms(): PublicProgramDto[] {
     let confirmations: string[] | undefined;
     if (r.confirmations) {
       try {
-        confirmations = typeof r.confirmations === "string" ? JSON.parse(r.confirmations) : r.confirmations;
+        confirmations =
+          typeof r.confirmations === "string" ? JSON.parse(r.confirmations) : r.confirmations;
       } catch {}
     }
 
@@ -700,8 +703,9 @@ export function recordAnalyticsEvent(event: {
     validated.metadata ? JSON.stringify(validated.metadata) : null,
   );
 
-  // Opportunistic retention pruning (throttle check)
-  if (Math.random() < 0.01) {
+  // Keep cleanup bounded to at most once per process every six hours.
+  if (Date.now() - lastAnalyticsPruneAt >= 6 * 60 * 60 * 1000) {
+    lastAnalyticsPruneAt = Date.now();
     try {
       pruneAnalyticsEvents(90);
     } catch {

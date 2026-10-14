@@ -14,14 +14,14 @@ export function LearningOutcomes({ program }: { program: ProgramDetail }) {
         <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              <LocalizedText>Chuẩn đầu ra
-            </LocalizedText></p>
+              <LocalizedText>Chuẩn đầu ra</LocalizedText>
+            </p>
             <h2
               id="outcomes-title"
               className="mt-3 max-w-[13ch] text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
             >
-              {program.outcomes.length} <LocalizedText>năng lực sau tốt nghiệp
-            </LocalizedText></h2>
+              {program.outcomes.length} <LocalizedText>năng lực sau tốt nghiệp</LocalizedText>
+            </h2>
           </div>
           <div className="border-t border-[var(--color-academic-rule-strong)]">
             {program.outcomes.map((outcome) => (

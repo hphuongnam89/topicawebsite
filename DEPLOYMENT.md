@@ -15,17 +15,23 @@
   - `ADMIN_SESSION_SECRET`: Khóa ký session quản trị, tối thiểu 32 ký tự ngẫu nhiên; production không dùng khóa mặc định. `SESSION_SECRET` là tên fallback tương thích; `ADMIN_JWT_SECRET` không được session hiện tại đọc.
   - `ADMIN_INITIAL_PASSWORD`: Chỉ cấp khi chủ động provision tài khoản admin qua migration 001; không có mật khẩu mặc định. Database đã migrate cần quy trình quản trị riêng để tạo/đổi tài khoản.
   - `NEXT_PUBLIC_SITE_URL`: URL chính thức của trang web.
+  - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`: tùy chọn; ưu tiên secret runtime cho thông báo lead thay vì giá trị legacy trong `site_settings`.
+  - `LEAD_NOTIFICATION_CRON_SECRET`: secret ngẫu nhiên riêng, bắt buộc để scheduler gọi worker `POST /api/internal/lead-notifications` với `Authorization: Bearer <secret>`.
+
+Trước khi phát hành code có outbox, sao lưu và áp dụng migration 005 theo runbook; không chạy migration khi chưa cô lập/backup DB đích. Sau đó cấu hình scheduler của hosting gọi worker định kỳ (ví dụ mỗi phút). Worker gửi tối đa 10 thông báo/lượt, retry theo exponential backoff, và chuyển bản ghi sang `failed` sau 12 lần. Việc gửi là at-least-once: nếu tiến trình dừng sau khi Telegram nhận tin nhưng trước khi DB đánh dấu `sent`, lần retry có thể gửi trùng. Theo dõi `claimed/sent/retried/failed` từ phản hồi; endpoint không cho phép gọi khi chưa đặt secret.
 
 ---
 
 ## 2. Triển khai Container với Docker
 
 ### Build Image
+
 ```bash
 docker build -t topica-edu .
 ```
 
 ### Chạy Container với Volume Mount
+
 ```bash
 docker run -d \
   --name topica-edu \
@@ -42,9 +48,11 @@ docker run -d \
 ## 3. Quy trình Sao lưu Cơ sở dữ liệu (Backup Runbook)
 
 ### Cơ chế kỹ thuật
+
 Hệ thống sử dụng cơ chế `VACUUM INTO` tích hợp sẵn của SQLite (SQLite 3.27+). Đây là phương thức snapshot online nguyên tử (atomic), tự động kết hợp các trang chưa ghi trong WAL vào file snapshot độc lập mà không cần ngắt kết nối hay khóa ghi ứng dụng.
 
 ### Lệnh thực thi sao lưu
+
 ```bash
 # 1. Sao lưu định kỳ tiêu chuẩn
 npx tsx scripts/backup-db.ts
@@ -54,7 +62,9 @@ npx tsx scripts/backup-db.ts --pre-migration --label=v1_1_update
 ```
 
 ### Cấu trúc Bản sao lưu & Manifest
+
 Mỗi lần sao lưu, hệ thống tạo ra 2 tệp:
+
 1. `topica_backup_<timestamp>_<ms>_<id>.db`: Snapshot cơ sở dữ liệu hoàn chỉnh, độc lập.
 2. `topica_backup_<timestamp>_<ms>_<id>.db.manifest.json`: Siêu dữ liệu kiểm chứng bao gồm:
    - `sha256`: Mã băm SHA-256 của file `.db` để chống giả mạo hoặc hỏng file.
@@ -64,6 +74,7 @@ Mỗi lần sao lưu, hệ thống tạo ra 2 tệp:
    - `isPreMigration`: Cờ bảo vệ bản sao lưu quan trọng.
 
 ### Chính sách Xoay vòng & Lưu trữ (Retention Policy)
+
 - **Giới hạn:** Mặc định giữ lại 10 bản sao lưu thường gần nhất trong thư mục `data/backups/`.
 - **Nguyên tắc an toàn (Safe Rotation):** Bản sao lưu cũ **chỉ bị xoá** sau khi bản sao lưu mới nhất đã được ghi đĩa và vượt qua bài kiểm tra `PRAGMA integrity_check;` thành công.
 - **Bảo vệ bản pre-migration:** Mọi bản sao lưu có gắn nhãn `--pre-migration` được giữ lại vĩnh viễn và không bao giờ bị xoay vòng tự động xóa.
@@ -73,14 +84,18 @@ Mỗi lần sao lưu, hệ thống tạo ra 2 tệp:
 ## 4. Quy trình Phục hồi Cơ sở dữ liệu (Restore & Disaster Recovery)
 
 ### Nguyên tắc bảo vệ môi trường chạy (Active DB Protection)
+
 Để ngăn ngừa tai nạn ghi đè nhầm dữ liệu đang hoạt động của người dùng (leads mới, bài viết mới), script phục hồi **mặc định khôi phục vào thư mục cô lập** (`data/restored/`), không chạm vào file `data/topica.db` đang chạy.
 
 ### Kiểm tra tính toàn vẹn trước phục hồi (Pre-restore Verification)
+
 Trước khi ghi bất kỳ dữ liệu nào, script thực hiện kiểm tra 2 lớp:
+
 1. Đối chiếu mã băm SHA-256 thực tế của file backup với file `manifest.json`. Nếu file bị biến dạng (corrupted) hoặc sửa đổi, tiến trình dừng ngay lập tức.
 2. Chạy `PRAGMA integrity_check;` trong bộ nhớ/phiên đọc thử.
 
 ### Lệnh thực thi phục hồi
+
 ```bash
 # 1. Kiểm tra tính toàn vẹn của bản sao lưu mới nhất (chỉ kiểm tra, không phục hồi)
 npx tsx scripts/restore-db.ts --verify-only

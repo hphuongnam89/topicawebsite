@@ -209,5 +209,9 @@ export const jsonFields = new Set([
 export function getEditableFieldValue(key: string, values: Record<string, string>): string {
   // The document access select has a public default before React receives a
   // change event. Persist that default instead of serializing an empty value.
-  return key === "access" ? values[key] || "public" : (values[key] ?? "");
+  const raw = values[key];
+  if (raw === "null" || raw === null || raw === undefined) {
+    return key === "access" ? "public" : "";
+  }
+  return key === "access" ? raw || "public" : raw;
 }

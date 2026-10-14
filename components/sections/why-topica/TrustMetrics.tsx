@@ -69,7 +69,8 @@ export function TrustMetrics({ metrics, fallbackStatements }: TrustMetricsProps)
   const items = hasVerifiedMetrics ? metrics : fallbackStatements;
 
   return (
-    <LocalizedElement as="section"
+    <LocalizedElement
+      as="section"
       aria-label={hasVerifiedMetrics ? "Dấu ấn của Topica" : "Cam kết trải nghiệm học tập"}
       className="mt-6 rounded-[1.5rem] border border-line-200 bg-elevated px-6 py-3 sm:px-8 lg:px-10"
     >
@@ -87,10 +88,12 @@ export function TrustMetrics({ metrics, fallbackStatements }: TrustMetricsProps)
                 <CountUpValue value={metric.value} suffix={metric.suffix} />
               ) : (
                 <span className="text-body-sm font-semibold tracking-[0.08em] text-brand-700 uppercase">
-                  <LocalizedText>Cam kết
-                </LocalizedText></span>
+                  <LocalizedText>Cam kết</LocalizedText>
+                </span>
               )}
-              <p className="text-body-sm font-medium text-ink-800"><LocalizedText>{label}</LocalizedText></p>
+              <p className="text-body-sm font-medium text-ink-800">
+                <LocalizedText>{label}</LocalizedText>
+              </p>
             </div>
           );
         })}

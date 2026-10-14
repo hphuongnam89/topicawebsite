@@ -8,9 +8,11 @@ const pagesToInsert = [
   {
     slug: "chat-luong-dao-tao",
     title: "Chất lượng Đào tạo & Báo cáo Ba Công khai",
-    excerpt: "Thông tin công khai về kiểm định chất lượng giáo dục, chuẩn đầu ra, điều kiện bảo đảm chất lượng và giá trị văn bằng tốt nghiệp của Trường Đại học Phú Xuân.",
+    excerpt:
+      "Thông tin công khai về kiểm định chất lượng giáo dục, chuẩn đầu ra, điều kiện bảo đảm chất lượng và giá trị văn bằng tốt nghiệp của Trường Đại học Phú Xuân.",
     seo_title: "Chất lượng Đào tạo & Báo cáo Ba Công khai | Topica Uni & ĐH Phú Xuân",
-    seo_description: "Cam kết chất lượng đào tạo, kiểm định giáo dục đại học quốc gia và giá trị văn bằng cử nhân của Trường Đại học Phú Xuân.",
+    seo_description:
+      "Cam kết chất lượng đào tạo, kiểm định giáo dục đại học quốc gia và giá trị văn bằng cử nhân của Trường Đại học Phú Xuân.",
     content_html: `
       <div class="academic-public-disclosure">
         <h2>1. Cơ sở Pháp lý & Kiểm định Chất lượng Giáo dục</h2>
@@ -56,9 +58,11 @@ const pagesToInsert = [
   {
     slug: "chinh-sach-bao-mat",
     title: "Chính sách Bảo mật Thông tin Cá nhân",
-    excerpt: "Quy chuẩn bảo vệ dữ liệu cá nhân của người học và khách hàng tuân thủ Nghị định 13/2023/NĐ-CP của Chính phủ.",
+    excerpt:
+      "Quy chuẩn bảo vệ dữ liệu cá nhân của người học và khách hàng tuân thủ Nghị định 13/2023/NĐ-CP của Chính phủ.",
     seo_title: "Chính sách Bảo mật Thông tin Người học | Topica Uni",
-    seo_description: "Cam kết bảo vệ dữ liệu cá nhân và quyền riêng tư của người học theo quy định pháp luật Việt Nam.",
+    seo_description:
+      "Cam kết bảo vệ dữ liệu cá nhân và quyền riêng tư của người học theo quy định pháp luật Việt Nam.",
     content_html: `
       <div class="privacy-policy-content">
         <h2>1. Mục đích và Phạm vi Thu thập Thông tin</h2>
@@ -106,9 +110,11 @@ const pagesToInsert = [
   {
     slug: "dieu-khoan-su-dung",
     title: "Điều khoản Sử dụng & Quy định Dịch vụ",
-    excerpt: "Quy định về quyền và nghĩa vụ của người học khi tham gia các dịch vụ trực tuyến và nền tảng đào tạo E-Learning Topica.",
+    excerpt:
+      "Quy định về quyền và nghĩa vụ của người học khi tham gia các dịch vụ trực tuyến và nền tảng đào tạo E-Learning Topica.",
     seo_title: "Điều khoản Sử dụng & Quy định Dịch vụ | Topica Uni",
-    seo_description: "Điều khoản sử dụng dịch vụ học tập trực tuyến, bản quyền học liệu và quy chế đào tạo tại Topica Uni.",
+    seo_description:
+      "Điều khoản sử dụng dịch vụ học tập trực tuyến, bản quyền học liệu và quy chế đào tạo tại Topica Uni.",
     content_html: `
       <div class="terms-of-service-content">
         <h2>1. Chấp thuận Điều khoản</h2>
@@ -140,9 +146,11 @@ const pagesToInsert = [
   {
     slug: "trai-nghiem-hoc-tap",
     title: "Trải nghiệm Học tập Trực tuyến Chuẩn Hiện đại",
-    excerpt: "Mô hình học tập trực tuyến hiện đại, chủ động thời gian 24/7 với sự đồng hành của đội ngũ giảng viên và cố vấn học tập tận tâm.",
+    excerpt:
+      "Mô hình học tập trực tuyến hiện đại, chủ động thời gian 24/7 với sự đồng hành của đội ngũ giảng viên và cố vấn học tập tận tâm.",
     seo_title: "Trải nghiệm Học tập Trực tuyến Chuẩn Hiện đại | Topica Uni",
-    seo_description: "Tìm hiểu phương pháp học E-Learning linh hoạt, lịch một tuần học tập và hệ thống hỗ trợ 24/7 tại Topica Uni.",
+    seo_description:
+      "Tìm hiểu phương pháp học E-Learning linh hoạt, lịch một tuần học tập và hệ thống hỗ trợ 24/7 tại Topica Uni.",
     content_html: `
       <div class="learning-experience-content">
         <h2>1. Mô hình Học tập Trực tuyến Linh hoạt 24/7</h2>
@@ -183,19 +191,36 @@ const pagesToInsert = [
 console.log("Bắt đầu cập nhật các trang công khai cốt lõi...");
 
 for (const p of pagesToInsert) {
-  const existing = db.prepare("SELECT id FROM pages WHERE slug = ?").get(p.slug) as { id: number } | undefined;
+  const existing = db.prepare("SELECT id FROM pages WHERE slug = ?").get(p.slug) as
+    { id: number } | undefined;
   if (existing) {
-    db.prepare(`
+    db.prepare(
+      `
       UPDATE pages
       SET title = ?, excerpt = ?, content_html = ?, seo_title = ?, seo_description = ?, updated_at = ?
       WHERE id = ?
-    `).run(p.title, p.excerpt, p.content_html, p.seo_title, p.seo_description, now, existing.id);
+    `,
+    ).run(p.title, p.excerpt, p.content_html, p.seo_title, p.seo_description, now, existing.id);
     console.log(`✓ Đã cập nhật trang: ${p.slug} (ID: ${existing.id})`);
   } else {
-    const res = db.prepare(`
+    const res = db
+      .prepare(
+        `
       INSERT INTO pages (title, slug, excerpt, content_html, featured_image, status, seo_title, seo_description, published_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, NULL, 'published', ?, ?, ?, ?, ?)
-    `).run(p.title, p.slug, p.excerpt, p.content_html, p.seo_title, p.seo_description, now, now, now);
+    `,
+      )
+      .run(
+        p.title,
+        p.slug,
+        p.excerpt,
+        p.content_html,
+        p.seo_title,
+        p.seo_description,
+        now,
+        now,
+        now,
+      );
     console.log(`+ Đã tạo mới trang: ${p.slug} (ID: ${res.lastInsertRowid})`);
   }
 }

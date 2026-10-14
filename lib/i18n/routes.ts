@@ -14,7 +14,9 @@ export function localizedPath(pathname: string, locale: "vi" | "en"): string {
   if (locale === "en") {
     if (path === "/en" || path.startsWith("/en/")) return path;
     const program = programs.find((item) => item.href.replace(/\/$/, "") === path);
-    return program ? `/en/programs/${program.id}` : englishRoutes[path] || `/en${path === "/" ? "" : path}`;
+    return program
+      ? `/en/programs/${program.id}`
+      : englishRoutes[path] || `/en${path === "/" ? "" : path}`;
   }
   if (path === "/en") return "/";
   if (path.startsWith("/en/")) return englishToVietnamese(path);

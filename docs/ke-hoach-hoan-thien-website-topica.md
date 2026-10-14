@@ -22,18 +22,18 @@ Không thay nền tảng công nghệ chỉ vì đổi thiết kế. Tính năng
 
 Các nhận định dưới đây đến từ khảo sát giao diện và đọc mã nguồn, không phải kết quả kiểm thử toàn bộ hệ thống:
 
-| Hiện trạng | Ý nghĩa đối với kế hoạch |
-|---|---|
-| Next.js 16.3.3, React 19, Tailwind 4; nhiều section và UI component đã có | Nâng cấp theo từng lớp, tái sử dụng thành phần đạt yêu cầu |
-| Trang chủ đã có chương trình, lý do lựa chọn, tin tức, chia sẻ, quy trình, đối tác, trung tâm | Cần sắp xếp lại mức ưu tiên và chất lượng nội dung, không chỉ thêm section |
-| CMS hiện truy vấn cơ sở dữ liệu nội bộ SQLite qua `lib/cms/queries.ts` và `lib/db` | Dựa trên luồng đang chạy; tài liệu mô tả WordPress cần được cập nhật |
-| Nội dung ngành nằm trong `data/programs.ts`, `data/program-details.ts`, `data/supplemental-program-details.ts`; form có danh sách ngành riêng | Chuẩn hóa một danh mục ngành dùng chung |
-| `TuitionHub.tsx` chứa nội dung và giá trị học phí trực tiếp trong component | Chuyển học phí thành dữ liệu có phiên bản và phạm vi áp dụng |
-| Admin và API trang chủ có nội dung mặc định gồm tên mẫu, số liệu mẫu | Ngăn nội dung minh họa trở thành nội dung xuất bản khi thiếu cấu hình |
-| Màu và kích thước được khai báo trong `tokens.css`, `app/theme.css`, `app/design-tokens.css` | Hợp nhất nguồn định nghĩa, giữ lớp tương thích trong quá trình chuyển đổi |
-| Analytics hiện ghi lượt xem trang | Bổ sung sự kiện hành trình và kết quả tiếp nhận tư vấn |
-| Có unit test, E2E và axe dependency; script links/a11y/lighthouse hiện chỉ in thông báo | Chuyển các đầu kiểm tra này thành kiểm tra thực chất |
-| Có nhiều thay đổi giao diện đang nằm trong working tree | Khi triển khai phải ghi nhận và bảo toàn thay đổi hiện có; không reset hàng loạt |
+| Hiện trạng                                                                                                                                    | Ý nghĩa đối với kế hoạch                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Next.js 16.3.3, React 19, Tailwind 4; nhiều section và UI component đã có                                                                     | Nâng cấp theo từng lớp, tái sử dụng thành phần đạt yêu cầu                       |
+| Trang chủ đã có chương trình, lý do lựa chọn, tin tức, chia sẻ, quy trình, đối tác, trung tâm                                                 | Cần sắp xếp lại mức ưu tiên và chất lượng nội dung, không chỉ thêm section       |
+| CMS hiện truy vấn cơ sở dữ liệu nội bộ SQLite qua `lib/cms/queries.ts` và `lib/db`                                                            | Dựa trên luồng đang chạy; tài liệu mô tả WordPress cần được cập nhật             |
+| Nội dung ngành nằm trong `data/programs.ts`, `data/program-details.ts`, `data/supplemental-program-details.ts`; form có danh sách ngành riêng | Chuẩn hóa một danh mục ngành dùng chung                                          |
+| `TuitionHub.tsx` chứa nội dung và giá trị học phí trực tiếp trong component                                                                   | Chuyển học phí thành dữ liệu có phiên bản và phạm vi áp dụng                     |
+| Admin và API trang chủ có nội dung mặc định gồm tên mẫu, số liệu mẫu                                                                          | Ngăn nội dung minh họa trở thành nội dung xuất bản khi thiếu cấu hình            |
+| Màu và kích thước được khai báo trong `tokens.css`, `app/theme.css`, `app/design-tokens.css`                                                  | Hợp nhất nguồn định nghĩa, giữ lớp tương thích trong quá trình chuyển đổi        |
+| Analytics hiện ghi lượt xem trang                                                                                                             | Bổ sung sự kiện hành trình và kết quả tiếp nhận tư vấn                           |
+| Có unit test, E2E và axe dependency; script links/a11y/lighthouse hiện chỉ in thông báo                                                       | Chuyển các đầu kiểm tra này thành kiểm tra thực chất                             |
+| Có nhiều thay đổi giao diện đang nằm trong working tree                                                                                       | Khi triển khai phải ghi nhận và bảo toàn thay đổi hiện có; không reset hàng loạt |
 
 Các lỗi đã thấy ở giao diện cần đưa vào backlog: hotline/email không thống nhất; thông báo tuyển sinh hết hạn còn nổi bật; HTML entity và thẻ HTML lộ ra; liên kết tài liệu `#`; nhãn nút sai đích đến; khác biệt về hình thức đào tạo và lịch học chưa giải thích rõ.
 
@@ -47,20 +47,20 @@ Giả định vận hành: tài liệu chương trình và học phí được c
 
 Nếu chỉ có 1 lập trình viên kiêm thiết kế, cần lập lại ước lượng sau phase 0; không dùng nguyên lịch đội nhiều vai trò. Thời gian từng phase là cửa sổ thực hiện, có chồng lấp, không phải tổng số ngày công. Dự phòng tuần 11–12 dành cho nội dung, ảnh và sửa lỗi, không dùng để âm thầm mở rộng tính năng.
 
-| Phase | Nội dung | Thời lượng dự kiến | Lịch | Phụ thuộc chính |
-|---|---|---|---|---|
-| 0 | Kiểm kê và baseline | 2–3 ngày | Tuần 1 | Bắt đầu |
-| 1 | Chuẩn hóa nội dung và dữ liệu | 4–6 ngày khởi tạo, hoàn thiện song song | Tuần 1–2 | 0 |
-| 2 | Kiến trúc thông tin và user flow | 3–4 ngày | Tuần 2 | 0, bộ dữ liệu lõi của 1 |
-| 3 | Hướng mỹ thuật và design system | 4–6 ngày | Tuần 3 | 2 |
-| 4 | Thiết kế chi tiết các mẫu trang | 6–8 ngày | Tuần 4–5 | 2, 3, nội dung mẫu thật |
-| 5 | Prototype và kiểm thử người dùng | 3–5 ngày | Tuần 5 | Các luồng lõi của 4 |
-| 6 | Thành phần giao diện và khung website | 4–6 ngày | Tuần 5–6 | 3 đã chốt; cập nhật theo 5 |
-| 7 | Triển khai toàn bộ nhóm trang | 10–15 ngày | Tuần 6–8 | 4, 5, 6; dữ liệu đã duyệt |
-| 8 | CMS và quy trình cập nhật | 5–8 ngày | Tuần 6–8 | 1, mô hình dữ liệu đã chốt |
-| 9 | QA tổng thể và nghiệm thu | 5–7 ngày | Tuần 9 | 7, 8 |
-| 10 | Phát hành và bàn giao | 2–3 ngày | Tuần 10 | 9 đạt tiêu chí |
-| 11 | Theo dõi và tối ưu | 30 ngày | Sau phát hành | 10 |
+| Phase | Nội dung                              | Thời lượng dự kiến                      | Lịch          | Phụ thuộc chính            |
+| ----- | ------------------------------------- | --------------------------------------- | ------------- | -------------------------- |
+| 0     | Kiểm kê và baseline                   | 2–3 ngày                                | Tuần 1        | Bắt đầu                    |
+| 1     | Chuẩn hóa nội dung và dữ liệu         | 4–6 ngày khởi tạo, hoàn thiện song song | Tuần 1–2      | 0                          |
+| 2     | Kiến trúc thông tin và user flow      | 3–4 ngày                                | Tuần 2        | 0, bộ dữ liệu lõi của 1    |
+| 3     | Hướng mỹ thuật và design system       | 4–6 ngày                                | Tuần 3        | 2                          |
+| 4     | Thiết kế chi tiết các mẫu trang       | 6–8 ngày                                | Tuần 4–5      | 2, 3, nội dung mẫu thật    |
+| 5     | Prototype và kiểm thử người dùng      | 3–5 ngày                                | Tuần 5        | Các luồng lõi của 4        |
+| 6     | Thành phần giao diện và khung website | 4–6 ngày                                | Tuần 5–6      | 3 đã chốt; cập nhật theo 5 |
+| 7     | Triển khai toàn bộ nhóm trang         | 10–15 ngày                              | Tuần 6–8      | 4, 5, 6; dữ liệu đã duyệt  |
+| 8     | CMS và quy trình cập nhật             | 5–8 ngày                                | Tuần 6–8      | 1, mô hình dữ liệu đã chốt |
+| 9     | QA tổng thể và nghiệm thu             | 5–7 ngày                                | Tuần 9        | 7, 8                       |
+| 10    | Phát hành và bàn giao                 | 2–3 ngày                                | Tuần 10       | 9 đạt tiêu chí             |
+| 11    | Theo dõi và tối ưu                    | 30 ngày                                 | Sau phát hành | 10                         |
 
 ## 4. Phase 0 — Kiểm kê, xác định phạm vi và ghi nhận baseline
 
@@ -145,13 +145,13 @@ Nếu chỉ có 1 lập trình viên kiêm thiết kế, cần lập lại ướ
 
 **Bộ màu đề xuất**
 
-| Vai trò | Màu | Quy tắc |
-|---|---|---|
-| Navy chính | #00264D | Header/footer, tiêu đề, nút chính trên nền sáng |
-| Xanh bổ trợ | #16466B | Mảng phụ, tương tác, chuyển sắc nhẹ; phải kiểm tra từng cặp tương phản |
-| Nền chính | #FFFFFF | Nội dung đọc và khoảng thở |
-| Nền phân đoạn | #F3F6FA | Nhóm nội dung phụ |
-| Chữ nội dung | #243447 | Văn bản dài |
+| Vai trò       | Màu     | Quy tắc                                                                |
+| ------------- | ------- | ---------------------------------------------------------------------- |
+| Navy chính    | #00264D | Header/footer, tiêu đề, nút chính trên nền sáng                        |
+| Xanh bổ trợ   | #16466B | Mảng phụ, tương tác, chuyển sắc nhẹ; phải kiểm tra từng cặp tương phản |
+| Nền chính     | #FFFFFF | Nội dung đọc và khoảng thở                                             |
+| Nền phân đoạn | #F3F6FA | Nhóm nội dung phụ                                                      |
+| Chữ nội dung  | #243447 | Văn bản dài                                                            |
 
 Các mã là đề xuất; có thể chọn sắc bổ trợ từ thang navy hiện có sau thử nghiệm thực tế. Vàng giữ ở logo nếu là nhận diện chuẩn; không dùng làm màu hành động mặc định toàn website. Màu trạng thái lỗi/thành công có chức năng riêng và luôn có chữ/icon hỗ trợ.
 
@@ -330,15 +330,15 @@ Thứ tự triển khai:
 
 **Mô hình nội dung đề xuất**
 
-| Loại dữ liệu | Trường quan trọng |
-|---|---|
-| Thông tin đơn vị | Tên, quan hệ tổ chức, hotline/email theo vai trò, địa chỉ, mạng xã hội đã xác nhận |
-| Chương trình | ID, slug, tên chính thức/chuyên ngành, mã, hình thức, văn bằng, đơn vị cấp, thời gian, tín chỉ, nội dung, nguồn và người rà soát |
-| Kỳ tuyển sinh | Chương trình áp dụng, bắt đầu, hạn, khai giảng, trạng thái, link xét tuyển, tài liệu |
-| Học phí | Chương trình/khóa/đối tượng, đơn giá, khoản khác, hiệu lực, chính sách, tài liệu nguồn |
-| Tài liệu | Tên, file, loại, ngày ban hành/hiệu lực, phiên bản, đơn vị quản lý, liên kết thay thế |
-| Tin/sự kiện | Loại nội dung, ngày đăng, ngày sự kiện, thời hạn nổi bật, tác giả/đơn vị, trạng thái |
-| Người học/đối tác | Nội dung đã duyệt, ảnh/logo, phạm vi quan hệ hoặc bối cảnh, quyền sử dụng |
+| Loại dữ liệu      | Trường quan trọng                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Thông tin đơn vị  | Tên, quan hệ tổ chức, hotline/email theo vai trò, địa chỉ, mạng xã hội đã xác nhận                                               |
+| Chương trình      | ID, slug, tên chính thức/chuyên ngành, mã, hình thức, văn bằng, đơn vị cấp, thời gian, tín chỉ, nội dung, nguồn và người rà soát |
+| Kỳ tuyển sinh     | Chương trình áp dụng, bắt đầu, hạn, khai giảng, trạng thái, link xét tuyển, tài liệu                                             |
+| Học phí           | Chương trình/khóa/đối tượng, đơn giá, khoản khác, hiệu lực, chính sách, tài liệu nguồn                                           |
+| Tài liệu          | Tên, file, loại, ngày ban hành/hiệu lực, phiên bản, đơn vị quản lý, liên kết thay thế                                            |
+| Tin/sự kiện       | Loại nội dung, ngày đăng, ngày sự kiện, thời hạn nổi bật, tác giả/đơn vị, trạng thái                                             |
+| Người học/đối tác | Nội dung đã duyệt, ảnh/logo, phạm vi quan hệ hoặc bối cảnh, quyền sử dụng                                                        |
 
 - Bổ sung draft/preview/review/publish/archive theo vai trò thực tế; phân quyền phải có hiệu lực ở server, không chỉ ẩn nút.
 - Có lịch xuất bản và hết hạn khi nghiệp vụ cần; quy định cache và đồng bộ để thay đổi xuất hiện đúng hạn.
@@ -401,7 +401,7 @@ Tham chiếu: https://web.dev/articles/vitals
 - Không viết test chỉ để kiểm tra lại các class CSS hay tên khẩu hiệu đã chốt; cập nhật test cũ để xác minh hành vi mới.
 
 **Đầu ra:** báo cáo QA, lỗi đã xử lý, ma trận thiết bị, kết quả UX/hiệu năng/khả năng tiếp cận, biên bản nghiệm thu nghiệp vụ.
-*Trạng thái*: ✅ **Đã hoàn thành 100%** (Xem chi tiết tại: `docs/phase-9-qa-tong-the-va-hieu-nang.md`).
+_Trạng thái_: ✅ **Đã hoàn thành 100%** (Xem chi tiết tại: `docs/phase-9-qa-tong-the-va-hieu-nang.md`).
 
 **Chủ trì:** QA; UX và kỹ thuật sửa lỗi; Topica xác nhận nội dung.
 
@@ -425,17 +425,17 @@ Tham chiếu: https://web.dev/articles/vitals
 
 **Sự kiện cần đo**
 
-| Sự kiện | Mục đích |
-|---|---|
-| view_program | Người dùng thực sự xem trang ngành nào |
-| view_tuition | Nhu cầu thông tin học phí |
-| click_consultation | Ý định hỏi tư vấn theo trang/vị trí |
-| lead_form_start | Bắt đầu điền form |
-| lead_submit_success | Hệ thống nhận thành công; không đo chỉ theo click nút |
-| lead_submit_error | Phát hiện bước thất bại |
+| Sự kiện              | Mục đích                                                |
+| -------------------- | ------------------------------------------------------- |
+| view_program         | Người dùng thực sự xem trang ngành nào                  |
+| view_tuition         | Nhu cầu thông tin học phí                               |
+| click_consultation   | Ý định hỏi tư vấn theo trang/vị trí                     |
+| lead_form_start      | Bắt đầu điền form                                       |
+| lead_submit_success  | Hệ thống nhận thành công; không đo chỉ theo click nút   |
+| lead_submit_error    | Phát hiện bước thất bại                                 |
 | outbound_apply_click | Chuyển sang cổng xét tuyển; không coi là hoàn tất hồ sơ |
-| document_open | Mức sử dụng tài liệu |
-| search_zero_results | Khoảng trống tìm kiếm/nội dung |
+| document_open        | Mức sử dụng tài liệu                                    |
+| search_zero_results  | Khoảng trống tìm kiếm/nội dung                          |
 
 Không đưa tên, điện thoại, email hoặc nội dung nhập tự do vào analytics. Tham số URL không được ghi nguyên trạng nếu có thể chứa thông tin cá nhân; thiết kế whitelist trường đo. Việc theo dõi kết quả nộp hồ sơ ở cổng ngoài cần cơ chế chia sẻ dữ liệu được thống nhất; nếu chưa có chỉ báo cáo outbound click.
 
@@ -451,27 +451,27 @@ So sánh trước/sau có xét nguồn traffic, mùa tuyển sinh và thiết b�
 
 ## 16. Backlog ưu tiên có thể chuyển thành ticket
 
-| ID | Công việc | Ưu tiên | Phase | Hoàn thành khi |
-|---|---|---|---|---|
-| DATA-01 | Thống nhất danh bạ và liên kết chính thức | P1 | 1, 7, 8 | Header/footer/form/schema dùng cùng dữ liệu đã duyệt |
-| DATA-02 | Xác minh hình thức, văn bằng, lịch học từng ngành | P0/P1 theo ảnh hưởng | 1 | Có nguồn và cách trình bày nhất quán đúng phạm vi |
-| DATA-03 | Học phí có phiên bản, hiệu lực và đối tượng | P1 | 1, 8 | Không còn giá trị quan trọng hard-code rời rạc |
-| DATA-04 | Loại bỏ dữ liệu minh họa trong fallback xuất bản | P1 | 1, 8 | Thiếu dữ liệu không sinh tên/số liệu mẫu công khai |
-| UX-01 | Sitemap/menu/CTA theo nhu cầu | P1 | 2, 4, 6 | Luồng tìm ngành, học phí, xét tuyển không nhầm |
-| UX-02 | Hero sáng, ảnh thật, tiêu đề responsive | P1 | 3, 4, 7 | Không ngắt dòng bất hợp lý; CTA và thông điệp rõ |
-| UX-03 | Mẫu trang ngành dùng chung | P1 | 4, 7 | 5 ngành đủ dữ liệu lõi và cấu trúc thống nhất |
-| UX-04 | Form ngắn và đầy đủ trạng thái | P1 | 4, 7 | Lỗi dễ sửa, gửi thành công lưu thật, không gửi lặp |
-| UX-05 | Một chiến lược sticky trên mobile | P1 | 4, 6 | Nội dung, bàn phím và focus không bị che |
-| UI-01 | Hợp nhất design tokens navy | P1 | 3, 6 | Một nguồn định nghĩa có semantic rõ |
-| UI-02 | Chuẩn hóa ảnh, chữ, khoảng cách và card | P2 | 3, 6, 7 | Các mẫu có cùng ngôn ngữ thị giác |
-| CMS-01 | Lịch thông báo và hết hạn | P1 | 8 | Đúng ngày/trạng thái/cache ở Asia/Bangkok |
-| CMS-02 | Preview, duyệt, phân quyền, nhật ký | P1 | 8 | Luồng biên tập có hiệu lực server và nghiệm thu |
-| CONTENT-01 | Sửa entity, excerpt và tài liệu `#` | P1 | 1, 7 | Đọc sạch, xem/tải được tài liệu thật |
-| CONTENT-02 | Bộ ảnh và câu chuyện người học thật | P2 | 1, 4, 7 | Có nguồn/quyền dùng/bối cảnh |
-| QA-01 | Links/a11y/performance thực chất | P1 | 9 | Lệnh kiểm tra có báo cáo và phát hiện lỗi |
-| QA-02 | Nghiệm thu 6 luồng chính trên thiết bị | P1 | 5, 9 | Hoàn thành tác vụ và sửa nhầm lẫn quan trọng |
-| OPS-01 | Backup/restore/release/rollback | P1 | 10 | Thử khôi phục và có người chịu trách nhiệm |
-| MEASURE-01 | Sự kiện hành trình và chất lượng lead | P2 | 7, 11 | Đo đúng kết quả và không gửi PII |
+| ID         | Công việc                                         | Ưu tiên              | Phase   | Hoàn thành khi                                       |
+| ---------- | ------------------------------------------------- | -------------------- | ------- | ---------------------------------------------------- |
+| DATA-01    | Thống nhất danh bạ và liên kết chính thức         | P1                   | 1, 7, 8 | Header/footer/form/schema dùng cùng dữ liệu đã duyệt |
+| DATA-02    | Xác minh hình thức, văn bằng, lịch học từng ngành | P0/P1 theo ảnh hưởng | 1       | Có nguồn và cách trình bày nhất quán đúng phạm vi    |
+| DATA-03    | Học phí có phiên bản, hiệu lực và đối tượng       | P1                   | 1, 8    | Không còn giá trị quan trọng hard-code rời rạc       |
+| DATA-04    | Loại bỏ dữ liệu minh họa trong fallback xuất bản  | P1                   | 1, 8    | Thiếu dữ liệu không sinh tên/số liệu mẫu công khai   |
+| UX-01      | Sitemap/menu/CTA theo nhu cầu                     | P1                   | 2, 4, 6 | Luồng tìm ngành, học phí, xét tuyển không nhầm       |
+| UX-02      | Hero sáng, ảnh thật, tiêu đề responsive           | P1                   | 3, 4, 7 | Không ngắt dòng bất hợp lý; CTA và thông điệp rõ     |
+| UX-03      | Mẫu trang ngành dùng chung                        | P1                   | 4, 7    | 5 ngành đủ dữ liệu lõi và cấu trúc thống nhất        |
+| UX-04      | Form ngắn và đầy đủ trạng thái                    | P1                   | 4, 7    | Lỗi dễ sửa, gửi thành công lưu thật, không gửi lặp   |
+| UX-05      | Một chiến lược sticky trên mobile                 | P1                   | 4, 6    | Nội dung, bàn phím và focus không bị che             |
+| UI-01      | Hợp nhất design tokens navy                       | P1                   | 3, 6    | Một nguồn định nghĩa có semantic rõ                  |
+| UI-02      | Chuẩn hóa ảnh, chữ, khoảng cách và card           | P2                   | 3, 6, 7 | Các mẫu có cùng ngôn ngữ thị giác                    |
+| CMS-01     | Lịch thông báo và hết hạn                         | P1                   | 8       | Đúng ngày/trạng thái/cache ở Asia/Bangkok            |
+| CMS-02     | Preview, duyệt, phân quyền, nhật ký               | P1                   | 8       | Luồng biên tập có hiệu lực server và nghiệm thu      |
+| CONTENT-01 | Sửa entity, excerpt và tài liệu `#`               | P1                   | 1, 7    | Đọc sạch, xem/tải được tài liệu thật                 |
+| CONTENT-02 | Bộ ảnh và câu chuyện người học thật               | P2                   | 1, 4, 7 | Có nguồn/quyền dùng/bối cảnh                         |
+| QA-01      | Links/a11y/performance thực chất                  | P1                   | 9       | Lệnh kiểm tra có báo cáo và phát hiện lỗi            |
+| QA-02      | Nghiệm thu 6 luồng chính trên thiết bị            | P1                   | 5, 9    | Hoàn thành tác vụ và sửa nhầm lẫn quan trọng         |
+| OPS-01     | Backup/restore/release/rollback                   | P1                   | 10      | Thử khôi phục và có người chịu trách nhiệm           |
+| MEASURE-01 | Sự kiện hành trình và chất lượng lead             | P2                   | 7, 11   | Đo đúng kết quả và không gửi PII                     |
 
 Ưu tiên trong bảng là phân loại ban đầu; phase 0 quyết định mức nghiêm trọng dựa trên chương trình và thông tin chính thức.
 

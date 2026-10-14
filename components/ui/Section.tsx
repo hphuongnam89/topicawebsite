@@ -31,19 +31,16 @@ export function Section({
   ...props
 }: SectionProps) {
   return (
-    <Component
-      className={cn(
-        "py-16 lg:py-24",
-        variantStyles[variant],
-        className,
-      )}
-      {...props}
-    >
-      <LocalizedText>{contained ? (
-        <Container size={containerSize}><LocalizedText>{children}</LocalizedText></Container>
-      ) : (
-        children
-      )}</LocalizedText>
+    <Component className={cn("py-16 lg:py-24", variantStyles[variant], className)} {...props}>
+      <LocalizedText>
+        {contained ? (
+          <Container size={containerSize}>
+            <LocalizedText>{children}</LocalizedText>
+          </Container>
+        ) : (
+          children
+        )}
+      </LocalizedText>
     </Component>
   );
 }

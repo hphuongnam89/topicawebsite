@@ -27,7 +27,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(function Card(
       className={cn(
         "group overflow-hidden rounded-lg font-sans transition-[transform,box-shadow,border-color] duration-[var(--duration-base)]",
         variantStyles[variant],
-        interactive && "hover:-translate-y-0.5 hover:shadow-card-hover hover:border-line-300",
+        interactive && "hover:-translate-y-0.5 hover:border-line-300 hover:shadow-card-hover",
         className,
       )}
       {...props}
@@ -69,7 +69,10 @@ export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement>
 export function CardTitle({ className, as: Component = "h3", ...props }: CardTitleProps) {
   return (
     <Component
-      className={cn("font-serif text-h3 font-bold text-ink-950 transition-colors group-hover:text-navy-900", className)}
+      className={cn(
+        "font-serif text-h3 font-bold text-ink-950 transition-colors group-hover:text-navy-900",
+        className,
+      )}
       {...props}
     />
   );
@@ -78,7 +81,9 @@ export function CardTitle({ className, as: Component = "h3", ...props }: CardTit
 export type CardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
 
 export function CardDescription({ className, ...props }: CardDescriptionProps) {
-  return <p className={cn("mt-1.5 text-body-sm text-ink-600 leading-relaxed", className)} {...props} />;
+  return (
+    <p className={cn("mt-1.5 text-body-sm leading-relaxed text-ink-600", className)} {...props} />
+  );
 }
 
 export type CardContentProps = React.HTMLAttributes<HTMLDivElement>;

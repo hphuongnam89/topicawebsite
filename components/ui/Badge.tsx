@@ -3,14 +3,7 @@ import * as React from "react";
 import { cn } from "./cn";
 
 export type BadgeVariant =
-  | "default"
-  | "brand"
-  | "navy"
-  | "outline"
-  | "success"
-  | "warning"
-  | "error"
-  | "info";
+  "default" | "brand" | "navy" | "outline" | "success" | "warning" | "error" | "info";
 
 export type BadgeSize = "sm" | "default";
 
@@ -54,7 +47,13 @@ export function Badge({
       )}
       {...props}
     >
-      <LocalizedText>{icon && <span className="shrink-0"><LocalizedText>{icon}</LocalizedText></span>}</LocalizedText>
+      <LocalizedText>
+        {icon && (
+          <span className="shrink-0">
+            <LocalizedText>{icon}</LocalizedText>
+          </span>
+        )}
+      </LocalizedText>
       <LocalizedText>{children}</LocalizedText>
     </div>
   );

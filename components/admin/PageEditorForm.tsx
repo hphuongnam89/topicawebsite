@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { sanitizeWordPressHtml } from "@/lib/cms/html";
@@ -40,43 +41,72 @@ export interface PageFormData {
   published_at: string;
 }
 
+import { generateSlug } from "@/lib/utils";
+
 interface PageEditorFormProps {
   initialData?: PageFormData;
   isEdit?: boolean;
-}
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[đĐ]/g, "d")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
 }
 
 export function PageEditorForm({ initialData, isEdit = false }: PageEditorFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<PageFormData>(
-    initialData || {
-      title: "",
-      slug: "",
-      excerpt: "",
-      content_html: "",
-      featured_image: "",
-      status: "draft",
-      seo_title: "",
-      seo_description: "",
-      published_at: new Date().toISOString().slice(0, 16),
-    },
+  const [formData, setFormDataRaw] = useState<PageFormData>(
+    initialData
+      ? {
+          ...initialData,
+          excerpt:
+            initialData.excerpt === "null" || !initialData.excerpt ? "" : initialData.excerpt,
+          featured_image:
+            initialData.featured_image === "null" || !initialData.featured_image
+              ? ""
+              : initialData.featured_image,
+          seo_title:
+            initialData.seo_title === "null" || !initialData.seo_title ? "" : initialData.seo_title,
+          seo_description:
+            initialData.seo_description === "null" || !initialData.seo_description
+              ? ""
+              : initialData.seo_description,
+        }
+      : {
+          title: "",
+          slug: "",
+          excerpt: "",
+          content_html: "",
+          featured_image: "",
+          status: "draft",
+          seo_title: "",
+          seo_description: "",
+          published_at: new Date().toISOString().slice(0, 16),
+        },
   );
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
+  const setFormData: typeof setFormDataRaw = (updater) => {
+    setDirty(true);
+    setFormDataRaw(updater);
+  };
+
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
+    };
+  }, [dirty]);
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -151,6 +181,8 @@ export function PageEditorForm({ initialData, isEdit = false }: PageEditorFormPr
       }
 
       setSuccess("Lưu trang thành công!");
+      setDirty(false);
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
       if (!isEdit) {
         setTimeout(() => {
           router.push(`/admin/pages/${data.id}/edit`);

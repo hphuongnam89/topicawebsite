@@ -79,7 +79,9 @@ describe("Task R11: Cấu trúc và hiển thị Trang chủ (Template T01)", ()
         "5 ngành học — Chọn đúng hướng đi",
       );
 
-      expect(screen.queryByRole("button", { name: /tạm dừng|tiếp tục tự động/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /tạm dừng|tiếp tục tự động/i }),
+      ).not.toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: /Hiển thị banner 3/ }));
       expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName(
         "Sáng tạo — Thế giới số trong tay bạn",

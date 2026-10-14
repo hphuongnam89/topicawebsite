@@ -122,14 +122,19 @@ async function testUrls() {
   console.log(statusCounts);
 
   // Group errors (non-200)
-  const failed = results.filter(r => r.httpStatus !== 200 && r.httpStatus !== 307 && r.httpStatus !== 308);
+  const failed = results.filter(
+    (r) => r.httpStatus !== 200 && r.httpStatus !== 307 && r.httpStatus !== 308,
+  );
   console.log(`\n=== FAILED / 404 / ERR URLs (${failed.length}) ===`);
   for (const f of failed) {
     console.log(`- [${f.status}] ${f.url} (${f.type}: ${f.label})`);
   }
 
   // Output JSON report
-  fs.writeFileSync("docs/url-inventory-results.json", JSON.stringify({ results, statusCounts }, null, 2));
+  fs.writeFileSync(
+    "docs/url-inventory-results.json",
+    JSON.stringify({ results, statusCounts }, null, 2),
+  );
   console.log("\nSaved detailed results to docs/url-inventory-results.json");
 }
 

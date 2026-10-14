@@ -18,7 +18,9 @@ export default async function MainLayout({ children }: { children: React.ReactNo
     <LanguageProvider initialLocale={initialLocale}>
       <AnalyticsTracker />
       <Header channels={contact.channels} />
-      <main id="main-content"><LocalizedText>{children}</LocalizedText></main>
+      <main id="main-content">
+        <LocalizedText>{children}</LocalizedText>
+      </main>
       <Footer channels={contact.channels} locations={contact.locations} />
       <FloatingActions channels={contact.channels} />
       <MobileStickyBar />

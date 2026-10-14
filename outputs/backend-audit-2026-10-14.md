@@ -86,14 +86,14 @@ Lead endpoint có bộ đếm 5/15 phút và cap map (`app/api/public/lead/route
 
 ## Chất lượng và kiểm tra đã chạy
 
-| Kiểm tra | Kết quả | Ghi chú |
-|---|---|---|
-| `npm run typecheck` | **Pass** | `tsc --noEmit` |
-| `npm test -- --reporter=dot` | **Pass: 47 files, 291 tests** | Vitest setup dùng DB/backup/uploads fixture tạm; test notification được cô lập theo cấu hình dự án |
-| `./node_modules/.bin/eslint app/api lib` | **Pass** | Lint tập trung backend không báo lỗi |
-| `npm run lint` | **Fail** | Toàn repo báo **308 errors, 20 warnings**; các lỗi có cả tests/evidence và UI ngoài backend. Lỗi tiêu biểu trong output: nhiều `@ts-ignore` ở test CMS, `prefer-const`, React setState-in-effect ở trang admin pages, `require()` ở evidence script. |
-| `npm audit --omit=dev --json` | **Fail theo advisory** | **1 critical + 8 high** trong production dependency tree; npm audit hoàn tất khi chuyển cache sang `/tmp`, không sửa lockfile. |
-| Build/Docker build | **Chưa chạy** | Không chạy build vì audit chỉ đọc và Dockerfile hiện phụ thuộc seed ignored; cần clean-checkout test sau khi sửa provisioning. |
+| Kiểm tra                                 | Kết quả                       | Ghi chú                                                                                                                                                                                                                                              |
+| ---------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run typecheck`                      | **Pass**                      | `tsc --noEmit`                                                                                                                                                                                                                                       |
+| `npm test -- --reporter=dot`             | **Pass: 47 files, 291 tests** | Vitest setup dùng DB/backup/uploads fixture tạm; test notification được cô lập theo cấu hình dự án                                                                                                                                                   |
+| `./node_modules/.bin/eslint app/api lib` | **Pass**                      | Lint tập trung backend không báo lỗi                                                                                                                                                                                                                 |
+| `npm run lint`                           | **Fail**                      | Toàn repo báo **308 errors, 20 warnings**; các lỗi có cả tests/evidence và UI ngoài backend. Lỗi tiêu biểu trong output: nhiều `@ts-ignore` ở test CMS, `prefer-const`, React setState-in-effect ở trang admin pages, `require()` ở evidence script. |
+| `npm audit --omit=dev --json`            | **Fail theo advisory**        | **1 critical + 8 high** trong production dependency tree; npm audit hoàn tất khi chuyển cache sang `/tmp`, không sửa lockfile.                                                                                                                       |
+| Build/Docker build                       | **Chưa chạy**                 | Không chạy build vì audit chỉ đọc và Dockerfile hiện phụ thuộc seed ignored; cần clean-checkout test sau khi sửa provisioning.                                                                                                                       |
 
 Môi trường kiểm tra hiện tại là **Node `v26.7.0`**, trong khi `package.json` yêu cầu Node `22.x`; do đó kết quả test không xác nhận tương thích production Node 22.
 

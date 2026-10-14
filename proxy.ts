@@ -13,25 +13,31 @@ export function proxy(request: NextRequest) {
     : selected === "vi" || selected === "en"
       ? selected
       : request.cookies.get("topica_locale")?.value;
-  requestHeaders.set("x-topica-locale", locale === "en" ? "en" : "vi");
+  const activeLocale = locale === "en" ? "en" : "vi";
+  requestHeaders.set("x-topica-locale", activeLocale);
 
+  let response: NextResponse;
   if (isEnRoute) {
     const targetViPath = localizedPath(pathname, "vi");
     const nextUrl = request.nextUrl.clone();
     nextUrl.pathname = targetViPath;
     nextUrl.searchParams.set("lang", "en");
-    return NextResponse.rewrite(nextUrl, {
+    response = NextResponse.rewrite(nextUrl, {
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else {
+    response = NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
   }
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  response.headers.set("x-topica-locale", activeLocale);
+  response.headers.set("x-pathname", pathname);
+  return response;
 }
 
 export const config = {

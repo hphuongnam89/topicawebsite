@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireUser } from "@/lib/auth/guards";
 import { getUserById, updateUserPassword } from "@/lib/db";
 import { verifyPassword, hashPassword, MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
@@ -12,10 +13,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const body = await request.json();
+    const rawBody = await readBoundedJson(request, 4096);
+    const body =
+      rawBody && typeof rawBody === "object"
+        ? (rawBody as { currentPassword?: unknown; newPassword?: unknown })
+        : {};
     const { currentPassword, newPassword } = body;
 
-    if (!currentPassword || !newPassword) {
+    if (
+      typeof currentPassword !== "string" ||
+      !currentPassword ||
+      typeof newPassword !== "string" ||
+      !newPassword ||
+      currentPassword.length > 256 ||
+      newPassword.length > 256
+    ) {
       return NextResponse.json(
         { error: "Vui lòng nhập mật khẩu hiện tại và mật khẩu mới." },
         { status: 400 },

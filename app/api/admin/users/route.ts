@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireAdmin } from "@/lib/auth/guards";
 import {
   getUsers,
@@ -29,16 +30,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const body = await request.json();
+    const rawBody = await readBoundedJson(request);
+    const body =
+      rawBody && typeof rawBody === "object"
+        ? (rawBody as { username?: unknown; password?: unknown; name?: unknown; role?: unknown })
+        : {};
     const { username, password, name, role } = body;
 
-    if (!username || !password || !name) {
+    if (
+      typeof username !== "string" ||
+      !username.trim() ||
+      username.length > 100 ||
+      typeof password !== "string" ||
+      !password ||
+      password.length > 256 ||
+      typeof name !== "string" ||
+      !name.trim() ||
+      name.length > 150
+    ) {
       return NextResponse.json(
         { error: "Vui lòng điền đầy đủ tên đăng nhập, mật khẩu và họ tên." },
         { status: 400 },
       );
     }
-    if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
       return NextResponse.json(
         { error: `Mật khẩu phải có tối thiểu ${MIN_PASSWORD_LENGTH} ký tự.` },
         { status: 400 },
@@ -76,15 +91,28 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const body = await request.json();
+    const rawBody = await readBoundedJson(request);
+    const body =
+      rawBody && typeof rawBody === "object"
+        ? (rawBody as { id?: unknown; name?: unknown; role?: unknown; password?: unknown })
+        : {};
     const { id, name, role, password } = body;
 
-    if (!id || !name) {
+    if (
+      typeof id !== "string" ||
+      !id ||
+      typeof name !== "string" ||
+      !name.trim() ||
+      name.length > 150
+    ) {
       return NextResponse.json({ error: "Thiếu ID hoặc họ tên." }, { status: 400 });
     }
 
-    if (password && password.trim().length > 0) {
-      if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH) {
+    if (password !== undefined && password !== null) {
+      if (typeof password !== "string" || password.length > 256) {
+        return NextResponse.json({ error: "Mật khẩu không hợp lệ." }, { status: 400 });
+      }
+      if (password.trim().length > 0 && password.length < MIN_PASSWORD_LENGTH) {
         return NextResponse.json(
           { error: `Mật khẩu phải có tối thiểu ${MIN_PASSWORD_LENGTH} ký tự.` },
           { status: 400 },
@@ -121,7 +149,7 @@ export async function PUT(request: Request) {
         }
       }
 
-      if (password && password.trim().length > 0) {
+      if (typeof password === "string" && password.trim().length > 0) {
         updates.password_hash = hashPassword(password);
       }
 
@@ -134,7 +162,7 @@ export async function PUT(request: Request) {
       recordAdminAudit(auth.user, "update", "user", id, [
         "name",
         "role",
-        ...(password?.trim() ? ["password"] : []),
+        ...(typeof password === "string" && password.trim() ? ["password"] : []),
       ]);
 
       db.exec("COMMIT");

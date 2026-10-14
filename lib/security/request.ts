@@ -23,8 +23,7 @@ export function isSameOrigin(request: Request): boolean {
     const expectedOrigin = new URL(`${forwardedProto}://${forwardedHost}`);
 
     return (
-      equivalentOrigin(clientOrigin, requestUrl) ||
-      equivalentOrigin(clientOrigin, expectedOrigin)
+      equivalentOrigin(clientOrigin, requestUrl) || equivalentOrigin(clientOrigin, expectedOrigin)
     );
   } catch {
     return false;

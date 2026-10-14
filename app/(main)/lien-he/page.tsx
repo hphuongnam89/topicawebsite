@@ -18,7 +18,7 @@ export async function generateMetadata({
   searchParams,
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-} = {}): Promise<Metadata> {
+}): Promise<Metadata> {
   const [page, locale] = await Promise.all([
     cms.getPageByPath("lien-he").catch(() => null),
     resolveRequestLocale(searchParams),
@@ -46,18 +46,25 @@ export default async function ContactPage() {
         <Container className="grid items-start gap-8 lg:grid-cols-2">
           <div>
             <h2 id="contact-form-title" className="text-h2 font-bold text-navy-950">
-              <LocalizedText>Nhận tư vấn tuyển sinh
-            </LocalizedText></h2>
+              <LocalizedText>Nhận tư vấn tuyển sinh</LocalizedText>
+            </h2>
             <p className="mt-4 text-body-lg text-ink-700">
-              <LocalizedText>Bạn chưa chọn ngành cũng có thể gửi yêu cầu. Biểu mẫu này ghi nhận nhu cầu tư vấn.
-            </LocalizedText></p>
+              <LocalizedText>
+                Bạn chưa chọn ngành cũng có thể gửi yêu cầu. Biểu mẫu này ghi nhận nhu cầu tư vấn.
+              </LocalizedText>
+            </p>
             <dl className="mt-6 space-y-4">
               {[contact.channels.admissionsHotline, contact.channels.admissionsEmail].map(
                 (channel) => (
                   <div key={channel.href}>
-                    <dt className="font-semibold text-ink-950"><LocalizedText>{channel.label}</LocalizedText></dt>
+                    <dt className="font-semibold text-ink-950">
+                      <LocalizedText>{channel.label}</LocalizedText>
+                    </dt>
                     <dd>
-                      <a className="break-all text-navy-700 underline hover:text-gold-700" href={channel.href}>
+                      <a
+                        className="break-all text-navy-700 underline hover:text-gold-700"
+                        href={channel.href}
+                      >
                         <LocalizedText>{channel.value}</LocalizedText>
                       </a>
                     </dd>
@@ -71,18 +78,24 @@ export default async function ContactPage() {
       </section>
 
       {/* Service Portals Directory for Students & Applicants */}
-      <section className="bg-surface-subtle py-12 border-y border-line-200" aria-labelledby="services-title">
+      <section
+        className="border-y border-line-200 bg-surface-subtle py-12"
+        aria-labelledby="services-title"
+      >
         <Container>
           <div className="max-w-2xl">
             <p className="text-xs font-bold tracking-[0.16em] text-navy-700 uppercase">
-              <LocalizedText>Cổng dịch vụ số
-            </LocalizedText></p>
+              <LocalizedText>Cổng dịch vụ số</LocalizedText>
+            </p>
             <h2 id="services-title" className="mt-2 text-2xl font-bold text-navy-950 sm:text-3xl">
-              <LocalizedText>Hệ thống học tập & Tra cứu trực tuyến
-            </LocalizedText></h2>
+              <LocalizedText>Hệ thống học tập & Tra cứu trực tuyến</LocalizedText>
+            </h2>
             <p className="mt-2 text-sm text-ink-600">
-              <LocalizedText>Phân định các cổng thông tin chuyên trách dành cho thí sinh đăng ký và sinh viên đang theo học.
-            </LocalizedText></p>
+              <LocalizedText>
+                Phân định các cổng thông tin chuyên trách dành cho thí sinh đăng ký và sinh viên
+                đang theo học.
+              </LocalizedText>
+            </p>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -100,28 +113,30 @@ export default async function ContactPage() {
                   className="flex flex-col justify-between rounded-xl border border-line-200 bg-white p-6 shadow-sm transition-all hover:border-gold-400 hover:shadow-md"
                 >
                   <div>
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-navy-50 text-navy-900 border border-navy-100">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-navy-100 bg-navy-50 text-navy-900">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <h3 className="font-sans text-lg font-bold text-navy-950">
                       <LocalizedText>{portal.name}</LocalizedText>
                     </h3>
-                    <p className="mt-2 text-sm text-ink-600 leading-relaxed">
+                    <p className="mt-2 text-sm leading-relaxed text-ink-600">
                       <LocalizedText>{portal.role}</LocalizedText>
                     </p>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-line-100">
+                  <div className="mt-6 border-t border-line-100 pt-4">
                     <a
                       href={portal.url}
                       target={portal.isExternal ? "_blank" : undefined}
                       rel={portal.isExternal ? "noopener noreferrer" : undefined}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-navy-700 hover:text-gold-700 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-navy-700 transition-colors hover:text-gold-700"
                     >
-                      <LocalizedText>Truy cập cổng
-                      </LocalizedText>{portal.isExternal ? (
+                      <LocalizedText>Truy cập cổng</LocalizedText>
+                      {portal.isExternal ? (
                         <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       ) : (
-                        <span aria-hidden="true"><LocalizedText>→</LocalizedText></span>
+                        <span aria-hidden="true">
+                          <LocalizedText>→</LocalizedText>
+                        </span>
                       )}
                     </a>
                   </div>

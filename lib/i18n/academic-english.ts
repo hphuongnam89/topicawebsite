@@ -4,19 +4,23 @@ export const academicEnglish: Record<string, string> = {
   "Không tích lũy": "Non-credit",
   "Marketing số & Kinh doanh số": "Digital Marketing & Digital Business",
   "Chương trình đào tạo đại học · Định hướng ứng dụng": "Undergraduate programme · Applied focus",
-  "Chương trình định hướng ứng dụng, kết hợp nền tảng quản trị kinh doanh với marketing số, kinh doanh số, trí tuệ nhân tạo và chuyển đổi số.": "An applied programme combining business administration foundations with digital marketing, digital business, artificial intelligence and digital transformation.",
+  "Chương trình định hướng ứng dụng, kết hợp nền tảng quản trị kinh doanh với marketing số, kinh doanh số, trí tuệ nhân tạo và chuyển đổi số.":
+    "An applied programme combining business administration foundations with digital marketing, digital business, artificial intelligence and digital transformation.",
   "Trình độ": "Level",
   "Đại học": "Undergraduate",
   "Hình thức": "Study mode",
   "Cử nhân": "Bachelor’s degree",
   "3 năm · 9 học kỳ": "3 years · 9 semesters",
   "126 tín chỉ": "126 credits",
-  "Không gồm Giáo dục thể chất và GDQP&AN": "Excludes Physical Education and National Defence and Security Education",
-  "Không gồm Giáo dục thể chất và Giáo dục quốc phòng và an ninh": "Excludes Physical Education and National Defence and Security Education",
+  "Không gồm Giáo dục thể chất và GDQP&AN":
+    "Excludes Physical Education and National Defence and Security Education",
+  "Không gồm Giáo dục thể chất và Giáo dục quốc phòng và an ninh":
+    "Excludes Physical Education and National Defence and Security Education",
   "Tổng học phần": "Total courses",
   "Cần xác nhận": "To be confirmed",
   "Cần cập nhật": "Needs updating",
-  "Bảng học phần và kế hoạch học tập còn một số mã trùng/khác nhau": "Some codes are duplicated or differ between the course table and study plan",
+  "Bảng học phần và kế hoạch học tập còn một số mã trùng/khác nhau":
+    "Some codes are duplicated or differ between the course table and study plan",
   "Kiến thức giáo dục đại cương": "General education",
   "Triết học Mác-Lênin": "Marxist-Leninist Philosophy",
   "Kinh tế chính trị Mác-Lênin": "Marxist-Leninist Political Economy",
@@ -65,7 +69,8 @@ export const academicEnglish: Record<string, string> = {
   "Kinh doanh số": "Digital Business",
   "Thương mại điện tử": "E-commerce",
   "Tự chọn định hướng Marketing số": "Digital Marketing electives",
-  "Chọn 2 học phần thuộc một định hướng (6 tín chỉ)": "Choose 2 courses from one pathway (6 credits)",
+  "Chọn 2 học phần thuộc một định hướng (6 tín chỉ)":
+    "Choose 2 courses from one pathway (6 credits)",
   "Quản trị khủng hoảng truyền thông số": "Digital Communications Crisis Management",
   "Truyền thông số trong kinh doanh": "Digital Business Communications",
   "Quản trị tổ chức sự kiện": "Event Management",
@@ -98,33 +103,50 @@ export const academicEnglish: Record<string, string> = {
   "Học phần tự chọn": "Elective courses",
   "Hoàn thành": "Completion",
   "Nền tảng đại cương": "General foundations",
-  "Vận dụng kiến thức chính trị, pháp luật, giáo dục thể chất, quốc phòng, công nghệ thông tin và ngoại ngữ.": "Apply knowledge of politics, law, physical education, national defence, IT and foreign languages.",
+  "Vận dụng kiến thức chính trị, pháp luật, giáo dục thể chất, quốc phòng, công nghệ thông tin và ngoại ngữ.":
+    "Apply knowledge of politics, law, physical education, national defence, IT and foreign languages.",
   "Năng lực liên ngành": "Interdisciplinary competencies",
-  "Kết hợp trí tuệ nhân tạo, kinh doanh, marketing, khởi nghiệp và quản trị bản thân trong học tập và công việc.": "Combine AI, business, marketing, entrepreneurship and self-management in study and work.",
+  "Kết hợp trí tuệ nhân tạo, kinh doanh, marketing, khởi nghiệp và quản trị bản thân trong học tập và công việc.":
+    "Combine AI, business, marketing, entrepreneurship and self-management in study and work.",
   "Kiến thức quản trị": "Management knowledge",
-  "Vận dụng kiến thức nền tảng về quản trị và quản trị kinh doanh.": "Apply foundational knowledge in management and business administration.",
+  "Vận dụng kiến thức nền tảng về quản trị và quản trị kinh doanh.":
+    "Apply foundational knowledge in management and business administration.",
   "Bối cảnh thị trường số": "Digital market context",
-  "Phân tích xu hướng thị trường và tác động của chúng tới hoạt động marketing số.": "Analyse market trends and their effects on digital marketing.",
+  "Phân tích xu hướng thị trường và tác động của chúng tới hoạt động marketing số.":
+    "Analyse market trends and their effects on digital marketing.",
   "Công cụ marketing số": "Digital marketing tools",
-  "Đánh giá và lựa chọn công cụ, công nghệ phù hợp cho hoạt động marketing số.": "Evaluate and select suitable tools and technologies for digital marketing.",
+  "Đánh giá và lựa chọn công cụ, công nghệ phù hợp cho hoạt động marketing số.":
+    "Evaluate and select suitable tools and technologies for digital marketing.",
   "Kinh doanh số và AI": "Digital business and AI",
-  "Vận dụng kiến thức kinh doanh số, trí tuệ nhân tạo và chuyển đổi số.": "Apply knowledge of digital business, AI and digital transformation.",
+  "Vận dụng kiến thức kinh doanh số, trí tuệ nhân tạo và chuyển đổi số.":
+    "Apply knowledge of digital business, AI and digital transformation.",
   "Tư duy và công nghệ": "Thinking and technology",
-  "Thể hiện kỹ năng công nghệ, kinh doanh, tư duy phản biện, sáng tạo và tinh thần khởi nghiệp.": "Demonstrate technology and business skills, critical thinking, creativity and entrepreneurship.",
+  "Thể hiện kỹ năng công nghệ, kinh doanh, tư duy phản biện, sáng tạo và tinh thần khởi nghiệp.":
+    "Demonstrate technology and business skills, critical thinking, creativity and entrepreneurship.",
   "Thực thi quản trị kinh doanh": "Business management practice",
-  "Phân tích, đánh giá, lập kế hoạch, triển khai và đo lường hoạt động quản trị kinh doanh.": "Analyse, evaluate, plan, implement and measure business management activities.",
+  "Phân tích, đánh giá, lập kế hoạch, triển khai và đo lường hoạt động quản trị kinh doanh.":
+    "Analyse, evaluate, plan, implement and measure business management activities.",
   "Năng lực cộng tác": "Collaboration skills",
-  "Giao tiếp, làm việc nhóm, thuyết trình, tự học và học tập suốt đời.": "Communication, teamwork, presentations, independent study and lifelong learning.",
+  "Giao tiếp, làm việc nhóm, thuyết trình, tự học và học tập suốt đời.":
+    "Communication, teamwork, presentations, independent study and lifelong learning.",
   "Đạo đức và trách nhiệm": "Ethics and responsibility",
-  "Tuân thủ pháp luật, đạo đức nghề nghiệp; thể hiện tính tự chủ và trách nhiệm.": "Comply with the law and professional ethics; demonstrate independence and responsibility.",
-  "Doanh nghiệp và tổ chức phi chính phủ có hoạt động liên quan đến quản trị kinh doanh.": "Businesses and non-governmental organisations involved in business administration.",
-  "Cơ quan quản lý nhà nước có chức năng liên quan đến quản trị kinh doanh.": "Government bodies with functions related to business administration.",
-  "Cơ sở đào tạo và viện nghiên cứu trong lĩnh vực quản trị kinh doanh.": "Education institutions and research institutes in business administration.",
-  "Có khả năng tiếp tục học tập ở trình độ thạc sĩ và tiến sĩ.": "Opportunities for further master’s and doctoral study.",
-  "Người đã tốt nghiệp trung học phổ thông hoặc tương đương, đáp ứng quy định tuyển sinh của Bộ Giáo dục và Đào tạo và Trường Đại học Phú Xuân.": "High school graduates or equivalent who meet Ministry of Education and Training and Phu Xuan University admission requirements.",
-  "Thực hiện theo Điều 14, Thông tư số 08/2021/TT-BGDĐT và quy định của cơ sở đào tạo.": "Under Article 14 of Circular 08/2021/TT-BGDĐT and the institution’s regulations.",
+  "Tuân thủ pháp luật, đạo đức nghề nghiệp; thể hiện tính tự chủ và trách nhiệm.":
+    "Comply with the law and professional ethics; demonstrate independence and responsibility.",
+  "Doanh nghiệp và tổ chức phi chính phủ có hoạt động liên quan đến quản trị kinh doanh.":
+    "Businesses and non-governmental organisations involved in business administration.",
+  "Cơ quan quản lý nhà nước có chức năng liên quan đến quản trị kinh doanh.":
+    "Government bodies with functions related to business administration.",
+  "Cơ sở đào tạo và viện nghiên cứu trong lĩnh vực quản trị kinh doanh.":
+    "Education institutions and research institutes in business administration.",
+  "Có khả năng tiếp tục học tập ở trình độ thạc sĩ và tiến sĩ.":
+    "Opportunities for further master’s and doctoral study.",
+  "Người đã tốt nghiệp trung học phổ thông hoặc tương đương, đáp ứng quy định tuyển sinh của Bộ Giáo dục và Đào tạo và Trường Đại học Phú Xuân.":
+    "High school graduates or equivalent who meet Ministry of Education and Training and Phu Xuan University admission requirements.",
+  "Thực hiện theo Điều 14, Thông tư số 08/2021/TT-BGDĐT và quy định của cơ sở đào tạo.":
+    "Under Article 14 of Circular 08/2021/TT-BGDĐT and the institution’s regulations.",
   "Khối kiến thức không tích lũy": "Non-credit courses",
-  "Chưa có mã ngành trong bộ dữ liệu đang dùng": "The current dataset does not include a programme code",
+  "Chưa có mã ngành trong bộ dữ liệu đang dùng":
+    "The current dataset does not include a programme code",
   "Nhập môn ngành": "Introduction to the Discipline",
   "Cơ sở văn hóa Việt Nam": "Foundations of Vietnamese Culture",
   "Tổng quan du lịch": "Introduction to Tourism",
@@ -136,14 +158,16 @@ export const academicEnglish: Record<string, string> = {
   "Lịch sử Việt Nam": "Vietnamese History",
   "Nghiệp vụ du lịch": "Tourism Operations",
   "Quản trị doanh thu trong du lịch": "Tourism Revenue Management",
-  "Kỹ năng hoạt náo và nghệ thuật xử lý tình huống trong du lịch": "Tourism Entertainment and Situational Skills",
+  "Kỹ năng hoạt náo và nghệ thuật xử lý tình huống trong du lịch":
+    "Tourism Entertainment and Situational Skills",
   "Quy hoạch du lịch": "Tourism Planning",
   "Văn hóa ẩm thực Việt Nam": "Vietnamese Culinary Culture",
   "Công nghệ và bền vững": "Technology and Sustainability",
   "Du lịch bền vững": "Sustainable Tourism",
   "Ứng dụng công nghệ trong du lịch": "Technology Applications in Tourism",
   "Định hướng chuyên sâu": "Specialist pathways",
-  "Chọn định hướng Quản trị lữ hành hoặc Quản trị khách sạn": "Choose Travel Management or Hotel Management",
+  "Chọn định hướng Quản trị lữ hành hoặc Quản trị khách sạn":
+    "Choose Travel Management or Hotel Management",
   "Địa lý du lịch": "Tourism Geography",
   "Định hướng Quản trị lữ hành": "Travel Management pathway",
   "Hệ thống tuyến điểm du lịch": "Tourism Routes and Destinations",
@@ -171,27 +195,38 @@ export const academicEnglish: Record<string, string> = {
   "Thực tập và tốt nghiệp": "Internship and Graduation",
   "Quản trị lữ hành · Quản trị khách sạn": "Travel Management · Hotel Management",
   "Phần 1–5; Bảng 3, 5, 6 và 13": "Sections 1–5; Tables 3, 5, 6 and 13",
-  "Theo số học phần được đánh số trong bảng chương trình đào tạo 2026": "Based on the numbered courses in the 2026 curriculum table",
-  "Chương trình định hướng ứng dụng, đào tạo năng lực tổ chức, quản lý, phân tích và phát triển hoạt động kinh doanh du lịch trong bối cảnh số.": "An applied programme developing skills to organise, manage, analyse and develop tourism businesses in a digital environment.",
+  "Theo số học phần được đánh số trong bảng chương trình đào tạo 2026":
+    "Based on the numbered courses in the 2026 curriculum table",
+  "Chương trình định hướng ứng dụng, đào tạo năng lực tổ chức, quản lý, phân tích và phát triển hoạt động kinh doanh du lịch trong bối cảnh số.":
+    "An applied programme developing skills to organise, manage, analyse and develop tourism businesses in a digital environment.",
   "Kiến thức nền tảng": "Foundational knowledge",
   "Kiến thức liên ngành": "Interdisciplinary knowledge",
   "Nghiệp vụ du lịch – khách sạn": "Tourism and Hospitality Operations",
   "Thị trường và công nghệ": "Markets and technology",
-  "Phân tích xu hướng thị trường du lịch và áp dụng công cụ, công nghệ để phát triển hoạt động kinh doanh.": "Analyse tourism market trends and apply tools and technology to develop business activities.",
+  "Phân tích xu hướng thị trường du lịch và áp dụng công cụ, công nghệ để phát triển hoạt động kinh doanh.":
+    "Analyse tourism market trends and apply tools and technology to develop business activities.",
   "Đánh giá cơ hội": "Evaluating opportunities",
-  "Đánh giá vấn đề và cơ hội của lĩnh vực du lịch trong bối cảnh toàn cầu hóa.": "Evaluate tourism challenges and opportunities in a global context.",
+  "Đánh giá vấn đề và cơ hội của lĩnh vực du lịch trong bối cảnh toàn cầu hóa.":
+    "Evaluate tourism challenges and opportunities in a global context.",
   "Sáng tạo phương án kinh doanh": "Developing business solutions",
-  "Thiết kế sản phẩm, dự án du lịch bền vững và đề án khởi nghiệp trong lĩnh vực du lịch.": "Design products, sustainable tourism projects and tourism start-up plans.",
+  "Thiết kế sản phẩm, dự án du lịch bền vững và đề án khởi nghiệp trong lĩnh vực du lịch.":
+    "Design products, sustainable tourism projects and tourism start-up plans.",
   "Kỹ năng nghề nghiệp": "Professional skills",
-  "Hoàn thiện kỹ năng công nghệ, ngoại ngữ, kinh doanh, tư duy phản biện và khởi nghiệp trong bối cảnh toàn cầu hóa.": "Develop technology, foreign language, business, critical thinking and entrepreneurship skills in a global context.",
+  "Hoàn thiện kỹ năng công nghệ, ngoại ngữ, kinh doanh, tư duy phản biện và khởi nghiệp trong bối cảnh toàn cầu hóa.":
+    "Develop technology, foreign language, business, critical thinking and entrepreneurship skills in a global context.",
   "Quản trị dịch vụ du lịch": "Tourism Service Management",
   "Giao tiếp và học tập suốt đời": "Communication and lifelong learning",
-  "Phát triển kỹ năng giao tiếp, làm việc nhóm, tự học và học tập suốt đời.": "Develop communication, teamwork, independent study and lifelong learning skills.",
-  "Tuân thủ pháp luật và đạo đức nghề nghiệp; tự chủ và có trách nhiệm với bản thân, gia đình và xã hội.": "Comply with the law and professional ethics; act independently and responsibly towards yourself, family and society.",
-  "Doanh nghiệp và tổ chức phi chính phủ hoạt động trong lĩnh vực du lịch.": "Businesses and non-governmental organisations in tourism.",
+  "Phát triển kỹ năng giao tiếp, làm việc nhóm, tự học và học tập suốt đời.":
+    "Develop communication, teamwork, independent study and lifelong learning skills.",
+  "Tuân thủ pháp luật và đạo đức nghề nghiệp; tự chủ và có trách nhiệm với bản thân, gia đình và xã hội.":
+    "Comply with the law and professional ethics; act independently and responsibly towards yourself, family and society.",
+  "Doanh nghiệp và tổ chức phi chính phủ hoạt động trong lĩnh vực du lịch.":
+    "Businesses and non-governmental organisations in tourism.",
   "Cơ quan quản lý nhà nước phù hợp với ngành du lịch.": "Government bodies relevant to tourism.",
-  "Cơ sở đào tạo và viện nghiên cứu chuyên ngành du lịch.": "Education institutions and research institutes specialising in tourism.",
-  "Có thể học tiếp chương trình thạc sĩ, tiến sĩ trong nước hoặc tham gia chương trình sau đại học ở nước ngoài.": "Opportunities for master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
+  "Cơ sở đào tạo và viện nghiên cứu chuyên ngành du lịch.":
+    "Education institutions and research institutes specialising in tourism.",
+  "Có thể học tiếp chương trình thạc sĩ, tiến sĩ trong nước hoặc tham gia chương trình sau đại học ở nước ngoài.":
+    "Opportunities for master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
   "Theo Điều 14, Thông tư số 08/2021/TT-BGDĐT.": "Under Article 14 of Circular 08/2021/TT-BGDĐT.",
   "Nền tảng công nghệ": "Technology foundations",
   "Cơ sở lập trình": "Programming Fundamentals",
@@ -227,8 +262,8 @@ export const academicEnglish: Record<string, string> = {
   "Biên dịch": "Translation",
   "Dẫn luận ngôn ngữ": "Introduction to Linguistics",
   "Bốn kỹ năng cơ bản": "Four foundational skills",
-  "Đọc": "Reading",
-  "Viết": "Writing",
+  Đọc: "Reading",
+  Viết: "Writing",
   "Giao tiếp": "Communication",
   "Phát triển ngôn ngữ": "Language development",
   "Giao tiếp học thuật": "Academic Communication",
@@ -239,12 +274,14 @@ export const academicEnglish: Record<string, string> = {
   "Giao thoa văn hóa": "Cross-cultural Studies",
   "Diễn thuyết trước công chúng": "Public Speaking",
   "Định hướng chuyên ngành": "Specialisation pathways",
-  "Chọn 1 học phần ngôn ngữ và một định hướng chuyên ngành": "Choose 1 language course and a specialisation pathway",
+  "Chọn 1 học phần ngôn ngữ và một định hướng chuyên ngành":
+    "Choose 1 language course and a specialisation pathway",
   "Hình thái – Cú pháp": "Morphology and Syntax",
   "Tiếng Anh thương mại": "Business English",
   "Chuyên ngành Tiếng Anh thương mại": "Business English specialisation",
   "Tiếng Anh du lịch": "Tourism English",
-  "Chuyên ngành Tiếng Anh du lịch, nhà hàng, khách sạn": "Tourism, Restaurant and Hospitality English specialisation",
+  "Chuyên ngành Tiếng Anh du lịch, nhà hàng, khách sạn":
+    "Tourism, Restaurant and Hospitality English specialisation",
   "Tiếng Anh khách sạn": "Hospitality English",
   "Chuyên sâu nghề nghiệp": "Professional specialisation",
   "Học phần theo chuyên ngành và chọn 1 học phần tự chọn": "Specialisation courses and 1 elective",
@@ -254,11 +291,12 @@ export const academicEnglish: Record<string, string> = {
   "Tiếng Anh tài chính ngân hàng": "English for Finance and Banking",
   "Phiên dịch thương mại": "Business Interpreting",
   "Tiếng Anh nhà hàng": "Restaurant English",
-  "Tự chọn Tiếng Anh du lịch, nhà hàng, khách sạn": "Tourism, Restaurant and Hospitality English electives",
+  "Tự chọn Tiếng Anh du lịch, nhà hàng, khách sạn":
+    "Tourism, Restaurant and Hospitality English electives",
   "Tiếng Anh cảnh điểm du lịch Huế": "English for Hue Tourism Destinations",
   "Nhập môn tiếng Trung": "Introduction to Chinese",
   "Ngữ âm – Văn tự": "Phonetics and Writing Systems",
-  "Nói": "Speaking",
+  Nói: "Speaking",
   "Kỹ năng nâng cao": "Advanced skills",
   "Viết nâng cao": "Advanced Writing",
   "Ngôn ngữ nâng cao": "Advanced language",
@@ -269,7 +307,8 @@ export const academicEnglish: Record<string, string> = {
   "Ngữ pháp tiếng Trung cơ bản": "Basic Chinese Grammar",
   "Ngữ pháp tiếng Trung nâng cao": "Advanced Chinese Grammar",
   "HSK trung cấp": "Intermediate HSK",
-  "Chọn 2 trong 5 học phần ngôn ngữ và một định hướng chuyên ngành": "Choose 2 of 5 language courses and a specialisation pathway",
+  "Chọn 2 trong 5 học phần ngôn ngữ và một định hướng chuyên ngành":
+    "Choose 2 of 5 language courses and a specialisation pathway",
   "Văn hóa Trung Quốc": "Chinese Culture",
   "HSK cao cấp": "Advanced HSK",
   "Viết văn ứng dụng": "Applied Writing",
@@ -279,7 +318,8 @@ export const academicEnglish: Record<string, string> = {
   "Chuyên ngành Tiếng Trung thương mại": "Business Chinese specialisation",
   "Tiếng Trung du lịch cơ bản": "Basic Tourism Chinese",
   "Chuyên ngành Tiếng Trung du lịch": "Tourism Chinese specialisation",
-  "Học phần theo chuyên ngành và chọn 2 trong 5 học phần tự chọn": "Specialisation courses and 2 of 5 electives",
+  "Học phần theo chuyên ngành và chọn 2 trong 5 học phần tự chọn":
+    "Specialisation courses and 2 of 5 electives",
   "Giao tiếp kinh doanh": "Business Communication",
   "Quảng cáo thương mại": "Commercial Advertising",
   "Ngôn ngữ văn bản pháp luật": "Legal Document Language",
@@ -292,82 +332,129 @@ export const academicEnglish: Record<string, string> = {
   "Chương trình đào tạo · Kế hoạch 9 học kỳ": "Curriculum · 9-semester plan",
   "bảng chương trình đào tạo 9 học kỳ": "9-semester curriculum table",
   "Đồ họa kỹ thuật số": "Digital Graphics",
-  "Chương trình kết hợp nền tảng công nghệ thông tin với thiết kế đồ họa, xử lý ảnh, thiết kế thương hiệu, giao diện website, game 2D/3D và đồ họa chuyển động.": "The programme combines IT foundations with graphic design, image processing, branding, website interfaces, 2D/3D games and motion graphics.",
+  "Chương trình kết hợp nền tảng công nghệ thông tin với thiết kế đồ họa, xử lý ảnh, thiết kế thương hiệu, giao diện website, game 2D/3D và đồ họa chuyển động.":
+    "The programme combines IT foundations with graphic design, image processing, branding, website interfaces, 2D/3D games and motion graphics.",
   "Chuyên viên thiết kế đồ họa.": "Graphic designer.",
   "Chuyên gia tư vấn thiết kế thương hiệu.": "Brand design consultant.",
   "Trưởng nhóm thiết kế.": "Design team leader.",
-  "Chuyên gia 2D/3D, VFX Artist hoặc Motion Designer.": "2D/3D specialist, VFX artist or motion designer.",
+  "Chuyên gia 2D/3D, VFX Artist hoặc Motion Designer.":
+    "2D/3D specialist, VFX artist or motion designer.",
   "Giám đốc sáng tạo.": "Creative director.",
-  "Giảng viên hoặc khởi nghiệp trong lĩnh vực thiết kế đồ họa.": "Lecturer or entrepreneur in graphic design.",
-  "Khung chương trình đào tạo Cử nhân CNTT - Trường ĐH Phú Xuân": "IT Bachelor’s Curriculum - Phu Xuan University",
+  "Giảng viên hoặc khởi nghiệp trong lĩnh vực thiết kế đồ họa.":
+    "Lecturer or entrepreneur in graphic design.",
+  "Khung chương trình đào tạo Cử nhân CNTT - Trường ĐH Phú Xuân":
+    "IT Bachelor’s Curriculum - Phu Xuan University",
   "Tiếng Việt và Tiếng Anh": "Vietnamese and English",
-  "Theo quy định tại Điều 14, Thông tư số 08/2021/TT-BGDĐT.": "Under Article 14 of Circular 08/2021/TT-BGDĐT.",
-  "Tiếng Anh thương mại · Tiếng Anh du lịch – nhà hàng – khách sạn": "Business English · Tourism, Restaurant and Hospitality English",
-  "Chương trình phát triển năng lực nghe, nói, đọc, viết và giao tiếp liên văn hóa, với hai định hướng ứng dụng trong thương mại và du lịch – nhà hàng – khách sạn.": "Develop listening, speaking, reading, writing and intercultural communication skills, with applied pathways in business and tourism, restaurants and hospitality.",
-  "Biên dịch, phiên dịch hoặc thông dịch viên kinh doanh.": "Translator, interpreter or business interpreter.",
-  "Nhân viên lễ tân hoặc văn phòng tại khách sạn và resort.": "Front office or administrative staff at hotels and resorts.",
+  "Theo quy định tại Điều 14, Thông tư số 08/2021/TT-BGDĐT.":
+    "Under Article 14 of Circular 08/2021/TT-BGDĐT.",
+  "Tiếng Anh thương mại · Tiếng Anh du lịch – nhà hàng – khách sạn":
+    "Business English · Tourism, Restaurant and Hospitality English",
+  "Chương trình phát triển năng lực nghe, nói, đọc, viết và giao tiếp liên văn hóa, với hai định hướng ứng dụng trong thương mại và du lịch – nhà hàng – khách sạn.":
+    "Develop listening, speaking, reading, writing and intercultural communication skills, with applied pathways in business and tourism, restaurants and hospitality.",
+  "Biên dịch, phiên dịch hoặc thông dịch viên kinh doanh.":
+    "Translator, interpreter or business interpreter.",
+  "Nhân viên lễ tân hoặc văn phòng tại khách sạn và resort.":
+    "Front office or administrative staff at hotels and resorts.",
   "Hướng dẫn viên du lịch trong nước hoặc quốc tế.": "Domestic or international tour guide.",
-  "Trợ lý, chăm sóc khách hàng, bán hàng hoặc điều hành tour.": "Assistant, customer service, sales or tour operations staff.",
+  "Trợ lý, chăm sóc khách hàng, bán hàng hoặc điều hành tour.":
+    "Assistant, customer service, sales or tour operations staff.",
   "Nhân viên phòng vé, đặt chỗ hoặc tiếp tân.": "Ticketing, reservations or reception staff.",
-  "Giáo viên hoặc giảng viên tiếng Anh tại cơ sở giáo dục.": "English teacher or lecturer at an education institution.",
-  "Khung chương trình đào tạo Cử nhân Ngôn ngữ Anh - Trường ĐH Phú Xuân": "English Language Bachelor’s Curriculum - Phu Xuan University",
+  "Giáo viên hoặc giảng viên tiếng Anh tại cơ sở giáo dục.":
+    "English teacher or lecturer at an education institution.",
+  "Khung chương trình đào tạo Cử nhân Ngôn ngữ Anh - Trường ĐH Phú Xuân":
+    "English Language Bachelor’s Curriculum - Phu Xuan University",
   "Tiếng Trung thương mại · Tiếng Trung du lịch": "Business Chinese · Tourism Chinese",
-  "Chương trình phát triển toàn diện năng lực tiếng Trung từ nền tảng đến nâng cao, kết hợp HSK/HSKK và hai định hướng ứng dụng trong thương mại và du lịch.": "Develop comprehensive Chinese skills from foundational to advanced levels, combining HSK/HSKK with applied pathways in business and tourism.",
+  "Chương trình phát triển toàn diện năng lực tiếng Trung từ nền tảng đến nâng cao, kết hợp HSK/HSKK và hai định hướng ứng dụng trong thương mại và du lịch.":
+    "Develop comprehensive Chinese skills from foundational to advanced levels, combining HSK/HSKK with applied pathways in business and tourism.",
   "Biên dịch hoặc phiên dịch tiếng Trung.": "Chinese translator or interpreter.",
-  "Trợ lý hoặc thư ký cho lãnh đạo, đối tác Trung Quốc và Đài Loan.": "Assistant or secretary to executives and partners from China and Taiwan.",
+  "Trợ lý hoặc thư ký cho lãnh đạo, đối tác Trung Quốc và Đài Loan.":
+    "Assistant or secretary to executives and partners from China and Taiwan.",
   "Giảng viên hoặc giáo viên tiếng Trung.": "Chinese lecturer or teacher.",
-  "Hướng dẫn viên du lịch hoặc điều hành tour Trung Quốc.": "Tour guide or operator for Chinese tours.",
-  "Chuyên viên chăm sóc khách hàng, nội dung, truyền thông hoặc marketing tiếng Trung.": "Chinese-language customer service, content, communications or marketing specialist.",
-  "Nhân viên văn phòng tại công ty Trung Quốc hoặc Đài Loan.": "Office staff at Chinese or Taiwanese companies.",
-  "Khung chương trình đào tạo Cử nhân Ngôn ngữ Trung Quốc - Trường ĐH Phú Xuân": "Chinese Language Bachelor’s Curriculum - Phu Xuan University",
+  "Hướng dẫn viên du lịch hoặc điều hành tour Trung Quốc.":
+    "Tour guide or operator for Chinese tours.",
+  "Chuyên viên chăm sóc khách hàng, nội dung, truyền thông hoặc marketing tiếng Trung.":
+    "Chinese-language customer service, content, communications or marketing specialist.",
+  "Nhân viên văn phòng tại công ty Trung Quốc hoặc Đài Loan.":
+    "Office staff at Chinese or Taiwanese companies.",
+  "Khung chương trình đào tạo Cử nhân Ngôn ngữ Trung Quốc - Trường ĐH Phú Xuân":
+    "Chinese Language Bachelor’s Curriculum - Phu Xuan University",
   "Tiếng Việt và Tiếng Trung Quốc": "Vietnamese and Chinese",
   "Học sinh THPT": "High school student",
   "Sinh viên Cao đẳng / Đại học": "College / university student",
   "Người đi làm": "Working adult",
-  "Khác": "Other",
+  Khác: "Other",
   "Cử nhân Quản trị kinh doanh": "Bachelor’s in Business Administration",
-  "Cử nhân Quản trị dịch vụ du lịch và lữ hành": "Bachelor’s in Tourism and Travel Services Management",
+  "Cử nhân Quản trị dịch vụ du lịch và lữ hành":
+    "Bachelor’s in Tourism and Travel Services Management",
   "Cử nhân Công nghệ thông tin": "Bachelor’s in Information Technology",
   "Cử nhân Ngôn ngữ Anh": "Bachelor’s in English Language",
   "Cử nhân Ngôn ngữ Trung Quốc": "Bachelor’s in Chinese Language",
-  "Bao gồm định hướng Quản trị lữ hành và Quản trị khách sạn": "Includes Travel Management and Hotel Management pathways",
-  "Bao gồm phòng lab thực hành ảo và học liệu số chuyên sâu": "Includes virtual practical labs and specialist digital materials",
-  "Định hướng Tiếng Anh thương mại & Tiếng Anh du lịch - khách sạn": "Business English & Tourism and Hospitality English pathways",
-  "Định hướng Tiếng Trung thương mại & Tiếng Trung du lịch, chuẩn HSK": "Business Chinese & Tourism Chinese pathways, aligned with HSK",
+  "Bao gồm định hướng Quản trị lữ hành và Quản trị khách sạn":
+    "Includes Travel Management and Hotel Management pathways",
+  "Bao gồm phòng lab thực hành ảo và học liệu số chuyên sâu":
+    "Includes virtual practical labs and specialist digital materials",
+  "Định hướng Tiếng Anh thương mại & Tiếng Anh du lịch - khách sạn":
+    "Business English & Tourism and Hospitality English pathways",
+  "Định hướng Tiếng Trung thương mại & Tiếng Trung du lịch, chuẩn HSK":
+    "Business Chinese & Tourism Chinese pathways, aligned with HSK",
   "Theo quy định hiện hành của Nhà nước": "Under current state regulations",
-  "Liên hệ để xác nhận các khoản áp dụng theo hồ sơ": "Contact us to confirm the fees applicable to your application",
-  "Theo đơn giá tín chỉ niêm yết tại thời điểm đăng ký học lại": "At the published credit fee when registering to retake a course",
-  "Không bao gồm khối kiến thức GDTC và GDQP&AN": "Excludes Physical Education and National Defence and Security Education",
-  "Không bao gồm học phí khối kiến thức GDTC và GDQP&AN": "Excludes tuition for Physical Education and National Defence and Security Education",
+  "Liên hệ để xác nhận các khoản áp dụng theo hồ sơ":
+    "Contact us to confirm the fees applicable to your application",
+  "Theo đơn giá tín chỉ niêm yết tại thời điểm đăng ký học lại":
+    "At the published credit fee when registering to retake a course",
+  "Không bao gồm khối kiến thức GDTC và GDQP&AN":
+    "Excludes Physical Education and National Defence and Security Education",
+  "Không bao gồm học phí khối kiến thức GDTC và GDQP&AN":
+    "Excludes tuition for Physical Education and National Defence and Security Education",
   "500 suất đầu tiên": "First 500 places",
-  "Giảm 30% học phí cho 500 tân sinh viên nộp hồ sơ sớm nhất.": "30% tuition reduction for the first 500 new students to apply.",
-  "Ưu tiên theo thứ tự hồ sơ nộp sớm; áp dụng đến 31/12/2026.": "Priority by application order; valid until 31/12/2026.",
-  "Nội dung học bổng do người dùng cung cấp; cần xác nhận thể lệ chính thức.": "Scholarship information supplied by the user; official terms need confirmation.",
+  "Giảm 30% học phí cho 500 tân sinh viên nộp hồ sơ sớm nhất.":
+    "30% tuition reduction for the first 500 new students to apply.",
+  "Ưu tiên theo thứ tự hồ sơ nộp sớm; áp dụng đến 31/12/2026.":
+    "Priority by application order; valid until 31/12/2026.",
+  "Nội dung học bổng do người dùng cung cấp; cần xác nhận thể lệ chính thức.":
+    "Scholarship information supplied by the user; official terms need confirmation.",
   "200 suất tiếp theo": "Next 200 places",
-  "Giảm 20% học phí cho 200 sinh viên tiếp theo.": "20% tuition reduction for the next 200 students.",
+  "Giảm 20% học phí cho 200 sinh viên tiếp theo.":
+    "20% tuition reduction for the next 200 students.",
   "Áp dụng sau 500 suất Topica Talent.": "Applies after the 500 Topica Talent places.",
   "Ưu đãi cộng thêm": "Additional offer",
-  "Giảm thêm 5% học phí khi đóng học phí toàn khóa ngay khi nhập học.": "An additional 5% tuition reduction when paying the full programme tuition at enrolment.",
-  "Dành cho sinh viên thanh toán học phí toàn khóa tại thời điểm nhập học.": "For students who pay full programme tuition at enrolment.",
+  "Giảm thêm 5% học phí khi đóng học phí toàn khóa ngay khi nhập học.":
+    "An additional 5% tuition reduction when paying the full programme tuition at enrolment.",
+  "Dành cho sinh viên thanh toán học phí toàn khóa tại thời điểm nhập học.":
+    "For students who pay full programme tuition at enrolment.",
   "Ưu đãi dành cho tu sĩ": "Offer for religious practitioners",
   "Đặc biệt": "Special",
   "Giảm 50% học phí cho đối tượng là tu sĩ.": "50% tuition reduction for religious practitioners.",
   "Liên hệ để biết thêm chi tiết.": "Contact us for details.",
   "Đóng theo tín chỉ thực học": "Pay for registered credits",
-  "Sinh viên đóng học phí theo từng học kỳ dựa trên số lượng tín chỉ thực tế đăng ký, giúp chủ động quản lý kế hoạch tài chính cá nhân.": "Students pay tuition each semester for the credits registered, helping them manage their financial plans.",
+  "Sinh viên đóng học phí theo từng học kỳ dựa trên số lượng tín chỉ thực tế đăng ký, giúp chủ động quản lý kế hoạch tài chính cá nhân.":
+    "Students pay tuition each semester for the credits registered, helping them manage their financial plans.",
   "Xác nhận trước khi thanh toán": "Confirm before payment",
-  "Đề nghị nhận bảng dự toán theo khóa, ngành và hồ sơ công nhận tín chỉ của bạn trước khi thanh toán.": "Request an estimate for your intake, programme and recognised credits before paying.",
+  "Đề nghị nhận bảng dự toán theo khóa, ngành và hồ sơ công nhận tín chỉ của bạn trước khi thanh toán.":
+    "Request an estimate for your intake, programme and recognised credits before paying.",
   "Điều kiện học bổng rõ ràng": "Clear scholarship requirements",
-  "Quyền lợi phụ thuộc hồ sơ, thời điểm và thông báo đang áp dụng. Liên hệ tuyển sinh để xác nhận suất và điều kiện kết hợp ưu đãi.": "Benefits depend on the application, timing and current notice. Contact admissions to confirm availability and whether offers can be combined.",
-  "Đề án Tuyển sinh & Biểu mức thu học phí năm 2026 — ĐH Phú Xuân": "2026 Admissions Scheme & Tuition Schedule — Phu Xuan University",
-  "Vận dụng kiến thức chính trị, pháp luật, thể chất, quốc phòng – an ninh, công nghệ thông tin và ngoại ngữ vào cuộc sống và công việc.": "Apply knowledge of politics, law, physical education, national defence and security, IT and foreign languages in life and work.",
-  "Áp dụng kiến thức về trí tuệ nhân tạo, kinh doanh, marketing, khởi nghiệp, đổi mới sáng tạo và quản trị bản thân để phát triển sự nghiệp.": "Apply knowledge of AI, business, marketing, entrepreneurship, innovation and self-management to develop a career.",
-  "Vận dụng kiến thức cơ sở ngành, ngành và chuyên ngành quản trị dịch vụ du lịch, lữ hành và khách sạn vào công việc thực tế.": "Apply foundational, discipline and specialist knowledge of tourism services, travel and hotel management in practical work.",
-  "Phân tích, lập kế hoạch, triển khai và đánh giá hiệu quả hoạt động quản trị dịch vụ du lịch theo nhu cầu thị trường lao động.": "Analyse, plan, implement and evaluate tourism service management activities in response to labour market needs.",
-  "Thí sinh đã tốt nghiệp THPT, đáp ứng quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.": "High school graduates who meet Ministry of Education and Training regulations and Phu Xuan University admission requirements.",
-  "Thí sinh đã tốt nghiệp THPT, đáp ứng tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.": "High school graduates who meet Ministry of Education and Training standards for university study and Phu Xuan University admission requirements.",
-  "Thí sinh đã tốt nghiệp THPT, đáp ứng đủ tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.": "High school graduates who meet all Ministry of Education and Training standards for university study and Phu Xuan University admission requirements.",
-  "Sau khi ra trường, Cử nhân chuyên ngành Đồ họa kỹ thuật số có thể học tiếp chương trình cao học, tiến sĩ trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.": "After graduation, Digital Graphics graduates may pursue master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
-  "Sau khi ra trường, Cử nhân ngành Ngôn ngữ Anh có thể học tiếp chương trình thạc sĩ, tiến sĩ trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.": "After graduation, English Language graduates may pursue master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
-  "Sau khi tốt nghiệp, người học có thể học tiếp chương trình cao học trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.": "After graduation, learners may pursue postgraduate study in Vietnam or postgraduate programmes abroad.",
+  "Quyền lợi phụ thuộc hồ sơ, thời điểm và thông báo đang áp dụng. Liên hệ tuyển sinh để xác nhận suất và điều kiện kết hợp ưu đãi.":
+    "Benefits depend on the application, timing and current notice. Contact admissions to confirm availability and whether offers can be combined.",
+  "Đề án Tuyển sinh & Biểu mức thu học phí năm 2026 — ĐH Phú Xuân":
+    "2026 Admissions Scheme & Tuition Schedule — Phu Xuan University",
+  "Vận dụng kiến thức chính trị, pháp luật, thể chất, quốc phòng – an ninh, công nghệ thông tin và ngoại ngữ vào cuộc sống và công việc.":
+    "Apply knowledge of politics, law, physical education, national defence and security, IT and foreign languages in life and work.",
+  "Áp dụng kiến thức về trí tuệ nhân tạo, kinh doanh, marketing, khởi nghiệp, đổi mới sáng tạo và quản trị bản thân để phát triển sự nghiệp.":
+    "Apply knowledge of AI, business, marketing, entrepreneurship, innovation and self-management to develop a career.",
+  "Vận dụng kiến thức cơ sở ngành, ngành và chuyên ngành quản trị dịch vụ du lịch, lữ hành và khách sạn vào công việc thực tế.":
+    "Apply foundational, discipline and specialist knowledge of tourism services, travel and hotel management in practical work.",
+  "Phân tích, lập kế hoạch, triển khai và đánh giá hiệu quả hoạt động quản trị dịch vụ du lịch theo nhu cầu thị trường lao động.":
+    "Analyse, plan, implement and evaluate tourism service management activities in response to labour market needs.",
+  "Thí sinh đã tốt nghiệp THPT, đáp ứng quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.":
+    "High school graduates who meet Ministry of Education and Training regulations and Phu Xuan University admission requirements.",
+  "Thí sinh đã tốt nghiệp THPT, đáp ứng tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.":
+    "High school graduates who meet Ministry of Education and Training standards for university study and Phu Xuan University admission requirements.",
+  "Thí sinh đã tốt nghiệp THPT, đáp ứng đủ tiêu chuẩn học đại học theo Quy định của Bộ Giáo dục và Đào tạo và điều kiện tuyển sinh của Trường Đại học Phú Xuân.":
+    "High school graduates who meet all Ministry of Education and Training standards for university study and Phu Xuan University admission requirements.",
+  "Sau khi ra trường, Cử nhân chuyên ngành Đồ họa kỹ thuật số có thể học tiếp chương trình cao học, tiến sĩ trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.":
+    "After graduation, Digital Graphics graduates may pursue master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
+  "Sau khi ra trường, Cử nhân ngành Ngôn ngữ Anh có thể học tiếp chương trình thạc sĩ, tiến sĩ trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.":
+    "After graduation, English Language graduates may pursue master’s or doctoral study in Vietnam or postgraduate programmes abroad.",
+  "Sau khi tốt nghiệp, người học có thể học tiếp chương trình cao học trong nước hoặc tham gia các chương trình sau đại học ở nước ngoài.":
+    "After graduation, learners may pursue postgraduate study in Vietnam or postgraduate programmes abroad.",
 };

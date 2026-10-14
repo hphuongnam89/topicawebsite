@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getLeads, updateLeadStatus, deleteLead } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
@@ -42,7 +43,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const parsed = leadStatusSchema.safeParse(await request.json());
+    const parsed = leadStatusSchema.safeParse(await readBoundedJson(request));
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu cập nhật không hợp lệ." }, { status: 422 });
     const { id, status } = parsed.data;

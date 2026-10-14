@@ -6,15 +6,15 @@
 
 ## Tóm tắt cho người quyết định
 
-| Hạng mục | Kết quả | Nhận định |
-|---|---|---|
-| TypeScript | Đạt (`tsc --noEmit --incremental false`, exit 0) | Không tìm thấy lỗi type ở snapshot cuối |
-| Vitest | 47 file, 291 test đạt | Chạy với DB/upload/backup fixture dưới thư mục temp, notification stub; không dùng DB thật |
-| ESLint app source | 1 error, 0 warning | Có thể chặn CI/release nếu lint là gate bắt buộc |
-| ESLint toàn repo | 308 errors, 20 warnings | Kết quả bị nhiễu bởi `.next-bilingual-qa`, `.next-verify`, test và evidence scripts |
-| English UI smoke | Nội dung chính chuyển ngữ được | Route English là redirect sang URL tiếng Việt có `?lang=en`; page title còn tiếng Việt |
-| Visual/accessibility/performance | Chưa kiểm chứng đầy đủ | Không chạy axe/Lighthouse/build hoặc ma trận thiết bị trên snapshot này |
-| Acceptance/backlog | 0 task được `accepted` | `progress.json`: 22 `in_progress`, 3 `verified`, 4 `planned`, 1 `implemented` |
+| Hạng mục                         | Kết quả                                          | Nhận định                                                                                  |
+| -------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| TypeScript                       | Đạt (`tsc --noEmit --incremental false`, exit 0) | Không tìm thấy lỗi type ở snapshot cuối                                                    |
+| Vitest                           | 47 file, 291 test đạt                            | Chạy với DB/upload/backup fixture dưới thư mục temp, notification stub; không dùng DB thật |
+| ESLint app source                | 1 error, 0 warning                               | Có thể chặn CI/release nếu lint là gate bắt buộc                                           |
+| ESLint toàn repo                 | 308 errors, 20 warnings                          | Kết quả bị nhiễu bởi `.next-bilingual-qa`, `.next-verify`, test và evidence scripts        |
+| English UI smoke                 | Nội dung chính chuyển ngữ được                   | Route English là redirect sang URL tiếng Việt có `?lang=en`; page title còn tiếng Việt     |
+| Visual/accessibility/performance | Chưa kiểm chứng đầy đủ                           | Không chạy axe/Lighthouse/build hoặc ma trận thiết bị trên snapshot này                    |
+| Acceptance/backlog               | 0 task được `accepted`                           | `progress.json`: 22 `in_progress`, 3 `verified`, 4 `planned`, 1 `implemented`              |
 
 > Đây là audit code + kiểm tra UI theo mẫu trên dev server đang chạy, không phải nghiệm thu toàn bộ route hoặc xác nhận dữ liệu tuyển sinh chính thức.
 

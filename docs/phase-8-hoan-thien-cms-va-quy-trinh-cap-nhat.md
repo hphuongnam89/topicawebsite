@@ -11,7 +11,7 @@
 
 ## 1. Mục tiêu & Phạm vi Nghiệm thu
 
-Mục tiêu cốt lõi của Phase 8 là **trao quyền cho đội ngũ biên tập và quản trị viên của Viện Topica chủ động cập nhật, duy trì website một cách an toàn mà không phá vỡ bố cục, không gây xung đột giao diện và không công bố các thông tin thiếu căn cứ pháp lý**. 
+Mục tiêu cốt lõi của Phase 8 là **trao quyền cho đội ngũ biên tập và quản trị viên của Viện Topica chủ động cập nhật, duy trì website một cách an toàn mà không phá vỡ bố cục, không gây xung đột giao diện và không công bố các thông tin thiếu căn cứ pháp lý**.
 
 Hệ thống quản trị nội dung (CMS) hoạt động dựa trên cơ sở dữ liệu SQLite cục bộ bền vững (`data/topica.db`), được bảo vệ chặt chẽ bằng cơ chế xác thực phân quyền ở cấp server, cùng quy trình sao lưu (backup) tự động.
 
@@ -20,6 +20,7 @@ Hệ thống quản trị nội dung (CMS) hoạt động dựa trên cơ sở d
 ## 2. Chi tiết Triển khai Theo 5 Phân hệ Quản trị
 
 ### 2.1. Phân hệ Quản trị Trang & Bài viết (Pages & Articles Management)
+
 - **Quản lý Vòng đời Xuất bản (Publishing Lifecycle)**:
   - Bổ sung và chuẩn hóa các trạng thái nội dung: `published` (Đã công khai), `draft` (Bản nháp), `archived` (Lưu trữ).
   - Phân quyền thực thi nghiêm ngặt tại Server API (`app/api/admin/articles` và `app/api/admin/pages`): Kiểm tra quyền Session Guard trước khi cho phép tạo, sửa hoặc xóa nội dung.
@@ -28,6 +29,7 @@ Hệ thống quản trị nội dung (CMS) hoạt động dựa trên cơ sở d
   - Phục vụ chỉ các bài viết có `status = 'published'` ra các endpoint công khai (Trang chủ, Tin tức, Tìm kiếm), ngăn chặn triệt để tình trạng bản nháp hoặc dữ liệu thử nghiệm bị rò rỉ.
 
 ### 2.2. Phân hệ Quản trị Leads Tuyển sinh (Admission Leads CRM)
+
 - **Bộ điều khiển Leads Toàn diện (`app/(admin)/admin/leads/page.tsx`)**:
   - Ghi nhận đầy đủ: Họ tên, Số điện thoại, Email, Ngành học quan tâm, Nguồn đăng ký (Landing page/Form tư vấn), Ghi chú và Thời gian gửi.
   - Vòng đời xử lý 4 bước: `Mới (new)` ➔ `Đã liên hệ (contacted)` ➔ `Đã tư vấn (consulted)` ➔ `Hủy / Không liên lạc được (cancelled)`.
@@ -36,20 +38,23 @@ Hệ thống quản trị nội dung (CMS) hoạt động dựa trên cơ sở d
   - Tích hợp tính năng tải file CSV có gắn tiền tố `\uFEFF` (Byte Order Mark), giúp bộ phận tuyển sinh mở trực tiếp trên Microsoft Excel mà không bị lỗi font Tiếng Việt có dấu.
 
 ### 2.3. Phân hệ Cấu hình Hệ thống & Thông tin Đơn vị (Site Settings)
+
 - **Chuẩn hóa Thông tin Thể chế Chính thức (`app/api/admin/settings/route.ts`)**:
   - Hotline miễn cước: `1800 646 857` (Hotline tư vấn nhanh: `0901 795 580`).
   - Email chính thức: `tuyensinh@topicauni.edu.vn` (hoặc `info@topicauni.edu.vn`).
   - Trụ sở chính: `27 Lê Văn Lương, Phường Nhân Chính, Quận Thanh Xuân, Hà Nội`.
-  - Tên đơn vị pháp lý: *Viện Đào tạo Quốc tế Topica – Trường Đại học Phú Xuân (PXU)*.
+  - Tên đơn vị pháp lý: _Viện Đào tạo Quốc tế Topica – Trường Đại học Phú Xuân (PXU)_.
   - Lưu trữ dưới dạng Key-Value an toàn trong bảng `settings` của SQLite; tự động revalidate layout khi có thay đổi.
 
 ### 2.4. Phân hệ Quản lý File & Media (Media Management)
+
 - **Kiểm soát Tải lên An toàn (`app/api/admin/upload/route.ts`)**:
   - Giới hạn các định dạng hình ảnh hợp lệ: JPEG, PNG, WebP, GIF.
   - Giới hạn dung lượng tải lên tối đa 5MB.
   - Chặn tuyệt đối việc tải lên các file nhị phân nguy hiểm (`.exe`, `.sh`, `.bat`, `.php`, `.js`).
 
 ### 2.5. Quy trình Sao lưu & Phục hồi Dữ liệu Tự động (Database Backup Protocol)
+
 - **Script Sao lưu Cơ sở Dữ liệu (`scripts/backup-db.ts`)**:
   - Tự động sao lưu file `data/topica.db` sang thư mục `data/backups/topica_backup_[timestamp].db`.
   - Cơ chế xoay vòng thông minh: Tự động dọn dẹp và duy trì 10 bản sao lưu mới nhất, tránh tràn dung lượng đĩa.
@@ -60,14 +65,14 @@ Hệ thống quản trị nội dung (CMS) hoạt động dựa trên cơ sở d
 
 ## 3. Bảng Tổng hợp Kết quả Kiểm thử & Đo lường Kỹ thuật
 
-| Tiêu chí Kiểm thử | Phương thức Thực hiện | Kết quả Đạt được | Trạng thái |
-| :--- | :--- | :--- | :--- |
-| **CMS & Admin Workflows Tests** | `__tests__/cms/cms-admin-workflows.test.ts` | **5 / 5 tests PASS** | ✅ Đạt |
-| **Toàn bộ Test Suites (Vitest)** | `npm run test` (7 test files) | **39 / 39 tests PASS** | ✅ Đạt 100% |
-| **TypeScript Typecheck** | `tsc --noEmit` (`npm run typecheck`) | **0 errors** | ✅ Đạt 100% |
-| **SEO Core Routes** | `tsx scripts/seo-check.ts` (17 routes) | **17 / 17 routes HTTP 200 OK** | ✅ Đạt 100% |
-| **Cơ chế Sao lưu Backup** | `npm run db:backup` | **File sao lưu tạo thành công** | ✅ Đạt |
-| **Đồng bộ Settings Thể chế** | Key `site_settings` trong SQLite | **Đã seed Hotline 1800 646 857** | ✅ Đạt |
+| Tiêu chí Kiểm thử                | Phương thức Thực hiện                       | Kết quả Đạt được                 | Trạng thái  |
+| :------------------------------- | :------------------------------------------ | :------------------------------- | :---------- |
+| **CMS & Admin Workflows Tests**  | `__tests__/cms/cms-admin-workflows.test.ts` | **5 / 5 tests PASS**             | ✅ Đạt      |
+| **Toàn bộ Test Suites (Vitest)** | `npm run test` (7 test files)               | **39 / 39 tests PASS**           | ✅ Đạt 100% |
+| **TypeScript Typecheck**         | `tsc --noEmit` (`npm run typecheck`)        | **0 errors**                     | ✅ Đạt 100% |
+| **SEO Core Routes**              | `tsx scripts/seo-check.ts` (17 routes)      | **17 / 17 routes HTTP 200 OK**   | ✅ Đạt 100% |
+| **Cơ chế Sao lưu Backup**        | `npm run db:backup`                         | **File sao lưu tạo thành công**  | ✅ Đạt      |
+| **Đồng bộ Settings Thể chế**     | Key `site_settings` trong SQLite            | **Đã seed Hotline 1800 646 857** | ✅ Đạt      |
 
 ---
 

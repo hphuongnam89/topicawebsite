@@ -18,6 +18,7 @@ Mục tiêu cốt lõi của Phase 7 là **đưa toàn bộ các trang công kha
 ## 2. Chi tiết Triển khai Theo 5 Nhóm Trang Công Khai
 
 ### 2.1. Nhóm 1: Trang Chủ & Hệ thống 5 Ngành Đào tạo Chi tiết
+
 - **Trang chủ (`/`)**:
   - Hero banner học thuật chuẩn mực, nút Đăng ký xét tuyển vàng Gold (`variant="accent"`), lộ trình tuyển sinh 2 đợt.
   - Khối 5 ngành đào tạo liên kết trực tiếp tới các trang chuyên sâu.
@@ -27,15 +28,16 @@ Mục tiêu cốt lõi của Phase 7 là **đưa toàn bộ các trang công kha
 - **5 Trang Ngành Đào tạo Chi tiết (`components/cms/ProgramPageView.tsx`)**:
   - Hỗ trợ cả 2 định dạng URL: dạng trực tiếp (`/cong-nghe-thong-tin`) và dạng phân cấp (`/nganh-dao-tao/cong-nghe-thong-tin`).
   - Danh mục 5 ngành hoàn thiện:
-    1. *Quản trị kinh doanh* (`/quan-tri-kinh-doanh-marketing` - Mã ngành 7340101)
-    2. *Quản trị dịch vụ du lịch và lữ hành* (`/quan-tri-dich-vu-du-lich-va-lu-hanh` - Mã ngành 7810103)
-    3. *Công nghệ thông tin – chuyên ngành Đồ hoạ kỹ thuật số* (`/cong-nghe-thong-tin` - Mã ngành 7480201)
-    4. *Ngôn ngữ Anh* (`/ngon-ngu-anh` - Mã ngành 7220201)
-    5. *Ngôn ngữ Trung Quốc* (`/ngon-ngu-trung-quoc` - Mã ngành 7220204)
+    1. _Quản trị kinh doanh_ (`/quan-tri-kinh-doanh-marketing` - Mã ngành 7340101)
+    2. _Quản trị dịch vụ du lịch và lữ hành_ (`/quan-tri-dich-vu-du-lich-va-lu-hanh` - Mã ngành 7810103)
+    3. _Công nghệ thông tin – chuyên ngành Đồ hoạ kỹ thuật số_ (`/cong-nghe-thong-tin` - Mã ngành 7480201)
+    4. _Ngôn ngữ Anh_ (`/ngon-ngu-anh` - Mã ngành 7220201)
+    5. _Ngôn ngữ Trung Quốc_ (`/ngon-ngu-trung-quoc` - Mã ngành 7220204)
   - Đầy đủ thông số: Đơn vị cấp bằng ĐH Phú Xuân, 126 tín chỉ, 9 học kỳ, khung chương trình (CurriculumExplorer), lộ trình học (StudyRoadmap), chuẩn đầu ra (LearningOutcomes) và FAQ giải đáp học phí 600k/tín chỉ.
   - Tích hợp cấu trúc dữ liệu Rich Snippets: **Schema.org Course & EducationalOccupationalProgram**.
 
 ### 2.2. Nhóm 2: Tuyển sinh, Học phí & FAQ
+
 - **Cổng Tuyển sinh (`/tuyen-sinh`)**:
   - Thông báo tuyển sinh năm 2026, các đợt xét tuyển, đối tượng áp dụng (tốt nghiệp THPT, liên thông, văn bằng 2).
   - Tích hợp FAQ tuyển sinh: phương thức xét tuyển, hồ sơ trực tuyến, học bổng và đóng học phí.
@@ -47,6 +49,7 @@ Mục tiêu cốt lõi của Phase 7 là **đưa toàn bộ các trang công kha
   - Nhóm câu hỏi theo chủ đề: Giá trị bằng cấp, thời gian học, hình thức học và thi, học phí, hỗ trợ sinh viên.
 
 ### 2.3. Nhóm 3: Giới thiệu, Chất lượng Đào tạo, Trải nghiệm Học tập & Liên hệ
+
 - **Về Topica & ĐH Phú Xuân (`/gioi-thieu`)**:
   - Làm rõ quan hệ thể chế: Viện Đào tạo Quốc tế Topica (đơn vị công nghệ và hỗ trợ đào tạo) và Trường Đại học Phú Xuân (thành viên EQuest - cơ sở giáo dục đại học cấp bằng cử nhân).
 - **Chất lượng Đào tạo & Báo cáo Ba Công khai (`/chat-luong-dao-tao`)**:
@@ -63,6 +66,7 @@ Mục tiêu cốt lõi của Phase 7 là **đưa toàn bộ các trang công kha
   - Hotline miễn cước `1800 646 857`, Email chính thức `tuyensinh@topicauni.edu.vn`.
 
 ### 2.4. Nhóm 4: Tin tức, Tìm kiếm, Pháp lý & Hệ thống
+
 - **Tin tức & Bài viết (`/tin-tuc`, `/tin-tuc/[slug]`)**:
   - Danh mục bài viết phân loại theo chuyên mục, phân trang, lọc tin tuyển sinh và tin tức học đường.
   - Nội dung bài viết được làm sạch HTML bằng `sanitizeWordPressHtml`, loại bỏ thẻ rác WordPress.
@@ -82,15 +86,15 @@ Mục tiêu cốt lõi của Phase 7 là **đưa toàn bộ các trang công kha
 
 ## 3. Bảng Kiểm tra Đo lường Chất lượng Tuyệt đối
 
-| Hạng mục Kiểm thử | Công cụ / Phương thức | Tiêu chí | Kết quả Thực tế | Đánh giá |
-| :--- | :--- | :--- | :--- | :--- |
-| **SEO Core Routes** | `tsx scripts/seo-check.ts` | 100% trả về 200 OK | **17 / 17 routes HTTP 200 OK** | ✅ Hoàn hảo |
-| **5 Ngành Đào tạo** | Curl kiểm tra trực tiếp | Cả 2 định dạng URL | **10 / 10 URLs HTTP 200 OK** | ✅ Hoàn hảo |
-| **Trang Pháp lý & Công khai** | Curl kiểm tra trực tiếp | Không còn lỗi 404 | **4 / 4 trang HTTP 200 OK** | ✅ Hoàn hảo |
-| **Sitemap XML** | `http://localhost:3000/sitemap.xml` | Tự động index trang mới | Đã index đầy đủ các trang CMS | ✅ Hoàn hảo |
-| **Robots.txt & LLMs.txt** | `robots.txt`, `llms.txt` | Cấu hình cho web crawler | **200 OK**, chặn admin, mở public | ✅ Hoàn hảo |
-| **Unit & Integration Tests** | Vitest (`npm run test`) | 100% test pass | **34 / 34 tests PASS** | ✅ Hoàn hảo |
-| **TypeScript Typecheck** | `tsc --noEmit` | 0 lỗi compilation | **0 errors** | ✅ Hoàn hảo |
+| Hạng mục Kiểm thử             | Công cụ / Phương thức               | Tiêu chí                 | Kết quả Thực tế                   | Đánh giá    |
+| :---------------------------- | :---------------------------------- | :----------------------- | :-------------------------------- | :---------- |
+| **SEO Core Routes**           | `tsx scripts/seo-check.ts`          | 100% trả về 200 OK       | **17 / 17 routes HTTP 200 OK**    | ✅ Hoàn hảo |
+| **5 Ngành Đào tạo**           | Curl kiểm tra trực tiếp             | Cả 2 định dạng URL       | **10 / 10 URLs HTTP 200 OK**      | ✅ Hoàn hảo |
+| **Trang Pháp lý & Công khai** | Curl kiểm tra trực tiếp             | Không còn lỗi 404        | **4 / 4 trang HTTP 200 OK**       | ✅ Hoàn hảo |
+| **Sitemap XML**               | `http://localhost:3000/sitemap.xml` | Tự động index trang mới  | Đã index đầy đủ các trang CMS     | ✅ Hoàn hảo |
+| **Robots.txt & LLMs.txt**     | `robots.txt`, `llms.txt`            | Cấu hình cho web crawler | **200 OK**, chặn admin, mở public | ✅ Hoàn hảo |
+| **Unit & Integration Tests**  | Vitest (`npm run test`)             | 100% test pass           | **34 / 34 tests PASS**            | ✅ Hoàn hảo |
+| **TypeScript Typecheck**      | `tsc --noEmit`                      | 0 lỗi compilation        | **0 errors**                      | ✅ Hoàn hảo |
 
 ---
 

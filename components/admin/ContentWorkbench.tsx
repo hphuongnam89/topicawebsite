@@ -1,15 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import type { ContentRevisionRecord } from "@/lib/db/types";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
-import {
-  Upload,
-  Image as ImageIcon,
-  Trash2,
-  FolderOpen,
-  X,
-  RefreshCw,
-} from "lucide-react";
+import { Upload, Image as ImageIcon, Trash2, CheckCircle2, Clock3 } from "lucide-react";
+import { MediaPickerDialog } from "./MediaPickerDialog";
+import { RevisionWorkflowPanel } from "./RevisionWorkflowPanel";
+import { workflowStateLabels } from "./workflow-states";
 import {
   contentTypes,
   contentFields,
@@ -19,12 +16,27 @@ import {
   getEditableFieldValue,
   type ContentType,
 } from "./content-fields";
-const states: Record<string, string> = {
-  draft: "Bản nháp",
-  in_review: "Chờ duyệt",
-  approved: "Đã duyệt",
-  published: "Đã công bố",
-  archived: "Lưu trữ",
+const programSections: Record<string, { title: string; description: string }> = {
+  name: {
+    title: "1. Nhận diện nội dung",
+    description: "Tên, đường dẫn và mã giúp hệ thống nhận đúng ngành đào tạo.",
+  },
+  marketing_label: {
+    title: "2. Nội dung hiển thị",
+    description: "Thông tin người học sẽ đọc trên trang ngành.",
+  },
+  code: {
+    title: "3. Thông tin đào tạo",
+    description: "Nhóm ngành, hình thức học, văn bằng và thời lượng.",
+  },
+  careers: {
+    title: "4. Nội dung chi tiết",
+    description: "Cơ hội nghề nghiệp, chương trình học và chuẩn đầu ra.",
+  },
+  image: {
+    title: "5. Hình ảnh và nguồn",
+    description: "Ảnh đại diện và nguồn cần đối chiếu trước khi công bố.",
+  },
 };
 const inputClass =
   "min-h-11 w-full rounded-md border border-line-200 bg-white px-3 py-2 text-ink-950 focus:outline-2 focus:outline-navy-700";
@@ -36,6 +48,54 @@ const dateTimeFields = new Set([
   "effective_to",
 ]);
 const dateOnlyFields = new Set(["published_date"]);
+const categoriesResponseSchema = z.object({
+  categories: z.array(z.object({ id: z.number(), name: z.string(), slug: z.string() })),
+});
+const mediaResponseSchema = z.object({
+  media: z.array(
+    z.object({
+      name: z.string(),
+      url: z.string(),
+      size: z.number(),
+      access: z.enum(["public", "private"]),
+    }),
+  ),
+});
+const revisionRecordSchema = z
+  .object({
+    id: z.number(),
+    entity_type: z.enum([
+      "article",
+      "page",
+      "program",
+      "tuition_policy",
+      "admission_round",
+      "organization",
+      "scholarship",
+      "document",
+    ]),
+    entity_id: z.string(),
+    version: z.number(),
+    title: z.string(),
+    payload: z.string(),
+    workflow_state: z.enum(["draft", "in_review", "approved", "published", "archived"]),
+    reviewer_notes: z.string().nullable(),
+    created_by: z.string(),
+    approved_by: z.string().nullable(),
+    published_at: z.string().nullable(),
+    expired_at: z.string().nullable(),
+    highlight_until: z.string().nullable(),
+    created_at: z.string(),
+    updated_at: z.string(),
+  })
+  .passthrough();
+const revisionListResponseSchema = z.object({
+  revisions: z.array(revisionRecordSchema),
+  serverTime: z.number(),
+  total: z.number(),
+  totalPages: z.number(),
+});
+const revisionResponseSchema = z.object({ revision: revisionRecordSchema });
 function parseObject(value: string): Record<string, unknown> {
   try {
     const parsed: unknown = JSON.parse(value || "{}");
@@ -380,7 +440,12 @@ function CurriculumJsonEditor({
           { code: "MAJ.201", name: "Cơ sở chuyên ngành 1", credits: 3, requirement: "Bắt buộc" },
           { code: "MAJ.202", name: "Cơ sở chuyên ngành 2", credits: 3, requirement: "Bắt buộc" },
           { code: "MAJ.203", name: "Kỹ năng chuyên môn", credits: 3, requirement: "Bắt buộc" },
-          { code: "POL.102", name: "Kinh tế chính trị Mác-Lênin", credits: 3, requirement: "Bắt buộc" },
+          {
+            code: "POL.102",
+            name: "Kinh tế chính trị Mác-Lênin",
+            credits: 3,
+            requirement: "Bắt buộc",
+          },
         ],
       },
     ];
@@ -392,7 +457,8 @@ function CurriculumJsonEditor({
     <div className="grid gap-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-xs text-ink-600">
-          Danh mục học phần theo từng học kỳ. Có thể dán trực tiếp JSON từ khung chương trình đào tạo.
+          Danh mục học phần theo từng học kỳ. Có thể dán trực tiếp JSON từ khung chương trình đào
+          tạo.
         </span>
         <div className="flex items-center gap-2">
           <button
@@ -442,6 +508,162 @@ function toVietnamLocal(value: unknown) {
 function fromVietnamLocal(value: string) {
   return value ? new Date(`${value}:00+07:00`).toISOString() : "";
 }
+
+function RevisionList({
+  rows,
+  serverTime,
+  total,
+  page,
+  totalPages,
+  search,
+  searchInput,
+  listType,
+  listState,
+  busy,
+  onSearchInput,
+  onSearch,
+  onListType,
+  onListState,
+  onPage,
+  onCreate,
+  onLoad,
+}: {
+  rows: ContentRevisionRecord[];
+  serverTime: number;
+  total: number;
+  page: number;
+  totalPages: number;
+  search: string;
+  searchInput: string;
+  listType: string;
+  listState: string;
+  busy: boolean;
+  onSearchInput: (value: string) => void;
+  onSearch: (value: string) => void;
+  onListType: (value: string) => void;
+  onListState: (value: string) => void;
+  onPage: (value: number) => void;
+  onCreate: () => void;
+  onLoad: (row: ContentRevisionRecord) => void;
+}) {
+  return (
+    <aside aria-label="Các bản sửa" className="min-w-0 rounded-xl border bg-white p-4">
+      <button type="button" className={inputClass} disabled={busy} onClick={onCreate}>
+        + Tạo nội dung mới
+      </button>
+      <p className="mt-2 text-xs text-ink-600">
+        Chọn một bản sửa bên dưới để tiếp tục, hoặc tạo bản nháp mới từ đầu.
+      </p>
+      <form
+        className="mt-4 grid gap-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSearch(searchInput.trim());
+          onPage(1);
+        }}
+      >
+        <label className="grid gap-1 text-sm font-medium">
+          Tìm theo tên hoặc mã
+          <input
+            className={inputClass}
+            value={searchInput}
+            maxLength={120}
+            onChange={(event) => onSearchInput(event.target.value)}
+            placeholder="VD: tourism, học phí..."
+          />
+        </label>
+        <label className="grid gap-1 text-sm font-medium">
+          Loại nội dung
+          <select
+            className={inputClass}
+            value={listType}
+            onChange={(event) => onListType(event.target.value)}
+          >
+            <option value="">Tất cả loại</option>
+            {Object.entries(contentTypes).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-1 text-sm font-medium">
+          Trạng thái
+          <select
+            className={inputClass}
+            value={listState}
+            onChange={(event) => onListState(event.target.value)}
+          >
+            <option value="">Tất cả trạng thái</option>
+            {Object.entries(workflowStateLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="submit"
+          className="min-h-10 rounded bg-navy-900 px-3 font-semibold text-white"
+        >
+          Tìm nội dung
+        </button>
+      </form>
+      <p className="mt-3 text-xs text-ink-600">
+        {total} bản sửa · trang {page}/{totalPages}
+      </p>
+      <ul className="mt-4 max-h-[36rem] space-y-2 overflow-auto">
+        {rows.map((row) => (
+          <li key={row.id}>
+            <button
+              type="button"
+              className="min-h-11 w-full rounded border p-3 text-left hover:bg-navy-50"
+              onClick={() => onLoad(row)}
+            >
+              <span className="block font-semibold">{row.title}</span>
+              <span className="text-sm text-ink-600">
+                {contentTypes[row.entity_type]} · {row.entity_id} · v{row.version} ·{" "}
+                {row.workflow_state === "published" &&
+                row.published_at &&
+                Date.parse(row.published_at) > serverTime
+                  ? "Đặt lịch"
+                  : workflowStateLabels[row.workflow_state]}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {!rows.length && (
+        <p className="mt-4 text-ink-600">
+          {search || listType || listState
+            ? "Không tìm thấy bản sửa phù hợp. Hãy thử đổi từ khóa hoặc bộ lọc."
+            : "Chưa có bản sửa. Bạn có thể tạo bản nháp đầu tiên."}
+        </p>
+      )}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <button
+            type="button"
+            disabled={page <= 1}
+            onClick={() => onPage(Math.max(1, page - 1))}
+            className="min-h-10 rounded border px-3 disabled:opacity-50"
+          >
+            Trước
+          </button>
+          <button
+            type="button"
+            disabled={page >= totalPages}
+            onClick={() => onPage(Math.min(totalPages, page + 1))}
+            className="min-h-10 rounded border px-3 disabled:opacity-50"
+          >
+            Sau
+          </button>
+        </div>
+      )}
+    </aside>
+  );
+}
+
 export function ContentWorkbench({
   isAdmin,
   initialEntityType,
@@ -483,31 +705,52 @@ export function ContentWorkbench({
   const [totalPages, setTotalPages] = useState(1);
 
   const [categories, setCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
+  const [categoriesError, setCategoriesError] = useState("");
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
-  const [mediaList, setMediaList] = useState<{ key: string; name: string; url: string; size: number }[]>([]);
+  const [mediaList, setMediaList] = useState<z.infer<typeof mediaResponseSchema>["media"]>([]);
   const [loadingMedia, setLoadingMedia] = useState(false);
+  const [mediaError, setMediaError] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  async function requestCategories() {
+    const res = await fetch("/api/admin/categories");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return categoriesResponseSchema.parse(await res.json()).categories;
+  }
+
+  async function loadCategories() {
+    try {
+      setCategories(await requestCategories());
+      setCategoriesError("");
+    } catch {
+      setCategoriesError("Không tải được danh mục bài viết.");
+    }
+  }
+
   useEffect(() => {
-    fetch("/api/admin/categories")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.categories) setCategories(data.categories);
+    let active = true;
+    requestCategories()
+      .then((items) => {
+        if (active) setCategories(items);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (active) setCategoriesError("Không tải được danh mục bài viết.");
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const openMediaPicker = async () => {
     setMediaPickerOpen(true);
     setLoadingMedia(true);
+    setMediaError("");
     try {
       const res = await fetch("/api/admin/media");
-      if (res.ok) {
-        const data = await res.json();
-        setMediaList(data.media || []);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setMediaList(mediaResponseSchema.parse(await res.json()).media);
     } catch {
-      // ignore
+      setMediaError("Không tải được thư viện media. Hãy thử tải lại.");
     } finally {
       setLoadingMedia(false);
     }
@@ -559,7 +802,7 @@ export function ContentWorkbench({
     if (listState) query.set("workflowState", listState);
     const res = await fetch(`/api/admin/revisions?${query}`, { cache: "no-store" });
     if (!res.ok) throw new Error("Không tải được danh sách bản sửa");
-    const data = await res.json();
+    const data = revisionListResponseSchema.parse(await res.json());
     setRows(data.revisions);
     setServerTime(data.serverTime);
     setTotal(data.total);
@@ -574,7 +817,7 @@ export function ContentWorkbench({
     fetch(`/api/admin/revisions?${query}`, { cache: "no-store", signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("Không tải được danh sách bản sửa");
-        return res.json();
+        return revisionListResponseSchema.parse(await res.json());
       })
       .then((data) => {
         setRows(data.revisions);
@@ -583,7 +826,14 @@ export function ContentWorkbench({
         setTotalPages(data.totalPages);
       })
       .catch((error) => {
-        if (!controller.signal.aborted) setError(String(error.message));
+        if (!controller.signal.aborted)
+          setError(
+            error instanceof z.ZodError
+              ? "Phản hồi danh sách bản sửa không đúng định dạng."
+              : error instanceof Error
+                ? error.message
+                : "Không tải được danh sách bản sửa.",
+          );
       });
     return () => controller.abort();
   }, [page, search, listType, listState]);
@@ -592,7 +842,16 @@ export function ContentWorkbench({
       setError("Hãy lưu bản nháp hoặc chọn Bỏ thay đổi trước khi chuyển bản sửa.");
       return;
     }
-    const payload = JSON.parse(row.payload);
+    let payload: unknown;
+    try {
+      payload = JSON.parse(row.payload);
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+        throw new Error();
+      }
+    } catch {
+      setError("Bản sửa có dữ liệu JSON không hợp lệ; không thể mở nội dung này.");
+      return;
+    }
     setType(row.entity_type);
     setAutoEntityId(false);
     setAutoRevisionTitle(false);
@@ -665,12 +924,20 @@ export function ContentWorkbench({
         payload[key] = value;
       }
     }
-    const data = await response(
-      await fetch("/api/admin/revisions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ entityType: type, entityId, title, payload, baseRevisionId: base }),
-      }),
+    const data = revisionResponseSchema.parse(
+      await response(
+        await fetch("/api/admin/revisions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            entityType: type,
+            entityId,
+            title,
+            payload,
+            baseRevisionId: base,
+          }),
+        }),
+      ),
     );
     setDirty(false);
     setSelected(data.revision);
@@ -779,17 +1046,19 @@ export function ContentWorkbench({
     action: string,
     options: Record<string, unknown> = {},
   ) {
-    const data = await response(
-      await fetch(`/api/admin/revisions/${revision.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action,
-          expectedUpdatedAt: revision.updated_at,
-          reason: reason || undefined,
-          ...options,
+    const data = revisionResponseSchema.parse(
+      await response(
+        await fetch(`/api/admin/revisions/${revision.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action,
+            expectedUpdatedAt: revision.updated_at,
+            reason: reason || undefined,
+            ...options,
+          }),
         }),
-      }),
+      ),
     );
     return data.revision as ContentRevisionRecord;
   }
@@ -820,11 +1089,29 @@ export function ContentWorkbench({
   }
   return (
     <div className="mx-auto max-w-7xl p-4 sm:p-8">
-      <h1 className="text-h2 font-bold text-navy-950">Nội dung & phê duyệt</h1>
+      <h1 className="text-h2 font-bold text-navy-950">Biên tập và phê duyệt nội dung</h1>
       <p className="mt-2 text-ink-700">
-        Lưu thay đổi thành bản nháp mới. Quản trị viên duyệt đúng bản sửa trước khi công bố; lịch
-        nhập theo giờ Việt Nam.
+        Tạo bản nháp, gửi đúng bản sửa để duyệt, rồi mới công bố. Nội dung công khai chỉ thay đổi
+        sau bước phê duyệt.
       </p>
+      <div className="mt-4 grid gap-3 rounded-xl border border-brand-200 bg-brand-50/60 p-4 sm:grid-cols-4">
+        {[
+          ["1", "Tạo hoặc mở", "Chọn nội dung cần sửa"],
+          ["2", "Lưu nháp", "Kiểm tra trước khi gửi"],
+          ["3", "Gửi duyệt", "Reviewer kiểm tra bản sửa"],
+          ["4", "Công bố", "Chỉ admin được phát hành"],
+        ].map(([step, title, description]) => (
+          <div key={step} className="flex gap-2 text-sm">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-navy-950 text-xs font-bold text-white">
+              {step}
+            </span>
+            <span>
+              <strong className="block text-navy-950">{title}</strong>
+              <span className="text-ink-600">{description}</span>
+            </span>
+          </div>
+        ))}
+      </div>
       {error && (
         <p role="alert" className="my-4 rounded bg-error/10 p-4 text-error">
           {error}
@@ -836,143 +1123,65 @@ export function ContentWorkbench({
         </p>
       )}
       <div className="mt-6 grid gap-6 xl:grid-cols-[18rem_1fr]">
-        <aside aria-label="Các bản sửa" className="min-w-0 rounded-xl border bg-white p-4">
-          <button
-            type="button"
-            className={inputClass}
-            disabled={busy}
-            onClick={() => {
-              setDirty(false);
-              setSelected(null);
-              setValues({});
-              setEntityId("");
-              setTitle("");
-              setAutoEntityId(false);
-              setAutoRevisionTitle(false);
-              setAutoArticleSlug(false);
-              setBase(0);
-              setError("");
-            }}
-          >
-            Bỏ thay đổi / Tạo nội dung mới
-          </button>
-          <form
-            className="mt-4 grid gap-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setPage(1);
-              setSearch(searchInput.trim());
-            }}
-          >
-            <label className="grid gap-1 text-sm font-medium">
-              Tìm theo tên hoặc mã
-              <input
-                className={inputClass}
-                value={searchInput}
-                maxLength={120}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="VD: tourism, học phí..."
-              />
-            </label>
-            <label className="grid gap-1 text-sm font-medium">
-              Loại nội dung
-              <select
-                className={inputClass}
-                value={listType}
-                onChange={(event) => {
-                  setListType(event.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="">Tất cả loại</option>
-                {Object.entries(contentTypes).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-1 text-sm font-medium">
-              Trạng thái
-              <select
-                className={inputClass}
-                value={listState}
-                onChange={(event) => {
-                  setListState(event.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="">Tất cả trạng thái</option>
-                {Object.entries(states).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button
-              type="submit"
-              className="min-h-10 rounded bg-navy-900 px-3 font-semibold text-white"
-            >
-              Tìm nội dung
-            </button>
-          </form>
-          <p className="mt-3 text-xs text-ink-600">
-            {total} bản sửa · trang {page}/{totalPages}
-          </p>
-          <ul className="mt-4 max-h-[36rem] space-y-2 overflow-auto">
-            {rows.map((row) => (
-              <li key={row.id}>
-                <button
-                  type="button"
-                  className="min-h-11 w-full rounded border p-3 text-left hover:bg-navy-50"
-                  onClick={() => load(row)}
-                >
-                  <span className="block font-semibold">{row.title}</span>
-                  <span className="text-sm text-ink-600">
-                    {contentTypes[row.entity_type]} · {row.entity_id} · v{row.version} ·{" "}
-                    {row.workflow_state === "published" &&
-                    row.published_at &&
-                    Date.parse(row.published_at) > serverTime
-                      ? "Đặt lịch"
-                      : states[row.workflow_state]}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          {!rows.length && (
-            <p className="mt-4 text-ink-600">
-              {search || listType || listState
-                ? "Không tìm thấy bản sửa phù hợp. Hãy thử đổi từ khóa hoặc bộ lọc."
-                : "Chưa có bản sửa. Bạn có thể tạo bản nháp đầu tiên."}
-            </p>
-          )}
-          {totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                disabled={page <= 1}
-                onClick={() => setPage((value) => Math.max(1, value - 1))}
-                className="min-h-10 rounded border px-3 disabled:opacity-50"
-              >
-                Trước
-              </button>
-              <button
-                type="button"
-                disabled={page >= totalPages}
-                onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
-                className="min-h-10 rounded border px-3 disabled:opacity-50"
-              >
-                Sau
-              </button>
-            </div>
-          )}
-        </aside>
+        <RevisionList
+          rows={rows}
+          serverTime={serverTime}
+          total={total}
+          page={page}
+          totalPages={totalPages}
+          search={search}
+          searchInput={searchInput}
+          listType={listType}
+          listState={listState}
+          busy={busy}
+          onSearchInput={setSearchInput}
+          onSearch={setSearch}
+          onListType={(value) => {
+            setListType(value);
+            setPage(1);
+          }}
+          onListState={(value) => {
+            setListState(value);
+            setPage(1);
+          }}
+          onPage={setPage}
+          onCreate={() => {
+            setDirty(false);
+            setSelected(null);
+            setValues({});
+            setEntityId("");
+            setTitle("");
+            setAutoEntityId(false);
+            setAutoRevisionTitle(false);
+            setAutoArticleSlug(false);
+            setBase(0);
+            setError("");
+          }}
+          onLoad={load}
+        />
         <section
           className="min-w-0 rounded-xl border bg-white p-4 sm:p-6"
           aria-label="Biên tập nội dung"
         >
+          <div className="mb-5 rounded-lg border border-line-200 bg-paper p-4">
+            <div className="flex items-start gap-3">
+              {selected ? (
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
+              ) : (
+                <Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-navy-800" />
+              )}
+              <div>
+                <p className="font-semibold text-navy-950">
+                  {selected ? `Đang sửa bản v${selected.version}` : "Đang tạo nội dung mới"}
+                </p>
+                <p className="mt-1 text-sm text-ink-600">
+                  {selected
+                    ? `Trạng thái hiện tại: ${workflowStateLabels[selected.workflow_state]}. Lưu bản nháp trước khi gửi duyệt hoặc công bố.`
+                    : "Nhập thông tin cơ bản trước. Sau khi lưu, hệ thống tạo một bản nháp để theo dõi và phê duyệt."}
+                </p>
+              </div>
+            </div>
+          </div>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -1005,7 +1214,7 @@ export function ContentWorkbench({
                 </select>
               </label>
               <label className="grid gap-1">
-                Mã nội dung
+                Mã nội dung (ID cố định)
                 <input
                   required
                   maxLength={240}
@@ -1032,7 +1241,7 @@ export function ContentWorkbench({
                   className="min-h-11 flex-1 rounded border px-4 text-navy-900 underline hover:bg-slate-50"
                   onClick={() => void run(loadExisting)}
                 >
-                  Tải nội dung hiện có theo mã
+                  Mở nội dung đã có theo mã
                 </button>
                 {selected && (
                   <button
@@ -1071,532 +1280,437 @@ export function ContentWorkbench({
                 )}
               </label>
               {contentFields[type].map((key) => (
-                <label
-                  key={key}
-                  className={`grid min-w-0 gap-1 ${jsonFields.has(key) || key === "content_html" ? "sm:col-span-2" : ""}`}
-                >
-                  {fieldLabels[key] || key}
-                  {key === "category_id" && type === "article" ? (
-                    <select
-                      className={inputClass}
-                      value={values[key] || ""}
-                      onChange={(event) => {
-                        setValues({ ...values, [key]: event.target.value });
-                        setDirty(true);
-                      }}
-                    >
-                      <option value="">-- Chưa phân loại --</option>
-                      {categories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  ) : key === "featured_image" ? (
-                    <div className="grid gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <input
-                          className={`flex-1 ${inputClass}`}
+                <div key={key} className="contents">
+                  {type === "program" && programSections[key] && (
+                    <div className="mt-3 border-t border-line-200 pt-4 sm:col-span-2">
+                      <h2 className="font-semibold text-navy-950">{programSections[key].title}</h2>
+                      <p className="mt-1 text-sm text-ink-600">
+                        {programSections[key].description}
+                      </p>
+                    </div>
+                  )}
+                  <label
+                    className={`grid min-w-0 gap-1 ${jsonFields.has(key) || key === "content_html" ? "sm:col-span-2" : ""}`}
+                  >
+                    {fieldLabels[key] || key}
+                    {key === "category_id" && type === "article" ? (
+                      <div className="grid gap-1">
+                        <select
+                          className={inputClass}
                           value={values[key] || ""}
-                          placeholder="https://... hoặc tải ảnh lên"
                           onChange={(event) => {
                             setValues({ ...values, [key]: event.target.value });
                             setDirty(true);
                           }}
-                          aria-label="Đường dẫn ảnh đại diện"
-                        />
-                        <label className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50">
-                          <Upload className="h-4 w-4" />
-                          <span>{uploadingImage ? "Đang tải..." : "Tải từ máy"}</span>
-                          <input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            disabled={uploadingImage}
-                            className="sr-only"
-                            onChange={(event) => {
-                              const file = event.target.files?.[0];
-                              if (file) void uploadFeaturedImage(file);
-                              event.currentTarget.value = "";
-                            }}
-                          />
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => void openMediaPicker()}
-                          className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
                         >
-                          <ImageIcon className="h-4 w-4" />
-                          <span>Thư viện Media</span>
-                        </button>
-                        {values[key] && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setValues({ ...values, [key]: "" });
-                              setDirty(true);
-                            }}
-                            className="inline-flex min-h-11 items-center gap-1 rounded-md border border-red-200 bg-red-50 px-2.5 py-2 text-sm text-red-700 hover:bg-red-100"
-                            title="Xóa ảnh đại diện"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            <span>Xóa</span>
-                          </button>
+                          <option value="">-- Chưa phân loại --</option>
+                          {categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.name}
+                            </option>
+                          ))}
+                        </select>
+                        {categoriesError && (
+                          <p role="alert" className="text-sm text-error">
+                            {categoriesError}{" "}
+                            <button
+                              type="button"
+                              className="underline"
+                              onClick={() => void loadCategories()}
+                            >
+                              Thử lại
+                            </button>
+                          </p>
                         )}
                       </div>
-                      {values[key] && (
-                        <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
-                          <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded border border-line-200 bg-white">
-                            <img
-                              src={values[key]}
-                              alt="Xem trước ảnh đại diện"
-                              className="h-full w-full object-cover"
+                    ) : key === "featured_image" ? (
+                      <div className="grid gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <input
+                            className={`flex-1 ${inputClass}`}
+                            value={values[key] || ""}
+                            placeholder="https://... hoặc tải ảnh lên"
+                            onChange={(event) => {
+                              setValues({ ...values, [key]: event.target.value });
+                              setDirty(true);
+                            }}
+                            aria-label="Đường dẫn ảnh đại diện"
+                          />
+                          <label className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50">
+                            <Upload className="h-4 w-4" />
+                            <span>{uploadingImage ? "Đang tải..." : "Tải từ máy"}</span>
+                            <input
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              disabled={uploadingImage}
+                              className="sr-only"
+                              onChange={(event) => {
+                                const file = event.target.files?.[0];
+                                if (file) void uploadFeaturedImage(file);
+                                event.currentTarget.value = "";
+                              }}
                             />
-                          </div>
-                          <div className="min-w-0 text-xs">
-                            <p className="font-semibold text-ink-900">Xem trước ảnh đại diện (Bản nháp)</p>
-                            <p className="mt-0.5 truncate text-ink-500">{values[key]}</p>
-                            <p className="mt-0.5 text-ink-400">Ảnh này chỉ được công bố khi hoàn tất duyệt và xuất bản.</p>
-                          </div>
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => void openMediaPicker()}
+                            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
+                          >
+                            <ImageIcon className="h-4 w-4" />
+                            <span>Thư viện Media</span>
+                          </button>
+                          {values[key] && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setValues({ ...values, [key]: "" });
+                                setDirty(true);
+                              }}
+                              className="inline-flex min-h-11 items-center gap-1 rounded-md border border-red-200 bg-red-50 px-2.5 py-2 text-sm text-red-700 hover:bg-red-100"
+                              title="Xóa ảnh đại diện"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span>Xóa</span>
+                            </button>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ) : key === "access" && type === "document" ? (
-                    <select
-                      className={inputClass}
-                      value={values[key] || "public"}
-                      onChange={(event) => {
-                        setValues({ ...values, [key]: event.target.value });
-                        setDirty(true);
-                      }}
-                    >
-                      <option value="public">Công khai</option>
-                      {isAdmin && <option value="private">Riêng tư · chỉ admin truy cập</option>}
-                    </select>
-                  ) : key === "file_url" && type === "document" ? (
-                    <div className="grid gap-2">
-                      <input
+                        {values[key] && (
+                          <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
+                            <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded border border-line-200 bg-white">
+                              <img
+                                src={values[key]}
+                                alt="Xem trước ảnh đại diện"
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                            <div className="min-w-0 text-xs">
+                              <p className="font-semibold text-ink-900">
+                                Xem trước ảnh đại diện (Bản nháp)
+                              </p>
+                              <p className="mt-0.5 truncate text-ink-500">{values[key]}</p>
+                              <p className="mt-0.5 text-ink-400">
+                                Ảnh này chỉ được công bố khi hoàn tất duyệt và xuất bản.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : key === "access" && type === "document" ? (
+                      <select
                         className={inputClass}
-                        value={values[key] || ""}
+                        value={values[key] || "public"}
                         onChange={(event) => {
                           setValues({ ...values, [key]: event.target.value });
                           setDirty(true);
                         }}
-                        aria-label="Đường dẫn tệp"
-                      />
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,application/pdf"
-                        disabled={!isAdmin && values.access === "private"}
-                        className={inputClass}
-                        onChange={(event) => {
-                          const file = event.target.files?.[0];
-                          if (file) void run(() => uploadDocument(file));
-                          event.currentTarget.value = "";
+                      >
+                        <option value="public">Công khai</option>
+                        {isAdmin && <option value="private">Riêng tư · chỉ admin truy cập</option>}
+                      </select>
+                    ) : key === "file_url" && type === "document" ? (
+                      <div className="grid gap-2">
+                        <input
+                          className={inputClass}
+                          value={values[key] || ""}
+                          onChange={(event) => {
+                            setValues({ ...values, [key]: event.target.value });
+                            setDirty(true);
+                          }}
+                          aria-label="Đường dẫn tệp"
+                        />
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,application/pdf"
+                          disabled={!isAdmin && values.access === "private"}
+                          className={inputClass}
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) void run(() => uploadDocument(file));
+                            event.currentTarget.value = "";
+                          }}
+                        />
+                        <span className="text-xs text-ink-600">
+                          PDF tối đa 20 MB; ảnh JPG/PNG/WebP tối đa 5 MB. PDF riêng tư được lưu
+                          ngoài thư mục public.
+                        </span>
+                      </div>
+                    ) : key === "content_html" ? (
+                      <RichTextEditor
+                        value={values[key] || ""}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                        onUploadImage={async (file) => {
+                          const form = new FormData();
+                          form.append("file", file);
+                          const response = await fetch("/api/admin/upload", {
+                            method: "POST",
+                            body: form,
+                          });
+                          const data = await response.json();
+                          if (!response.ok) throw new Error(data.error || "Không tải được ảnh");
+                          return data.url;
                         }}
                       />
-                      <span className="text-xs text-ink-600">
-                        PDF tối đa 20 MB; ảnh JPG/PNG/WebP tối đa 5 MB. PDF riêng tư được lưu ngoài
-                        thư mục public.
-                      </span>
-                    </div>
-                  ) : key === "content_html" ? (
-                    <RichTextEditor
-                      value={values[key] || ""}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                      onUploadImage={async (file) => {
-                        const form = new FormData();
-                        form.append("file", file);
-                        const response = await fetch("/api/admin/upload", {
-                          method: "POST",
-                          body: form,
-                        });
-                        const data = await response.json();
-                        if (!response.ok) throw new Error(data.error || "Không tải được ảnh");
-                        return data.url;
-                      }}
-                    />
-                  ) : key === "aliases" || key === "program_ids" || key === "careers" || key === "confirmations" ? (
-                    <StringListEditor
-                      label={fieldLabels[key] || key}
-                      value={values[key] || "[]"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "curriculum" ? (
-                    <CurriculumJsonEditor
-                      value={values[key] || "[]"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "group" && type === "program" ? (
-                    <select
-                      className={inputClass}
-                      value={values[key] || "technology"}
-                      onChange={(event) => {
-                        setValues({ ...values, [key]: event.target.value });
-                        setDirty(true);
-                      }}
-                    >
-                      <option value="technology">Công nghệ & Sáng tạo</option>
-                      <option value="business">Kinh doanh & Dịch vụ</option>
-                      <option value="language">Ngôn ngữ</option>
-                      <option value="other">Khác</option>
-                    </select>
-                  ) : key === "image" && type === "program" ? (
-                    <div className="grid gap-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <input
-                          className={`flex-1 ${inputClass}`}
+                    ) : key === "aliases" ||
+                      key === "program_ids" ||
+                      key === "careers" ||
+                      key === "confirmations" ? (
+                      <StringListEditor
+                        label={fieldLabels[key] || key}
+                        value={values[key] || "[]"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "curriculum" ? (
+                      <CurriculumJsonEditor
+                        value={values[key] || "[]"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "group" && type === "program" ? (
+                      <select
+                        className={inputClass}
+                        value={values[key] || "technology"}
+                        onChange={(event) => {
+                          setValues({ ...values, [key]: event.target.value });
+                          setDirty(true);
+                        }}
+                      >
+                        <option value="technology">Công nghệ & Sáng tạo</option>
+                        <option value="business">Kinh doanh & Dịch vụ</option>
+                        <option value="language">Ngôn ngữ</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    ) : key === "image" && type === "program" ? (
+                      <div className="grid gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <input
+                            className={`flex-1 ${inputClass}`}
+                            value={values[key] || ""}
+                            placeholder="/images/programs/... hoặc https://..."
+                            onChange={(event) => {
+                              setValues({ ...values, [key]: event.target.value });
+                              setDirty(true);
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => void openMediaPicker()}
+                            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
+                          >
+                            <ImageIcon className="h-4 w-4" />
+                            <span>Thư viện Media</span>
+                          </button>
+                        </div>
+                        {values[key] && (
+                          <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
+                            <img
+                              src={values[key]}
+                              alt="Ảnh ngành"
+                              className="h-12 w-20 rounded object-cover"
+                            />
+                            <span className="truncate text-xs text-ink-600">{values[key]}</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : key === "summary" ||
+                      key === "admissions" ||
+                      key === "graduation" ||
+                      key === "further_study" ? (
+                      <textarea
+                        rows={3}
+                        className={inputClass}
+                        value={values[key] || ""}
+                        placeholder={`Nhập ${fieldLabels[key]?.toLowerCase() || key}...`}
+                        onChange={(event) => {
+                          setValues({ ...values, [key]: event.target.value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "duration_credits" ? (
+                      <DurationEditor
+                        value={values[key] || "{}"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "other_fees" ? (
+                      <ScalarObjectEditor
+                        label={fieldLabels[key] || key}
+                        numeric
+                        value={values[key] || "{}"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "service_urls" ? (
+                      <ServiceUrlsEditor
+                        value={values[key] || "{}"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                      />
+                    ) : key === "documents" ? (
+                      <RepeatableObjectEditor
+                        value={values[key] || "[]"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                        fields={[
+                          { key: "title", label: "Tên tài liệu" },
+                          {
+                            key: "url",
+                            label: "Liên kết tài liệu",
+                            placeholder: "/duong-dan-hoac-https://...",
+                          },
+                        ]}
+                        addLabel="Thêm tài liệu hướng dẫn"
+                        emptyItem={{ title: "", url: "" }}
+                      />
+                    ) : key === "locations" ? (
+                      <RepeatableObjectEditor
+                        value={values[key] || "[]"}
+                        onChange={(value) => {
+                          setValues({ ...values, [key]: value });
+                          setDirty(true);
+                        }}
+                        fields={[
+                          { key: "name", label: "Tên cơ sở" },
+                          { key: "city", label: "Tỉnh/thành phố" },
+                          { key: "address", label: "Địa chỉ" },
+                          { key: "hotline", label: "Hotline (không bắt buộc)" },
+                        ]}
+                        addLabel="Thêm địa điểm"
+                        emptyItem={{ name: "", city: "", address: "", hotline: "" }}
+                      />
+                    ) : jsonFields.has(key) ? (
+                      <div className="grid gap-1.5">
+                        <textarea
+                          rows={4}
+                          className={inputClass}
+                          spellCheck={false}
                           value={values[key] || ""}
-                          placeholder="/images/programs/... hoặc https://..."
                           onChange={(event) => {
                             setValues({ ...values, [key]: event.target.value });
                             setDirty(true);
                           }}
                         />
-                        <button
-                          type="button"
-                          onClick={() => void openMediaPicker()}
-                          className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-line-200 bg-white px-3 py-2 text-sm font-semibold text-navy-900 shadow-xs hover:bg-slate-50"
-                        >
-                          <ImageIcon className="h-4 w-4" />
-                          <span>Thư viện Media</span>
-                        </button>
+                        <span className="text-xs text-ink-500">
+                          Trường dữ liệu lồng nhau; nhập JSON hợp lệ. Để trống sẽ xóa nội dung.
+                        </span>
                       </div>
-                      {values[key] && (
-                        <div className="flex items-center gap-3 rounded-lg border border-line-200 bg-slate-50 p-2.5">
-                          <img
-                            src={values[key]}
-                            alt="Ảnh ngành"
-                            className="h-12 w-20 rounded object-cover"
-                          />
-                          <span className="truncate text-xs text-ink-600">{values[key]}</span>
-                        </div>
-                      )}
-                    </div>
-                  ) : key === "summary" || key === "admissions" || key === "graduation" || key === "further_study" ? (
-                    <textarea
-                      rows={3}
-                      className={inputClass}
-                      value={values[key] || ""}
-                      placeholder={`Nhập ${fieldLabels[key]?.toLowerCase() || key}...`}
-                      onChange={(event) => {
-                        setValues({ ...values, [key]: event.target.value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "duration_credits" ? (
-                    <DurationEditor
-                      value={values[key] || "{}"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "other_fees" ? (
-                    <ScalarObjectEditor
-                      label={fieldLabels[key] || key}
-                      numeric
-                      value={values[key] || "{}"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "service_urls" ? (
-                    <ServiceUrlsEditor
-                      value={values[key] || "{}"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                    />
-                  ) : key === "documents" ? (
-                    <RepeatableObjectEditor
-                      value={values[key] || "[]"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                      fields={[
-                        { key: "title", label: "Tên tài liệu" },
-                        {
-                          key: "url",
-                          label: "Liên kết tài liệu",
-                          placeholder: "/duong-dan-hoac-https://...",
-                        },
-                      ]}
-                      addLabel="Thêm tài liệu hướng dẫn"
-                      emptyItem={{ title: "", url: "" }}
-                    />
-                  ) : key === "locations" ? (
-                    <RepeatableObjectEditor
-                      value={values[key] || "[]"}
-                      onChange={(value) => {
-                        setValues({ ...values, [key]: value });
-                        setDirty(true);
-                      }}
-                      fields={[
-                        { key: "name", label: "Tên cơ sở" },
-                        { key: "city", label: "Tỉnh/thành phố" },
-                        { key: "address", label: "Địa chỉ" },
-                        { key: "hotline", label: "Hotline (không bắt buộc)" },
-                      ]}
-                      addLabel="Thêm địa điểm"
-                      emptyItem={{ name: "", city: "", address: "", hotline: "" }}
-                    />
-                  ) : jsonFields.has(key) ? (
-                    <div className="grid gap-1.5">
-                      <textarea
-                        rows={4}
+                    ) : (
+                      <input
                         className={inputClass}
-                        spellCheck={false}
+                        type={
+                          numberFields.has(key)
+                            ? "number"
+                            : dateTimeFields.has(key)
+                              ? "datetime-local"
+                              : dateOnlyFields.has(key)
+                                ? "date"
+                                : "text"
+                        }
+                        min={numberFields.has(key) ? 0 : undefined}
+                        step={dateTimeFields.has(key) ? 60 : undefined}
                         value={values[key] || ""}
                         onChange={(event) => {
-                          setValues({ ...values, [key]: event.target.value });
+                          const value = event.target.value;
+                          setValues({ ...values, [key]: value });
+                          if ((type === "article" || type === "program") && key === "slug")
+                            setAutoArticleSlug(false);
+                          if (
+                            (type === "article" || type === "program") &&
+                            (key === "title" || key === "name") &&
+                            !selected
+                          ) {
+                            const generated = articleContentId(value);
+                            if (!entityId || autoEntityId) {
+                              setEntityId(generated);
+                              setAutoEntityId(Boolean(generated));
+                            }
+                            if (!title.trim() || autoRevisionTitle) {
+                              setTitle(
+                                type === "program"
+                                  ? `Cập nhật ngành: ${value}`.slice(0, 240)
+                                  : value.slice(0, 240),
+                              );
+                              setAutoRevisionTitle(Boolean(value.trim()));
+                            }
+                            if (!values.slug || autoArticleSlug) {
+                              setValues({ ...values, [key]: value, slug: generated });
+                              setAutoArticleSlug(Boolean(generated));
+                            }
+                          }
                           setDirty(true);
                         }}
                       />
-                      <span className="text-xs text-ink-500">
-                        Trường dữ liệu lồng nhau; nhập JSON hợp lệ. Để trống sẽ xóa nội dung.
-                      </span>
-                    </div>
-                  ) : (
-                    <input
-                      className={inputClass}
-                      type={
-                        numberFields.has(key)
-                          ? "number"
-                          : dateTimeFields.has(key)
-                            ? "datetime-local"
-                            : dateOnlyFields.has(key)
-                              ? "date"
-                              : "text"
-                      }
-                      min={numberFields.has(key) ? 0 : undefined}
-                      step={dateTimeFields.has(key) ? 60 : undefined}
-                      value={values[key] || ""}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        setValues({ ...values, [key]: value });
-                        if ((type === "article" || type === "program") && key === "slug") setAutoArticleSlug(false);
-                        if ((type === "article" || type === "program") && (key === "title" || key === "name") && !selected) {
-                          const generated = articleContentId(value);
-                          if (!entityId || autoEntityId) {
-                            setEntityId(generated);
-                            setAutoEntityId(Boolean(generated));
-                          }
-                          if (!title.trim() || autoRevisionTitle) {
-                            setTitle(type === "program" ? `Cập nhật ngành: ${value}`.slice(0, 240) : value.slice(0, 240));
-                            setAutoRevisionTitle(Boolean(value.trim()));
-                          }
-                          if (!values.slug || autoArticleSlug) {
-                            setValues({ ...values, [key]: value, slug: generated });
-                            setAutoArticleSlug(Boolean(generated));
-                          }
-                        }
-                        setDirty(true);
-                      }}
-                    />
-                  )}
-                </label>
+                    )}
+                  </label>
+                </div>
               ))}
               <button
                 className="min-h-12 rounded bg-navy-950 px-4 font-semibold text-white sm:col-span-2"
                 type="submit"
               >
-                {busy ? "Đang xử lý…" : "Lưu thành bản nháp mới"}
+                {busy ? "Đang xử lý…" : selected ? "Lưu bản nháp mới" : "Tạo và lưu bản nháp"}
               </button>
             </fieldset>
           </form>
           {selected && (
-            <div className="mt-6 border-t pt-6">
-              <h2 className="font-semibold">
-                Bản v{selected.version} · {states[selected.workflow_state]}
-              </h2>
-              <button
-                type="button"
-                className="my-3 min-h-11 rounded border px-4 underline"
-                disabled={busy || dirty}
-                onClick={() =>
-                  void run(async () => {
-                    const data = await response(
-                      await fetch(`/api/admin/revisions/${selected.id}/preview`, {
-                        cache: "no-store",
-                      }),
-                    );
-                    window.location.assign(data.url);
-                  })
-                }
-              >
-                Xem trước (hiệu lực 5 phút)
-              </button>
-              <label className="mb-3 grid gap-1">
-                Ghi chú / lý do
-                <textarea
-                  className={inputClass}
-                  value={reason}
-                  onChange={(event) => setReason(event.target.value)}
-                />
-              </label>
-              {isAdmin && selected.workflow_state === "approved" && (
-                <fieldset className="mb-4 grid gap-3 sm:grid-cols-3">
-                  <legend className="mb-2 text-sm">
-                    Lịch công bố — giờ Việt Nam (GMT+7); để trống để công bố ngay
-                  </legend>
-                  <label>
-                    Công bố
-                    <input
-                      type="datetime-local"
-                      className={inputClass}
-                      value={publishAt}
-                      onChange={(event) => setPublishAt(event.target.value)}
-                    />
-                  </label>
-                  <label>
-                    Hết hạn
-                    <input
-                      type="datetime-local"
-                      className={inputClass}
-                      value={expireAt}
-                      onChange={(event) => setExpireAt(event.target.value)}
-                    />
-                  </label>
-                  <label>
-                    Hết ưu tiên
-                    <input
-                      type="datetime-local"
-                      className={inputClass}
-                      value={highlight}
-                      onChange={(event) => setHighlight(event.target.value)}
-                    />
-                  </label>
-                </fieldset>
-              )}
-              <div className="flex flex-wrap gap-3">
-                {(selected.workflow_state === "draft"
-                  ? ["submit_review"]
-                  : isAdmin && selected.workflow_state === "in_review"
-                    ? ["approve", "reject"]
-                    : isAdmin && selected.workflow_state === "approved"
-                      ? ["publish"]
-                      : isAdmin && selected.workflow_state === "published"
-                        ? ["archive"]
-                        : []
-                ).map((action) => (
-                  <button
-                    key={action}
-                    disabled={busy || dirty}
-                    type="button"
-                    className="min-h-11 rounded bg-navy-800 px-4 text-white disabled:opacity-50"
-                    onClick={() => void run(() => transition(action))}
-                  >
-                    {
-                      {
-                        submit_review: "Gửi duyệt",
-                        approve: "Duyệt",
-                        reject: "Yêu cầu chỉnh sửa",
-                        publish: "Công bố / đặt lịch",
-                        archive: "Lưu trữ",
-                      }[action]
-                    }
-                  </button>
-                ))}
-                {isAdmin && selected.workflow_state === "in_review" && (
-                  <button
-                    type="button"
-                    disabled={busy || dirty}
-                    className="min-h-11 rounded bg-navy-950 px-4 font-semibold text-white disabled:opacity-50"
-                    onClick={() => void run(approveAndPublishNow)}
-                  >
-                    Duyệt và công bố ngay
-                  </button>
-                )}
-              </div>
-            </div>
+            <RevisionWorkflowPanel
+              selected={selected}
+              isAdmin={isAdmin}
+              busy={busy}
+              dirty={dirty}
+              reason={reason}
+              publishAt={publishAt}
+              expireAt={expireAt}
+              highlight={highlight}
+              onReason={setReason}
+              onPublishAt={setPublishAt}
+              onExpireAt={setExpireAt}
+              onHighlight={setHighlight}
+              onPreview={() =>
+                void run(async () => {
+                  const data = await response(
+                    await fetch(`/api/admin/revisions/${selected.id}/preview`, {
+                      cache: "no-store",
+                    }),
+                  );
+                  window.location.assign(data.url);
+                })
+              }
+              onTransition={(action) => void run(() => transition(action))}
+              onApproveAndPublish={() => void run(approveAndPublishNow)}
+            />
           )}
         </section>
       </div>
 
       {mediaPickerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-xl bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-line-200 px-6 py-4">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-navy-800" />
-                <h3 className="font-display text-lg font-bold text-ink-950">
-                  Chọn ảnh đại diện từ Thư viện Media
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setMediaPickerOpen(false)}
-                className="rounded-lg p-1.5 text-ink-400 hover:bg-slate-100 hover:text-ink-700"
-                aria-label="Đóng thư viện ảnh"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6">
-              {loadingMedia ? (
-                <div className="flex h-48 items-center justify-center gap-2 text-ink-500">
-                  <RefreshCw className="h-5 w-5 animate-spin text-brand-700" />
-                  <span>Đang tải thư viện media...</span>
-                </div>
-              ) : mediaList.length === 0 ? (
-                <div className="py-12 text-center text-ink-500">
-                  <p>Chưa có tệp nào trong thư viện media.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                  {mediaList
-                    .filter((item) => /\.(jpg|jpeg|png|webp|gif)$/i.test(item.name || item.url))
-                    .map((item) => (
-                      <button
-                        key={item.key || item.url}
-                        type="button"
-                        onClick={() => {
-                          setValues({ ...values, featured_image: item.url });
-                          setDirty(true);
-                          setMediaPickerOpen(false);
-                        }}
-                        className="group flex flex-col overflow-hidden rounded-lg border border-line-200 bg-white text-left transition-all hover:border-brand-600 hover:shadow-md focus:outline-2 focus:outline-brand-600"
-                      >
-                        <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
-                          <img
-                            src={item.url}
-                            alt={item.name}
-                            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                        <div className="p-2">
-                          <p className="line-clamp-1 text-xs font-semibold text-ink-900" title={item.name}>
-                            {item.name}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                </div>
-              )}
-            </div>
-            <div className="border-t border-line-200 px-6 py-3 text-right">
-              <button
-                type="button"
-                onClick={() => setMediaPickerOpen(false)}
-                className="rounded-lg border border-line-200 bg-white px-4 py-2 text-xs font-semibold text-ink-700 hover:bg-slate-50"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
+        <MediaPickerDialog
+          media={mediaList}
+          loading={loadingMedia}
+          error={mediaError}
+          onRetry={() => void openMediaPicker()}
+          onClose={() => setMediaPickerOpen(false)}
+          onSelect={(item) => {
+            setValues((current) => ({ ...current, featured_image: item.url }));
+            setDirty(true);
+            setMediaPickerOpen(false);
+          }}
+        />
       )}
     </div>
   );

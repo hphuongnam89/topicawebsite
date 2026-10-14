@@ -16,14 +16,14 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)]">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-              <LocalizedText>Thông tin nhanh
-            </LocalizedText></p>
+              <LocalizedText>Thông tin nhanh</LocalizedText>
+            </p>
             <h2
               id="facts-title"
               className="mt-3 text-2xl font-semibold text-[var(--color-academic-ink)]"
             >
-              <LocalizedText>Thông tin chương trình
-            </LocalizedText></h2>
+              <LocalizedText>Thông tin chương trình</LocalizedText>
+            </h2>
           </div>
           <dl className="grid min-w-0 gap-px border border-[var(--color-academic-rule)] bg-[var(--color-academic-rule)] sm:grid-cols-2 xl:grid-cols-4">
             {publicFacts.map((fact) => (
@@ -47,11 +47,13 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
                 </dt>
                 <dd className="mt-3 text-xl font-semibold text-[var(--color-academic-ink)]">
                   <LocalizedText>{fact.value}</LocalizedText>
-                  <LocalizedText>{fact.note && (
-                    <span className="mt-2 block text-xs leading-5 font-normal text-[var(--color-academic-muted)]">
-                      <LocalizedText>{fact.note}</LocalizedText>
-                    </span>
-                  )}</LocalizedText>
+                  <LocalizedText>
+                    {fact.note && (
+                      <span className="mt-2 block text-xs leading-5 font-normal text-[var(--color-academic-muted)]">
+                        <LocalizedText>{fact.note}</LocalizedText>
+                      </span>
+                    )}
+                  </LocalizedText>
                 </dd>
               </div>
             ))}

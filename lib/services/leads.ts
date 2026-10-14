@@ -63,6 +63,16 @@ export function submitLead(data: SubmitLeadInput): SubmitLeadResult {
 
     // 3. Lưu lead an toàn vào cơ sở dữ liệu
     lead = createLead(data);
+    if (
+      process.env.NODE_ENV !== "test" &&
+      process.env.STUB_NOTIFICATIONS !== "true" &&
+      process.env.TELEGRAM_DISABLED !== "true"
+    ) {
+      const createdAt = new Date().toISOString();
+      db.prepare(
+        "INSERT INTO lead_notification_outbox (lead_id, available_at, created_at) VALUES (?, ?, ?)",
+      ).run(lead.id, createdAt, createdAt);
+    }
     db.exec("COMMIT");
   } catch (error) {
     db.exec("ROLLBACK");
@@ -81,15 +91,15 @@ export function submitLead(data: SubmitLeadInput): SubmitLeadResult {
   } catch {
     console.warn("[Analytics] Không ghi được sự kiện; yêu cầu tư vấn đã được lưu.");
   }
-  void notifyTelegram({
-    fullname: lead.fullname,
-    phone: lead.phone,
-    email: lead.email ?? undefined,
-    program: lead.program ?? undefined,
-    notes: lead.notes ?? undefined,
-  }).catch(() => {
-    // Không ném lỗi ra ngoài làm sai lệch trạng thái lưu lead
-  });
+  if (
+    process.env.NODE_ENV !== "test" &&
+    process.env.STUB_NOTIFICATIONS !== "true" &&
+    process.env.TELEGRAM_DISABLED !== "true"
+  ) {
+    void drainLeadNotificationOutbox(1).catch(() => {
+      console.warn("[LeadNotification] Queue dispatch failed; scheduled retry remains available.");
+    });
+  }
 
   return { lead, duplicate: false };
 }
@@ -100,14 +110,14 @@ async function notifyTelegram(lead: {
   email?: string;
   program?: string;
   notes?: string;
-}): Promise<void> {
+}): Promise<boolean> {
   // Không gửi notification thực tế khi đang ở chế độ test hoặc cấu hình vô hiệu hóa
   if (
     process.env.NODE_ENV === "test" ||
     process.env.STUB_NOTIFICATIONS === "true" ||
     process.env.TELEGRAM_DISABLED === "true"
   ) {
-    return;
+    return true;
   }
 
   try {
@@ -115,7 +125,9 @@ async function notifyTelegram(lead: {
       "site_settings",
       {},
     );
-    if (!settings.telegramBotToken || !settings.telegramChatId) return;
+    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN || settings.telegramBotToken;
+    const telegramChatId = process.env.TELEGRAM_CHAT_ID || settings.telegramChatId;
+    if (!telegramBotToken || !telegramChatId) return false;
 
     const message = [
       "🎓 *HỌC VIÊN ĐĂNG KÝ TƯ VẤN MỚI*",
@@ -131,17 +143,95 @@ async function notifyTelegram(lead: {
       .filter(Boolean)
       .join("\n");
 
-    const response = await fetch(
-      `https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: settings.telegramChatId, text: message }),
-        signal: AbortSignal.timeout(10000),
-      },
-    );
-    if (!response.ok) throw new Error("Provider rejected notification");
+    const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: telegramChatId, text: message }),
+      signal: AbortSignal.timeout(10000),
+    });
+    return response.ok;
   } catch {
     console.warn("[LeadNotification] Thông báo thất bại; yêu cầu tư vấn đã được lưu trong CMS.");
+    return false;
   }
+}
+
+export async function drainLeadNotificationOutbox(limit = 10) {
+  const db = getDb();
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const safeLimit = Math.max(1, Math.min(50, Math.floor(limit)));
+  const leaseUntil = new Date(now.getTime() + safeLimit * 15_000 + 30_000).toISOString();
+
+  db.exec("BEGIN IMMEDIATE");
+  let rows: Array<{
+    id: number;
+    attempts: number;
+    fullname: string;
+    phone: string;
+    email: string | null;
+    program: string | null;
+    notes: string | null;
+  }>;
+  try {
+    rows = db
+      .prepare(
+        `
+        SELECT o.id, o.attempts, l.fullname, l.phone, l.email, l.program, l.notes
+        FROM lead_notification_outbox o JOIN leads l ON l.id = o.lead_id
+        WHERE (o.status = 'pending' AND o.available_at <= ?)
+           OR (o.status = 'processing' AND o.locked_until <= ?)
+        ORDER BY o.id LIMIT ?
+      `,
+      )
+      .all(nowIso, nowIso, safeLimit) as typeof rows;
+    for (const row of rows) {
+      db.prepare(
+        "UPDATE lead_notification_outbox SET status = 'processing', locked_until = ? WHERE id = ?",
+      ).run(leaseUntil, row.id);
+    }
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+
+  let sent = 0;
+  let retried = 0;
+  let failed = 0;
+  for (const row of rows) {
+    const delivered = await notifyTelegram({
+      fullname: row.fullname,
+      phone: row.phone,
+      email: row.email ?? undefined,
+      program: row.program ?? undefined,
+      notes: row.notes ?? undefined,
+    });
+    if (delivered) {
+      db.prepare(
+        "UPDATE lead_notification_outbox SET status = 'sent', sent_at = ?, locked_until = NULL, last_error = NULL WHERE id = ?",
+      ).run(new Date().toISOString(), row.id);
+      sent++;
+      continue;
+    }
+
+    const attempts = row.attempts + 1;
+    const terminal = attempts >= 12;
+    const delayMs = Math.min(6 * 60 * 60 * 1000, 60_000 * 2 ** Math.min(attempts - 1, 8));
+    db.prepare(
+      `
+      UPDATE lead_notification_outbox
+      SET status = ?, attempts = ?, available_at = ?, locked_until = NULL, last_error = 'delivery_failed'
+      WHERE id = ?
+    `,
+    ).run(
+      terminal ? "failed" : "pending",
+      attempts,
+      new Date(Date.now() + delayMs).toISOString(),
+      row.id,
+    );
+    if (terminal) failed++;
+    else retried++;
+  }
+  return { claimed: rows.length, sent, retried, failed };
 }

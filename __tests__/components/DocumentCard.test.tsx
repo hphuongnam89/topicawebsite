@@ -9,7 +9,7 @@ describe("Task R06: DocumentCard Component", () => {
         title="Quyết định ban hành Đề án tuyển sinh 2026"
         type="Đề án tuyển sinh"
         date="Ban hành: 15/01/2026"
-      />
+      />,
     );
 
     expect(screen.getByText("Quyết định ban hành Đề án tuyển sinh 2026")).toBeDefined();
@@ -18,11 +18,7 @@ describe("Task R06: DocumentCard Component", () => {
   });
 
   test("hiển thị 'Bản số đang cập nhật' khi không có link xem hoặc tải", () => {
-    render(
-      <DocumentCard
-        title="Biểu mẫu lưu hành nội bộ"
-      />
-    );
+    render(<DocumentCard title="Biểu mẫu lưu hành nội bộ" />);
 
     expect(screen.getByText("Bản số đang cập nhật")).toBeDefined();
     expect(screen.queryByText("Tải xuống")).toBeNull();
@@ -36,7 +32,7 @@ describe("Task R06: DocumentCard Component", () => {
         viewUrl="/chat-luong-dao-tao/"
         downloadUrl="#"
         fileSize="1.5 MB PDF"
-      />
+      />,
     );
 
     // Không render nút tải xuống với '#'
@@ -53,7 +49,7 @@ describe("Task R06: DocumentCard Component", () => {
         title="Mẫu phôi bằng Cử nhân"
         downloadUrl="/official-assets/mau-phoi-bang.png"
         fileSize="1.6 MB PNG"
-      />
+      />,
     );
 
     expect(screen.getByText("Tải xuống")).toBeDefined();

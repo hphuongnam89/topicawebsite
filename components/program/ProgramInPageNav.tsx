@@ -22,34 +22,35 @@ export function ProgramInPageNav({ program }: { program: ProgramDetail }) {
   ];
 
   return (
-    <LocalizedElement as="nav"
+    <LocalizedElement
+      as="nav"
       aria-label="Mục lục trang ngành"
       className="sticky top-16 z-20 border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-elevated)]/95 backdrop-blur-md transition-shadow"
     >
       <Container className="px-0 sm:px-4">
-        <div className="flex items-center gap-1 overflow-x-auto py-2.5 px-4 sm:px-0 text-xs font-semibold sm:text-sm no-scrollbar">
-          <span className="hidden items-center gap-2 pr-3 text-[var(--color-academic-muted)] lg:flex shrink-0">
+        <div className="no-scrollbar flex items-center gap-1 overflow-x-auto px-4 py-2.5 text-xs font-semibold sm:px-0 sm:text-sm">
+          <span className="hidden shrink-0 items-center gap-2 pr-3 text-[var(--color-academic-muted)] lg:flex">
             <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-academic-accent)]" />
-            <LocalizedText>Nội dung:
-          </LocalizedText></span>
-          <div className="flex items-center gap-1.5 shrink-0">
+            <LocalizedText>Nội dung:</LocalizedText>
+          </span>
+          <div className="flex shrink-0 items-center gap-1.5">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-md px-3 py-1.5 text-[var(--color-academic-muted)] transition-colors hover:bg-[var(--color-academic-paper)] hover:text-[var(--color-academic-ink)] focus-visible:outline-2 focus-visible:outline-[var(--color-academic-focus)] whitespace-nowrap"
+                className="rounded-md px-3 py-1.5 whitespace-nowrap text-[var(--color-academic-muted)] transition-colors hover:bg-[var(--color-academic-paper)] hover:text-[var(--color-academic-ink)] focus-visible:outline-2 focus-visible:outline-[var(--color-academic-focus)]"
               >
                 <LocalizedText>{item.label}</LocalizedText>
               </a>
             ))}
           </div>
-          <div className="ml-auto pl-4 hidden md:flex items-center shrink-0">
+          <div className="ml-auto hidden shrink-0 items-center pl-4 md:flex">
             <Link
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
-              className="text-xs font-semibold text-[var(--color-academic-accent-strong)] hover:underline whitespace-nowrap"
+              className="text-xs font-semibold whitespace-nowrap text-[var(--color-academic-accent-strong)] hover:underline"
             >
-              <LocalizedText>Xem biểu phí & học bổng →
-            </LocalizedText></Link>
+              <LocalizedText>Xem biểu phí & học bổng →</LocalizedText>
+            </Link>
           </div>
         </div>
       </Container>

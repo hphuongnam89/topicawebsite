@@ -26,7 +26,9 @@ export function InlineAdmissionCTA({
       <div className="flex shrink-0 text-brand-600">
         <GraduationCap size={24} />
       </div>
-      <p className="m-0 flex-1 text-body-sm font-medium text-ink-800"><LocalizedText>{message}</LocalizedText></p>
+      <p className="m-0 flex-1 text-body-sm font-medium text-ink-800">
+        <LocalizedText>{message}</LocalizedText>
+      </p>
       <div className="w-full shrink-0 sm:w-auto">
         <ButtonLink
           href={href}

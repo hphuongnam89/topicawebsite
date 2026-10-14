@@ -43,7 +43,10 @@ export function Accordion({
 
   return (
     <AccordionContext.Provider value={{ openValues, toggleItem }}>
-      <div className={cn("divide-y divide-line-200 border-y border-line-200", className)} {...props}>
+      <div
+        className={cn("divide-y divide-line-200 border-y border-line-200", className)}
+        {...props}
+      >
         <LocalizedText>{children}</LocalizedText>
       </div>
     </AccordionContext.Provider>
@@ -73,11 +76,7 @@ export function AccordionItem({ value, className, children, ...props }: Accordio
 
 export type AccordionTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function AccordionTrigger({
-  className,
-  children,
-  ...props
-}: AccordionTriggerProps) {
+export function AccordionTrigger({ className, children, ...props }: AccordionTriggerProps) {
   const accContext = React.useContext(AccordionContext);
   const itemContext = React.useContext(ItemContext);
   if (!accContext || !itemContext)
@@ -97,7 +96,9 @@ export function AccordionTrigger({
       )}
       {...props}
     >
-      <span className="pr-4"><LocalizedText>{children}</LocalizedText></span>
+      <span className="pr-4">
+        <LocalizedText>{children}</LocalizedText>
+      </span>
       <span
         className={cn(
           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-paper text-ink-600 transition-transform duration-[var(--duration-base)]",
@@ -112,21 +113,16 @@ export function AccordionTrigger({
 
 export type AccordionContentProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function AccordionContent({
-  className,
-  children,
-  ...props
-}: AccordionContentProps) {
+export function AccordionContent({ className, children, ...props }: AccordionContentProps) {
   const itemContext = React.useContext(ItemContext);
-  if (!itemContext)
-    throw new Error("AccordionContent must be used within AccordionItem");
+  if (!itemContext) throw new Error("AccordionContent must be used within AccordionItem");
 
   if (!itemContext.isOpen) return null;
 
   return (
     <div
       className={cn(
-        "pt-1 pb-5 text-body text-ink-800 leading-relaxed animate-in fade-in duration-200",
+        "animate-in fade-in pt-1 pb-5 text-body leading-relaxed text-ink-800 duration-200",
         className,
       )}
       {...props}

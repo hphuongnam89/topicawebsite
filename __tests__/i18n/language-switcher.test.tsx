@@ -14,27 +14,56 @@ afterEach(cleanup);
 
 function ExistingPage() {
   const [value, setValue] = useState("");
-  return <>
-    <LanguageSwitcher />
-    <section className="existing-layout" data-testid="page">
-      <h1><LocalizedText>Quản trị kinh doanh</LocalizedText></h1>
-      <Link href="/tuyen-sinh/"><LocalizedText>Đăng ký xét tuyển</LocalizedText></Link>
-      <LocalizedElement as="input" aria-label="Họ tên" placeholder="Nhập họ tên của bạn" value={value} onChange={(event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value)} />
-      <details open><summary><LocalizedText>Thông tin chi tiết</LocalizedText></summary><p><LocalizedText>Học phí</LocalizedText></p></details>
-      <img src="/images/programs/program-business.webp" alt="Business" />
-    </section>
-  </>;
+  return (
+    <>
+      <LanguageSwitcher />
+      <section className="existing-layout" data-testid="page">
+        <h1>
+          <LocalizedText>Quản trị kinh doanh</LocalizedText>
+        </h1>
+        <Link href="/tuyen-sinh/">
+          <LocalizedText>Đăng ký xét tuyển</LocalizedText>
+        </Link>
+        <LocalizedElement
+          as="input"
+          aria-label="Họ tên"
+          placeholder="Nhập họ tên của bạn"
+          value={value}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value)}
+        />
+        <details open>
+          <summary>
+            <LocalizedText>Thông tin chi tiết</LocalizedText>
+          </summary>
+          <p>
+            <LocalizedText>Học phí</LocalizedText>
+          </p>
+        </details>
+        <img src="/images/programs/program-business.webp" alt="Business" />
+      </section>
+    </>
+  );
 }
 
 describe("language switching preserves the existing page", () => {
   it("changes only text and language preference, keeping elements, input, links and open panels", () => {
-    window.history.replaceState({}, "", "/quan-tri-kinh-doanh-marketing?category=kept#chuong-trinh");
-    render(<LanguageProvider initialLocale="vi"><ExistingPage /></LanguageProvider>);
+    window.history.replaceState(
+      {},
+      "",
+      "/quan-tri-kinh-doanh-marketing?category=kept#chuong-trinh",
+    );
+    render(
+      <LanguageProvider initialLocale="vi">
+        <ExistingPage />
+      </LanguageProvider>,
+    );
     const page = screen.getByTestId("page");
     const input = screen.getByRole("textbox");
     const originalHref = page.querySelector("a")!.getAttribute("href");
     fireEvent.change(input, { target: { value: "QA existing input" } });
-    const structure = page.innerHTML.replace(/>[^<]*</g, "><").replace(/(?:aria-label|placeholder)="[^"]*"/g, "");
+    const structure = page.innerHTML
+      .replace(/>[^<]*</g, "><")
+      .replace(/(?:aria-label|placeholder)="[^"]*"/g, "");
     fireEvent.click(screen.getByRole("button", { name: "Read this page in English" }));
     expect(screen.getByRole("heading").textContent).toBe("Business Administration");
     expect(screen.getByRole("textbox")).toBe(input);
@@ -42,7 +71,10 @@ describe("language switching preserves the existing page", () => {
     expect(input).toHaveAttribute("placeholder", "Enter your full name");
     expect(page.querySelector("details")).toHaveAttribute("open");
     expect(page.querySelector("a")).toHaveAttribute("href", originalHref);
-    expect(page.querySelector("img")).toHaveAttribute("src", "/images/programs/program-business.webp");
+    expect(page.querySelector("img")).toHaveAttribute(
+      "src",
+      "/images/programs/program-business.webp",
+    );
     expect(window.location.pathname).toBe("/quan-tri-kinh-doanh-marketing");
     expect(window.location.search).toBe("?category=kept&lang=en");
     expect(window.location.hash).toBe("#chuong-trinh");
@@ -51,11 +83,17 @@ describe("language switching preserves the existing page", () => {
     expect(screen.getByRole("heading").textContent).toBe("Quản trị kinh doanh");
     expect(input).toHaveValue("QA existing input");
     expect(document.documentElement.lang).toBe("vi");
-    expect(page.innerHTML.replace(/>[^<]*</g, "><").replace(/(?:aria-label|placeholder)="[^"]*"/g, "")).toBe(structure);
+    expect(
+      page.innerHTML.replace(/>[^<]*</g, "><").replace(/(?:aria-label|placeholder)="[^"]*"/g, ""),
+    ).toBe(structure);
   });
 
   it("uses the same elements when initially opened in English", () => {
-    render(<LanguageProvider initialLocale="en"><ExistingPage /></LanguageProvider>);
+    render(
+      <LanguageProvider initialLocale="en">
+        <ExistingPage />
+      </LanguageProvider>,
+    );
     expect(screen.getByRole("heading").textContent).toBe("Business Administration");
     expect(screen.getByTestId("page").children.length).toBe(5);
   });
@@ -65,8 +103,11 @@ describe("language switching preserves the existing page", () => {
     expect(translateText("126", "en")).toBe("126");
     expect(translateText("Phạm Duy Khánh", "en")).toBe("Phạm Duy Khánh");
     expect(translateText("Học phí", "vi")).toBe("Học phí");
-    const html = '<h2 class="kept">Học phí &amp; Học bổng</h2><a href="/lien-he">Liên hệ</a><img src="/pxu.jpg">';
-    expect(translateHtml(html, "en")).toBe('<h2 class="kept">Tuition &amp; Scholarships</h2><a href="/lien-he">Contact</a><img src="/pxu.jpg">');
+    const html =
+      '<h2 class="kept">Học phí &amp; Học bổng</h2><a href="/lien-he">Liên hệ</a><img src="/pxu.jpg">';
+    expect(translateHtml(html, "en")).toBe(
+      '<h2 class="kept">Tuition &amp; Scholarships</h2><a href="/lien-he">Contact</a><img src="/pxu.jpg">',
+    );
     expect(translateHtml(html, "vi")).toBe(html);
   });
 

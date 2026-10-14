@@ -117,14 +117,14 @@ describe("Phase 9: Comprehensive QA, Accessibility WCAG 2.2 AA & Responsive Qual
     test("giao diện chứa skip-to-main-content link", () => {
       const headerContent = fs.readFileSync(
         path.join(process.cwd(), "components/layout/Header.tsx"),
-        "utf-8"
+        "utf-8",
       );
       expect(headerContent).toContain('href="#main-content"');
       expect(headerContent).toContain("Chuyển đến nội dung chính");
 
       const layoutContent = fs.readFileSync(
         path.join(process.cwd(), "app/(main)/layout.tsx"),
-        "utf-8"
+        "utf-8",
       );
       expect(layoutContent).toContain('id="main-content"');
     });
@@ -188,16 +188,16 @@ describe("Phase 9: Comprehensive QA, Accessibility WCAG 2.2 AA & Responsive Qual
     test("MobileStickyBar sử dụng các nút có kích thước đạt chuẩn tối thiểu 44px", () => {
       const stickyBarContent = fs.readFileSync(
         path.join(process.cwd(), "components/layout/MobileStickyBar.tsx"),
-        "utf-8"
+        "utf-8",
       );
-      expect(stickyBarContent).toContain('min-h-[44px]');
+      expect(stickyBarContent).toContain("min-h-[44px]");
       expect(stickyBarContent).toContain('size="default"');
     });
 
     test("FloatingActions trên desktop/tablet có kích thước >= 44x44px", () => {
       const floatingContent = fs.readFileSync(
         path.join(process.cwd(), "components/layout/FloatingActions.tsx"),
-        "utf-8"
+        "utf-8",
       );
       expect(floatingContent).toContain("h-12 w-12");
       expect(floatingContent).toContain("aria-label");

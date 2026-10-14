@@ -36,12 +36,10 @@ export function buttonStyles({
   const variants: Record<ButtonVariant, string> = {
     primary:
       "bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-950 active:translate-y-px font-semibold shadow-xs focus-visible:outline-navy-900",
-    navy:
-      "bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-950 active:translate-y-px font-semibold shadow-xs focus-visible:outline-navy-900",
+    navy: "bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-950 active:translate-y-px font-semibold shadow-xs focus-visible:outline-navy-900",
     accent:
       "bg-gold-500 text-navy-950 hover:bg-gold-600 active:bg-gold-700 active:translate-y-px font-semibold shadow-xs focus-visible:outline-gold-500",
-    gold:
-      "bg-gold-500 text-navy-950 hover:bg-gold-600 active:bg-gold-700 active:translate-y-px font-semibold shadow-xs focus-visible:outline-gold-500",
+    gold: "bg-gold-500 text-navy-950 hover:bg-gold-600 active:bg-gold-700 active:translate-y-px font-semibold shadow-xs focus-visible:outline-gold-500",
     secondary:
       "border-2 border-navy-900 bg-transparent text-navy-900 hover:bg-navy-50 active:translate-y-px font-semibold focus-visible:outline-navy-900",
     outline:
@@ -52,8 +50,7 @@ export function buttonStyles({
       "bg-transparent text-navy-900 hover:bg-navy-50 hover:text-navy-900 font-medium focus-visible:outline-navy-900",
     destructive:
       "bg-error text-white hover:bg-error/90 active:bg-error/95 font-semibold focus-visible:outline-error",
-    icon:
-      "bg-transparent text-navy-900 hover:bg-navy-50 focus-visible:outline-navy-900",
+    icon: "bg-transparent text-navy-900 hover:bg-navy-50 focus-visible:outline-navy-900",
   };
   const sizes: Record<ButtonSize, string> = {
     sm: variant === "icon" ? "h-9 w-9 p-0" : "h-9 px-4 text-body-sm",
@@ -91,9 +88,21 @@ function ButtonContent({
   return (
     <>
       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
-      <LocalizedText>{!loading && leftIcon && <span className="mr-2"><LocalizedText>{leftIcon}</LocalizedText></span>}</LocalizedText>
+      <LocalizedText>
+        {!loading && leftIcon && (
+          <span className="mr-2">
+            <LocalizedText>{leftIcon}</LocalizedText>
+          </span>
+        )}
+      </LocalizedText>
       <LocalizedText>{children}</LocalizedText>
-      <LocalizedText>{!loading && rightIcon && !isTertiary && <span className="ml-2"><LocalizedText>{rightIcon}</LocalizedText></span>}</LocalizedText>
+      <LocalizedText>
+        {!loading && rightIcon && !isTertiary && (
+          <span className="ml-2">
+            <LocalizedText>{rightIcon}</LocalizedText>
+          </span>
+        )}
+      </LocalizedText>
       {!loading && isTertiary && (
         <ArrowRight
           className="ml-1 h-4 w-4 transition-transform duration-[var(--duration-base)] group-hover:translate-x-[2px]"
@@ -128,7 +137,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   ref,
 ) {
   return (
-    <LocalizedElement as="button"
+    <LocalizedElement
+      as="button"
       ref={ref}
       type={type}
       className={buttonStyles({ variant, size, loading, disabled, className })}

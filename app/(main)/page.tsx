@@ -78,7 +78,8 @@ export default function Home() {
       <WhyTopicaSection />
       <AdmissionTimeline />
       {heroData?.showLeadForm && (
-        <LocalizedElement as="section"
+        <LocalizedElement
+          as="section"
           id="tu-van"
           aria-label="Nhận tư vấn tuyển sinh"
           className="scroll-mt-20 border-t border-line-100 bg-navy-50/70 py-16 sm:py-20"
@@ -86,27 +87,37 @@ export default function Home() {
           <Container className="grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="max-w-lg lg:col-span-5">
               <span className="inline-block rounded-full border border-gold-300 bg-gold-50/80 px-3.5 py-1 text-xs font-semibold text-gold-800">
-                <LocalizedText>Tư vấn tuyển sinh 2026
-              </LocalizedText></span>
+                <LocalizedText>Tư vấn tuyển sinh 2026</LocalizedText>
+              </span>
               <h2 className="mt-3 font-display text-h2 font-bold text-navy-950">
-                <LocalizedText>Cùng tìm lộ trình phù hợp
-              </LocalizedText></h2>
+                <LocalizedText>Cùng tìm lộ trình phù hợp</LocalizedText>
+              </h2>
               <p className="mt-4 text-body-lg leading-relaxed text-ink-700">
-                <LocalizedText>Bạn có thể nhận tư vấn khi chưa quyết định ngành học. Để lại thông tin liên hệ và
-                những điều bạn muốn tìm hiểu.
-              </LocalizedText></p>
+                <LocalizedText>
+                  Bạn có thể nhận tư vấn khi chưa quyết định ngành học. Để lại thông tin liên hệ và
+                  những điều bạn muốn tìm hiểu.
+                </LocalizedText>
+              </p>
               <div className="mt-6 space-y-2.5 text-body-sm text-ink-600">
                 <div className="flex items-center gap-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-navy-700" />
-                  <span><LocalizedText>Tư vấn hoàn toàn miễn phí từ chuyên viên đào tạo Topica</LocalizedText></span>
+                  <span>
+                    <LocalizedText>
+                      Tư vấn hoàn toàn miễn phí từ chuyên viên đào tạo Topica
+                    </LocalizedText>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-navy-700" />
-                  <span><LocalizedText>Hướng dẫn chi tiết thủ tục xét miễn giảm tín chỉ</LocalizedText></span>
+                  <span>
+                    <LocalizedText>Hướng dẫn chi tiết thủ tục xét miễn giảm tín chỉ</LocalizedText>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-navy-700" />
-                  <span><LocalizedText>Bảo mật dữ liệu cá nhân theo quy định</LocalizedText></span>
+                  <span>
+                    <LocalizedText>Bảo mật dữ liệu cá nhân theo quy định</LocalizedText>
+                  </span>
                 </div>
               </div>
             </div>
@@ -128,4 +139,3 @@ export default function Home() {
     </>
   );
 }
-import type { Metadata } from "next";

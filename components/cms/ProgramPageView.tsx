@@ -1,5 +1,13 @@
 import { LocalizedText } from "@/components/i18n/LocalizedText";
-import { AlertTriangle, ArrowRight, Building2, GraduationCap, Landmark, CreditCard, MessageCircle } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Building2,
+  GraduationCap,
+  Landmark,
+  CreditCard,
+  MessageCircle,
+} from "lucide-react";
 import { CurriculumExplorer } from "@/components/program/CurriculumExplorer";
 import { LearningOutcomes } from "@/components/program/LearningOutcomes";
 import { PendingAcademicSections } from "@/components/program/PendingAcademicSections";
@@ -106,18 +114,20 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <div>
               <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent)] uppercase">
-                <LocalizedText>Sau tốt nghiệp
-              </LocalizedText></p>
+                <LocalizedText>Sau tốt nghiệp</LocalizedText>
+              </p>
               <h2
                 id="career-title"
                 className="mt-3 max-w-[12ch] text-4xl font-semibold tracking-[-0.03em] !text-[var(--color-academic-on-accent)] sm:text-5xl"
               >
-                <LocalizedText>Cơ hội nghề nghiệp
-              </LocalizedText></h2>
+                <LocalizedText>Cơ hội nghề nghiệp</LocalizedText>
+              </h2>
               <p className="mt-5 max-w-md leading-7 text-[color:var(--color-academic-on-accent)]/75">
-                <LocalizedText>{hasAcademicSource
-                  ? "Hồ sơ nguồn mô tả nhóm môi trường làm việc, không gắn chức danh hoặc doanh nghiệp cụ thể."
-                  : "Các vị trí dưới đây được giữ theo nội dung trang ngành hiện hành; chưa đối chiếu hồ sơ chương trình đào tạo."}</LocalizedText>
+                <LocalizedText>
+                  {hasAcademicSource
+                    ? "Hồ sơ nguồn mô tả nhóm môi trường làm việc, không gắn chức danh hoặc doanh nghiệp cụ thể."
+                    : "Các vị trí dưới đây được giữ theo nội dung trang ngành hiện hành; chưa đối chiếu hồ sơ chương trình đào tạo."}
+                </LocalizedText>
               </p>
             </div>
             <ol className="border-t border-[color:var(--color-academic-on-accent)]/25">
@@ -140,11 +150,13 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               })}
             </ol>
           </div>
-          <LocalizedText>{program.furtherStudy && (
-            <p className="mt-10 border-l-2 border-[var(--color-academic-accent)] pl-4 text-sm leading-6 text-[color:var(--color-academic-on-accent)]/75">
-              <LocalizedText>{program.furtherStudy}</LocalizedText>
-            </p>
-          )}</LocalizedText>
+          <LocalizedText>
+            {program.furtherStudy && (
+              <p className="mt-10 border-l-2 border-[var(--color-academic-accent)] pl-4 text-sm leading-6 text-[color:var(--color-academic-on-accent)]/75">
+                <LocalizedText>{program.furtherStudy}</LocalizedText>
+              </p>
+            )}
+          </LocalizedText>
         </Container>
       </section>
 
@@ -158,35 +170,39 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
             <div className="grid min-w-0 gap-8 lg:grid-cols-2 lg:gap-16">
               <div>
                 <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-                  <LocalizedText>Tuyển sinh & tốt nghiệp
-                </LocalizedText></p>
+                  <LocalizedText>Tuyển sinh & tốt nghiệp</LocalizedText>
+                </p>
                 <h2
                   id="admissions-title"
                   className="mt-3 text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
                 >
-                  <LocalizedText>Điều kiện trong hồ sơ chương trình
-                </LocalizedText></h2>
+                  <LocalizedText>Điều kiện trong hồ sơ chương trình</LocalizedText>
+                </h2>
                 <dl className="mt-8 space-y-7">
-                  <LocalizedText>{program.admissions && (
-                    <div className="border-t border-[var(--color-academic-rule-strong)] pt-5">
-                      <dt className="text-sm font-bold text-[var(--color-academic-ink)]">
-                        <LocalizedText>Đối tượng tuyển sinh
-                      </LocalizedText></dt>
-                      <dd className="mt-2 leading-7 text-[var(--color-academic-muted)]">
-                        <LocalizedText>{program.admissions}</LocalizedText>
-                      </dd>
-                    </div>
-                  )}</LocalizedText>
-                  <LocalizedText>{program.graduation && (
-                    <div className="border-t border-[var(--color-academic-rule-strong)] pt-5">
-                      <dt className="text-sm font-bold text-[var(--color-academic-ink)]">
-                        <LocalizedText>Điều kiện tốt nghiệp
-                      </LocalizedText></dt>
-                      <dd className="mt-2 leading-7 text-[var(--color-academic-muted)]">
-                        <LocalizedText>{program.graduation}</LocalizedText>
-                      </dd>
-                    </div>
-                  )}</LocalizedText>
+                  <LocalizedText>
+                    {program.admissions && (
+                      <div className="border-t border-[var(--color-academic-rule-strong)] pt-5">
+                        <dt className="text-sm font-bold text-[var(--color-academic-ink)]">
+                          <LocalizedText>Đối tượng tuyển sinh</LocalizedText>
+                        </dt>
+                        <dd className="mt-2 leading-7 text-[var(--color-academic-muted)]">
+                          <LocalizedText>{program.admissions}</LocalizedText>
+                        </dd>
+                      </div>
+                    )}
+                  </LocalizedText>
+                  <LocalizedText>
+                    {program.graduation && (
+                      <div className="border-t border-[var(--color-academic-rule-strong)] pt-5">
+                        <dt className="text-sm font-bold text-[var(--color-academic-ink)]">
+                          <LocalizedText>Điều kiện tốt nghiệp</LocalizedText>
+                        </dt>
+                        <dd className="mt-2 leading-7 text-[var(--color-academic-muted)]">
+                          <LocalizedText>{program.graduation}</LocalizedText>
+                        </dd>
+                      </div>
+                    )}
+                  </LocalizedText>
                 </dl>
               </div>
 
@@ -199,8 +215,8 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
                     />
                     <div>
                       <h3 className="text-xl font-semibold text-[var(--color-academic-ink)]">
-                        <LocalizedText>Điểm cần đối chiếu trong nguồn
-                      </LocalizedText></h3>
+                        <LocalizedText>Điểm cần đối chiếu trong nguồn</LocalizedText>
+                      </h3>
                     </div>
                   </div>
                   <ul className="mt-6 space-y-4 text-sm leading-6 text-[var(--color-academic-muted)]">
@@ -227,14 +243,14 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
       >
         <Container size="narrow">
           <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent-strong)] uppercase">
-            <LocalizedText>Câu hỏi thường gặp
-          </LocalizedText></p>
+            <LocalizedText>Câu hỏi thường gặp</LocalizedText>
+          </p>
           <h2
             id="faq-title"
             className="mt-3 text-4xl font-semibold tracking-[-0.03em] text-[var(--color-academic-ink)] sm:text-5xl"
           >
-            <LocalizedText>Thông tin cốt lõi
-          </LocalizedText></h2>
+            <LocalizedText>Thông tin cốt lõi</LocalizedText>
+          </h2>
           <div className="mt-9 border-t border-[var(--color-academic-rule-strong)]">
             {faqs.map(([question, answer]) => (
               <details
@@ -244,7 +260,9 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
                 <summary className="cursor-pointer list-none py-5 font-semibold text-[var(--color-academic-ink)] marker:content-none">
                   <LocalizedText>{question}</LocalizedText>
                 </summary>
-                <p className="pb-6 leading-7 text-[var(--color-academic-muted)]"><LocalizedText>{answer}</LocalizedText></p>
+                <p className="pb-6 leading-7 text-[var(--color-academic-muted)]">
+                  <LocalizedText>{answer}</LocalizedText>
+                </p>
               </details>
             ))}
           </div>
@@ -255,14 +273,19 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
         <Container className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-[var(--color-academic-accent)] uppercase">
-              <LocalizedText>Hành trình học tập của bạn
-            </LocalizedText></p>
+              <LocalizedText>Hành trình học tập của bạn</LocalizedText>
+            </p>
             <h2 className="mt-2 max-w-2xl text-2xl font-semibold !text-[var(--color-academic-on-accent)] sm:text-3xl lg:text-4xl">
-              <LocalizedText>Sẵn sàng trở thành sinh viên ngành </LocalizedText><LocalizedText>{program.officialName}</LocalizedText><LocalizedText>?
-            </LocalizedText></h2>
-            <p className="mt-2 text-sm text-[var(--color-academic-on-accent)]/80 max-w-xl">
-              <LocalizedText>Kiểm tra điều kiện nhập học, xem dự toán học phí chính xác hoặc nộp hồ sơ xét tuyển trực tuyến ngay hôm nay.
-            </LocalizedText></p>
+              <LocalizedText>Sẵn sàng trở thành sinh viên ngành </LocalizedText>
+              <LocalizedText>{program.officialName}</LocalizedText>
+              <LocalizedText>?</LocalizedText>
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-[var(--color-academic-on-accent)]/80">
+              <LocalizedText>
+                Kiểm tra điều kiện nhập học, xem dự toán học phí chính xác hoặc nộp hồ sơ xét tuyển
+                trực tuyến ngay hôm nay.
+              </LocalizedText>
+            </p>
           </div>
           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[30rem]">
             <ButtonLink
@@ -272,8 +295,8 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
             >
-              <LocalizedText>Đăng ký xét tuyển
-            </LocalizedText></ButtonLink>
+              <LocalizedText>Đăng ký xét tuyển</LocalizedText>
+            </ButtonLink>
             <ButtonLink
               href="/tuyen-sinh/hoc-phi-hoc-bong/"
               size="lg"
@@ -281,8 +304,8 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center bg-[var(--color-academic-elevated)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
-              <LocalizedText>Xem biểu phí & học bổng
-            </LocalizedText></ButtonLink>
+              <LocalizedText>Xem biểu phí & học bổng</LocalizedText>
+            </ButtonLink>
             <ButtonLink
               href="/lien-he/"
               size="lg"
@@ -290,8 +313,8 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
               className="w-full justify-center border border-white/20 bg-transparent text-white hover:bg-white/10 sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
             >
-              <LocalizedText>Nhận tư vấn
-            </LocalizedText></ButtonLink>
+              <LocalizedText>Nhận tư vấn</LocalizedText>
+            </ButtonLink>
           </div>
         </Container>
       </section>

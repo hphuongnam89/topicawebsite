@@ -90,7 +90,8 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
         <ScrollReveal variant="scaleIn">
           <div className="group relative mt-12 flex justify-center">
-            <LocalizedElement as="div"
+            <LocalizedElement
+              as="div"
               ref={scrollRef}
               className="flex w-full snap-x snap-mandatory [scrollbar-width:none] gap-6 overflow-x-auto scroll-smooth pb-8 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
               onScroll={handleScroll}
@@ -107,9 +108,11 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                 >
                   <div className="flex h-full flex-col rounded-lg border border-line-200 bg-paper p-6 transition-all hover:border-gold-300 hover:shadow-md">
                     <div className="font-display text-[3rem] leading-none text-gold-500">
-                      <LocalizedText>&quot;
-                    </LocalizedText></div>
-                    <p className="mt-2 flex-grow text-body text-ink-800"><LocalizedText>{testimonial.quote}</LocalizedText></p>
+                      <LocalizedText>&quot;</LocalizedText>
+                    </div>
+                    <p className="mt-2 flex-grow text-body text-ink-800">
+                      <LocalizedText>{testimonial.quote}</LocalizedText>
+                    </p>
 
                     <div className="mt-6 flex items-center gap-4">
                       {testimonial.avatar ? (
@@ -126,13 +129,19 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
                         </div>
                       )}
                       <div>
-                        <div className="font-semibold text-ink-950"><LocalizedText>{testimonial.name}</LocalizedText></div>
-                        <div className="text-body-sm text-ink-600"><LocalizedText>{testimonial.role}</LocalizedText></div>
-                        <LocalizedText>{testimonial.program && (
-                          <div className="text-body-sm font-medium text-gold-700">
-                            <LocalizedText>{testimonial.program}</LocalizedText>
-                          </div>
-                        )}</LocalizedText>
+                        <div className="font-semibold text-ink-950">
+                          <LocalizedText>{testimonial.name}</LocalizedText>
+                        </div>
+                        <div className="text-body-sm text-ink-600">
+                          <LocalizedText>{testimonial.role}</LocalizedText>
+                        </div>
+                        <LocalizedText>
+                          {testimonial.program && (
+                            <div className="text-body-sm font-medium text-gold-700">
+                              <LocalizedText>{testimonial.program}</LocalizedText>
+                            </div>
+                          )}
+                        </LocalizedText>
                       </div>
                     </div>
                   </div>
@@ -140,7 +149,8 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
               ))}
             </LocalizedElement>
 
-            <LocalizedElement as="button"
+            <LocalizedElement
+              as="button"
               onClick={() => scrollToIndex(Math.max(0, activeIndex - 1))}
               className="absolute top-1/2 -left-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 focus-visible:outline-navy-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
               disabled={activeIndex === 0}
@@ -149,7 +159,8 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
               <ChevronLeft className="h-5 w-5 text-ink-800" />
             </LocalizedElement>
 
-            <LocalizedElement as="button"
+            <LocalizedElement
+              as="button"
               onClick={() => scrollToIndex(Math.min(items.length - 1, activeIndex + 1))}
               className="absolute top-1/2 -right-5 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-line-200 bg-canvas shadow-xs transition-[background-color,transform] hover:border-gold-400 hover:bg-gold-50 focus-visible:outline-navy-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:flex"
               disabled={activeIndex === items.length - 1}
@@ -162,7 +173,8 @@ export function TestimonialSection({ data }: TestimonialSectionProps) {
 
         <div className="mt-4 flex justify-center gap-2">
           {items.map((_, index) => (
-            <LocalizedElement as="button"
+            <LocalizedElement
+              as="button"
               key={index}
               onClick={() => scrollToIndex(index)}
               className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-navy-500"

@@ -15,18 +15,20 @@ export function ArticleInlineCTA({ className }: ArticleInlineCTAProps) {
       )}
     >
       <h3 className="mb-2 font-display text-h3 text-ink-950">
-        <LocalizedText>Bạn quan tâm đến chương trình đào tạo?
-      </LocalizedText></h3>
+        <LocalizedText>Bạn quan tâm đến chương trình đào tạo?</LocalizedText>
+      </h3>
       <p className="mb-6 text-body text-ink-800">
-        <LocalizedText>Đăng ký nhận tư vấn miễn phí từ chuyên viên tuyển sinh Topica.
-      </LocalizedText></p>
+        <LocalizedText>
+          Đăng ký nhận tư vấn miễn phí từ chuyên viên tuyển sinh Topica.
+        </LocalizedText>
+      </p>
       <div className="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <ButtonLink href="/dang-ky" variant="primary" className="w-full justify-center">
-          <LocalizedText>Nhận tư vấn
-        </LocalizedText></ButtonLink>
+          <LocalizedText>Nhận tư vấn</LocalizedText>
+        </ButtonLink>
         <ButtonLink href="/nganh-dao-tao" variant="secondary" className="w-full justify-center">
-          <LocalizedText>Xem ngành đào tạo
-        </LocalizedText></ButtonLink>
+          <LocalizedText>Xem ngành đào tạo</LocalizedText>
+        </ButtonLink>
       </div>
     </aside>
   );

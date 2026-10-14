@@ -19,13 +19,13 @@ tải xuống, toàn bộ ảnh/đối tác/chứng thực và record legacy CMS
 
 ## Mâu thuẫn và đầu vào cần nhận
 
-| ID | Quan sát | Cần đầu mối xác nhận |
-| --- | --- | --- |
-| C01 | `programs.ts` ghi THPT 3.5 năm/9 kỳ; T03 hiện 3 năm/9 kỳ | Đào tạo: thời lượng theo từng ngành/đối tượng, quyết định miễn tín chỉ |
-| C02 | Báo cáo phase 1 ghi học bổng 100/50/30%; source hiện các giá trị khác | Tài chính/tuyển sinh: quyết định, điều kiện, phạm vi và ngày hiệu lực |
-| C03 | Tên ngành du lịch và chuyên ngành marketing/đồ họa có cách ghi khác nhau | Đào tạo: tên ngành, chuyên ngành, mã ngành và văn bằng chính thức |
-| C04 | 600.000đ/tín chỉ, 126 tín chỉ, 75.600.000đ và phí 1.000.000đ chỉ có claim trong code | Tài chính: biểu phí từng khóa/đối tượng, khoản loại trừ và cách tính |
-| C05 | Contact/cổng có flag verified, comment địa chỉ 28/08 nhưng chưa có capture/document tại run | Vận hành: vai trò, URL cuối, địa chỉ hiện hành và quyền sử dụng ảnh |
+| ID  | Quan sát                                                                                    | Cần đầu mối xác nhận                                                   |
+| --- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| C01 | `programs.ts` ghi THPT 3.5 năm/9 kỳ; T03 hiện 3 năm/9 kỳ                                    | Đào tạo: thời lượng theo từng ngành/đối tượng, quyết định miễn tín chỉ |
+| C02 | Báo cáo phase 1 ghi học bổng 100/50/30%; source hiện các giá trị khác                       | Tài chính/tuyển sinh: quyết định, điều kiện, phạm vi và ngày hiệu lực  |
+| C03 | Tên ngành du lịch và chuyên ngành marketing/đồ họa có cách ghi khác nhau                    | Đào tạo: tên ngành, chuyên ngành, mã ngành và văn bằng chính thức      |
+| C04 | 600.000đ/tín chỉ, 126 tín chỉ, 75.600.000đ và phí 1.000.000đ chỉ có claim trong code        | Tài chính: biểu phí từng khóa/đối tượng, khoản loại trừ và cách tính   |
+| C05 | Contact/cổng có flag verified, comment địa chỉ 28/08 nhưng chưa có capture/document tại run | Vận hành: vai trò, URL cuối, địa chỉ hiện hành và quyền sử dụng ảnh    |
 
 Cần gom văn bản có số/ngày, file hoặc URL nguồn, phạm vi áp dụng, người duyệt và
 ngày hiệu lực cho các nhóm trên; không chỉ xác nhận toàn bộ website bằng một câu.
@@ -34,6 +34,7 @@ Chưa nhận được đầu vào thì tiếp tục prototype/contract fixture, 
 ## Tiến độ Đợt B — Bộ phiếu hỏi nghiệp vụ (Run 01)
 
 Ngày 12/10/2026, toàn bộ các câu hỏi nghiệp vụ và mâu thuẫn dữ liệu đã được tổng hợp thành các gói yêu cầu chuyên biệt cho từng phòng ban tại [PHASE_B_STAKEHOLDER_PACKETS.md](../evidence/hyper-ui-remediation/run-01/PHASE_B_STAKEHOLDER_PACKETS.md):
+
 - **PKT-ADM**: Ban Tuyển sinh (URL portal tra cứu hồ sơ HUI-01, đợt tuyển sinh đang mở HUI-02).
 - **PKT-ACA**: Phòng Đào tạo (Thời lượng 3.5 năm vs 3 năm C01, mã/tên ngành C03, duyệt public copy HUI-05).
 - **PKT-FIN**: Ban Tài chính (Quyết định biểu phí C04, chính sách học bổng C02).

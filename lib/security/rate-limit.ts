@@ -14,7 +14,10 @@ export interface RateLimitResult {
 }
 
 export class BoundedRateLimiter {
-  private store = new Map<string, { count: number; resetAt: number; lastAccess: number; seq: number }>();
+  private store = new Map<
+    string,
+    { count: number; resetAt: number; lastAccess: number; seq: number }
+  >();
   private readonly windowMs: number;
   private readonly maxAttempts: number;
   private readonly maxKeys: number;
@@ -141,7 +144,10 @@ export function getClientIp(request: Request): string {
 
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
-    const parts = forwarded.split(",").map((p) => p.trim()).filter(Boolean);
+    const parts = forwarded
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
     for (const part of parts) {
       if (isValidIp(part)) return part;
     }

@@ -191,7 +191,9 @@ describe("Task R16: Model CMS và Migration có thể khôi phục (Database Sch
       // Rollback 1 bước
       const lastMigration = ALL_MIGRATIONS[ALL_MIGRATIONS.length - 1];
       const reportRollback = rollbackMigration(db, { steps: 1, skipBackup: true });
-      expect(reportRollback.rolledBack).toContain(`v${lastMigration.version} (${lastMigration.name})`);
+      expect(reportRollback.rolledBack).toContain(
+        `v${lastMigration.version} (${lastMigration.name})`,
+      );
       expect(reportRollback.currentVersion).toBe(ALL_MIGRATIONS.length - 1);
 
       const appliedAfter = getAppliedMigrations(db);
@@ -317,8 +319,14 @@ describe("Task R16: Model CMS và Migration có thể khôi phục (Database Sch
     beforeEach(() => {
       const db = initDb(); // Explicit isolated schema and test-only domain fixture.
       cmsDomainFixture.up(db);
-      for(const [id,role] of [["editor_01","editor"],["editor_02","editor"],["admin_root","admin"]]) {
-        db.prepare("INSERT OR IGNORE INTO users(id,username,password_hash,name,role,created_at) VALUES(?,?,?,?,?,?)").run(id,id,"fixture-only",id,role,new Date().toISOString());
+      for (const [id, role] of [
+        ["editor_01", "editor"],
+        ["editor_02", "editor"],
+        ["admin_root", "admin"],
+      ]) {
+        db.prepare(
+          "INSERT OR IGNORE INTO users(id,username,password_hash,name,role,created_at) VALUES(?,?,?,?,?,?)",
+        ).run(id, id, "fixture-only", id, role, new Date().toISOString());
       }
     });
 

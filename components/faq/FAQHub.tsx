@@ -51,7 +51,8 @@ export function FAQHub({ categories }: FAQHubProps) {
       <div className="mb-12">
         <div className="relative mx-auto mb-8 max-w-2xl">
           <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-ink-400" />
-          <LocalizedElement as="input"
+          <LocalizedElement
+            as="input"
             type="text"
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
@@ -71,8 +72,8 @@ export function FAQHub({ categories }: FAQHubProps) {
                   : "border-line-200 bg-paper text-ink-600 hover:border-brand-500 hover:text-brand-700",
               )}
             >
-              <LocalizedText>Tất cả
-            </LocalizedText></button>
+              <LocalizedText>Tất cả</LocalizedText>
+            </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
@@ -109,14 +110,16 @@ export function FAQHub({ categories }: FAQHubProps) {
         ) : (
           <div className="rounded-xl border border-line-200 bg-paper py-12 text-center">
             <p className="text-body-lg font-medium text-ink-600">
-              <LocalizedText>Không tìm thấy câu hỏi nào phù hợp với &quot;</LocalizedText><LocalizedText>{searchQuery}</LocalizedText><LocalizedText>&quot;
-            </LocalizedText></p>
+              <LocalizedText>Không tìm thấy câu hỏi nào phù hợp với &quot;</LocalizedText>
+              <LocalizedText>{searchQuery}</LocalizedText>
+              <LocalizedText>&quot;</LocalizedText>
+            </p>
             <button
               onClick={() => setSearchQuery("")}
               className="mt-4 font-semibold text-brand-700 hover:underline"
             >
-              <LocalizedText>Xóa bộ lọc
-            </LocalizedText></button>
+              <LocalizedText>Xóa bộ lọc</LocalizedText>
+            </button>
           </div>
         )}
       </div>

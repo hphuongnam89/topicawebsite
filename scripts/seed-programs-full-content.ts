@@ -120,9 +120,11 @@ function main() {
         duration_credits: durationCreditsJson,
       };
 
-      db.prepare(
-        `UPDATE content_revisions SET payload = ?, updated_at = ? WHERE id = ?`,
-      ).run(JSON.stringify(updatedPayload), new Date().toISOString(), existingRevision.id);
+      db.prepare(`UPDATE content_revisions SET payload = ?, updated_at = ? WHERE id = ?`).run(
+        JSON.stringify(updatedPayload),
+        new Date().toISOString(),
+        existingRevision.id,
+      );
       console.log(`✓ Updated program '${prog.id}' and revision #${existingRevision.id}`);
     } else {
       console.log(`✓ Updated program '${prog.id}' table row`);

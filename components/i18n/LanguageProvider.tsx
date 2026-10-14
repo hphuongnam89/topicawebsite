@@ -1,11 +1,28 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { translateText, type Locale } from "@/lib/i18n/translate";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { translateText, reverseTranslateText, type Locale } from "@/lib/i18n/translate";
 
-const LanguageContext = createContext<{ locale: Locale; setLocale: (locale: Locale) => void }>({ locale: "vi", setLocale: () => {} });
+const LanguageContext = createContext<{ locale: Locale; setLocale: (locale: Locale) => void }>({
+  locale: "vi",
+  setLocale: () => {},
+});
 
-export function LanguageProvider({ children, initialLocale }: { children: ReactNode; initialLocale: Locale }) {
+export function LanguageProvider({
+  children,
+  initialLocale,
+}: {
+  children: ReactNode;
+  initialLocale: Locale;
+}) {
   const [locale, setLocale] = useState(initialLocale);
   const scrollPosition = useRef<number | null>(null);
   const viTitleRef = useRef<string | null>(null);
@@ -14,14 +31,27 @@ export function LanguageProvider({ children, initialLocale }: { children: ReactN
     document.cookie = `topica_locale=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`;
     if (typeof document !== "undefined" && document.title) {
       if (locale === "vi") {
-        if (!viTitleRef.current) viTitleRef.current = document.title;
-        else document.title = viTitleRef.current;
+        if (viTitleRef.current) {
+          document.title = viTitleRef.current;
+        } else {
+          const rev = reverseTranslateText(document.title);
+          if (rev) {
+            viTitleRef.current = rev;
+            document.title = rev;
+          } else {
+            viTitleRef.current = document.title;
+          }
+        }
       } else {
-        if (!viTitleRef.current) viTitleRef.current = document.title;
+        if (!viTitleRef.current) {
+          const rev = reverseTranslateText(document.title);
+          viTitleRef.current = rev || document.title;
+        }
         document.title = translateText(viTitleRef.current, "en");
       }
     }
   }, [locale]);
+
   useLayoutEffect(() => {
     if (scrollPosition.current === null) return;
     const top = scrollPosition.current;
@@ -40,7 +70,11 @@ export function LanguageProvider({ children, initialLocale }: { children: ReactN
     window.history.replaceState(window.history.state, "", url);
   }
 
-  return <LanguageContext.Provider value={{ locale, setLocale: changeLocale }}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale: changeLocale }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 export function useLanguage() {

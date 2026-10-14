@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readBoundedJson } from "@/lib/http/read-json";
 import { requireAdmin as requireUser } from "@/lib/auth/guards";
 import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
@@ -153,7 +154,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const rawBody = await request.json().catch(() => null);
+    const rawBody = await readBoundedJson(request, 262_144).catch(() => null);
     const parsed = homepageUpdateSchema.safeParse(rawBody);
     if (!parsed.success) {
       return NextResponse.json(

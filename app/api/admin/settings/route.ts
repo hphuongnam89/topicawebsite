@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
 import { recordAdminAudit } from "@/lib/services/admin-audit";
 import { z } from "zod";
+import { readBoundedJson } from "@/lib/http/read-json";
 
 const DEFAULT_SETTINGS = {
   hotline: "1800 646 857",
@@ -63,7 +64,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
-    const rawBody = await request.json().catch(() => null);
+    const rawBody = await readBoundedJson(request, 65_536).catch(() => null);
     const parsed = settingsPayloadSchema.safeParse(rawBody);
 
     if (!parsed.success) {
@@ -76,8 +77,8 @@ export async function PUT(request: Request) {
     // If masked sentinel was returned to client and submitted unchanged, preserve existing secret
     const effectiveBotToken =
       inputSettings.telegramBotToken === MASKED_SECRET
-        ? (currentSettings.telegramBotToken || "")
-        : (inputSettings.telegramBotToken || "");
+        ? currentSettings.telegramBotToken || ""
+        : inputSettings.telegramBotToken || "";
 
     const toSave: typeof DEFAULT_SETTINGS = {
       ...DEFAULT_SETTINGS,
