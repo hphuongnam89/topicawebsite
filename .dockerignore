@@ -3,7 +3,10 @@ npm-debug.log
 .next*
 .git
 railway-seed
-data/
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/backups/
 public/uploads/
 backups/
 **/backups/
