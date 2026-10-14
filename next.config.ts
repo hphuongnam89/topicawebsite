@@ -122,6 +122,10 @@ const nextConfig: NextConfig = {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
   images: {
+    // Railway cannot reliably egress to the external CMS image origin from the
+    // server-side optimizer. Let the browser request approved remote assets
+    // directly; CSP and remotePatterns still constrain the allowed origins.
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 3600,
     remotePatterns: [

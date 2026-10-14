@@ -28,7 +28,7 @@ export default async function TuitionPage() {
   const page = await cms.getPageByPath("tuyen-sinh/hoc-phi-hoc-bong").catch(() => null);
 
   return (
-    <main className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
         title={page?.title || "Học phí & Học bổng"}
         subtitle={
@@ -45,6 +45,6 @@ export default async function TuitionPage() {
         scholarships={getLiveScholarships()}
         documents={getPublicDocuments()}
       />
-    </main>
+    </div>
   );
 }

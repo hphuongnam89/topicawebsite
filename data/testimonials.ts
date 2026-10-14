@@ -5,6 +5,7 @@ export interface Testimonial {
   role: string;
   quote: string;
   program: string;
+  isSample?: boolean;
 }
 
 export const testimonials: readonly Testimonial[] = [

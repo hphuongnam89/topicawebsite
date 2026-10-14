@@ -37,19 +37,20 @@ export function AdmissionBanner({
         <div className="max-w-measure mx-auto flex flex-col items-center">
           <h2 className="mb-6 font-display text-display md:text-h1">{heading}</h2>
           <p className="mb-8 text-body-lg opacity-90">{description}</p>
-          <div className="flex w-full flex-col justify-center gap-4 sm:w-auto sm:flex-row">
-            <ButtonLink href={primaryHref} variant={isDark ? "accent" : "primary"} size="lg">
+          <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
+            <ButtonLink href={primaryHref} variant={isDark ? "accent" : "primary"} size="lg" className="w-full justify-center">
               {primaryLabel}
             </ButtonLink>
             {secondaryHref && secondaryLabel && (
               <ButtonLink
                 href={secondaryHref}
                 variant="secondary"
-                className={
+                className={cn(
                   isDark
                     ? "border-line-200 text-white hover:bg-white/10"
-                    : "border-white/30 text-white hover:bg-white/10"
-                }
+                    : "border-white/30 text-white hover:bg-white/10",
+                  "w-full justify-center",
+                )}
                 size="lg"
               >
                 {secondaryLabel}

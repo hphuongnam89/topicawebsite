@@ -34,6 +34,21 @@ describe("Task R07: Route Map, IA và 6 Hành trình Quyết định", () => {
         expect(allProgramHrefs).toContain(prog.href);
       });
     });
+
+    test("menu Tin tức chỉ giữ bản tin, thông báo chính thức thuộc menu Tuyển sinh", () => {
+      const newsGroup = navigationData.primary.find((group) => group.id === "news");
+      const admissionsGroup = navigationData.primary.find((group) => group.id === "admissions");
+      const newsItems = newsGroup?.columns.flatMap((column) => column.items) ?? [];
+      const admissionsItems = admissionsGroup?.columns.flatMap((column) => column.items) ?? [];
+
+      expect(newsItems.some((item) => item.label === "Tin tuyển sinh")).toBe(true);
+      expect(newsItems.some((item) => item.label === "Thông báo tuyển sinh")).toBe(false);
+      expect(
+        admissionsItems.some(
+          (item) => item.label === "Thông báo tuyển sinh" && item.href === "/thong-bao-tuyen-sinh/",
+        ),
+      ).toBe(true);
+    });
   });
 
   describe("2. Canonical & Chuyển hướng Route Ngành Đào tạo", () => {

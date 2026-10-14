@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { getPublicAdmissionRounds } from "@/lib/services/cms-models";
 import { formatDateTimeGMT7 } from "@/lib/date";
-import { CalendarDays, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 
 export function CurrentAdmissions() {
@@ -10,13 +11,16 @@ export function CurrentAdmissions() {
     .filter((row) => row.status === "open")
     .sort((a, b) => a.deadlineAt.localeCompare(b.deadlineAt));
 
+  // Keep the homepage focused when there is no verified, published intake round.
+  if (rounds.length === 0) return null;
+
   return (
     <section
       className="border-b border-line-200 bg-surface-subtle/60 py-5 sm:py-6"
       aria-label="Thông tin kỳ tuyển sinh"
     >
       <Container>
-        {rounds.length ? (
+        <ScrollReveal>
           <div className="grid gap-4 md:grid-cols-2">
             {rounds.map((round) => (
               <div
@@ -51,39 +55,7 @@ export function CurrentAdmissions() {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="flex flex-col gap-3 rounded-xl border border-navy-100/60 bg-canvas p-4 text-ink-700 shadow-2xs sm:flex-row sm:items-center sm:justify-between sm:p-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-900">
-                <CalendarDays className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-body-sm font-semibold text-navy-950">
-                  Thông tin kế hoạch tuyển sinh 2026
-                </p>
-                <p className="text-body-sm text-ink-600">
-                  Các đợt xét tuyển mới đang được cập nhật kế hoạch tiếp nhận hồ sơ định kỳ.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 pt-2 sm:pt-0">
-              <Link
-                href="/tuyen-sinh/"
-                className="inline-flex items-center gap-1 text-body-sm font-semibold text-navy-800 hover:text-navy-950 hover:underline"
-              >
-                Xem quy chế tuyển sinh
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              <span className="hidden text-line-300 sm:inline">|</span>
-              <Link
-                href="/lien-he/"
-                className="text-body-sm font-semibold text-gold-700 hover:text-gold-800 hover:underline"
-              >
-                Nhận tư vấn về lịch và hồ sơ.
-              </Link>
-            </div>
-          </div>
-        )}
+        </ScrollReveal>
       </Container>
     </section>
   );

@@ -148,11 +148,12 @@ export function ArticleEditorForm({
     try {
       const url = isEdit ? `/api/admin/articles/${formData.id}` : "/api/admin/articles";
       const method = isEdit ? "PUT" : "POST";
+      const { id: _id, ...payload } = formData;
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(isEdit ? payload : formData),
       });
 
       const data = await res.json();
@@ -172,19 +173,6 @@ export function ArticleEditorForm({
     }
   };
 
-  if (initialData?.status === "published")
-    return (
-      <div className="rounded-xl border bg-white p-6">
-        <h1 className="text-h2 font-bold">Chỉnh sửa bài viết đã công bố</h1>
-        <p className="mt-4">
-          Mở Nội dung & phê duyệt, chọn Bài viết và tải mã <strong>{initialData.id}</strong> để tạo
-          bản nháp mới.
-        </p>
-        <Link href="/admin/content" className="mt-4 inline-block underline">
-          Mở nội dung & phê duyệt
-        </Link>
-      </div>
-    );
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Top Action Bar */}
@@ -357,6 +345,7 @@ export function ArticleEditorForm({
                 className="h-10 w-full rounded-lg border border-line-200 bg-white px-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
               >
                 <option value="draft">Bản nháp (Chưa hiển thị)</option>
+                <option value="published">Đã xuất bản (Hiển thị ngay)</option>
               </select>
             </div>
 
@@ -458,10 +447,10 @@ export function ArticleEditorForm({
                 Hoặc nhập URL ảnh
               </label>
               <input
-                type="url"
+                type="text"
                 value={formData.featured_image}
                 onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                placeholder="https://..."
+                placeholder="/uploads/... hoặc https://..."
                 className="h-9 w-full rounded-lg border border-line-200 bg-white px-3 text-xs text-ink-950 focus:border-brand-600 focus:outline-none"
               />
             </div>

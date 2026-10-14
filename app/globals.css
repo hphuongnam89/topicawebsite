@@ -8,6 +8,25 @@
 @import "./theme.css";
 @import "./design-tokens.css";
 
+.hero-stage {
+  background-image:
+    radial-gradient(ellipse 46rem 32rem at 100% 42%, rgb(19 71 128 / 28%), transparent 74%),
+    linear-gradient(118deg, #001a3d 0%, #00264d 58%, #062f59 100%);
+}
+
+.hero-title-accent {
+  color: var(--color-gold-300);
+}
+
+.hero-image-rule {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-300),
+    rgb(216 182 124 / 18%) 78%,
+    transparent
+  );
+}
+
 @layer base {
   *,
   *::before,
@@ -108,48 +127,96 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
   bottom: 6rem;
 }
 
+@media (max-width: 1279px) {
+  body:has(aside[aria-label="Hành động tuyển sinh"]) [data-mobile-sticky-bar] {
+    display: none;
+  }
+}
+
 @layer components {
-  .homepage-enter,
   .scroll-reveal {
     min-width: 0;
     opacity: 1;
     transform: none;
+    transition:
+      opacity 620ms cubic-bezier(0.2, 0.75, 0.25, 1),
+      transform 620ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    transition-delay: var(--reveal-delay, 0s);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .homepage-enter {
-      animation: homepage-enter var(--duration-enter) var(--ease-emphasized) both;
-      animation-delay: var(--enter-delay, 0ms);
+    .program-hero-copy {
+      animation: hero-copy-arrive 680ms var(--ease-emphasized) both;
     }
 
-    @supports (animation-timeline: view()) {
-      .scroll-reveal {
-        animation: scroll-reveal linear both;
-        animation-range: entry 4% cover 24%;
-        animation-timeline: view();
-      }
+    .program-hero-panel {
+      animation: program-panel-arrive 780ms var(--ease-emphasized) both;
+      animation-delay: 120ms;
+    }
 
-      .scroll-reveal[data-reveal="slideInLeft"] {
-        --reveal-x: -1.5rem;
-        --reveal-y: 0;
-      }
+    .hero-copy-reveal {
+      animation: hero-copy-arrive 600ms var(--ease-emphasized) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
 
-      .scroll-reveal[data-reveal="slideInRight"] {
-        --reveal-x: 1.5rem;
-        --reveal-y: 0;
-      }
+    .hero-title-reveal {
+      animation: hero-title-unmask 760ms var(--ease-emphasized) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
 
-      .scroll-reveal[data-reveal="scaleIn"],
-      .scroll-reveal[data-reveal="imageReveal"] {
-        --reveal-scale: 0.98;
-      }
+    .hero-image-reveal {
+      animation: hero-image-unmask 1050ms cubic-bezier(0.76, 0, 0.24, 1) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
+
+    .hero-image-reveal__image {
+      animation: hero-image-settle 1450ms var(--ease-emphasized) both;
+      animation-delay: var(--hero-delay, 0ms);
+    }
+
+    .hero-image-rule {
+      animation: hero-rule-draw 850ms var(--ease-emphasized) both;
+      animation-delay: 760ms;
+      transform-origin: left center;
+    }
+
+    .hero-image-reveal:hover .hero-image-reveal__image {
+      transform: scale(1.035);
+      transition: transform 700ms var(--ease-emphasized);
+    }
+
+    .hero-primary-cta svg {
+      transition: transform 220ms var(--ease-emphasized);
+    }
+
+    .hero-primary-cta:hover svg,
+    .hero-primary-cta:focus-visible svg {
+      transform: translateX(4px);
     }
   }
 
-  @keyframes homepage-enter {
+  .scroll-reveal[data-scroll-ready="true"][data-scroll-visible="false"] {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+
+  .scroll-reveal[data-reveal="slideInLeft"][data-scroll-ready="true"][data-scroll-visible="false"] {
+    transform: translate3d(-1.5rem, 0, 0);
+  }
+
+  .scroll-reveal[data-reveal="slideInRight"][data-scroll-ready="true"][data-scroll-visible="false"] {
+    transform: translate3d(1.5rem, 0, 0);
+  }
+
+  .scroll-reveal[data-reveal="scaleIn"][data-scroll-ready="true"][data-scroll-visible="false"],
+  .scroll-reveal[data-reveal="imageReveal"][data-scroll-ready="true"][data-scroll-visible="false"] {
+    transform: scale(0.96);
+  }
+
+  @keyframes hero-copy-arrive {
     from {
       opacity: 0;
-      transform: translateY(1rem);
+      transform: translateY(0.8rem);
     }
     to {
       opacity: 1;
@@ -157,14 +224,54 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
     }
   }
 
-  @keyframes scroll-reveal {
+  @keyframes program-panel-arrive {
     from {
       opacity: 0;
-      transform: translate(var(--reveal-x, 0), var(--reveal-y, 1rem)) scale(var(--reveal-scale, 1));
+      transform: translateY(0.65rem);
     }
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+
+  @keyframes hero-title-unmask {
+    from {
+      clip-path: inset(0 0 100% 0);
+      opacity: 0;
+      transform: translateY(0.14em);
+    }
+    to {
+      clip-path: inset(0);
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hero-image-unmask {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes hero-image-settle {
+    from {
+      transform: scale(1.11);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes hero-rule-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
     }
   }
 
@@ -326,7 +433,7 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
   }
 
   .prose-editorial blockquote {
-    border-left: 3px solid var(--color-brand-500);
+    border-left: 1px solid var(--color-line-300);
     padding: 1rem 1.25rem;
     margin: 1.5rem 0;
     background: var(--color-paper);
@@ -382,7 +489,11 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
     border-radius: var(--radius-xl);
     padding: clamp(1.5rem, 4vw, 3.5rem);
     background:
-      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--color-brand-100) 55%, transparent), transparent 42%),
+      radial-gradient(
+        circle at 100% 0%,
+        color-mix(in srgb, var(--color-brand-100) 55%, transparent),
+        transparent 42%
+      ),
       var(--color-paper);
     box-shadow: 0 1.5rem 3rem color-mix(in srgb, var(--color-ink-950) 8%, transparent);
   }
@@ -481,15 +592,16 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
   }
 }
 
-.animate-marquee {
+.partners-marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 25s linear infinite;
+  animation: marquee 32s linear infinite;
   will-change: transform;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -508,8 +620,60 @@ body:has(aside[aria-label="Hành động tuyển sinh"]) [data-floating-actions]
     scroll-behavior: auto !important;
   }
 
+  .partners-marquee-track,
   .animate-marquee {
     animation: none !important;
+  }
+
+  .hero-title-reveal,
+  .hero-copy-reveal,
+  .hero-image-reveal {
+    animation: hero-reduced-arrive 360ms ease-out both !important;
+    animation-delay: 0ms !important;
+  }
+
+  .program-hero-copy,
+  .program-hero-panel {
+    animation: hero-reduced-arrive 360ms ease-out both !important;
+    animation-delay: 0ms !important;
+  }
+
+  .hero-image-reveal__image {
+    animation: none !important;
     transform: none !important;
+  }
+
+  .hero-image-rule {
+    transform: none !important;
+  }
+
+  .scroll-reveal[data-scroll-ready="true"][data-scroll-visible="false"] {
+    opacity: 0;
+    transform: translate3d(0, 0.75rem, 0);
+    transition-property: opacity, transform !important;
+    transition-duration: 360ms !important;
+  }
+
+  .scroll-reveal[data-scroll-ready="true"][data-scroll-visible="true"] {
+    opacity: 1;
+    transform: none;
+    transition-property: opacity, transform !important;
+    transition-duration: 360ms !important;
+  }
+
+  a,
+  button,
+  [role="button"],
+  .group {
+    transition-duration: 180ms !important;
+  }
+
+  @keyframes hero-reduced-arrive {
+    from {
+      opacity: 0.72;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }

@@ -1,0 +1,65 @@
+# Báo cáo kiểm thử các chức năng quản trị Topica
+
+**Phạm vi:** kiểm thử theo vai trò admin, ngày 13–14/10/2026 (Asia/Bangkok).  
+**Môi trường:** bản sao QA cô lập chạy tại `http://localhost:3114`, dữ liệu migration rỗng với tài khoản tổng hợp `qa-admin` và `qa-editor`; upload, database, backup và outbound notification dùng thư mục/định danh riêng. Không dùng bản ghi sản xuất và không gửi thông báo thật.
+
+**Cập nhật remediation:** các lỗi có thể sửa trong mã nguồn đã được xử lý tuần tự và kiểm tra lại; xem [biên bản remediation](./evidence/admin-walkthrough-2026-10-13/REMEDIATION-2026-10-14.md). Trạng thái phát hành vẫn cần UAT/responsive và quyết định nghiệp vụ cho dữ liệu chính thức.
+
+## Kết quả điều hành
+
+Đã đi qua 12 khu vực hiển thị trong admin: tổng quan, cấu hình trang chủ, trang, tin tức, danh mục tin tức, media, lead tư vấn, quản trị viên, cấu hình chung, tài khoản & bảo mật, nhật ký quản trị và nội dung & phê duyệt. Đã kiểm tra thêm các trang công khai tương ứng.
+
+Các luồng thao tác thành công gồm đăng nhập, tạo/sửa/xóa danh mục tạm, soạn thảo và phê duyệt bài viết/trang, preview, xuất bản, cấu hình trang chủ, trust item và testimonial fixture, lưu cấu hình chung, tiếp nhận–tìm kiếm–đổi trạng thái–xuất CSV lead, đổi tên hiển thị người dùng, audit log, kiểm soát phiên bản đồng thời, từ chối rồi gửi lại bản sửa, đặt lịch và hủy lịch, lưu tám loại nội dung CMS, kiểm soát quyền editor/admin, kiểm tra Origin, kiểm tra upload MIME/kích thước, media private và logout API.
+
+Ba bộ kiểm tra API có 96 assertion thô: **89 pass hợp lệ, 6 fail, 1 assertion không hợp lệ cần chạy lại**. Assertion `LEAD-IDEMPOTENCY` trong `edge-api-results.json` đã so sánh trường không tồn tại (`leadId`), dù các kiểm tra độc lập vẫn cho thấy retry có cờ `duplicate=true`, cùng một idempotency key sai payload trả 409 và chỉ giữ một bản ghi. Không dùng assertion cũ để kết luận hai response có cùng `id`.
+
+## Ma trận chức năng
+
+| Khu vực | Đã thực hiện | Kết quả |
+|---|---|---|
+| Đăng nhập / phiên | Sai mật khẩu, đăng nhập admin fixture, Origin lạ, logout API | Đạt; logout bằng UI bị kẹt ở hộp thoại confirm của công cụ trình duyệt nên chưa xác minh được trạng thái giao diện sau logout |
+| Tổng quan | Dashboard rỗng, bộ lọc 30 ngày, dữ liệu deadline | Có dữ liệu; phát hiện deadline quá hạn vẫn nằm trong danh sách 30 ngày |
+| Danh mục tin tức | Tạo slug tự động, tạo trùng, xóa category tạm | Đạt; trùng trả xung đột |
+| Tin tức | Tạo draft, rich text, preview token, gửi duyệt, approve, publish, reject/resubmit, đặt/hủy lịch, tìm kiếm/bộ lọc | Luồng mới đạt; danh sách legacy không hiện bản ghi revision-only sau reload; legacy rich text hiện trống |
+| Trang | Draft → review → approve → publish, kiểm tra public | Luồng mới đạt; danh sách sau reload vẫn rỗng |
+| Nội dung & phê duyệt | Program, admission round, tuition, scholarship, document, organization | Draft và workflow đạt; document default access lỗi; scholarship CMS không xuất hiện ở trang học phí; organization thiếu phone bị từ chối đúng |
+| Trang chủ | Sửa hero, bật form, trust item, testimonial fixture | Lưu và public hiển thị đúng fixture QA |
+| Cấu hình chung | Hotline, email, title, persistence | API/UI lưu được; header và SEO public không dùng các giá trị đã lưu |
+| Media | Thư viện rỗng, upload ảnh fixture, MIME giả, >5MB, private read | MIME/kích thước/private đạt; URL static prefix của QA trả 404, dedicated media API trả 200; upload qua UI bị giới hạn quyền file URL của tiện ích |
+| Lead tư vấn | Validation rỗng, submit consent, tìm kiếm, đổi status, export CSV, rate limit | Đạt; form cho phép bỏ trống email; assertion so sánh `response.id` cần chạy lại |
+| Quản trị viên | Danh sách, form tạo, sửa tên hiển thị, password API, duplicate, không tự xóa | Đạt phần lớn; tạo tài khoản chấp nhận password 1 ký tự |
+| Nhật ký quản trị | Xem log, lọc lead, changed fields | Đạt; không thấy secret value |
+| Responsive | Viewport 390px | Chưa kết luận: override Chrome không đổi innerWidth; IAB 390 không tải được admin; đã reset viewport |
+
+## Lỗi và rủi ro cần xử lý
+
+| ID / mức | Mô tả, tái hiện và bằng chứng |
+|---|---|
+| F01 / P1 | **Bản nháp CMS có thể làm mất fallback public.** Tạo draft program revision rồi tải trang public tương ứng trả 404; sau khi publish bản hợp lệ thì trang trở lại. Cùng cơ chế có thể tác động organization/contact và tuition. Bằng chứng: `51-program-after-draft.*`, `workflow-api-results.json`; mã liên quan `lib/services/public-site.ts`. Cần quyết định rõ draft phải giữ fallback cũ hay ẩn trang. |
+| F02 / P1 | **Danh sách admin không hiển thị bản ghi revision-only sau reload.** Bài viết và trang đã publish qua CMS workflow nhưng bảng legacy vẫn báo rỗng. Bằng chứng: `16-articles-after-reload.*`, `21-pages-after-publish.*`. |
+| F03 / P1 | **Editor legacy load rich text trống.** Bản ghi có HTML trong DB/API nhưng màn sửa không nạp nội dung; lưu tiếp có nguy cơ ghi đè. Bằng chứng `62-legacy-edit-load.txt`, `edge-api-results.json`; component `components/ui/RichTextEditor.tsx` khởi tạo theo `content` nhưng không đồng bộ khi dữ liệu async về. |
+| F04 / P2 | **Rời route khi có thay đổi chưa lưu không cảnh báo.** Nhập title rồi bấm mục sidebar, route đổi ngay và dữ liệu nhập mất. Bằng chứng `63-unsaved-route-leave.txt`. |
+| F05 / P2 | **Tạo user nhận password một ký tự.** `USER-CREATE-SHORT-PASSWORD` trả 200 trong khi đổi password đã chặn password ngắn bằng 400. Bằng chứng `api-results.json`. |
+| F06 / P2 | **Cấu hình chung lưu được nhưng không đi vào public contact/SEO.** Hotline/email/title đọc lại được từ settings nhưng public header vẫn dùng dữ liệu cũ/neutral. Bằng chứng `27-settings-saved.*`, `28-settings-public.txt`; organization CMS đã publish là luồng khác và cập nhật đúng. |
+| F07 / P2 | **Document mặc định hiển thị Public nhưng serialize thành access rỗng.** Publish trả 422 “Invalid input” không chỉ rõ field. Chọn Private rồi Public, lưu lại thì publish được. Bằng chứng `64-document-default-access-error.*`, `65-document-published-workaround.txt`, `document-diagnostic.json`. |
+| F08 / P2 | **Admission đã quá hạn vẫn xuất hiện trong “30 ngày tới”.** Bản ghi hết hạn 01/10 vẫn xuất hiện khi kiểm tra ngày 14/10. Bằng chứng `60-dashboard-past-deadline.*`; điều kiện truy vấn cần có lower bound từ thời điểm hiện tại. |
+| F09 / P2 | **Scholarship CMS publish không được trang học phí sử dụng.** Workflow publish thành công nhưng hub vẫn lấy danh sách tĩnh trong `getLiveScholarships`. Đây là sai khác nguồn dữ liệu cần quyết định sản phẩm, không tự ý thay đổi nội dung thật. Bằng chứng `workflow-api-results.json`, `66-tuition-scholarship-public.txt`. |
+| F10 / P2 | **Origin phụ thuộc hostname.** QA truy cập bằng IP bị 403 `Invalid origin`, `localhost` hoạt động. Đây là hạn chế cấu hình/runtime đã xác nhận trong QA, cần kiểm tra hostname thật khi triển khai. |
+| F11 / P2 | **URL media trả về không phục vụ được qua static prefix QA.** Upload thành công nhưng URL trả 404 và checksum không khớp; endpoint `/api/public-media` cùng file trả 200. Đây là lỗi cấu hình đường dẫn static của runner, chưa đủ bằng chứng kết luận mọi môi trường production bị lỗi. Bằng chứng `api-results.json`, `workflow-api-results.json`, `media-api-result.json`. |
+| F12 / P3 | **Email lead không bắt buộc.** Lead không có email vẫn được tạo sau khi có consent. Xác nhận đây là yêu cầu nghiệp vụ trước khi thay đổi validation. |
+| F13 / P3 | **Thư viện Media báo rỗng sau upload API.** Cần quyết định media list có đọc cả private/public storage và upload mới hay không. Bằng chứng `29-media-empty.txt`, `40-media-after-api-upload.*`. |
+| F14 / P3 | **Một số field nullable hiển thị literal “null”.** Thấy trong màn sửa legacy, làm giảm khả năng chỉnh sửa an toàn; liên quan F03. |
+
+## Quyền, dữ liệu và giới hạn
+
+Anonymous admin APIs trả 401; editor bị chặn các endpoint admin-only và không được approve; Origin lạ trả 403; preview anonymous redirect login; private media chặn anonymous/editor và cho admin đọc. Các bản ghi, user, category, lead và file do kiểm thử tạo đều là fixture và đã xóa những đối tượng disposable sau khi kiểm tra. Không chạy thao tác xóa trên dữ liệu thật, không thay đổi source product, không gửi notification thật. Worktree vốn đã dirty trước khi kiểm thử; `source-status-before.txt` và `scratch/qa-admin-walkthrough-20261013/manifest.json` lưu trạng thái/ fingerprint trước chạy.
+
+Không đưa ra kết luận Lighthouse, accessibility đầy đủ, dữ liệu học phí chính thức, người học thật hay phê duyệt phát hành. Chưa đo boundary schedule trong 60 giây và chưa xác minh exact `response.id` của retry idempotency. Browser upload bị chặn bởi quyền “file URL” của tiện ích; không tự bật quyền đó.
+
+## Bằng chứng
+
+Toàn bộ DOM snapshot, ảnh chụp, CSV export và JSON API nằm trong [thư mục evidence](./evidence/admin-walkthrough-2026-10-13/). Ảnh đại diện cho hai lỗi chính: [program bị 404 sau draft](./evidence/admin-walkthrough-2026-10-13/51-program-after-draft.jpg) và [document access mặc định](./evidence/admin-walkthrough-2026-10-13/64-document-default-access-error.jpg). Các file evidence chỉ chứa fixture QA, không chứa mật khẩu tài khoản.
+
+## Trạng thái bàn giao
+
+Báo cáo này hoàn tất ở trạng thái **chưa chấp nhận phát hành** vì còn các lỗi P1/P2 ở trên. Bước tiếp theo nên là ưu tiên F01–F03, thống nhất nguồn dữ liệu scholarship/settings, rồi chạy lại các kiểm tra bị fail và assertion idempotency trên môi trường QA cô lập.

@@ -29,14 +29,14 @@ export default function NotFound() {
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href="/" variant="primary" size="default" leftIcon={<Home className="h-4 w-4" />}>
+          <div className="mx-auto mt-8 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
+            <ButtonLink href="/" variant="primary" size="default" leftIcon={<Home className="h-4 w-4" />} className="w-full justify-center">
               Về trang chủ
             </ButtonLink>
-            <ButtonLink href="/nganh-dao-tao/" variant="secondary" size="default" leftIcon={<GraduationCap className="h-4 w-4" />}>
+            <ButtonLink href="/nganh-dao-tao/" variant="secondary" size="default" leftIcon={<GraduationCap className="h-4 w-4" />} className="w-full justify-center">
               Xem 5 ngành đào tạo
             </ButtonLink>
-            <ButtonLink href="/tuyen-sinh/hoc-phi-hoc-bong/" variant="outline" size="default">
+            <ButtonLink href="/tuyen-sinh/hoc-phi-hoc-bong/" variant="outline" size="default" className="w-full justify-center sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]">
               Học phí 2026
             </ButtonLink>
           </div>

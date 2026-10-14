@@ -1,5 +1,0 @@
-expect(received).toBe(expected) // Object.is equality
-
-Expected: 403
-Received: 200
-exit_code=1

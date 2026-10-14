@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, expect, test, vi } from "vitest";
-import { getDb, createPage } from "@/lib/db";
+import { getDb, createPage, setSetting } from "@/lib/db";
 import { createArticleFromInput } from "@/lib/services/articles";
 import { cms } from "@/lib/cms/queries";
 import { createDraftRevision, transitionRevision } from "@/lib/services/revisions";
@@ -8,6 +8,7 @@ import {
   getLiveProgramDetail,
   getLiveTuitionPrograms,
   getLiveContact,
+  getLiveScholarships,
 } from "@/lib/services/public-site";
 import { cmsDomainFixture } from "@/__tests__/fixtures/cms-domain";
 
@@ -105,6 +106,23 @@ test("program directory/detail and price cards change together, archive suppress
   expect(getLiveProgramDetail("quan-tri-kinh-doanh-marketing")).toBeNull();
   expect(getLiveTuitionPrograms().find((row) => row.id === "ba")).toBeUndefined();
 });
+test("a draft-only revision does not hide the static program fallback", () => {
+  createDraftRevision({
+    entityType: "program",
+    entityId: "it",
+    title: "Fixture draft only",
+    payload: { name: "Draft only program" },
+    actorId: "editor",
+    actorName: "editor",
+  });
+
+  expect(getLiveProgramDetail("cong-nghe-thong-tin")?.officialName).toBe(
+    "Công nghệ thông tin – chuyên ngành Đồ hoạ kỹ thuật số",
+  );
+  expect(getLivePrograms().find((row) => row.id === "it")?.name).toBe(
+    "Công nghệ thông tin – chuyên ngành Đồ hoạ kỹ thuật số",
+  );
+});
 test("contact consumers use a single published organization; malformed structured content cannot publish", () => {
   publish("organization", "pxu_topica", {
     hotline: "0900000000",
@@ -113,4 +131,56 @@ test("contact consumers use a single published organization; malformed structure
   expect(getLiveContact().channels.admissionsHotline.href).toBe("tel:0900000000");
   expect(getLiveContact().channels.generalEmail.href).toBe("mailto:fixture@example.invalid");
   expect(() => publish("program", "ba", { duration_credits: "broken JSON" })).toThrow(/JSON/);
+});
+test("saved site settings override public contact values when organization exists", () => {
+  setSetting("site_settings", {
+    hotline: "0900000088",
+    email: "settings@example.test",
+    address: "Settings address",
+  });
+  const contact = getLiveContact();
+  expect(contact.channels.admissionsHotline.value).toBe("0900000088");
+  expect(contact.channels.generalEmail.value).toBe("settings@example.test");
+  expect(contact.locations[0]?.address).toBe("Settings address");
+});
+test("site settings provide public contact fallback when no organization is published", () => {
+  getDb().prepare("DELETE FROM organizations").run();
+  getDb().prepare("DELETE FROM content_revisions WHERE entity_type='organization'").run();
+  setSetting("site_settings", {
+    hotline: "0900000099",
+    email: "qa-settings@example.test",
+    address: "QA settings address",
+  });
+  const contact = getLiveContact();
+  expect(contact.channels.admissionsHotline.value).toBe("0900000099");
+  expect(contact.channels.admissionsHotline.href).toBe("tel:0900000099");
+  expect(contact.channels.admissionsEmail.value).toBe("qa-settings@example.test");
+  expect(contact.locations[0]?.address).toBe("QA settings address");
+});
+
+test("published CMS scholarships are consumed by the tuition hub", () => {
+  const row = createDraftRevision({
+    entityType: "scholarship",
+    entityId: "qa-scholarship",
+    title: "QA scholarship",
+    payload: {
+      id: "qa-scholarship",
+      name: "QA scholarship",
+      program_ids: ["ba"],
+      scope: "full_course",
+      value_type: "percent",
+      value: 25,
+      conditions: "QA condition",
+      evaluation_method: "QA evaluation",
+      source: "QA policy",
+    },
+    actorId: "editor",
+    actorName: "editor",
+  });
+  transitionRevision(row.id, "submit_review", "editor");
+  transitionRevision(row.id, "approve", "admin");
+  transitionRevision(row.id, "publish", "admin");
+  expect(getLiveScholarships()).toEqual(
+    expect.arrayContaining([expect.objectContaining({ id: "qa-scholarship", percentage: "25%" })]),
+  );
 });

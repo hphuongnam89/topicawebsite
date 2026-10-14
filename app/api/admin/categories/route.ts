@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth/guards";
 import { getCategories, createCategory, deleteCategory } from "@/lib/db";
 import { isSameOrigin } from "@/lib/security/request";
 import { categorySchema } from "@/lib/validation/admin";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 export async function GET() {
   const auth = await requireUser();
@@ -14,14 +15,21 @@ export async function GET() {
 export async function POST(request: Request) {
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const parsed = categorySchema.safeParse(await request.json());
-    if (!parsed.success) return NextResponse.json({ error: "Dữ liệu danh mục không hợp lệ." }, { status: 422 });
+    if (!parsed.success)
+      return NextResponse.json({ error: "Dữ liệu danh mục không hợp lệ." }, { status: 422 });
     const { name, slug, description } = parsed.data;
 
     const created = createCategory(name.trim(), slug.trim(), description?.trim());
+    recordAdminAudit(auth.user, "create", "category", String(created.id), [
+      "name",
+      "slug",
+      "description",
+    ]);
     return NextResponse.json({ success: true, category: created });
   } catch (error: unknown) {
     console.error("Create category error:", error);
@@ -35,7 +43,8 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -44,5 +53,6 @@ export async function DELETE(request: Request) {
   }
 
   deleteCategory(Number(id));
+  recordAdminAudit(auth.user, "delete", "category", id, ["record"]);
   return NextResponse.json({ success: true });
 }

@@ -7,6 +7,7 @@ import { draftInputSchema } from "@/lib/validation/revisions";
 import { entityTables } from "@/lib/services/content-entities";
 import { getPublishedRevision, getRevisions } from "@/lib/services/revisions";
 import { readBoundedJson, BodyLimitError } from "@/lib/http/read-json";
+const revisionStates = ["draft", "in_review", "approved", "published", "archived"] as const;
 export async function GET(request: Request) {
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
@@ -36,11 +37,50 @@ export async function GET(request: Request) {
       { headers: { "Cache-Control": "private, no-store" } },
     );
   }
-  const revisions = getDb()
-    .prepare("SELECT * FROM content_revisions ORDER BY updated_at DESC,id DESC LIMIT 200")
-    .all();
+  const state = url.searchParams.get("workflowState") || undefined;
+  const search = url.searchParams.get("search")?.trim().slice(0, 120);
+  const page = Math.max(1, Math.min(10000, Number(url.searchParams.get("page")) || 1));
+  const limit = Math.max(10, Math.min(50, Number(url.searchParams.get("limit")) || 25));
+  const conditions: string[] = [];
+  const params: (string | number)[] = [];
+  if (type) {
+    if (!Object.hasOwn(entityTables, type))
+      return NextResponse.json({ error: "Loại nội dung không hợp lệ" }, { status: 422 });
+    conditions.push("entity_type = ?");
+    params.push(type);
+  }
+  if (state) {
+    if (!revisionStates.includes(state as (typeof revisionStates)[number]))
+      return NextResponse.json({ error: "Trạng thái không hợp lệ" }, { status: 422 });
+    conditions.push("workflow_state = ?");
+    params.push(state);
+  }
+  if (search) {
+    conditions.push("(title LIKE ? ESCAPE '\\' OR entity_id LIKE ? ESCAPE '\\')");
+    const escaped = search.replace(/[\\%_]/g, "\\$&");
+    params.push(`%${escaped}%`, `%${escaped}%`);
+  }
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const db = getDb();
+  const total = (
+    db.prepare(`SELECT COUNT(*) AS total FROM content_revisions ${where}`).get(...params) as {
+      total: number;
+    }
+  ).total;
+  const revisions = db
+    .prepare(
+      `SELECT * FROM content_revisions ${where} ORDER BY updated_at DESC,id DESC LIMIT ? OFFSET ?`,
+    )
+    .all(...params, limit, (page - 1) * limit);
   return NextResponse.json(
-    { revisions, serverTime: Date.now() },
+    {
+      revisions,
+      total,
+      page,
+      limit,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      serverTime: Date.now(),
+    },
     { headers: { "Cache-Control": "private, no-store" } },
   );
 }

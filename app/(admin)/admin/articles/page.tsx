@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 interface ArticleItem {
-  id: number;
+  id: number | string;
   title: string;
   slug: string;
   excerpt: string | null;
@@ -27,6 +27,7 @@ interface ArticleItem {
   is_featured: number;
   status: string;
   published_at: string;
+  source?: "legacy" | "revision";
 }
 
 interface CategoryItem {
@@ -45,7 +46,7 @@ export default function AdminArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const fetchCategories = async () => {
@@ -94,12 +95,8 @@ export default function AdminArticlesPage() {
     (async () => {
       await fetchArticles();
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, selectedCategory, selectedStatus]);
-
-  
-
-  
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,7 +127,7 @@ export default function AdminArticlesPage() {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto max-w-7xl space-y-6 p-6 lg:p-10">
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -141,13 +138,14 @@ export default function AdminArticlesPage() {
             </h1>
           </div>
           <p className="mt-1 text-body-sm text-ink-500">
-            Tổng cộng <span className="font-semibold text-ink-900">{total}</span> bài viết trong hệ thống.
+            Tổng cộng <span className="font-semibold text-ink-900">{total}</span> bài viết trong hệ
+            thống.
           </p>
         </div>
 
         <Link
-          href="/admin/articles/new"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 transition-all"
+          href="/admin/content?entityType=article"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
         >
           <PlusCircle className="h-4 w-4" />
           <span>Tạo bài viết mới</span>
@@ -156,10 +154,10 @@ export default function AdminArticlesPage() {
 
       {message && (
         <div
-          className={`flex items-start gap-3 rounded-lg p-4 text-body-sm border ${
+          className={`flex items-start gap-3 rounded-lg border p-4 text-body-sm ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-              : "bg-red-50 text-red-800 border-red-200"
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border-red-200 bg-red-50 text-red-800"
           }`}
         >
           {message.type === "success" ? (
@@ -176,13 +174,13 @@ export default function AdminArticlesPage() {
         <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 gap-3 sm:grid-cols-12">
           {/* Search Box */}
           <div className="relative sm:col-span-6">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
+            <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-ink-400" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm theo tiêu đề hoặc tóm tắt..."
-              className="h-10 w-full rounded-lg border border-line-200 bg-white pl-9 pr-3 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
+              className="h-10 w-full rounded-lg border border-line-200 bg-white pr-3 pl-9 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
             />
           </div>
 
@@ -227,14 +225,16 @@ export default function AdminArticlesPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold text-ink-500 uppercase">
               <tr>
                 <th className="px-6 py-3.5">Bài viết</th>
                 <th className="px-4 py-3.5">Chuyên mục</th>
                 <th className="px-4 py-3.5">Tác giả</th>
                 <th className="px-4 py-3.5">Trạng thái</th>
-                <th className="px-4 py-3.5 hidden lg:table-cell">Ngày đăng</th>
-                <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
+                <th className="hidden px-4 py-3.5 lg:table-cell">Ngày đăng</th>
+                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-3.5 text-right shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                  Thao tác
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
@@ -255,10 +255,10 @@ export default function AdminArticlesPage() {
                 </tr>
               ) : (
                 articles.map((art) => (
-                  <tr key={art.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={`${art.source ?? "legacy"}-${art.id}`} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md bg-slate-100 border border-line-200 relative">
+                        <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md border border-line-200 bg-slate-100">
                           {art.featured_image ? (
                             <img
                               src={art.featured_image}
@@ -266,19 +266,19 @@ export default function AdminArticlesPage() {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center text-[10px] text-ink-400 font-medium">
+                            <div className="flex h-full w-full items-center justify-center text-[10px] font-medium text-ink-400">
                               No Image
                             </div>
                           )}
                         </div>
-                        <div className="min-w-0 max-w-md">
+                        <div className="max-w-md min-w-0">
                           <Link
-                            href={`/admin/articles/${art.id}/edit`}
-                            className="font-semibold text-ink-950 hover:text-brand-700 line-clamp-1 transition-colors"
+                            href={`/admin/content?entityType=article&entityId=${art.id}`}
+                            className="line-clamp-1 font-semibold text-ink-950 transition-colors hover:text-brand-700"
                           >
                             {art.title}
                           </Link>
-                          <p className="text-xs text-ink-400 truncate mt-0.5">/{art.slug}</p>
+                          <p className="mt-0.5 truncate text-xs text-ink-400">/{art.slug}</p>
                         </div>
                       </div>
                     </td>
@@ -310,27 +310,29 @@ export default function AdminArticlesPage() {
                       )}
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden lg:table-cell">
+                    <td className="hidden px-4 py-4 text-xs whitespace-nowrap text-ink-500 lg:table-cell">
                       {new Date(art.published_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                    <td className="sticky right-0 z-10 bg-white px-6 py-4 text-right whitespace-nowrap shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          href={`/admin/articles/${art.id}/edit`}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-slate-100 hover:text-brand-700 transition-colors"
+                          href={`/admin/content?entityType=article&entityId=${art.id}`}
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-100 hover:text-brand-700"
                           title="Chỉnh sửa"
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
-                        <button
-                          onClick={() => handleDelete(art.id, art.title)}
-                          disabled={deletingId === art.id}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
-                          title="Xóa bài viết"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {art.source !== "revision" && typeof art.id === "number" && (
+                          <button
+                            onClick={() => handleDelete(Number(art.id), art.title)}
+                            disabled={deletingId === art.id}
+                            className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
+                            title="Xóa bài viết"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -342,7 +344,7 @@ export default function AdminArticlesPage() {
 
         {/* Pagination Bar */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-line-200 px-6 py-3 bg-slate-50">
+          <div className="flex items-center justify-between border-t border-line-200 bg-slate-50 px-6 py-3">
             <span className="text-xs text-ink-500">
               Trang {page} / {totalPages}
             </span>

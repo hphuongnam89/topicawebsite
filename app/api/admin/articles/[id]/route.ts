@@ -6,6 +6,7 @@ import { isSameOrigin } from "@/lib/security/request";
 import { articleUpdateSchema } from "@/lib/validation/admin";
 import { updateArticleFromInput } from "@/lib/services/articles";
 import { getRevisions } from "@/lib/services/revisions";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -35,21 +36,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
     const parsed = articleUpdateSchema.safeParse(await request.json());
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
-    const current = getArticleById(articleId);
-    if (
-      current?.status === "published" ||
-      parsed.data.status === "published" ||
-      getRevisions("article", String(articleId)).length
-    )
-      return NextResponse.json(
-        { error: "Tạo bản nháp revision để chỉnh sửa nội dung đã công bố" },
-        { status: 409 },
-      );
     const updated = updateArticleFromInput(articleId, parsed.data);
 
     if (!updated) {
       return NextResponse.json({ error: "Không tìm thấy bài viết để cập nhật." }, { status: 404 });
     }
+    recordAdminAudit(auth.user, "update", "article", String(articleId), Object.keys(parsed.data));
 
     revalidatePath("/");
     revalidatePath("/tin-tuc");
@@ -84,6 +76,7 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
   if (!success) {
     return NextResponse.json({ error: "Không tìm thấy bài viết để xóa." }, { status: 404 });
   }
+  recordAdminAudit(auth.user, "delete", "article", String(id), ["record"]);
 
   revalidatePath("/");
   revalidatePath("/tin-tuc");

@@ -1,5 +1,0 @@
-
-> topica-edu@0.1.0 typecheck
-> tsc --noEmit
-
-scripts/qa-workspace.ts(88,3): error TS2741: Property 'NODE_ENV' is missing in type '{ [k: string]: string | undefined; }' but required in type 'ProcessEnv'.

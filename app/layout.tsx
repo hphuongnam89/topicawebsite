@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import { env } from "@/lib/env";
+import { getSetting } from "@/lib/db";
 
 const beVietnamPro = localFont({
   src: [
@@ -24,7 +25,7 @@ const lora = localFont({
   variable: "--font-lora",
 });
 
-export const metadata: Metadata = {
+const DEFAULT_METADATA: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
   alternates: {
     canonical: "/",
@@ -72,6 +73,19 @@ export const metadata: Metadata = {
     },
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = getSetting<{ siteTitle?: string; siteDescription?: string }>("site_settings", {});
+  const title = settings.siteTitle?.trim() || DEFAULT_METADATA.title;
+  const description = settings.siteDescription?.trim() || DEFAULT_METADATA.description || "";
+  return {
+    ...DEFAULT_METADATA,
+    title: { default: title as string, template: "%s | Topica" },
+    description,
+    openGraph: { ...DEFAULT_METADATA.openGraph, title: title as string, description },
+    twitter: { ...DEFAULT_METADATA.twitter, title: title as string, description },
+  };
+}
 
 export default function RootLayout({
   children,

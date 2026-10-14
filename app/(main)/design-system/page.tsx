@@ -34,7 +34,7 @@ import { CheckCircle2, Award, BookOpen, Clock, ShieldCheck, Mail, User } from "l
 
 export default function DesignSystemPage() {
   return (
-    <main className="min-h-screen bg-canvas pb-24 font-sans text-ink-800">
+    <div className="min-h-screen bg-canvas pb-24 font-sans text-ink-800">
       {/* Hero Header */}
       <div className="border-b border-line-200 bg-surface-subtle py-12 lg:py-16">
         <Container>
@@ -407,6 +407,6 @@ export default function DesignSystemPage() {
           </div>
         </section>
       </Container>
-    </main>
+    </div>
   );
 }

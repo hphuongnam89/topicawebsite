@@ -22,6 +22,7 @@ interface HeroData {
   title: string;
   description: string;
   bgImage: string;
+  videoUrl?: string;
   ctaPrimaryText: string;
   ctaPrimaryLink: string;
   ctaSecondaryText: string;
@@ -47,6 +48,7 @@ const DEFAULT_HERO: HeroData = {
   title: "HỌC CHỦ ĐỘNG —\nKIẾN TẠO TƯƠNG LAI",
   description: "Chương trình đào tạo từ xa chất lượng cao, linh hoạt thời gian, được Bộ GD&ĐT công nhận.",
   bgImage: "https://topicauni.edu.vn/wp-content/uploads/2026/06/gen-h-z7974881374708_9928c332948e9dc73c1de5527deb67d3.jpg",
+  videoUrl: "",
   ctaPrimaryText: "Đăng ký xét tuyển",
   ctaPrimaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
   ctaSecondaryText: "Xem ngành học",
@@ -63,36 +65,7 @@ const DEFAULT_TRUST: TrustItem[] = [
   { label: "Thành viên EQuest" },
 ];
 
-const DEFAULT_TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: "t1",
-    name: "Nguyễn Văn A",
-    role: "Cựu sinh viên",
-    quote: "Chương trình đào tạo tại Topica rất thực tiễn, giúp tôi tự tin áp dụng vào công việc ngay sau khi tốt nghiệp.",
-    program: "Công nghệ thông tin - chuyên ngành Đồ hoạ kỹ thuật số",
-  },
-  {
-    id: "t2",
-    name: "Trần Thị B",
-    role: "Sinh viên năm 3",
-    quote: "Đội ngũ giảng viên nhiệt tình và luôn hỗ trợ sinh viên trong suốt quá trình học tập.",
-    program: "Quản trị kinh doanh",
-  },
-  {
-    id: "t3",
-    name: "Lê Văn C",
-    role: "Trưởng phòng Marketing",
-    quote: "Môi trường học tập trực tuyến linh hoạt đã giúp tôi cân bằng giữa công việc và việc học.",
-    program: "Ngôn ngữ Anh",
-  },
-  {
-    id: "t4",
-    name: "Phạm Thị D",
-    role: "Chuyên viên Du lịch",
-    quote: "Kiến thức từ chương trình đã mở ra nhiều cơ hội phát triển nghề nghiệp cho tôi trong lĩnh vực lữ hành.",
-    program: "Quản trị du lịch và lữ hành",
-  },
-];
+const DEFAULT_TESTIMONIALS: TestimonialItem[] = [];
 
 export default function AdminHomepageManager() {
   const [activeTab, setActiveTab] = useState<"hero" | "trust" | "testimonials">("hero");
@@ -105,6 +78,7 @@ export default function AdminHomepageManager() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const fetchHomepageData = async () => {
     try {
@@ -183,6 +157,28 @@ export default function AdminHomepageManager() {
       setMessage({ type: "error", text: err.message || "Lỗi tải ảnh lên." });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessage(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Tải video thất bại.");
+      setHero((prev) => ({ ...prev, videoUrl: data.url }));
+      setMessage({ type: "success", text: "Đã tải video giới thiệu lên. Hãy lưu cấu hình để áp dụng." });
+    } catch (err: any) {
+      setMessage({ type: "error", text: err.message || "Lỗi tải video lên." });
+    } finally {
+      setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -297,7 +293,18 @@ export default function AdminHomepageManager() {
 
             <div className="relative overflow-hidden rounded-xl border border-slate-700 bg-slate-950 text-white min-h-[340px] p-6 lg:p-10 flex items-center">
               <div className="absolute inset-0 z-0">
-                {hero.bgImage ? (
+                {hero.videoUrl ? (
+                  <video
+                    src={hero.videoUrl}
+                    poster={hero.bgImage || undefined}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    className="h-full w-full object-cover object-center"
+                  />
+                ) : hero.bgImage ? (
                   <img
                     src={hero.bgImage}
                     alt="Banner preview"
@@ -488,6 +495,37 @@ export default function AdminHomepageManager() {
                 </div>
               </div>
 
+              <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs space-y-4">
+                <h3 className="font-display text-base font-bold text-ink-950 border-b border-line-100 pb-3 flex items-center gap-2">
+                  <Upload className="h-4 w-4 text-brand-700" />
+                  <span>Video giới thiệu trường</span>
+                </h3>
+                {hero.videoUrl ? (
+                  <video src={hero.videoUrl} poster={hero.bgImage || undefined} controls muted playsInline preload="metadata" className="aspect-video w-full rounded-lg border border-line-200 bg-slate-950 object-contain" />
+                ) : (
+                  <p className="rounded-lg bg-paper p-3 text-xs leading-5 text-ink-600">
+                    Chưa có video. Khi thêm video, ảnh banner hiện tại sẽ làm ảnh dự phòng và poster.
+                  </p>
+                )}
+                <input type="file" ref={videoInputRef} onChange={handleVideoUpload} accept="video/mp4,video/webm,.mp4,.webm" className="hidden" />
+                <button type="button" onClick={() => videoInputRef.current?.click()} disabled={uploading} className="flex w-full items-center justify-center gap-2 rounded-lg border border-line-200 bg-paper py-2.5 text-body-sm font-semibold text-ink-800 hover:bg-slate-100 transition-colors disabled:opacity-60">
+                  {uploading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                  <span>{uploading ? "Đang tải lên..." : hero.videoUrl ? "Thay video giới thiệu" : "Tải video giới thiệu"}</span>
+                </button>
+                {hero.videoUrl && (
+                  <button type="button" onClick={() => setHero((prev) => ({ ...prev, videoUrl: "" }))} className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50">
+                    <Trash2 className="h-4 w-4" /> Gỡ video, dùng ảnh banner
+                  </button>
+                )}
+                <label className="block text-xs leading-5 text-ink-500">
+                  Hoặc nhập URL video MP4/WebM (tối đa 25 MB khi tải lên)
+                  <input type="url" value={hero.videoUrl || ""} onChange={(e) => setHero({ ...hero, videoUrl: e.target.value })} placeholder="https://.../gioi-thieu.mp4" className="mt-1 h-9 w-full rounded-lg border border-line-200 bg-white px-3 text-xs text-ink-950 focus:border-brand-600 focus:outline-none" />
+                </label>
+                <p className="text-xs leading-5 text-ink-500">
+                  Hero phát video tự động ở chế độ tắt tiếng; ảnh banner vẫn hiện khi thiết bị giảm chuyển động. Bấm “Lưu cấu hình” để áp dụng.
+                </p>
+              </div>
+
               {/* Form Toggle */}
               <div className="rounded-xl border border-line-200 bg-white p-6 shadow-xs">
                 <label className="flex items-center gap-3 cursor-pointer">
@@ -502,7 +540,7 @@ export default function AdminHomepageManager() {
                       Hiển thị Form Tư vấn
                     </span>
                     <p className="text-xs text-ink-500">
-                      Form xuất hiện trực tiếp bên cạnh Hero Banner.
+                      Form xuất hiện sau thông tin ngành và lộ trình tuyển sinh, không nằm trong Hero.
                     </p>
                   </div>
                 </label>

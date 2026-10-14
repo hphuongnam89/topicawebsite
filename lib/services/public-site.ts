@@ -1,5 +1,5 @@
 import "server-only";
-import { getDb } from "@/lib/db";
+import { getDb, getSetting } from "@/lib/db";
 import { programs, PROGRAM_ID_MAP, type Program } from "@/data/programs";
 import { getProgramDetail, type ProgramDetail } from "@/data/program-details";
 import {
@@ -19,15 +19,27 @@ import {
 
 export function hasManagedContent(type: EntityType, id?: string): boolean {
   const db = getDb();
-  const base = id
-    ? db.prepare(`SELECT 1 FROM ${entityTables[type]} WHERE id=?`).get(id)
-    : db.prepare(`SELECT 1 FROM ${entityTables[type]} LIMIT 1`).get();
-  const revision = id
-    ? db
-        .prepare("SELECT 1 FROM content_revisions WHERE entity_type=? AND entity_id=? LIMIT 1")
-        .get(type, id)
-    : db.prepare("SELECT 1 FROM content_revisions WHERE entity_type=? LIMIT 1").get(type);
-  return Boolean(base || revision);
+  // A draft/review revision is editorial state and must not hide an existing
+  // public fallback. Only an effective publication or an explicit archive
+  // suppresses the legacy/static consumer when no public row is available.
+  const params = id ? [type, id] : [type];
+  const where = id ? "entity_type=? AND entity_id=?" : "entity_type=?";
+  const revision = db
+    .prepare(
+      `SELECT workflow_state, published_at, expired_at
+       FROM content_revisions
+       WHERE ${where}
+       ORDER BY version DESC, id DESC LIMIT 1`,
+    )
+    .get(...params) as
+    | { workflow_state: string; published_at: string | null; expired_at: string | null }
+    | undefined;
+  if (!revision) return false;
+  if (revision.workflow_state === "archived" && revision.published_at) return true;
+  if (revision.workflow_state !== "published" || !revision.published_at) return false;
+  const now = Date.now();
+  return Date.parse(revision.published_at) <= now &&
+    (!revision.expired_at || Date.parse(revision.expired_at) > now);
 }
 
 export function getLivePrograms(): Program[] {
@@ -124,27 +136,59 @@ export function getLiveTuitionPrograms(): readonly ProgramTuition[] {
 }
 
 export function getLiveScholarships(): readonly ScholarshipPolicy[] {
-  if (!hasManagedContent("scholarship")) return SCHOLARSHIPS;
-  return getPublicScholarships().map((row) => ({
-    id: row.id,
-    title: row.name,
-    percentage:
-      row.valueType === "percent"
-        ? `${row.value}%`
-        : new Intl.NumberFormat("vi-VN").format(row.value) + " đ",
-    percentageValue: row.valueType === "percent" ? row.value / 100 : 0,
-    scope: "full_course",
-    description: row.scope,
-    criteria: row.conditions,
-    source: row.evaluationMethod,
-  }));
+  const published = getPublicScholarships();
+  if (!published.length) return SCHOLARSHIPS;
+  return published.map((row) => {
+    const isPercent = row.valueType === "percent";
+    const value = Number(row.value);
+    return {
+      id: row.id,
+      title: row.name,
+      percentage: isPercent
+        ? `${value}%`
+        : `${new Intl.NumberFormat("vi-VN").format(value)} đ`,
+      percentageValue: isPercent ? value / 100 : 0,
+      scope: row.scope === "first_year" ? "first_year" : "full_course",
+      tag: "Học bổng Topica",
+      description: row.conditions,
+      criteria: row.evaluationMethod,
+      source: "CMS publication",
+    } satisfies ScholarshipPolicy;
+  });
 }
 
 export type ContactChannels = Record<keyof typeof contactChannels, ContactChannel>;
 export function getLiveContact(): { channels: ContactChannels; locations: typeof campuses } {
   const org = getPublicOrganization();
-  if (!org && !hasManagedContent("organization"))
-    return { channels: contactChannels, locations: campuses };
+  const settings = getSetting<Partial<{
+    hotline: string;
+    email: string;
+    address: string;
+  }>>("site_settings", {});
+  const hasConfiguredSettings = Object.keys(settings).length > 0;
+  if (!org && !hasManagedContent("organization")) {
+    const phone = settings.hotline?.trim() || contactChannels.admissionsHotline.value;
+    const email = settings.email?.trim() || contactChannels.admissionsEmail.value;
+    const address = settings.address?.trim();
+    return {
+      channels: {
+        ...contactChannels,
+        admissionsHotline: {
+          ...contactChannels.admissionsHotline,
+          value: phone,
+          href: `tel:${phone.replace(/[^+\d]/g, "")}`,
+        },
+        admissionsEmail: {
+          ...contactChannels.admissionsEmail,
+          value: email,
+          href: `mailto:${email}`,
+        },
+      },
+      locations: address
+        ? [{ ...campuses[0], address, city: campuses[0]?.city ?? "" }, ...campuses.slice(1)]
+        : campuses,
+    };
+  }
   const phone = (value: string, label: string): ContactChannel => ({
     label,
     value,
@@ -174,6 +218,28 @@ export function getLiveContact(): { channels: ContactChannels; locations: typeof
       locations: [],
     };
   }
+  if (hasConfiguredSettings) {
+    const hotline = settings.hotline?.trim() || org.hotline;
+    const phone = settings.hotline?.trim() || org.phone;
+    const email = settings.email?.trim() || org.email;
+    const locations = settings.address?.trim()
+      ? [{ ...org.locations[0], address: settings.address.trim() }, ...org.locations.slice(1)]
+      : org.locations;
+    return {
+      channels: {
+        admissionsHotline: {
+          label: "Hotline tư vấn",
+          value: hotline,
+          href: `tel:${hotline.replace(/[^+\d]/g, "")}`,
+          role: "admissions",
+        },
+        admissionsDirect: phoneChannel(phone, "Điện thoại liên hệ"),
+        admissionsEmail: mailChannel(email),
+        generalEmail: mailChannel(email),
+      },
+      locations: locations.map((row) => ({ city: row.city, address: row.address, phone: row.hotline })),
+    };
+  }
   return {
     channels: {
       admissionsHotline: phone(org.hotline, "Hotline tư vấn"),
@@ -187,4 +253,12 @@ export function getLiveContact(): { channels: ContactChannels; locations: typeof
       phone: row.hotline,
     })),
   };
+}
+
+function phoneChannel(value: string, label: string): ContactChannel {
+  return { label, value, href: `tel:${value.replace(/[^+\d]/g, "")}`, role: "admissions" };
+}
+
+function mailChannel(value: string): ContactChannel {
+  return { label: "Email liên hệ", value, href: `mailto:${value}`, role: "general" };
 }

@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth/guards";
 import { getArticles } from "@/lib/db";
+import { getRevisionOnlyArticles } from "@/lib/services/admin-content";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
 import { articleCreateSchema } from "@/lib/validation/admin";
 import { createArticleFromInput } from "@/lib/services/articles";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 export async function GET(request: Request) {
   const auth = await requireUser();
@@ -18,14 +20,17 @@ export async function GET(request: Request) {
   const page = Math.max(1, Number(searchParams.get("page") || 1));
   const limit = Math.min(50, Math.max(1, Number(searchParams.get("limit") || 20)));
   const offset = (page - 1) * limit;
-
-  const result = getArticles({ search, categoryId, status, limit, offset });
+  const legacy = getArticles({ search, categoryId, status, limit: 10000, offset: 0 });
+  const articles = [...legacy.items, ...getRevisionOnlyArticles({ search, categoryId, status })].sort(
+    (left, right) => String(right.updated_at ?? right.published_at).localeCompare(String(left.updated_at ?? left.published_at)),
+  );
+  const total = articles.length;
 
   return NextResponse.json({
-    articles: result.items,
-    total: result.total,
+    articles: articles.slice(offset, offset + limit),
+    total,
     page,
-    totalPages: Math.ceil(result.total / limit),
+    totalPages: Math.ceil(total / limit),
   });
 }
 
@@ -40,13 +45,12 @@ export async function POST(request: Request) {
     const parsed = articleCreateSchema.safeParse(await request.json());
     if (!parsed.success)
       return NextResponse.json({ error: "Dữ liệu bài viết không hợp lệ." }, { status: 422 });
-    if (parsed.data.status === "published")
-      return NextResponse.json(
-        { error: "Lưu nháp rồi gửi duyệt tại mục Nội dung & phê duyệt" },
-        { status: 422 },
-      );
-    parsed.data.status = "draft";
     const created = createArticleFromInput(parsed.data, user.name);
+    recordAdminAudit(user, "create", "article", String(created.id), [
+      "title",
+      "slug",
+      "content_html",
+    ]);
 
     revalidatePath("/");
     revalidatePath("/tin-tuc");

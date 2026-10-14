@@ -42,7 +42,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
           status: (article.status as "published" | "draft") || "published",
           seo_title: article.seo_title || "",
           seo_description: article.seo_description || "",
-          published_at: article.published_at,
+          published_at: article.published_at || new Date().toISOString(),
         }}
       />
     </div>

@@ -15,7 +15,7 @@ export const articleCreateSchema = z.object({
   status: z.enum(["draft", "published"]).optional(),
   seo_title: optionalText(240),
   seo_description: optionalText(500),
-  published_at: z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Ngày đăng không hợp lệ").optional(),
+  published_at: z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Ngày đăng không hợp lệ").nullable().optional(),
 }).strict();
 
 export const articleUpdateSchema = articleCreateSchema.partial();

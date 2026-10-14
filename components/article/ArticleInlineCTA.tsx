@@ -19,11 +19,11 @@ export function ArticleInlineCTA({ className }: ArticleInlineCTAProps) {
       <p className="mb-6 text-body text-ink-800">
         Đăng ký nhận tư vấn miễn phí từ chuyên viên tuyển sinh Topica.
       </p>
-      <div className="flex flex-wrap items-center gap-4">
-        <ButtonLink href="/dang-ky" variant="primary">
+      <div className="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+        <ButtonLink href="/dang-ky" variant="primary" className="w-full justify-center">
           Nhận tư vấn
         </ButtonLink>
-        <ButtonLink href="/nganh-dao-tao" variant="secondary">
+        <ButtonLink href="/nganh-dao-tao" variant="secondary" className="w-full justify-center">
           Xem ngành đào tạo
         </ButtonLink>
       </div>

@@ -36,6 +36,7 @@ export function updateArticleFromInput(
 ): ArticleRecord | null {
   return updateArticle(id, {
     ...input,
+    published_at: input.published_at ?? undefined,
     content_html:
       input.content_html === undefined ? undefined : sanitizeWordPressHtml(input.content_html),
     tags: input.tags === undefined ? undefined : serializeTags(input.tags),

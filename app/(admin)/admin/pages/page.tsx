@@ -14,13 +14,14 @@ import {
 } from "lucide-react";
 
 interface PageItem {
-  id: number;
+  id: number | string;
   title: string;
   slug: string;
   excerpt: string | null;
   featured_image: string | null;
   status: string;
   published_at: string;
+  source?: "legacy" | "revision";
 }
 
 export default function AdminPagesPage() {
@@ -50,7 +51,11 @@ export default function AdminPagesPage() {
   }, []);
 
   const handleDelete = async (id: number, title: string) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa trang "${title}"? Hành động này không thể hoàn tác.`)) {
+    if (
+      !window.confirm(
+        `Bạn có chắc chắn muốn xóa trang "${title}"? Hành động này không thể hoàn tác.`,
+      )
+    ) {
       return;
     }
     setDeletingId(id);
@@ -71,23 +76,25 @@ export default function AdminPagesPage() {
     }
   };
 
-  const filteredPages = pages.filter(p => p.title.toLowerCase().includes(search.toLowerCase()) || p.slug.toLowerCase().includes(search.toLowerCase()));
+  const filteredPages = pages.filter(
+    (p) =>
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      p.slug.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+    <div className="mx-auto max-w-7xl space-y-8 p-6 lg:p-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-ink-950 sm:text-3xl">
             Quản lý Trang (Pages)
           </h1>
-          <p className="mt-1 text-body-sm text-ink-500">
-            {pages.length} trang tĩnh trên hệ thống
-          </p>
+          <p className="mt-1 text-body-sm text-ink-500">{pages.length} trang tĩnh trên hệ thống</p>
         </div>
         <Link
-          href="/admin/pages/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm hover:bg-brand-800 transition-all"
+          href="/admin/content?entityType=page"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-body-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-800"
         >
           <PlusCircle className="h-4 w-4" />
           <span>Thêm trang mới</span>
@@ -97,13 +104,13 @@ export default function AdminPagesPage() {
       {/* Filters */}
       <div className="rounded-xl border border-line-200 bg-white p-4 shadow-xs">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-400" />
+          <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-ink-400" />
           <input
             type="text"
             placeholder="Tìm kiếm theo tên trang, slug..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-10 w-full rounded-lg border border-line-200 bg-white pl-10 pr-4 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-line-200 bg-white pr-4 pl-10 text-body-sm text-ink-950 focus:border-brand-600 focus:outline-none"
           />
         </div>
       </div>
@@ -112,12 +119,14 @@ export default function AdminPagesPage() {
       <div className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-body-sm">
-            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold uppercase text-ink-500">
+            <thead className="border-b border-line-200 bg-slate-50 text-xs font-semibold text-ink-500 uppercase">
               <tr>
                 <th className="px-6 py-3.5">Tiêu đề</th>
                 <th className="px-4 py-3.5">Trạng thái</th>
-                <th className="px-4 py-3.5 hidden sm:table-cell">Ngày đăng</th>
-                <th className="px-6 py-3.5 text-right sticky right-0 bg-slate-50 z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">Thao tác</th>
+                <th className="hidden px-4 py-3.5 sm:table-cell">Ngày đăng</th>
+                <th className="sticky right-0 z-10 bg-slate-50 px-6 py-3.5 text-right shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                  Thao tác
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line-100">
@@ -138,17 +147,17 @@ export default function AdminPagesPage() {
                 </tr>
               ) : (
                 filteredPages.map((page) => (
-                  <tr key={page.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={`${page.source ?? "legacy"}-${page.id}`} className="transition-colors hover:bg-slate-50/70">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="min-w-0 max-w-md">
+                        <div className="max-w-md min-w-0">
                           <Link
-                            href={`/admin/pages/${page.id}/edit`}
-                            className="font-semibold text-ink-950 hover:text-brand-700 line-clamp-1 transition-colors"
+                            href={`/admin/content?entityType=page&entityId=${page.id}`}
+                            className="line-clamp-1 font-semibold text-ink-950 transition-colors hover:text-brand-700"
                           >
                             {page.title}
                           </Link>
-                          <p className="text-xs text-ink-400 truncate mt-0.5">/{page.slug}</p>
+                          <p className="mt-0.5 truncate text-xs text-ink-400">/{page.slug}</p>
                         </div>
                       </div>
                     </td>
@@ -165,36 +174,38 @@ export default function AdminPagesPage() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-ink-500 hidden sm:table-cell">
+                    <td className="hidden px-4 py-4 text-xs whitespace-nowrap text-ink-500 sm:table-cell">
                       {new Date(page.published_at).toLocaleDateString("vi-VN")}
                     </td>
 
-                    <td className="px-6 py-4 whitespace-nowrap text-right sticky right-0 bg-white z-10 shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
+                    <td className="sticky right-0 z-10 bg-white px-6 py-4 text-right whitespace-nowrap shadow-[-12px_0_15px_-3px_rgba(0,0,0,0.05)]">
                       <div className="flex items-center justify-end gap-2">
                         <a
                           href={`/${page.slug}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-slate-100 hover:text-brand-700 transition-colors"
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-100 hover:text-brand-700"
                           title="Xem trên web"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
                         <Link
-                          href={`/admin/pages/${page.id}/edit`}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-slate-100 hover:text-brand-700 transition-colors"
+                          href={`/admin/content?entityType=page&entityId=${page.id}`}
+                          className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-slate-100 hover:text-brand-700"
                           title="Chỉnh sửa"
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
-                        <button
-                          onClick={() => handleDelete(page.id, page.title)}
-                          disabled={deletingId === page.id}
-                          className="rounded-md p-1.5 text-ink-600 hover:bg-red-50 hover:text-error transition-colors"
-                          title="Xóa trang"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {page.source !== "revision" && typeof page.id === "number" && (
+                          <button
+                            onClick={() => handleDelete(Number(page.id), page.title)}
+                            disabled={deletingId === page.id}
+                            className="rounded-md p-1.5 text-ink-600 transition-colors hover:bg-red-50 hover:text-error"
+                            title="Xóa trang"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

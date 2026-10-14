@@ -56,7 +56,7 @@ export default function Home() {
       <TrustSection data={trustData} />
       <WhyTopicaSection />
       <AdmissionTimeline />
-      {!heroData?.showLeadForm && (
+      {heroData?.showLeadForm && (
         <section
           id="tu-van"
           aria-label="Nhận tư vấn tuyển sinh"
@@ -70,7 +70,7 @@ export default function Home() {
               <h2 className="mt-3 font-display text-h2 font-bold text-navy-950">
                 Cùng tìm lộ trình phù hợp
               </h2>
-              <p className="mt-4 text-body-lg text-ink-700 leading-relaxed">
+              <p className="mt-4 text-body-lg leading-relaxed text-ink-700">
                 Bạn có thể nhận tư vấn khi chưa quyết định ngành học. Để lại thông tin liên hệ và
                 những điều bạn muốn tìm hiểu.
               </p>

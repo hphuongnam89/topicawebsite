@@ -174,7 +174,7 @@ function renderArticle(article: Article) {
   );
 
   return (
-    <main className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas">
       <JsonLd data={articleJsonLd} />
 
       <ArticleLayout
@@ -236,7 +236,7 @@ function renderArticle(article: Article) {
 
         <RelatedArticles articleSlug={article.slug} articleId={article.id} />
       </ArticleLayout>
-    </main>
+    </div>
   );
 }
 
@@ -249,7 +249,7 @@ async function renderCategory(category: Category, page: number) {
   const articles = result?.articles || [];
 
   return (
-    <main className="min-h-screen bg-canvas pb-24">
+    <div className="min-h-screen bg-canvas pb-24">
       <PageHeader
         title={category.title}
         subtitle={category.description || `Các bài viết thuộc chuyên mục ${category.title}`}
@@ -274,7 +274,7 @@ async function renderCategory(category: Category, page: number) {
           </div>
         )}
       </Container>
-    </main>
+    </div>
   );
 }
 

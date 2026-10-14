@@ -166,19 +166,19 @@ export function Header({
           >
             <div
               className={cn(
-                "flex items-center justify-center rounded-lg bg-gold-500 p-2 transition-all duration-[var(--duration-slow)]",
-                scrolled ? "h-12" : "h-14",
+                "flex items-center justify-center transition-all duration-[var(--duration-slow)]",
+                scrolled ? "h-12 w-32" : "h-14 w-36 sm:w-40",
               )}
             >
               <Image
-                src="/topica-logo.png"
+                src="/topica-logo-transparent.png"
                 alt="Viện Đào tạo Quốc tế Topica"
-                width={180}
-                height={60}
+                width={768}
+                height={358}
                 priority
                 className={cn(
-                  "h-auto w-auto object-contain transition-all duration-[var(--duration-slow)]",
-                  scrolled ? "max-h-8" : "max-h-10",
+                  "h-auto w-full object-contain transition-all duration-[var(--duration-slow)]",
+                  scrolled ? "max-h-14" : "max-h-16",
                 )}
               />
             </div>

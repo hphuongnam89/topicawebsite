@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getLeads, getArticles, getCategories, getAnalyticsStats } from "@/lib/db";
+import { getReviewQueueCount } from "@/lib/services/revisions";
+import { getCmsOperationsHealth } from "@/lib/services/cms-models";
 import { redirect } from "next/navigation";
 import {
   Users,
@@ -14,28 +16,40 @@ import {
   AlertCircle,
   PlusCircle,
   BarChart,
+  ClipboardCheck,
 } from "lucide-react";
 
-export default async function AdminDashboardPage() {
+type DashboardSearchParams = { range?: string | string[] };
+
+export default async function AdminDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<DashboardSearchParams>;
+}) {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/admin/login");
   }
 
   if (user.role !== "admin") redirect("/admin/content");
+  const params = await searchParams;
+  const requestedRange = Array.isArray(params.range) ? params.range[0] : params.range;
+  const range = [7, 30, 90].includes(Number(requestedRange)) ? Number(requestedRange) : 7;
   const totalLeads = getLeads().total;
   const { items: recentLeads } = getLeads({ limit: 5 });
   const { items: recentArticles, total: totalArticles } = getArticles({ limit: 5 });
   const categories = getCategories();
 
   const newLeadsCount = getLeads({ status: "new" }).total;
-  const analytics = getAnalyticsStats(7); // Last 7 days
+  const reviewQueueCount = getReviewQueueCount();
+  const analytics = getAnalyticsStats(range);
+  const cmsHealth = getCmsOperationsHealth();
 
   const statCards = [
     {
       title: "Lượt truy cập",
       value: analytics.totalViews,
-      total: "Trong 7 ngày qua",
+      total: `Trong ${range} ngày qua`,
       icon: BarChart,
       color: "bg-indigo-600 text-white",
       href: "/admin", // No specific page for analytics yet
@@ -75,8 +89,8 @@ export default async function AdminDashboardPage() {
             Bảng điều khiển Quản trị
           </h1>
           <p className="mt-1 text-body-sm text-ink-500">
-            Xin chào, <span className="font-semibold text-navy-900">{user.name}</span>. Chúc bạn
-            một ngày làm việc hiệu quả!
+            Xin chào, <span className="font-semibold text-navy-900">{user.name}</span>. Chúc bạn một
+            ngày làm việc hiệu quả!
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -96,6 +110,198 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      <section
+        aria-labelledby="admin-work-queue"
+        className="rounded-xl border border-line-200 bg-white p-5 shadow-xs sm:p-6"
+      >
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.12em] text-gold-700 uppercase">
+              Điều phối hôm nay
+            </p>
+            <h2 id="admin-work-queue" className="mt-1 font-display text-xl font-bold text-navy-950">
+              Việc cần xử lý
+            </h2>
+          </div>
+          <p className="text-sm text-ink-500">
+            Số liệu lấy trực tiếp từ nội dung và yêu cầu tư vấn hiện có.
+          </p>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/admin/content"
+            className="group flex min-h-20 items-center justify-between rounded-lg border border-line-200 bg-paper/70 px-4 py-3 transition-colors hover:border-gold-500 hover:bg-gold-50"
+          >
+            <span className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-900 text-gold-300">
+                <ClipboardCheck className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-ink-900">Nội dung chờ duyệt</span>
+                <span className="block text-xs text-ink-500">Mở quy trình phê duyệt</span>
+              </span>
+            </span>
+            <span className="font-display text-2xl font-bold text-navy-950">
+              {reviewQueueCount}
+            </span>
+          </Link>
+          <Link
+            href="/admin/leads"
+            className="group flex min-h-20 items-center justify-between rounded-lg border border-line-200 bg-paper/70 px-4 py-3 transition-colors hover:border-gold-500 hover:bg-gold-50"
+          >
+            <span className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold-100 text-gold-800">
+                <Users className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-ink-900">Yêu cầu tư vấn mới</span>
+                <span className="block text-xs text-ink-500">Mở danh sách lead</span>
+              </span>
+            </span>
+            <span className="font-display text-2xl font-bold text-navy-950">{newLeadsCount}</span>
+          </Link>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="cms-health-title"
+        className="rounded-xl border border-line-200 bg-white p-5 shadow-xs sm:p-6"
+      >
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.12em] text-gold-700 uppercase">
+              Chất lượng nội dung
+            </p>
+            <h2 id="cms-health-title" className="mt-1 font-display text-xl font-bold text-navy-950">
+              Rà soát trước khi công bố
+            </h2>
+          </div>
+          <Link href="/admin/content" className="text-sm font-semibold text-navy-900 underline">
+            Mở CMS
+          </Link>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/admin/content"
+            className="rounded-lg border border-line-200 bg-paper/70 p-4 transition-colors hover:border-gold-500"
+          >
+            <span className="text-sm font-semibold text-ink-900">Thiếu nguồn xác minh</span>
+            <span className="mt-1 block font-display text-2xl font-bold text-navy-950">
+              {cmsHealth.missingSource}
+            </span>
+            <span className="text-xs text-ink-500">
+              Trong dữ liệu ngành, tuyển sinh, học phí, học bổng, tài liệu
+            </span>
+          </Link>
+          <Link
+            href="/admin/content?entityType=document"
+            className="rounded-lg border border-line-200 bg-paper/70 p-4 transition-colors hover:border-gold-500"
+          >
+            <span className="text-sm font-semibold text-ink-900">Tài liệu thiếu tệp</span>
+            <span className="mt-1 block font-display text-2xl font-bold text-navy-950">
+              {cmsHealth.missingDocumentFiles}
+            </span>
+            <span className="text-xs text-ink-500">Thiếu đường dẫn xem hoặc tải</span>
+          </Link>
+        </div>
+        {(cmsHealth.sourceGaps.some((item) => item.count > 0) ||
+          cmsHealth.missingDocumentItems.length > 0) && (
+          <div className="mt-4 grid gap-4 border-t border-line-200 pt-4 md:grid-cols-2">
+            {cmsHealth.sourceGaps.some((item) => item.count > 0) && (
+              <div>
+                <h3 className="text-sm font-semibold text-ink-900">Thiếu nguồn theo nhóm</h3>
+                <ul className="mt-2 space-y-1.5">
+                  {cmsHealth.sourceGaps
+                    .filter((item) => item.count > 0)
+                    .map((item) => (
+                      <li key={item.entityType}>
+                        <Link
+                          href={`/admin/content?entityType=${item.entityType}`}
+                          className="flex justify-between gap-3 text-sm text-navy-900 underline underline-offset-2"
+                        >
+                          <span>{item.label}</span>
+                          <span>{item.count}</span>
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+            {cmsHealth.missingDocumentItems.length > 0 && (
+              <div>
+                <h3 className="text-sm font-semibold text-ink-900">Tài liệu cần gắn tệp</h3>
+                <ul className="mt-2 space-y-1.5">
+                  {cmsHealth.missingDocumentItems.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        href={`/admin/content?entityType=document&entityId=${encodeURIComponent(item.id)}`}
+                        className="block truncate text-sm text-navy-900 underline underline-offset-2"
+                        title={item.title}
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="mt-5 border-t border-line-200 pt-4">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="font-semibold text-ink-900">Hạn hồ sơ / hiệu lực trong 30 ngày</h3>
+            <span className="text-sm text-ink-500">{cmsHealth.expiringCount} mục</span>
+          </div>
+          {cmsHealth.expiringItems.length ? (
+            <ul className="mt-2 divide-y divide-line-100">
+              {cmsHealth.expiringItems.map((item) => (
+                <li key={item.revisionId}>
+                  <Link
+                    href={`/admin/content?entityType=${encodeURIComponent(item.entityType)}&entityId=${encodeURIComponent(item.entityId)}`}
+                    className="flex flex-col gap-1 py-3 text-sm transition-colors hover:text-navy-700 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <span className="font-medium text-ink-900">{item.title}</span>
+                    <time dateTime={item.expiresAt} className="text-ink-600">
+                      {new Intl.DateTimeFormat("vi-VN", {
+                        timeZone: "Asia/Ho_Chi_Minh",
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      }).format(new Date(item.expiresAt))}
+                    </time>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-ink-500">Không có mốc hạn nào trong 30 ngày tới.</p>
+          )}
+        </div>
+      </section>
+
+      <section
+        aria-label="Khoảng thời gian thống kê"
+        className="flex flex-col gap-3 rounded-xl border border-line-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <h2 className="text-sm font-semibold text-ink-900">Lọc thống kê truy cập</h2>
+          <p className="text-xs text-ink-500">
+            Áp dụng cho tổng lượt xem và danh sách trang được xem nhiều.
+          </p>
+        </div>
+        <nav aria-label="Chọn khoảng thời gian" className="flex flex-wrap gap-2">
+          {[7, 30, 90].map((days) => (
+            <Link
+              key={days}
+              href={`/admin?range=${days}`}
+              aria-current={range === days ? "page" : undefined}
+              className={`inline-flex min-h-10 items-center justify-center rounded-lg border px-4 text-sm font-semibold transition-colors ${range === days ? "border-navy-900 bg-navy-900 text-white" : "border-line-200 bg-white text-navy-900 hover:border-gold-500 hover:bg-gold-50"}`}
+            >
+              {days} ngày
+            </Link>
+          ))}
+        </nav>
+      </section>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -247,7 +453,7 @@ export default async function AdminDashboardPage() {
           <div className="flex items-center gap-2">
             <BarChart className="h-5 w-5 text-indigo-600" />
             <h2 className="font-display text-lg font-bold text-ink-950">
-              Top Trang Xem Nhiều (7 ngày qua)
+              Trang được xem nhiều · {range} ngày qua
             </h2>
           </div>
         </div>

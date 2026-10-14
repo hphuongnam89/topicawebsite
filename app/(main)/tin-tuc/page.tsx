@@ -79,7 +79,7 @@ export default async function NewsHomepage({ searchParams }: Props) {
   const paginationBaseUrl = `/tin-tuc${paginationQuery ? `?${paginationQuery}` : ""}`;
 
   return (
-    <main className="min-h-screen bg-canvas pb-24">
+    <div className="min-h-screen bg-canvas pb-24">
       <PageHeader
         title="Tin tức & Sự kiện"
         subtitle="Cập nhật thông tin mới nhất về tuyển sinh, sự kiện và hoạt động đào tạo"
@@ -147,6 +147,6 @@ export default async function NewsHomepage({ searchParams }: Props) {
         )}
       </Container>
       <AdmissionCTA />
-    </main>
+    </div>
   );
 }

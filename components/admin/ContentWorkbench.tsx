@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { ContentRevisionRecord } from "@/lib/db/types";
+import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import {
   contentTypes,
   contentFields,
   fieldLabels,
   numberFields,
   jsonFields,
+  getEditableFieldValue,
   type ContentType,
 } from "./content-fields";
 const states: Record<string, string> = {
@@ -18,12 +20,344 @@ const states: Record<string, string> = {
 };
 const inputClass =
   "min-h-11 w-full rounded-md border border-line-200 bg-white px-3 py-2 text-ink-950 focus:outline-2 focus:outline-navy-700";
-export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
+const dateTimeFields = new Set([
+  "open_at",
+  "deadline_at",
+  "start_at",
+  "effective_from",
+  "effective_to",
+]);
+const dateOnlyFields = new Set(["published_date"]);
+function parseObject(value: string): Record<string, unknown> {
+  try {
+    const parsed: unknown = JSON.parse(value || "{}");
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function parseArray(value: string): Array<Record<string, unknown>> {
+  try {
+    const parsed: unknown = JSON.parse(value || "[]");
+    return Array.isArray(parsed)
+      ? parsed.filter(
+          (item): item is Record<string, unknown> =>
+            !!item && typeof item === "object" && !Array.isArray(item),
+        )
+      : [];
+  } catch {
+    return [];
+  }
+}
+function articleContentId(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[đĐ]/g, "d")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 240);
+}
+
+function RepeatableObjectEditor({
+  value,
+  onChange,
+  fields,
+  addLabel,
+  emptyItem,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  fields: Array<{ key: string; label: string; placeholder?: string }>;
+  addLabel: string;
+  emptyItem: Record<string, string>;
+}) {
+  const items = parseArray(value);
+  const update = (index: number, key: string, nextValue: string) => {
+    const next = items.map((item) => ({ ...item }));
+    next[index] = { ...next[index], [key]: nextValue };
+    onChange(JSON.stringify(next, null, 2));
+  };
+  return (
+    <div className="grid gap-3">
+      {items.map((item, index) => (
+        <fieldset
+          key={index}
+          className="grid gap-2 rounded-md border border-line-200 p-3 sm:grid-cols-2"
+        >
+          <legend className="px-1 text-xs font-semibold text-ink-600">Mục {index + 1}</legend>
+          {fields.map((field) => (
+            <label key={field.key} className="grid gap-1 text-sm">
+              {field.label}
+              <input
+                className={inputClass}
+                value={String(item[field.key] ?? "")}
+                placeholder={field.placeholder}
+                onChange={(event) => update(index, field.key, event.target.value)}
+              />
+            </label>
+          ))}
+          <button
+            type="button"
+            className="min-h-11 justify-self-start rounded-md border border-line-200 px-3 text-sm text-red-800 hover:bg-red-50 sm:col-span-2"
+            onClick={() =>
+              onChange(
+                JSON.stringify(
+                  items.filter((_, itemIndex) => itemIndex !== index),
+                  null,
+                  2,
+                ),
+              )
+            }
+          >
+            Xóa mục
+          </button>
+        </fieldset>
+      ))}
+      <button
+        type="button"
+        className="hover:bg-surface-50 min-h-11 justify-self-start rounded-md border border-line-200 px-3 text-sm font-medium"
+        onClick={() => onChange(JSON.stringify([...items, emptyItem], null, 2))}
+      >
+        + {addLabel}
+      </button>
+      <span className="text-xs text-ink-500">
+        Các thay đổi chỉ lưu vào bản nháp cho đến khi được duyệt và công bố.
+      </span>
+    </div>
+  );
+}
+
+function StringListEditor({
+  value,
+  onChange,
+  label,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  label: string;
+}) {
+  let items: unknown[] = [];
+  try {
+    const parsed: unknown = JSON.parse(value || "[]");
+    if (Array.isArray(parsed)) items = parsed;
+  } catch {
+    items = value ? value.split(/\r?\n/) : [];
+  }
+  return (
+    <div className="grid gap-2">
+      <textarea
+        rows={4}
+        className={inputClass}
+        value={items.map((item) => String(item ?? "")).join("\n")}
+        onChange={(event) =>
+          onChange(
+            JSON.stringify(
+              event.target.value
+                .split(/\r?\n/)
+                .map((item) => item.trim())
+                .filter(Boolean),
+            ),
+          )
+        }
+        aria-label={label}
+      />
+      <span className="text-xs text-ink-500">
+        Mỗi mục một dòng. Để trống để xóa toàn bộ danh sách.
+      </span>
+    </div>
+  );
+}
+
+function ScalarObjectEditor({
+  value,
+  onChange,
+  label,
+  numeric = false,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  label: string;
+  numeric?: boolean;
+}) {
+  const fields = Object.entries(parseObject(value));
+  const rows = fields.length ? fields : [["", ""] as [string, unknown]];
+  const update = (index: number, nextKey: string, nextValue: unknown) => {
+    const next = Object.fromEntries(fields);
+    const oldKey = rows[index]?.[0] ?? "";
+    const oldValue = rows[index]?.[1] ?? "";
+    if (oldKey) delete next[oldKey];
+    const key = nextKey.trim();
+    if (key && nextValue !== "") next[key] = nextValue;
+    else if (key && oldValue !== "") next[key] = oldValue;
+    onChange(JSON.stringify(next, null, 2));
+  };
+  return (
+    <div className="grid gap-2">
+      {rows.map(([key, rawValue], index) => (
+        <div
+          key={`${index}:${key}`}
+          className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+        >
+          <input
+            className={inputClass}
+            value={key}
+            placeholder={numeric ? "Mã khoản phí" : "Tên dịch vụ"}
+            aria-label={`${label} · tên mục ${index + 1}`}
+            onChange={(event) => update(index, event.target.value, rawValue)}
+          />
+          <input
+            className={inputClass}
+            type={numeric ? "number" : "url"}
+            min={numeric ? 0 : undefined}
+            value={String(rawValue ?? "")}
+            placeholder={numeric ? "Số tiền (VNĐ)" : "https://…"}
+            aria-label={`${label} · giá trị ${index + 1}`}
+            onChange={(event) =>
+              update(
+                index,
+                key,
+                numeric && event.target.value ? Number(event.target.value) : event.target.value,
+              )
+            }
+          />
+          <button
+            type="button"
+            className="min-h-11 rounded border border-line-200 px-3 text-sm text-ink-700 hover:bg-paper"
+            aria-label={`Xóa ${label} ${index + 1}`}
+            onClick={() => {
+              const next = Object.fromEntries(fields);
+              if (key) delete next[key];
+              onChange(JSON.stringify(next, null, 2));
+            }}
+          >
+            Xóa
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        className="min-h-10 justify-self-start rounded border border-line-200 px-3 text-sm font-semibold text-navy-900 hover:bg-paper"
+        onClick={() => {
+          const next = Object.fromEntries(fields);
+          let suffix = fields.length + 1;
+          let key = numeric ? `Khoản phí ${suffix}` : `Dịch vụ ${suffix}`;
+          while (Object.hasOwn(next, key)) key = `${numeric ? "Khoản phí" : "Dịch vụ"} ${++suffix}`;
+          next[key] = numeric ? 0 : "";
+          onChange(JSON.stringify(next, null, 2));
+        }}
+      >
+        + Thêm mục
+      </button>
+    </div>
+  );
+}
+
+function DurationEditor({ value, onChange }: { value: string; onChange: (next: string) => void }) {
+  const current = parseObject(value);
+  const update = (field: string, rawValue: string) => {
+    const next = { ...current };
+    if (!rawValue) delete next[field];
+    else next[field] = Number(rawValue);
+    onChange(JSON.stringify(next, null, 2));
+  };
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      {[
+        ["credits", "Tổng tín chỉ", true],
+        ["semesters", "Số học kỳ", true],
+        ["estimatedMonths", "Số tháng dự kiến", false],
+      ].map(([field, label, required]) => (
+        <label key={String(field)} className="grid gap-1 text-sm">
+          {String(label)}
+          <input
+            className={inputClass}
+            type="number"
+            min={1}
+            required={Boolean(required)}
+            value={String(current[String(field)] ?? "")}
+            onChange={(event) => update(String(field), event.target.value)}
+          />
+        </label>
+      ))}
+      {Array.isArray(current.tracks) && (
+        <p className="text-xs text-ink-500 sm:col-span-3">
+          Bản xem trước giữ nguyên {current.tracks.length} lộ trình đối tượng từ dữ liệu đã tải.
+          Chỉnh cấu hình lộ trình chi tiết trong trường JSON nâng cao.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function ServiceUrlsEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  const current = parseObject(value);
+  const fields = [
+    ["library", "Thư viện số"],
+    ["lms", "Cổng Elearning"],
+    ["assessment", "Hệ thống khảo thí"],
+    ["application", "Cổng xét tuyển"],
+    ["status", "Trang trạng thái"],
+  ];
+  return (
+    <div className="grid gap-2 sm:grid-cols-2">
+      {fields.map(([field, label]) => (
+        <label key={field} className="grid gap-1 text-sm">
+          {label}
+          <input
+            className={inputClass}
+            type="text"
+            value={String(current[field] ?? "")}
+            onChange={(event) =>
+              onChange(JSON.stringify({ ...current, [field]: event.target.value }, null, 2))
+            }
+          />
+        </label>
+      ))}
+    </div>
+  );
+}
+
+function toVietnamLocal(value: unknown) {
+  if (typeof value !== "string" || !value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Date(date.getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16);
+}
+function fromVietnamLocal(value: string) {
+  return value ? new Date(`${value}:00+07:00`).toISOString() : "";
+}
+export function ContentWorkbench({
+  isAdmin,
+  initialEntityType,
+  initialEntityId,
+  initialListType,
+  initialListState,
+}: {
+  isAdmin: boolean;
+  initialEntityType?: ContentType;
+  initialEntityId?: string;
+  initialListType?: ContentType;
+  initialListState?: string;
+}) {
   const [serverTime, setServerTime] = useState(0);
   const [rows, setRows] = useState<ContentRevisionRecord[]>([]),
-    [type, setType] = useState<ContentType>("program"),
-    [entityId, setEntityId] = useState(""),
+    [type, setType] = useState<ContentType>(initialEntityType ?? "program"),
+    [entityId, setEntityId] = useState(initialEntityId ?? ""),
     [title, setTitle] = useState("");
+  const [autoEntityId, setAutoEntityId] = useState(false),
+    [autoRevisionTitle, setAutoRevisionTitle] = useState(false),
+    [autoArticleSlug, setAutoArticleSlug] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({}),
     [base, setBase] = useState(0),
     [selected, setSelected] = useState<ContentRevisionRecord | null>(null);
@@ -35,6 +369,13 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
     [expireAt, setExpireAt] = useState(""),
     [highlight, setHighlight] = useState(""),
     [reason, setReason] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [listType, setListType] = useState(initialListType ?? "");
+  const [listState, setListState] = useState(initialListState ?? "");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -44,16 +385,32 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("topica:unsaved-changes", { detail: { dirty: false } }));
+    };
+  }, [dirty]);
   async function refresh() {
-    const res = await fetch("/api/admin/revisions", { cache: "no-store" });
+    const query = new URLSearchParams({ page: String(page), limit: "25" });
+    if (search) query.set("search", search);
+    if (listType) query.set("entityType", listType);
+    if (listState) query.set("workflowState", listState);
+    const res = await fetch(`/api/admin/revisions?${query}`, { cache: "no-store" });
     if (!res.ok) throw new Error("Không tải được danh sách bản sửa");
     const data = await res.json();
     setRows(data.revisions);
     setServerTime(data.serverTime);
+    setTotal(data.total);
+    setTotalPages(data.totalPages);
   }
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/admin/revisions", { cache: "no-store", signal: controller.signal })
+    const query = new URLSearchParams({ page: String(page), limit: "25" });
+    if (search) query.set("search", search);
+    if (listType) query.set("entityType", listType);
+    if (listState) query.set("workflowState", listState);
+    fetch(`/api/admin/revisions?${query}`, { cache: "no-store", signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("Không tải được danh sách bản sửa");
         return res.json();
@@ -61,12 +418,14 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
       .then((data) => {
         setRows(data.revisions);
         setServerTime(data.serverTime);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
       })
       .catch((error) => {
         if (!controller.signal.aborted) setError(String(error.message));
       });
     return () => controller.abort();
-  }, []);
+  }, [page, search, listType, listState]);
   function load(row: ContentRevisionRecord) {
     if (dirty) {
       setError("Hãy lưu bản nháp hoặc chọn Bỏ thay đổi trước khi chuyển bản sửa.");
@@ -74,6 +433,9 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
     }
     const payload = JSON.parse(row.payload);
     setType(row.entity_type);
+    setAutoEntityId(false);
+    setAutoRevisionTitle(false);
+    setAutoArticleSlug(false);
     setEntityId(row.entity_id);
     setTitle(row.title);
     setSelected(row);
@@ -90,7 +452,13 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
       Object.fromEntries(
         Object.entries(payload).map(([key, value]) => [
           key,
-          typeof value === "object" ? JSON.stringify(value, null, 2) : String(value ?? ""),
+          dateTimeFields.has(key)
+            ? toVietnamLocal(value)
+            : dateOnlyFields.has(key)
+              ? String(value ?? "").slice(0, 10)
+              : typeof value === "object"
+                ? JSON.stringify(value, null, 2)
+                : String(value ?? ""),
         ]),
       ),
     );
@@ -117,13 +485,25 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
   }
   async function save() {
     const payload: Record<string, unknown> = {};
-    for (const key of contentFields[type])
-      if (values[key]?.trim())
-        payload[key] = jsonFields.has(key)
-          ? JSON.parse(values[key])
-          : numberFields.has(key)
-            ? Number(values[key])
-            : values[key];
+    for (const key of contentFields[type]) {
+      const value = getEditableFieldValue(key, values);
+      if (jsonFields.has(key)) {
+        payload[key] = value.trim()
+          ? JSON.parse(value)
+          : key === "duration_credits"
+            ? ""
+            : key === "other_fees" || key === "assumptions" || key === "service_urls"
+              ? {}
+              : [];
+      } else if (numberFields.has(key)) {
+        payload[key] = value.trim() ? Number(value) : null;
+      } else if (dateTimeFields.has(key)) {
+        payload[key] = fromVietnamLocal(value);
+      } else {
+        // Send empty strings too, so an editor can intentionally clear an optional field.
+        payload[key] = value;
+      }
+    }
     const data = await response(
       await fetch("/api/admin/revisions", {
         method: "POST",
@@ -151,15 +531,106 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
       Object.fromEntries(
         Object.entries(data.payload).map(([key, value]) => [
           key,
-          typeof value === "object" ? JSON.stringify(value, null, 2) : String(value ?? ""),
+          dateTimeFields.has(key)
+            ? toVietnamLocal(value)
+            : dateOnlyFields.has(key)
+              ? String(value ?? "").slice(0, 10)
+              : typeof value === "object"
+                ? JSON.stringify(value, null, 2)
+                : String(value ?? ""),
         ]),
       ),
     );
     setBase(data.baseRevisionId);
     setTitle(data.payload.title || data.payload.name || "Cập nhật nội dung");
+    setAutoEntityId(false);
+    setAutoRevisionTitle(false);
+    setAutoArticleSlug(false);
     setSelected(null);
     setDirty(false);
     setNotice("Đã tải nội dung hiện có. Thay đổi sẽ được lưu thành bản nháp mới.");
+  }
+  async function uploadDocument(file: File) {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("access", values.access || "public");
+    const data = await response(await fetch("/api/admin/upload", { method: "POST", body: form }));
+    setValues((current) => ({
+      ...current,
+      file_url: data.url,
+      view_url: data.url,
+      mime_type: data.mimeType,
+      byte_size: String(data.size),
+      checksum_sha256: data.checksumSha256,
+    }));
+    setDirty(true);
+    setNotice(
+      data.access === "private"
+        ? "Tệp được lưu riêng tư; chỉ quản trị viên xem được."
+        : "Tệp công khai đã tải lên.",
+    );
+  }
+  useEffect(() => {
+    if (!initialEntityType || !initialEntityId) return;
+    const entityType = initialEntityType;
+    const targetId = initialEntityId;
+    let active = true;
+    async function loadInitialEntity() {
+      try {
+        const data = await response(
+          await fetch(
+            `/api/admin/revisions?entityType=${encodeURIComponent(entityType)}&entityId=${encodeURIComponent(targetId)}`,
+            { cache: "no-store" },
+          ),
+        );
+        if (!active) return;
+        setValues(
+          Object.fromEntries(
+            Object.entries(data.payload).map(([key, value]) => [
+              key,
+              dateTimeFields.has(key)
+                ? toVietnamLocal(value)
+                : dateOnlyFields.has(key)
+                  ? String(value ?? "").slice(0, 10)
+                  : typeof value === "object"
+                    ? JSON.stringify(value, null, 2)
+                    : String(value ?? ""),
+            ]),
+          ),
+        );
+        setBase(data.baseRevisionId);
+        setTitle(data.payload.title || data.payload.name || "Cập nhật nội dung");
+        setSelected(null);
+        setDirty(false);
+        setNotice("Đã tải nội dung hiện có. Thay đổi sẽ được lưu thành bản nháp mới.");
+      } catch (loadError) {
+        if (active)
+          setError(loadError instanceof Error ? loadError.message : "Không tải được nội dung.");
+      }
+    }
+    void loadInitialEntity();
+    return () => {
+      active = false;
+    };
+  }, [initialEntityType, initialEntityId]);
+  async function sendTransition(
+    revision: ContentRevisionRecord,
+    action: string,
+    options: Record<string, unknown> = {},
+  ) {
+    const data = await response(
+      await fetch(`/api/admin/revisions/${revision.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action,
+          expectedUpdatedAt: revision.updated_at,
+          reason: reason || undefined,
+          ...options,
+        }),
+      }),
+    );
+    return data.revision as ContentRevisionRecord;
   }
   async function transition(action: string) {
     if (!selected) return;
@@ -170,21 +641,21 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
       action === "publish"
         ? { publishAt: utc(publishAt), expireAt: utc(expireAt), highlightUntil: utc(highlight) }
         : {};
-    const data = await response(
-      await fetch(`/api/admin/revisions/${selected.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action,
-          expectedUpdatedAt: selected.updated_at,
-          reason: reason || undefined,
-          ...options,
-        }),
-      }),
-    );
-    setSelected(data.revision);
+    setSelected(await sendTransition(selected, action, options));
     await refresh();
     setNotice("Đã cập nhật trạng thái.");
+  }
+  async function approveAndPublishNow() {
+    if (!selected || !isAdmin) return;
+    if (dirty) throw new Error("Lưu bản nháp trước khi duyệt hoặc công bố.");
+    if (!window.confirm("Bài sẽ được duyệt và hiển thị công khai ngay. Bạn muốn tiếp tục?")) return;
+
+    const approved = await sendTransition(selected, "approve");
+    setSelected(approved);
+    const published = await sendTransition(approved, "publish");
+    setSelected(published);
+    await refresh();
+    setNotice("Đã duyệt và công bố bài viết.");
   }
   return (
     <div className="mx-auto max-w-7xl p-4 sm:p-8">
@@ -215,12 +686,79 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
               setValues({});
               setEntityId("");
               setTitle("");
+              setAutoEntityId(false);
+              setAutoRevisionTitle(false);
+              setAutoArticleSlug(false);
               setBase(0);
               setError("");
             }}
           >
             Bỏ thay đổi / Tạo nội dung mới
           </button>
+          <form
+            className="mt-4 grid gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setPage(1);
+              setSearch(searchInput.trim());
+            }}
+          >
+            <label className="grid gap-1 text-sm font-medium">
+              Tìm theo tên hoặc mã
+              <input
+                className={inputClass}
+                value={searchInput}
+                maxLength={120}
+                onChange={(event) => setSearchInput(event.target.value)}
+                placeholder="VD: tourism, học phí..."
+              />
+            </label>
+            <label className="grid gap-1 text-sm font-medium">
+              Loại nội dung
+              <select
+                className={inputClass}
+                value={listType}
+                onChange={(event) => {
+                  setListType(event.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">Tất cả loại</option>
+                {Object.entries(contentTypes).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-1 text-sm font-medium">
+              Trạng thái
+              <select
+                className={inputClass}
+                value={listState}
+                onChange={(event) => {
+                  setListState(event.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">Tất cả trạng thái</option>
+                {Object.entries(states).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="submit"
+              className="min-h-10 rounded bg-navy-900 px-3 font-semibold text-white"
+            >
+              Tìm nội dung
+            </button>
+          </form>
+          <p className="mt-3 text-xs text-ink-600">
+            {total} bản sửa · trang {page}/{totalPages}
+          </p>
           <ul className="mt-4 max-h-[36rem] space-y-2 overflow-auto">
             {rows.map((row) => (
               <li key={row.id}>
@@ -231,7 +769,7 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                 >
                   <span className="block font-semibold">{row.title}</span>
                   <span className="text-sm text-ink-600">
-                    {contentTypes[row.entity_type]} · v{row.version} ·{" "}
+                    {contentTypes[row.entity_type]} · {row.entity_id} · v{row.version} ·{" "}
                     {row.workflow_state === "published" &&
                     row.published_at &&
                     Date.parse(row.published_at) > serverTime
@@ -244,6 +782,26 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
           </ul>
           {!rows.length && (
             <p className="mt-4 text-ink-600">Chưa có bản sửa. Bạn có thể tạo bản nháp đầu tiên.</p>
+          )}
+          {totalPages > 1 && (
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => setPage((value) => Math.max(1, value - 1))}
+                className="min-h-10 rounded border px-3 disabled:opacity-50"
+              >
+                Trước
+              </button>
+              <button
+                type="button"
+                disabled={page >= totalPages}
+                onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
+                className="min-h-10 rounded border px-3 disabled:opacity-50"
+              >
+                Sau
+              </button>
+            </div>
           )}
         </aside>
         <section
@@ -264,6 +822,10 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                   className={inputClass}
                   onChange={(event) => {
                     setType(event.target.value as ContentType);
+                    if (autoEntityId) setEntityId("");
+                    setAutoEntityId(false);
+                    setAutoRevisionTitle(false);
+                    setAutoArticleSlug(false);
                     setValues({});
                     setBase(0);
                     setSelected(null);
@@ -287,11 +849,14 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                   readOnly={!!selected}
                   onChange={(event) => {
                     setEntityId(event.target.value);
+                    setAutoEntityId(false);
                     setDirty(true);
                   }}
                 />
                 <span className="text-xs text-ink-600">
-                  Dùng mã đã có khi cập nhật; chương trình: ba, tourism, it, english, chinese.
+                  {type === "article"
+                    ? "Mã tự tạo theo tiêu đề; bạn có thể sửa nếu cần."
+                    : "Dùng mã đã có khi cập nhật; chương trình: ba, tourism, it, english, chinese."}
                 </span>
               </label>
               <button
@@ -310,9 +875,15 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                   value={title}
                   onChange={(event) => {
                     setTitle(event.target.value);
+                    setAutoRevisionTitle(false);
                     setDirty(true);
                   }}
                 />
+                {type === "article" && (
+                  <span className="text-xs text-ink-600">
+                    Tên bản sửa tự lấy từ tiêu đề bài viết; bạn có thể đổi tên này.
+                  </span>
+                )}
               </label>
               {contentFields[type].map((key) => (
                 <label
@@ -320,24 +891,183 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                   className={`grid min-w-0 gap-1 ${jsonFields.has(key) || key === "content_html" ? "sm:col-span-2" : ""}`}
                 >
                   {fieldLabels[key] || key}
-                  {jsonFields.has(key) || key === "content_html" ? (
-                    <textarea
-                      rows={jsonFields.has(key) ? 4 : 10}
+                  {key === "access" && type === "document" ? (
+                    <select
                       className={inputClass}
-                      value={values[key] || ""}
+                      value={values[key] || "public"}
                       onChange={(event) => {
                         setValues({ ...values, [key]: event.target.value });
                         setDirty(true);
                       }}
+                    >
+                      <option value="public">Công khai</option>
+                      {isAdmin && <option value="private">Riêng tư · chỉ admin truy cập</option>}
+                    </select>
+                  ) : key === "file_url" && type === "document" ? (
+                    <div className="grid gap-2">
+                      <input
+                        className={inputClass}
+                        value={values[key] || ""}
+                        onChange={(event) => {
+                          setValues({ ...values, [key]: event.target.value });
+                          setDirty(true);
+                        }}
+                        aria-label="Đường dẫn tệp"
+                      />
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,application/pdf"
+                        disabled={!isAdmin && values.access === "private"}
+                        className={inputClass}
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) void run(() => uploadDocument(file));
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                      <span className="text-xs text-ink-600">
+                        PDF tối đa 20 MB; ảnh JPG/PNG/WebP tối đa 5 MB. PDF riêng tư được lưu ngoài
+                        thư mục public.
+                      </span>
+                    </div>
+                  ) : key === "content_html" ? (
+                    <RichTextEditor
+                      value={values[key] || ""}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                      onUploadImage={async (file) => {
+                        const form = new FormData();
+                        form.append("file", file);
+                        const response = await fetch("/api/admin/upload", {
+                          method: "POST",
+                          body: form,
+                        });
+                        const data = await response.json();
+                        if (!response.ok) throw new Error(data.error || "Không tải được ảnh");
+                        return data.url;
+                      }}
                     />
+                  ) : key === "aliases" || key === "program_ids" ? (
+                    <StringListEditor
+                      label={fieldLabels[key] || key}
+                      value={values[key] || "[]"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "duration_credits" ? (
+                    <DurationEditor
+                      value={values[key] || "{}"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "other_fees" ? (
+                    <ScalarObjectEditor
+                      label={fieldLabels[key] || key}
+                      numeric
+                      value={values[key] || "{}"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "service_urls" ? (
+                    <ServiceUrlsEditor
+                      value={values[key] || "{}"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                    />
+                  ) : key === "documents" ? (
+                    <RepeatableObjectEditor
+                      value={values[key] || "[]"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                      fields={[
+                        { key: "title", label: "Tên tài liệu" },
+                        {
+                          key: "url",
+                          label: "Liên kết tài liệu",
+                          placeholder: "/duong-dan-hoac-https://...",
+                        },
+                      ]}
+                      addLabel="Thêm tài liệu hướng dẫn"
+                      emptyItem={{ title: "", url: "" }}
+                    />
+                  ) : key === "locations" ? (
+                    <RepeatableObjectEditor
+                      value={values[key] || "[]"}
+                      onChange={(value) => {
+                        setValues({ ...values, [key]: value });
+                        setDirty(true);
+                      }}
+                      fields={[
+                        { key: "name", label: "Tên cơ sở" },
+                        { key: "city", label: "Tỉnh/thành phố" },
+                        { key: "address", label: "Địa chỉ" },
+                        { key: "hotline", label: "Hotline (không bắt buộc)" },
+                      ]}
+                      addLabel="Thêm địa điểm"
+                      emptyItem={{ name: "", city: "", address: "", hotline: "" }}
+                    />
+                  ) : jsonFields.has(key) ? (
+                    <div className="grid gap-1.5">
+                      <textarea
+                        rows={4}
+                        className={inputClass}
+                        spellCheck={false}
+                        value={values[key] || ""}
+                        onChange={(event) => {
+                          setValues({ ...values, [key]: event.target.value });
+                          setDirty(true);
+                        }}
+                      />
+                      <span className="text-xs text-ink-500">
+                        Trường dữ liệu lồng nhau; nhập JSON hợp lệ. Để trống sẽ xóa nội dung.
+                      </span>
+                    </div>
                   ) : (
                     <input
                       className={inputClass}
-                      type={numberFields.has(key) ? "number" : "text"}
+                      type={
+                        numberFields.has(key)
+                          ? "number"
+                          : dateTimeFields.has(key)
+                            ? "datetime-local"
+                            : dateOnlyFields.has(key)
+                              ? "date"
+                              : "text"
+                      }
                       min={numberFields.has(key) ? 0 : undefined}
+                      step={dateTimeFields.has(key) ? 60 : undefined}
                       value={values[key] || ""}
                       onChange={(event) => {
-                        setValues({ ...values, [key]: event.target.value });
+                        const value = event.target.value;
+                        setValues({ ...values, [key]: value });
+                        if (type === "article" && key === "slug") setAutoArticleSlug(false);
+                        if (type === "article" && key === "title" && !selected) {
+                          const generated = articleContentId(value);
+                          if (!entityId || autoEntityId) {
+                            setEntityId(generated);
+                            setAutoEntityId(Boolean(generated));
+                          }
+                          if (!title.trim() || autoRevisionTitle) {
+                            setTitle(value.slice(0, 240));
+                            setAutoRevisionTitle(Boolean(value.trim()));
+                          }
+                          if (!values.slug || autoArticleSlug) {
+                            setValues({ ...values, [key]: value, slug: generated });
+                            setAutoArticleSlug(Boolean(generated));
+                          }
+                        }
                         setDirty(true);
                       }}
                     />
@@ -445,6 +1175,16 @@ export function ContentWorkbench({ isAdmin }: { isAdmin: boolean }) {
                     }
                   </button>
                 ))}
+                {isAdmin && selected.workflow_state === "in_review" && (
+                  <button
+                    type="button"
+                    disabled={busy || dirty}
+                    className="min-h-11 rounded bg-navy-950 px-4 font-semibold text-white disabled:opacity-50"
+                    onClick={() => void run(approveAndPublishNow)}
+                  >
+                    Duyệt và công bố ngay
+                  </button>
+                )}
               </div>
             </div>
           )}

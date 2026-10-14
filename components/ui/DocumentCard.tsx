@@ -65,7 +65,7 @@ export function DocumentCard({
           isInternalView ? (
             <Link
               href={viewUrl!}
-              className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
+              className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md border border-line-200 px-0 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900 sm:h-9 sm:w-32 sm:px-2"
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -76,7 +76,7 @@ export function DocumentCard({
               href={viewUrl!}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-9 items-center gap-1.5 rounded-md border border-line-200 px-3 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900"
+              className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md border border-line-200 px-0 text-body-sm font-medium text-ink-800 transition-colors hover:border-navy-500 hover:text-navy-900 sm:h-9 sm:w-32 sm:px-2"
               aria-label={`Xem tài liệu: ${title}`}
             >
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -89,7 +89,7 @@ export function DocumentCard({
           <a
             href={downloadUrl!}
             download
-            className="flex h-9 items-center gap-1.5 rounded-md bg-navy-900 px-3 text-body-sm font-medium text-white transition-colors hover:bg-navy-800"
+            className="flex h-9 w-9 items-center justify-center gap-1.5 rounded-md bg-navy-900 px-0 text-body-sm font-medium text-white transition-colors hover:bg-navy-800 sm:h-9 sm:w-32 sm:px-2"
             aria-label={`Tải xuống: ${title}`}
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />

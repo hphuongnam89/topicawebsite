@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth/guards";
 import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 const DEFAULT_SETTINGS = {
   hotline: "1800 646 857",
@@ -12,7 +13,8 @@ const DEFAULT_SETTINGS = {
   youtube: "https://www.youtube.com/user/TopicaVietnam",
   zalo: "https://zalo.me/topica",
   siteTitle: "Viện Đào tạo Quốc tế Topica – Trường Đại học Phú Xuân",
-  siteDescription: "Chương trình đào tạo cử nhân trực tuyến chuẩn quốc gia do Trường Đại học Phú Xuân cấp bằng, hợp tác cùng Viện Đào tạo Quốc tế Topica.",
+  siteDescription:
+    "Chương trình đào tạo cử nhân trực tuyến chuẩn quốc gia do Trường Đại học Phú Xuân cấp bằng, hợp tác cùng Viện Đào tạo Quốc tế Topica.",
   telegramBotToken: "",
   telegramChatId: "",
 };
@@ -27,7 +29,8 @@ export async function GET() {
 export async function PUT(request: Request) {
   const auth = await requireAdmin();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -38,6 +41,7 @@ export async function PUT(request: Request) {
     }
 
     setSetting("site_settings", settings);
+    recordAdminAudit(auth.user, "update", "setting", "site_settings", Object.keys(settings));
 
     // Revalidate whole website layout
     revalidatePath("/", "layout");

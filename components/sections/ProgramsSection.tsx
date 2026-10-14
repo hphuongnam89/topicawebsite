@@ -5,7 +5,6 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card, CardMedia, CardBody, CardFooter } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { buttonStyles } from "@/components/ui/Button";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { programs as defaultPrograms, programGroups, type Program } from "@/data/programs";
@@ -16,7 +15,7 @@ export function ProgramsSection({
   return (
     <section
       id="chuong-trinh-dao-tao"
-      className="scroll-mt-20 bg-canvas py-16 lg:py-24"
+      className="scroll-mt-20 bg-paper-blue py-16 lg:py-24"
       aria-labelledby="programs-title"
     >
       <Container>
@@ -24,10 +23,11 @@ export function ProgramsSection({
           id="programs-title"
           title={`${programs.length} Ngành Đào tạo Cử nhân Trực tuyến`}
           subtitle="Chương trình đào tạo chất lượng cao do Trường Đại học Phú Xuân cấp bằng cử nhân, linh hoạt thời gian cho người đi làm"
-          align="center"
+          align="left"
+          className="max-w-4xl after:mt-6 after:block after:h-1 after:w-14 after:rounded-full after:bg-gold-500 after:content-['']"
         />
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-9 grid grid-cols-1 gap-6 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
           {programs.map((program, index) => {
             const hasSpecialization = program.name.includes("- chuyên ngành");
             const mainName = hasSpecialization
@@ -49,7 +49,7 @@ export function ProgramsSection({
                       <div className="relative h-full w-full overflow-hidden bg-navy-50">
                         <Image
                           src={program.image}
-                          alt={program.name}
+                          alt={`Ảnh minh họa cho ngành ${program.name}`}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-[var(--duration-slow)] group-hover:scale-[1.03] motion-reduce:transition-none"
@@ -60,18 +60,15 @@ export function ProgramsSection({
                     <CardBody className="flex-1">
                       <div className="mb-2.5 flex items-center justify-between gap-2">
                         <Badge variant="navy">{programGroups[program.group]}</Badge>
-                        <StatusBadge variant="active" showIcon={false} />
                       </div>
 
-                      <h3 className="font-serif text-h3 font-bold text-ink-950 transition-colors group-hover:text-navy-900">
+                      <h3 className="min-h-[3.5rem] font-serif text-h3 font-bold text-ink-950 transition-colors group-hover:text-navy-900">
                         {mainName}
                       </h3>
 
-                      {specialization && (
-                        <p className="mt-1 text-xs font-semibold tracking-wider text-gold-700 uppercase">
-                          Chuyên ngành: {specialization}
-                        </p>
-                      )}
+                      <p className="mt-1 min-h-4 text-xs font-semibold tracking-wider text-gold-700 uppercase">
+                        {specialization ? `Chuyên ngành: ${specialization}` : ""}
+                      </p>
 
                       <p className="mt-2.5 line-clamp-2 text-body-sm leading-relaxed text-ink-600">
                         {program.shortDescription}
@@ -111,31 +108,29 @@ export function ProgramsSection({
           })}
         </div>
 
-        {/* Pathway to Directory & Tuition Details */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 rounded-xl border border-line-200 bg-surface-subtle/60 p-6 sm:flex-row sm:px-8">
-          <div>
-            <h4 className="font-semibold text-navy-950">
-              Bạn muốn so sánh toàn diện 5 ngành và mức học phí?
-            </h4>
-            <p className="mt-1 text-body-sm text-ink-600">
-              Tra cứu bảng học phí theo tín chỉ và kế hoạch đào tạo chi tiết từng ngành.
+        <div className="relative mt-12 overflow-hidden rounded-2xl bg-navy-950 px-6 py-8 text-canvas shadow-card sm:px-9 sm:py-9 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:px-12">
+          <div
+            className="pointer-events-none absolute -right-12 -top-20 h-56 w-56 rounded-full border border-gold-400/20"
+            aria-hidden="true"
+          />
+          <div className="relative max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-400">
+              Chọn ngành học
+            </p>
+            <h3 className="mt-2 font-serif text-xl font-bold text-white sm:text-2xl">
+              Đang phân vân ngành nào phù hợp với bạn?
+            </h3>
+            <p className="mt-2 max-w-xl text-body-sm leading-relaxed text-navy-100">
+              Khám phá chương trình, lộ trình học và định hướng của từng ngành để tìm lựa chọn phù hợp.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/nganh-dao-tao/"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-navy-200 bg-canvas px-4 py-2 text-body-sm font-semibold text-navy-900 shadow-2xs transition-colors hover:bg-navy-50"
-            >
-              Xem danh mục ngành
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link
-              href="/tuyen-sinh/hoc-phi-hoc-bong/"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-line-200 bg-canvas px-4 py-2 text-body-sm font-semibold text-ink-700 shadow-2xs transition-colors hover:border-navy-300 hover:text-navy-900"
-            >
-              Tra cứu học phí 2026
-            </Link>
-          </div>
+          <Link
+            href="/nganh-dao-tao/"
+            className="relative mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-gold-400 px-5 py-3 text-body-sm font-bold text-navy-950 shadow-sm transition-colors hover:bg-gold-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-300 sm:w-auto lg:mt-0 lg:shrink-0"
+          >
+            Khám phá các ngành
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
         </div>
       </Container>
     </section>

@@ -147,20 +147,12 @@
           "heading": "Chương trình",
           "items": [
             {
-              "label": "Đào tạo từ xa",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/"
-            },
-            {
               "label": "Khung chương trình",
               "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/khung-chuong-trinh/"
             },
             {
               "label": "Mục tiêu & Chuẩn đầu ra",
               "href": "/chuong-trinh/chuong-trinh-dao-tao-tu-xa/muc-tieu-va-chuan-dau-ra/"
-            },
-            {
-              "label": "Đào tạo ngắn hạn",
-              "href": "/chuong-trinh/chuong-trinh-dao-tao-ngan-han/"
             }
           ]
         },
@@ -221,20 +213,8 @@
               "href": "/tin-tuc?category=tin-tuc-tuyen-sinh"
             },
             {
-              "label": "Thông báo tuyển sinh",
-              "href": "/tin-tuc?category=thong-bao-tuyen-sinh"
-            },
-            {
               "label": "Sự kiện",
               "href": "/tin-tuc?category=su-kien"
-            },
-            {
-              "label": "Giáo dục",
-              "href": "/tin-tuc?category=giao-duc"
-            },
-            {
-              "label": "Sinh viên",
-              "href": "/tin-tuc?category=hoat-dong-sinh-vien"
             },
             {
               "label": "Tuyển dụng",
@@ -257,16 +237,8 @@
               "href": "/cong-khai/"
             },
             {
-              "label": "Báo cáo thường niên",
-              "href": "/bao-cao-thuong-nien/"
-            },
-            {
               "label": "Công khai văn bằng chứng chỉ",
               "href": "/cong-khai-van-bang-chung-chi/"
-            },
-            {
-              "label": "Khảo thí & ĐBCL",
-              "href": "/khao-thi-dbcl/"
             }
           ]
         },

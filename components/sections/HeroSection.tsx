@@ -1,15 +1,18 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
-import { LeadForm } from "@/components/forms/LeadForm";
-import { ArrowRight } from "lucide-react";
 
 export interface HeroSectionData {
   badge?: string;
   title?: string;
   description?: string;
   bgImage?: string;
+  videoUrl?: string;
   ctaPrimaryText?: string;
   ctaPrimaryLink?: string;
   ctaSecondaryText?: string;
@@ -19,6 +22,18 @@ export interface HeroSectionData {
 
 interface HeroSectionProps {
   data?: HeroSectionData;
+}
+
+interface HeroSlide {
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  videoUrl?: string;
+  primaryText: string;
+  primaryLink: string;
+  secondaryText: string;
+  secondaryLink: string;
 }
 
 const DEFAULT_HERO_DATA: HeroSectionData = {
@@ -35,100 +50,196 @@ const DEFAULT_HERO_DATA: HeroSectionData = {
   showLeadForm: false,
 };
 
+const SLIDE_INTERVAL = 3000;
+const HERO_SLIDE_COUNT = 3;
+
 export function HeroSection({ data }: HeroSectionProps) {
   const content = { ...DEFAULT_HERO_DATA, ...data };
+  const prefersReducedMotion = useReducedMotion();
+  const [activeSlide, setActiveSlide] = useState(0);
+  const title = content.title?.replace(/\s*\r?\n\s*/g, " ") || DEFAULT_HERO_DATA.title!;
+
+  const slides: HeroSlide[] = [
+      {
+        title,
+        description: content.description || DEFAULT_HERO_DATA.description!,
+        image: content.bgImage || DEFAULT_HERO_DATA.bgImage!,
+        imageAlt: "Môi trường học tập trực tuyến của Topica",
+        videoUrl: content.videoUrl,
+        primaryText: content.ctaSecondaryText || "Xem ngành học",
+        primaryLink: content.ctaSecondaryLink || "/nganh-dao-tao/",
+        secondaryText: content.ctaPrimaryText || "Đăng ký xét tuyển",
+        secondaryLink: content.ctaPrimaryLink || "https://www.tuyensinh.topicauni.edu.vn/",
+      },
+      {
+        title: "5 ngành học — Chọn đúng hướng đi",
+        description:
+          "Khám phá các chương trình Kinh doanh, Du lịch, Công nghệ thông tin, Ngôn ngữ Anh và Ngôn ngữ Trung Quốc.",
+        image: "/images/programs/program-business.webp",
+        imageAlt: "Ảnh minh họa hoạt động cộng tác trong lĩnh vực kinh doanh",
+        primaryText: "Khám phá ngành học",
+        primaryLink: "/nganh-dao-tao/",
+        secondaryText: "Đăng ký xét tuyển",
+        secondaryLink: "https://www.tuyensinh.topicauni.edu.vn/",
+      },
+      {
+        title: "Sáng tạo — Thế giới số trong tay bạn",
+        description:
+          "Tìm hiểu ngành Công nghệ thông tin, chuyên ngành Đồ họa kỹ thuật số và khung chương trình đào tạo.",
+        image: "/images/programs/program-digital-design.webp",
+        imageAlt: "Ảnh minh họa người học sáng tạo đồ họa kỹ thuật số",
+        primaryText: "Xem chương trình CNTT",
+        primaryLink: "/cong-nghe-thong-tin/",
+        secondaryText: "Khám phá 5 ngành",
+        secondaryLink: "/nganh-dao-tao/",
+      },
+    ];
+  const activeSlideHasVideo = activeSlide === 0 && Boolean(content.videoUrl);
+
+  useEffect(() => {
+    if (prefersReducedMotion || activeSlideHasVideo) return;
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % HERO_SLIDE_COUNT);
+    }, SLIDE_INTERVAL);
+
+    return () => window.clearInterval(timer);
+  }, [activeSlide, activeSlideHasVideo, prefersReducedMotion]);
+
+  const active = slides[activeSlide];
+  const titleParts = active.title.match(/^(.*?)\s+([—–])\s+(.+)$/);
 
   return (
     <section
-      className="relative flex w-full flex-col-reverse bg-navy-950 lg:block"
+      className="hero-stage relative w-full overflow-hidden bg-navy-950"
       aria-labelledby="homepage-title"
     >
-      {/* Background Image */}
-      <div className="relative h-64 w-full sm:h-80 lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2">
-        <Image
-          src={content.bgImage || DEFAULT_HERO_DATA.bgImage!}
-          alt="Môi trường học tập trực tuyến Topica"
-          fill
-          priority
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          className="object-cover object-[62%_center]"
-        />
-        {/* Navy-tinted Gradient Overlay: ensures text readability on left while human warmth is visible on right */}
-        <div className="absolute inset-0 hidden bg-gradient-to-r from-navy-950 via-transparent to-transparent lg:block" />
-      </div>
-
-      <Container className="relative z-10 py-10 sm:py-12 lg:min-h-[34rem] lg:py-20">
-        <div
-          className={`grid min-w-0 grid-cols-1 items-center gap-10 ${content.showLeadForm ? "lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-12" : "lg:max-w-[48%]"}`}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={activeSlide}
+          initial={prefersReducedMotion ? false : { opacity: 0, x: 36 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={prefersReducedMotion ? undefined : { opacity: 0, x: -36 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Left Content */}
-          <div className="flex max-w-2xl min-w-0 flex-col">
-            {content.badge && (
-              <div
-                className="homepage-enter mb-5"
-                style={{ "--enter-delay": "40ms" } as React.CSSProperties}
+          <Container className="grid gap-9 py-9 sm:gap-12 sm:py-12 lg:min-h-[39rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-stretch lg:gap-12 lg:py-14">
+            <div className="flex min-w-0 flex-col justify-center min-h-[24rem] max-[380px]:min-h-[28rem] lg:min-h-0 lg:py-8 lg:pr-2">
+              <h1
+                id="homepage-title"
+                aria-label={active.title}
+                className="hero-title-reveal mb-6 max-w-[17ch] font-display text-[clamp(2.5rem,4.5vw,4rem)] leading-[1.04] font-bold tracking-[-0.03em] text-balance text-white"
+                style={{ "--hero-delay": "160ms" } as React.CSSProperties}
               >
-                <span className="inline-block rounded-full border border-gold-400/40 bg-navy-950/70 px-4 py-2 text-body-sm font-semibold text-gold-300 backdrop-blur-sm">
-                  {content.badge}
-                </span>
-              </div>
-            )}
+                {titleParts ? (
+                  <>
+                    <span className="block">{titleParts[1]}</span>
+                    <span className="hero-title-accent block">
+                      {titleParts[2]} {titleParts[3]}
+                    </span>
+                  </>
+                ) : (
+                  active.title
+                )}
+              </h1>
 
-            <h1
-              id="homepage-title"
-              className="homepage-enter mb-5 max-w-[18ch] font-display text-[clamp(2.25rem,6.5vw,3.75rem)] leading-[1.15] font-bold tracking-[-0.02em] text-white"
-              style={{ "--enter-delay": "100ms" } as React.CSSProperties}
-            >
-              {content.title}
-            </h1>
+              <p
+                className="hero-copy-reveal mb-7 max-w-[58ch] text-body-lg text-white/80"
+                style={{ "--hero-delay": "220ms" } as React.CSSProperties}
+              >
+                {active.description}
+              </p>
 
-            <p
-              className="homepage-enter mb-7 max-w-[58ch] text-body-lg text-white/80"
-              style={{ "--enter-delay": "160ms" } as React.CSSProperties}
-            >
-              {content.description}
-            </p>
+              <div
+                className="hero-copy-reveal grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2"
+                style={{ "--hero-delay": "300ms" } as React.CSSProperties}
+              >
+                {[active.primaryText, active.secondaryText].map((label, index) => {
+                  const href = index === 0 ? active.primaryLink : active.secondaryLink;
+                  const isPrimary = index === 0;
 
-            <div
-              className="homepage-enter flex flex-col gap-3 sm:flex-row sm:flex-wrap"
-              style={{ "--enter-delay": "220ms" } as React.CSSProperties}
-            >
-              {content.ctaPrimaryText && (
-                <ButtonLink
-                  href={content.ctaPrimaryLink || "https://www.tuyensinh.topicauni.edu.vn/"}
-                  size="lg"
-                  variant="accent"
-                  rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-                >
-                  {content.ctaPrimaryText}
-                </ButtonLink>
-              )}
-              {content.ctaSecondaryText && (
-                <ButtonLink
-                  href={content.ctaSecondaryLink || "/nganh-dao-tao/"}
-                  size="lg"
-                  variant="secondary"
-                  className="border-white/70 text-white hover:border-white hover:bg-white/10 hover:text-white"
-                >
-                  {content.ctaSecondaryText}
-                </ButtonLink>
-              )}
-            </div>
-          </div>
-
-          {/* Right Content - Lead Form */}
-          {content.showLeadForm && (
-            <div
-              className="homepage-enter mx-auto w-full max-w-md lg:mr-0 lg:ml-auto"
-              style={{ "--enter-delay": "260ms" } as React.CSSProperties}
-            >
-              <div className="rounded-2xl border border-white/20 bg-white/10 p-1.5 shadow-2xl backdrop-blur-md sm:p-2">
-                <LeadForm />
+                  return (
+                    <ButtonLink
+                      key={`${label}-${href}`}
+                      href={href}
+                      size="lg"
+                      variant={isPrimary ? "accent" : "secondary"}
+                      className={
+                        isPrimary
+                          ? "hero-primary-cta w-full justify-center"
+                          : "w-full justify-center border-white/70 text-white hover:border-white hover:bg-white/10 hover:text-white"
+                      }
+                      rightIcon={
+                        isPrimary ? (
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        ) : undefined
+                      }
+                    >
+                      {label}
+                    </ButtonLink>
+                  );
+                })}
               </div>
             </div>
-          )}
-        </div>
-      </Container>
+
+            <div
+              className="hero-image-reveal group relative isolate min-h-[16rem] overflow-hidden rounded-[1.5rem] border border-white/15 shadow-[0_24px_70px_-32px_rgba(0,0,0,0.72)] sm:min-h-[22rem] lg:min-h-[unset] lg:rounded-tl-[4rem] lg:rounded-br-[4rem]"
+              style={{ "--hero-delay": "80ms" } as React.CSSProperties}
+            >
+              {active.videoUrl && !prefersReducedMotion ? (
+                <video
+                  src={active.videoUrl}
+                  autoPlay
+                  muted
+                  playsInline
+                  preload="metadata"
+                  poster={active.image}
+                  aria-hidden="true"
+                  onEnded={() => setActiveSlide((current) => (current + 1) % HERO_SLIDE_COUNT)}
+                  className="hero-image-reveal__image absolute inset-0 h-full w-full object-cover object-[62%_center]"
+                />
+              ) : (
+                <Image
+                  src={active.image}
+                  alt={active.imageAlt}
+                  fill
+                  priority={activeSlide === 0}
+                  sizes="(min-width: 1024px) 48vw, 100vw"
+                  className="hero-image-reveal__image object-cover object-[62%_center]"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-950/45 via-transparent to-transparent lg:bg-gradient-to-r lg:from-navy-950/20 lg:via-transparent lg:to-transparent" />
+              <span
+                className="hero-image-rule absolute inset-x-0 bottom-0 z-10 h-[3px]"
+                aria-hidden="true"
+              />
+            </div>
+
+            <div
+              className="col-span-full -mt-5 flex justify-center gap-2 lg:-mt-8"
+              role="group"
+              aria-label="Chọn banner giới thiệu"
+            >
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.title}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Hiển thị banner ${index + 1}: ${slide.title}`}
+                  aria-current={activeSlide === index ? "true" : undefined}
+                  className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-300"
+                >
+                  <span
+                    className={`h-2.5 rounded-full transition-[width,background-color] duration-300 ${
+                      activeSlide === index ? "w-9 bg-brand-400" : "w-2.5 bg-white/60"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+              ))}
+            </div>
+          </Container>
+        </motion.div>
+      </AnimatePresence>
     </section>
   );
 }

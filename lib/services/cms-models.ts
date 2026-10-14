@@ -380,7 +380,12 @@ export function getAuditLogs(
   options: {
     entityType?: string;
     entityId?: string;
+    startDate?: string;
+    endDate?: string;
+    actorId?: string;
+    action?: string;
     limit?: number;
+    offset?: number;
   } = {},
 ): AuditLogRecord[] {
   const db = getDb();
@@ -395,15 +400,179 @@ export function getAuditLogs(
     conditions.push("entity_id = ?");
     params.push(options.entityId);
   }
+  if (options.startDate) {
+    conditions.push("timestamp >= ?");
+    params.push(options.startDate);
+  }
+  if (options.endDate) {
+    conditions.push("timestamp < ?");
+    params.push(options.endDate);
+  }
+  if (options.actorId) {
+    conditions.push("actor_id = ?");
+    params.push(options.actorId);
+  }
+  if (options.action) {
+    conditions.push("action = ?");
+    params.push(options.action);
+  }
 
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-  const limit = options.limit || 50;
+  const limit = Math.min(100, Math.max(1, Math.trunc(options.limit ?? 50) || 50));
+  const offset = Math.max(0, Math.trunc(options.offset ?? 0) || 0);
 
   const rows = db
-    .prepare(`SELECT * FROM audit_logs ${whereClause} ORDER BY timestamp DESC LIMIT ?`)
-    .all(...params, limit) as unknown as AuditLogRecord[];
+    .prepare(
+      `SELECT * FROM audit_logs ${whereClause} ORDER BY timestamp DESC,id DESC LIMIT ? OFFSET ?`,
+    )
+    .all(...params, limit, offset) as unknown as AuditLogRecord[];
 
   return rows;
+}
+
+export function countAuditLogs(
+  options: {
+    entityType?: string;
+    entityId?: string;
+    startDate?: string;
+    endDate?: string;
+    actorId?: string;
+    action?: string;
+  } = {},
+): number {
+  const conditions: string[] = [];
+  const params: string[] = [];
+  for (const [key, column] of [
+    ["entityType", "entity_type"],
+    ["entityId", "entity_id"],
+    ["startDate", "timestamp >="],
+    ["endDate", "timestamp <"],
+    ["actorId", "actor_id"],
+    ["action", "action"],
+  ] as const) {
+    const value = options[key];
+    if (!value) continue;
+    conditions.push(column.includes(" ") ? `${column} ?` : `${column} = ?`);
+    params.push(value);
+  }
+  const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
+  const row = getDb()
+    .prepare(`SELECT COUNT(*) AS total FROM audit_logs ${where}`)
+    .get(...params) as { total: number };
+  return Number(row.total);
+}
+
+export function getAuditLogActors(): Array<{ id: string; name: string }> {
+  return getDb()
+    .prepare(
+      "SELECT actor_id AS id, MAX(actor_name) AS name FROM audit_logs GROUP BY actor_id ORDER BY name COLLATE NOCASE",
+    )
+    .all() as Array<{ id: string; name: string }>;
+}
+
+export interface CmsExpiringItem {
+  revisionId: number;
+  entityType: string;
+  entityId: string;
+  title: string;
+  expiresAt: string;
+}
+
+export function getCmsOperationsHealth(asOf = new Date()) {
+  const db = getDb();
+  const sourceTables = [
+    { table: "organizations", type: "organization", label: "Liên hệ & tổ chức" },
+    { table: "programs", type: "program", label: "Ngành học" },
+    { table: "admission_rounds", type: "admission_round", label: "Tuyển sinh" },
+    { table: "tuition_policies", type: "tuition_policy", label: "Học phí" },
+    { table: "scholarships", type: "scholarship", label: "Học bổng" },
+    { table: "documents", type: "document", label: "Tài liệu" },
+  ];
+  const sourceGaps = sourceTables.map(({ table, type, label }) => {
+    const row = db
+      .prepare(`SELECT COUNT(*) AS count FROM ${table} WHERE trim(coalesce(source,'')) = ''`)
+      .get() as { count: number };
+    return { entityType: type, label, count: Number(row.count) };
+  });
+  const missingSource = sourceGaps.reduce((total, item) => total + item.count, 0);
+  const missingDocumentFiles = Number(
+    (
+      db
+        .prepare(
+          "SELECT COUNT(*) AS count FROM documents WHERE trim(coalesce(file_url,'')) = '' OR trim(coalesce(view_url,'')) = ''",
+        )
+        .get() as { count: number }
+    ).count,
+  );
+  const missingDocumentItems = db
+    .prepare(
+      "SELECT id, title FROM documents WHERE trim(coalesce(file_url,'')) = '' OR trim(coalesce(view_url,'')) = '' ORDER BY title COLLATE NOCASE LIMIT 8",
+    )
+    .all() as Array<{ id: string; title: string }>;
+
+  const now = asOf.toISOString();
+  const through = new Date(asOf.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  const revisions = db
+    .prepare(
+      `WITH ranked AS (
+         SELECT *, ROW_NUMBER() OVER (
+           PARTITION BY entity_type, entity_id ORDER BY published_at DESC, version DESC
+         ) AS row_number
+         FROM content_revisions
+         WHERE workflow_state IN ('published','archived') AND published_at IS NOT NULL
+       )
+       SELECT id, entity_type, entity_id, title, payload, expired_at
+       FROM ranked
+       WHERE row_number=1 AND workflow_state='published' AND published_at<=?
+         AND (expired_at IS NULL OR expired_at>?)`,
+    )
+    .all(now, now) as Array<{
+    id: number;
+    entity_type: string;
+    entity_id: string;
+    title: string;
+    payload: string;
+    expired_at: string | null;
+  }>;
+
+  const expiringItems: CmsExpiringItem[] = [];
+  for (const revision of revisions) {
+    if (!["admission_round", "tuition_policy", "scholarship"].includes(revision.entity_type))
+      continue;
+    try {
+      const payload = JSON.parse(revision.payload) as Record<string, unknown>;
+      const candidates = [revision.expired_at, payload.deadline_at, payload.effective_to]
+        .filter((value): value is string => typeof value === "string" && Boolean(value))
+        .filter((value) => !Number.isNaN(Date.parse(value)))
+        .sort((left, right) => Date.parse(left) - Date.parse(right));
+      const expiresAt = candidates[0];
+      if (
+        expiresAt &&
+        Date.parse(expiresAt) >= Date.parse(now) &&
+        Date.parse(expiresAt) <= Date.parse(through)
+      ) {
+        expiringItems.push({
+          revisionId: revision.id,
+          entityType: revision.entity_type,
+          entityId: revision.entity_id,
+          title: revision.title,
+          expiresAt,
+        });
+      }
+    } catch {
+      // Invalid legacy revision payloads are surfaced by editorial validation, not guessed here.
+    }
+  }
+  expiringItems.sort((left, right) => Date.parse(left.expiresAt) - Date.parse(right.expiresAt));
+
+  return {
+    missingSource,
+    sourceGaps,
+    missingDocumentFiles,
+    missingDocumentItems,
+    expiringItems: expiringItems.slice(0, 8),
+    expiringCount: expiringItems.length,
+  };
 }
 
 // ----------------------------------------------------------------------------

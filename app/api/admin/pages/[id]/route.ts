@@ -5,6 +5,7 @@ import { isSameOrigin } from "@/lib/security/request";
 import { pageUpdateSchema } from "@/lib/validation/admin";
 import { sanitizeWordPressHtml } from "@/lib/cms/html";
 import { getRevisions } from "@/lib/services/revisions";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 type Context = { params: Promise<{ id: string }> };
 export async function GET(_request: Request, context: Context) {
   const auth = await requireUser();
@@ -62,6 +63,13 @@ export async function PUT(request: Request, context: Context) {
           : sanitizeWordPressHtml(parsed.data.content_html),
     };
     const page = updatePage(id, input);
+    recordAdminAudit(
+      auth.user,
+      "update",
+      "page",
+      String(id),
+      Object.keys(parsed.data).filter((key) => key !== "expected_updated_at"),
+    );
     db.exec("COMMIT");
     return NextResponse.json(page);
   } catch {
@@ -80,5 +88,7 @@ export async function DELETE(request: Request, context: Context) {
       { error: "Hãy lưu trữ revision thay vì xóa trang công khai" },
       { status: 409 },
     );
-  return NextResponse.json({ success: deletePage(id) });
+  const deleted = deletePage(id);
+  if (deleted) recordAdminAudit(auth.user, "delete", "page", String(id), ["record"]);
+  return NextResponse.json({ success: deleted });
 }

@@ -75,12 +75,13 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
               {page.excerpt ||
                 "Khám phá các chương trình đào tạo chất lượng cao tại Topica. Chúng tôi chào đón những sinh viên đam mê học hỏi, sẵn sàng kiến tạo tương lai."}
             </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
               <ButtonLink
                 href="https://www.tuyensinh.topicauni.edu.vn/"
                 variant="accent"
                 size="lg"
                 external
+                className="w-full justify-center"
               >
                 Đăng ký xét tuyển
               </ButtonLink>
@@ -88,7 +89,7 @@ export async function AdmissionHub({ page }: AdmissionHubProps) {
                 href="/lien-he/"
                 variant="secondary"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10"
+                className="w-full justify-center border-white/30 text-white hover:bg-white/10"
               >
                 Nhận tư vấn
               </ButtonLink>

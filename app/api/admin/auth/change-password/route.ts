@@ -3,11 +3,13 @@ import { requireUser } from "@/lib/auth/guards";
 import { getUserById, updateUserPassword } from "@/lib/db";
 import { verifyPassword, hashPassword } from "@/lib/auth/password";
 import { isSameOrigin } from "@/lib/security/request";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 export async function POST(request: Request) {
   const auth = await requireUser();
   if ("response" in auth) return auth.response;
-  if (!isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!isSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -16,14 +18,14 @@ export async function POST(request: Request) {
     if (!currentPassword || !newPassword) {
       return NextResponse.json(
         { error: "Vui lòng nhập mật khẩu hiện tại và mật khẩu mới." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (newPassword.length < 6) {
       return NextResponse.json(
         { error: "Mật khẩu mới phải có tối thiểu 6 ký tự." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -34,14 +36,12 @@ export async function POST(request: Request) {
 
     const isMatch = verifyPassword(currentPassword, user.password_hash);
     if (!isMatch) {
-      return NextResponse.json(
-        { error: "Mật khẩu hiện tại không chính xác." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Mật khẩu hiện tại không chính xác." }, { status: 400 });
     }
 
     const newHash = hashPassword(newPassword);
     updateUserPassword(auth.user.id, newHash);
+    recordAdminAudit(auth.user, "update", "user", auth.user.id, ["password"]);
 
     return NextResponse.json({ success: true, message: "Đổi mật khẩu thành công!" });
   } catch (error) {

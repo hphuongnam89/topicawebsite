@@ -1,7 +1,0 @@
-
-> topica-edu@0.1.0 typecheck
-> tsc --noEmit
-
-app/(main)/tuyen-sinh/page.tsx(21,7): error TS2322: Type 'CmsPage | { id: number; slug: string; title: string; sourceUrl: string; contentHtml: string; excerpt: string; }' is not assignable to type 'CmsPage'.
-  Type '{ id: number; slug: string; title: string; sourceUrl: string; contentHtml: string; excerpt: string; }' is missing the following properties from type 'CmsPage': publishedAt, updatedAt
-exit_code=2

@@ -57,11 +57,11 @@ export function TrustSection({ data }: TrustSectionProps) {
 
   return (
     <section
-      className="border-y border-line-100 bg-paper py-6 sm:py-8"
+      className="border-y border-navy-800 bg-navy-950 py-4 sm:py-6"
       aria-label="Dấu ấn Topica"
     >
       <Container>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-x-5 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-0">
           {items.map((item, index) => {
             const Icon = item.icon || defaultIcons[index % defaultIcons.length];
             const delay = index * 0.1;
@@ -71,12 +71,14 @@ export function TrustSection({ data }: TrustSectionProps) {
                 key={index}
                 variant="fadeUp"
                 delay={delay}
-                className="flex min-w-0 items-center gap-3 rounded-lg border border-line-100 bg-canvas px-3 py-3 text-left transition-all hover:border-gold-300 hover:shadow-sm sm:px-4"
+                className="group flex min-w-0 items-start gap-3 border-b border-white/15 py-4 text-left last:border-b-0 sm:gap-3 sm:py-5 lg:border-b-0 lg:border-l lg:border-white/15 lg:px-4 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-navy-50 text-navy-900">
-                  <Icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
-                </div>
-                <p className="text-body-sm leading-snug font-semibold text-ink-800">{item.label}</p>
+                <Icon
+                  className="mt-0.5 h-5 w-5 shrink-0 text-gold-300 transition-transform duration-200 group-hover:-translate-y-0.5"
+                  strokeWidth={1.7}
+                  aria-hidden="true"
+                />
+                <p className="text-body-sm leading-snug font-semibold text-white/90">{item.label}</p>
               </ScrollReveal>
             );
           })}

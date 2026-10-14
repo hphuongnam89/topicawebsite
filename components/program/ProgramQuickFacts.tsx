@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import type { ProgramDetail } from "@/data/program-details";
 
 export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
-  const hasVerifiedAcademicData = program.evidenceLevel !== "cms_only";
+  const publicFacts = program.facts.filter((fact) => fact.status !== "need_confirmation");
 
   return (
     <section
@@ -25,7 +25,7 @@ export function ProgramQuickFacts({ program }: { program: ProgramDetail }) {
             </h2>
           </div>
           <dl className="grid min-w-0 gap-px border border-[var(--color-academic-rule)] bg-[var(--color-academic-rule)] sm:grid-cols-2 xl:grid-cols-4">
-            {program.facts.map((fact) => (
+            {publicFacts.map((fact) => (
               <div
                 key={fact.label}
                 className="min-w-0 bg-[var(--color-academic-canvas)] p-5 sm:p-6"

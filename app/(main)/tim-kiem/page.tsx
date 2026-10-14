@@ -28,7 +28,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const page = typeof resolvedParams.page === "string" ? parseInt(resolvedParams.page, 10) : 1;
 
   return (
-    <main className="min-h-screen bg-canvas pt-8 pb-24 lg:pt-16">
+    <div className="min-h-screen bg-canvas pt-8 pb-24 lg:pt-16">
       <Container size="narrow">
         <div className="mb-12 text-center">
           <h1 className="mb-8 font-display text-display text-ink-950">Tìm kiếm</h1>
@@ -45,7 +45,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <SearchResults query={q} page={page} />
         </Suspense>
       </Container>
-    </main>
+    </div>
   );
 }
 

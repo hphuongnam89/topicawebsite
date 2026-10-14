@@ -7,6 +7,8 @@ export interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement
   subtitle?: string;
   align?: "left" | "center";
   as?: "h2" | "h3";
+  titleClassName?: string;
+  subtitleClassName?: string;
 }
 
 export function SectionHeading({
@@ -15,6 +17,8 @@ export function SectionHeading({
   subtitle,
   align = "left",
   as: Component = "h2",
+  titleClassName,
+  subtitleClassName,
   className,
   ...props
 }: SectionHeadingProps) {
@@ -23,11 +27,15 @@ export function SectionHeading({
       className={cn(align === "center" && "mx-auto max-w-[47.5rem] text-center", className)}
       {...props}
     >
-      <Component className="font-display text-h2 font-bold text-ink-950">
+      <Component className={cn("font-display text-h2 font-bold text-ink-950", titleClassName)}>
         {title ?? children}
       </Component>
       {align === "center" && <div aria-hidden="true" className="mx-auto mt-4 h-[3px] w-12 bg-brand-500" />}
-      {subtitle && <p className="mt-3 font-sans text-body-lg text-ink-600">{subtitle}</p>}
+      {subtitle && (
+        <p className={cn("mt-3 font-sans text-body-lg text-ink-600", subtitleClassName)}>
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

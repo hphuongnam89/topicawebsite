@@ -8,15 +8,20 @@ Operator phải dừng ghi CMS/lead/upload, đóng process ghi và xác nhận �
 import { backupStorageBundle, restoreStorageBundle } from "./scripts/storage-bundle";
 // Các biến đường dẫn do operator xác nhận; không chạy với DB thật từ QA.
 const bundle = backupStorageBundle({
-  dbFile: confirmedDbPath, uploadsDir: confirmedUploadsPath,
-  backupDir: confirmedBackupPath, quiesced: true,
+  dbFile: confirmedDbPath,
+  uploadsDir: confirmedUploadsPath,
+  privateUploadsDir: confirmedPrivateUploadsPath,
+  backupDir: confirmedBackupPath,
+  quiesced: true,
 });
 const restored = restoreStorageBundle(bundle.directory, newEmptyInstancePath, {
-  dbFile: confirmedDbPath, uploadsDir: confirmedUploadsPath,
+  dbFile: confirmedDbPath,
+  uploadsDir: confirmedUploadsPath,
+  privateUploadsDir: confirmedPrivateUploadsPath,
 });
 ```
 
-Backup snapshot SQLite nhất quán, kiểm integrity/checksum, inventory SHA-256 uploads trước/sau; từ chối symlink/junction/hardlink. Chỉ `bundle-*` có `bundle.json` hoàn tất mới restore. `.partial` là bản lỗi để điều tra, không tính backup tốt. Lỗi không rotation/xóa bundle tốt trước đó. Retention bundle chưa tự động; chỉ xóa bản cũ sau xác minh bản mới/restore theo chính sách được duyệt; giữ bản trước migration.
+Backup snapshot SQLite nhất quán, kiểm integrity/checksum, inventory SHA-256 cả uploads công khai và thư mục riêng tư trước/sau; manifest v2 phân biệt hai vùng. Restore vẫn hỗ trợ manifest v1 chỉ chứa media công khai. Tệp riêng tư nằm ngoài `public` và được khôi phục riêng, không mở URL tĩnh. Từ chối symlink/junction/hardlink. Chỉ `bundle-*` có `bundle.json` hoàn tất mới restore. `.partial` là bản lỗi để điều tra, không tính backup tốt. Lỗi không rotation/xóa bundle tốt trước đó. Retention bundle chưa tự động; chỉ xóa bản cũ sau xác minh bản mới/restore theo chính sách được duyệt; giữ bản trước migration.
 
 Restore xác minh manifest/path/checksum DB và media trước tạo target mới; từ chối target tồn tại hoặc đụng storage đang dùng. Kiểm `restore.json`, khởi động instance riêng, đọc nội dung/mở asset. Nếu lỗi giữa restore, giữ target để điều tra, chọn target mới, không coi target lỗi là thành công. Cutover/rollback cần bước riêng, giữ lead mới; không đè DB cũ lên dữ liệu đang chạy. Operator chỉ mở ghi khi kết thúc.
 

@@ -5,7 +5,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Container } from "@/components/ui/Container";
 import { Card, CardMedia, CardBody, CardFooter } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 import { programGroups } from "@/data/programs";
@@ -44,14 +43,14 @@ export default function ProgramsDirectoryPage() {
   const programs = getLivePrograms();
   const tuitionPrograms = getLiveTuitionPrograms();
   return (
-    <main className="min-h-screen bg-canvas pb-24 font-sans text-ink-800">
+    <div className="min-h-screen bg-canvas pb-24 font-sans text-ink-800">
       <PageHeader
         title="Ngành Đào tạo Cử nhân Trực tuyến"
         subtitle="5 chương trình đào tạo đại học chính thức do Trường Đại học Phú Xuân cấp bằng, ứng dụng công nghệ E-Learning hiện đại từ Viện Đào tạo Quốc tế Topica."
         breadcrumbs={[{ label: "Trang chủ", href: "/" }, { label: "Ngành đào tạo" }]}
       />
 
-      <Container className="mt-12 space-y-16">
+      <Container className="mt-8 space-y-12 sm:mt-10 sm:space-y-14">
         {/* Academic Legal Notice */}
         <Alert variant="info" title="Thông tin pháp lý & Giá trị văn bằng tốt nghiệp">
           Văn bằng tốt nghiệp do <strong>Trường Đại học Phú Xuân</strong> cấp thuộc hệ thống văn
@@ -59,30 +58,6 @@ export default function ProgramsDirectoryPage() {
           nay <strong>không phân biệt hình thức đào tạo</strong>, có giá trị pháp lý tương đương văn
           bằng chính quy để thi tuyển công chức, nâng bậc lương và học tiếp lên Thạc sĩ, Tiến sĩ.
         </Alert>
-
-        {/* Quick Highlights Strip */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <div className="rounded-xl border border-line-200 bg-surface-subtle/70 p-4 text-center sm:p-5">
-            <span className="font-serif text-2xl font-bold text-navy-950 sm:text-3xl">5</span>
-            <p className="mt-1 text-xs font-semibold text-ink-600 uppercase tracking-wider">Ngành cử nhân</p>
-            <p className="mt-0.5 text-xs text-ink-500">Bằng ĐH Phú Xuân</p>
-          </div>
-          <div className="rounded-xl border border-line-200 bg-surface-subtle/70 p-4 text-center sm:p-5">
-            <span className="font-serif text-2xl font-bold text-navy-950 sm:text-3xl">126</span>
-            <p className="mt-1 text-xs font-semibold text-ink-600 uppercase tracking-wider">Tín chỉ chuẩn</p>
-            <p className="mt-0.5 text-xs text-ink-500">Khung đào tạo chuẩn</p>
-          </div>
-          <div className="rounded-xl border border-line-200 bg-surface-subtle/70 p-4 text-center sm:p-5">
-            <span className="font-serif text-2xl font-bold text-navy-950 sm:text-3xl">100%</span>
-            <p className="mt-1 text-xs font-semibold text-ink-600 uppercase tracking-wider">Trực tuyến</p>
-            <p className="mt-0.5 text-xs text-ink-500">Chủ động thời gian</p>
-          </div>
-          <div className="rounded-xl border border-line-200 bg-surface-subtle/70 p-4 text-center sm:p-5">
-            <span className="font-serif text-2xl font-bold text-navy-950 sm:text-3xl">600k</span>
-            <p className="mt-1 text-xs font-semibold text-ink-600 uppercase tracking-wider">Đ / Tín chỉ</p>
-            <p className="mt-0.5 text-xs text-ink-500">Đóng theo kỳ đăng ký</p>
-          </div>
-        </div>
 
         {/* Programs Grid */}
         <div className="space-y-8">
@@ -132,20 +107,17 @@ export default function ProgramsDirectoryPage() {
                   <CardBody className="flex flex-1 flex-col p-6">
                     <div className="mb-3 flex items-center justify-between gap-2">
                       <Badge variant="navy">{programGroups[program.group]}</Badge>
-                      <StatusBadge variant="active" showIcon={false} />
                     </div>
 
-                    <h3 className="font-serif text-xl font-bold text-ink-950 transition-colors group-hover:text-navy-900">
+                    <h3 className="min-h-[3.5rem] font-serif text-xl font-bold text-ink-950 transition-colors group-hover:text-navy-900">
                       <Link href={program.href} className="hover:underline">
                         {mainName}
                       </Link>
                     </h3>
 
-                    {specialization && (
-                      <p className="mt-1 text-xs font-semibold tracking-wider text-gold-700 uppercase">
-                        Chuyên ngành: {specialization}
-                      </p>
-                    )}
+                    <p className="mt-1 min-h-4 text-xs font-semibold tracking-wider text-gold-700 uppercase">
+                      {specialization ? `Chuyên ngành: ${specialization}` : ""}
+                    </p>
 
                     <p className="mt-3 flex-1 text-body-sm leading-relaxed text-ink-600">
                       {program.shortDescription}
@@ -186,8 +158,8 @@ export default function ProgramsDirectoryPage() {
                     </div>
                   </CardBody>
 
-                  <CardFooter className="flex items-center justify-between gap-3 border-t border-line-100 bg-surface-subtle/50 p-4 sm:px-6">
-                    <ButtonLink href={program.href} variant="outline" size="sm">
+                  <CardFooter className="grid w-full grid-cols-1 gap-2 border-t border-line-100 bg-surface-subtle/50 p-4 sm:px-6">
+                    <ButtonLink href={program.href} variant="outline" size="sm" className="w-full justify-center">
                       Chi tiết & Khung học
                     </ButtonLink>
                     <ButtonLink
@@ -195,6 +167,7 @@ export default function ProgramsDirectoryPage() {
                       variant="accent"
                       size="sm"
                       external
+                      className="w-full justify-center"
                     >
                       Đăng ký xét tuyển
                     </ButtonLink>
@@ -280,14 +253,16 @@ export default function ProgramsDirectoryPage() {
 
         {/* Comparison & Academic Principles */}
         <div className="rounded-2xl border border-line-200 bg-surface-subtle p-8 lg:p-10">
-          <div className="max-w-3xl">
-            <span className="text-xs font-semibold tracking-wider text-navy-800 uppercase">
-              Quyền lợi người học
-            </span>
-            <h3 className="mt-2 font-serif text-2xl font-bold text-ink-950 sm:text-3xl">
-              Vì sao nên chọn học Cử nhân trực tuyến Topica?
-            </h3>
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center">
+              <span className="text-xs font-semibold tracking-wider text-navy-800 uppercase">
+                Quyền lợi người học
+              </span>
+              <h3 className="mt-2 font-serif text-2xl font-bold text-ink-950 sm:text-3xl">
+                Vì sao nên chọn học Cử nhân trực tuyến Topica?
+              </h3>
+            </div>
+            <div className="mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-x-12 gap-y-6 sm:grid-cols-2">
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-success" />
                 <div>
@@ -346,12 +321,13 @@ export default function ProgramsDirectoryPage() {
                 chọn ngành, đánh giá điều kiện hồ sơ và nhận kế hoạch học tập cá nhân hóa.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex w-full max-w-md flex-col gap-3 lg:max-w-[18.25rem]">
               <ButtonLink
                 href="https://www.tuyensinh.topicauni.edu.vn/"
                 variant="accent"
                 size="lg"
                 external
+                className="w-full justify-center"
                 rightIcon={<ArrowRight className="h-4 w-4" />}
               >
                 Đăng ký xét tuyển ngay
@@ -360,7 +336,7 @@ export default function ProgramsDirectoryPage() {
                 href="/tuyen-sinh/hoc-phi-hoc-bong/"
                 variant="secondary"
                 size="lg"
-                className="border-white/20 bg-white/10 text-white hover:bg-white/20"
+                className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20"
               >
                 Tra cứu học phí 2026
               </ButtonLink>
@@ -368,6 +344,6 @@ export default function ProgramsDirectoryPage() {
           </div>
         </div>
       </Container>
-    </main>
+    </div>
   );
 }

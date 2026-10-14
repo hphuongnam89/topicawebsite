@@ -3,12 +3,14 @@ import { requireAdmin as requireUser } from "@/lib/auth/guards";
 import { getSetting, setSetting } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { isSameOrigin } from "@/lib/security/request";
+import { recordAdminAudit } from "@/lib/services/admin-audit";
 
 export interface HomepageHeroSettings {
   badge: string;
   title: string;
   description: string;
   bgImage: string;
+  videoUrl?: string;
   ctaPrimaryText: string;
   ctaPrimaryLink: string;
   ctaSecondaryText: string;
@@ -138,6 +140,12 @@ export async function PUT(request: Request) {
     if (admissionSteps) {
       setSetting("homepage_steps", admissionSteps);
     }
+    recordAdminAudit(auth.user, "update", "homepage", "homepage", [
+      ...(hero ? ["hero"] : []),
+      ...(trustItems ? ["trustItems"] : []),
+      ...(testimonials ? ["testimonials"] : []),
+      ...(admissionSteps ? ["admissionSteps"] : []),
+    ]);
 
     // On-demand revalidation
     revalidatePath("/");

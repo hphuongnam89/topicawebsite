@@ -23,15 +23,15 @@ export function AdmissionCTA() {
             Đăng ký xét tuyển trực tuyến hoặc nhận tư vấn từ chuyên viên tuyển sinh Topica.
           </p>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
-            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="accent" external>
+          <div className="grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
+            <ButtonLink href="https://www.tuyensinh.topicauni.edu.vn/" size="lg" variant="accent" external className="w-full justify-center">
               Đăng ký xét tuyển
             </ButtonLink>
             <ButtonLink
               href="/lien-he/"
               size="lg"
               variant="secondary"
-              className="border-white/30 text-white hover:bg-white/10 hover:text-white"
+              className="w-full justify-center border-white/30 text-white hover:bg-white/10 hover:text-white"
             >
               Nhận tư vấn
             </ButtonLink>

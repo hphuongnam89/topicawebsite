@@ -1,5 +1,0 @@
-
-> topica-edu@0.1.0 typecheck
-> tsc --noEmit
-
-scripts/backup-db.ts(109,43): error TS2353: Object literal may only specify known properties, and 'readOnly' does not exist in type '{ open?: boolean | undefined; }'.

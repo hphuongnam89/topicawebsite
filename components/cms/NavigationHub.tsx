@@ -7,7 +7,7 @@ import { ArrowRight, ChevronRight, GraduationCap, HelpCircle, PhoneCall, Sparkle
 
 export function NavigationHub({ group }: { group: NavGroup }) {
   return (
-    <main className="min-h-screen bg-canvas">
+    <div className="min-h-screen bg-canvas">
       <PageHeader
         title={group.label}
         subtitle={`Trung tâm điều hướng thông tin và tài nguyên chuyên đề: ${group.label}.`}
@@ -73,13 +73,14 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[30rem] lg:shrink-0">
                 <ButtonLink
                   href="https://www.tuyensinh.topicauni.edu.vn/"
                   variant="accent"
                   size="default"
                   external
                   rightIcon={<ArrowRight className="w-4 h-4" />}
+                  className="w-full justify-center"
                 >
                   Đăng ký xét tuyển
                 </ButtonLink>
@@ -87,7 +88,7 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                   href="/tuyen-sinh/hoc-phi-hoc-bong/"
                   variant="secondary"
                   size="default"
-                  className="bg-white/10 text-white border-white/20 hover:bg-white/20"
+                  className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20"
                 >
                   Học phí 2026
                 </ButtonLink>
@@ -95,8 +96,8 @@ export function NavigationHub({ group }: { group: NavGroup }) {
                   href="/lien-he/"
                   variant="secondary"
                   size="default"
-                  className="bg-white/10 text-white border-white/20 hover:bg-white/20"
                   leftIcon={<PhoneCall className="w-4 h-4" />}
+                  className="w-full justify-center border-white/20 bg-white/10 text-white hover:bg-white/20 sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
                 >
                   Nhận tư vấn
                 </ButtonLink>
@@ -105,6 +106,6 @@ export function NavigationHub({ group }: { group: NavGroup }) {
           </div>
         </Container>
       </section>
-    </main>
+    </div>
   );
 }

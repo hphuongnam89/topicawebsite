@@ -24,9 +24,9 @@ export const fieldLabels: Record<string, string> = {
   program_id: "Mã ngành áp dụng",
   cohort: "Khóa",
   audience: "Đối tượng",
-  open_at: "Mở nhận hồ sơ (UTC)",
-  deadline_at: "Hạn nhận hồ sơ (UTC)",
-  start_at: "Khai giảng (UTC)",
+  open_at: "Mở nhận hồ sơ (giờ Việt Nam)",
+  deadline_at: "Hạn nhận hồ sơ (giờ Việt Nam)",
+  start_at: "Khai giảng (giờ Việt Nam)",
   application_url: "Link xét tuyển",
   documents: "Tài liệu hướng dẫn",
   currency: "Tiền tệ",
@@ -35,8 +35,8 @@ export const fieldLabels: Record<string, string> = {
   total_tuition: "Tổng học phí (VNĐ)",
   other_fees: "Các khoản phí khác",
   assumptions: "Điều kiện tính phí",
-  effective_from: "Áp dụng từ (UTC)",
-  effective_to: "Áp dụng đến (UTC)",
+  effective_from: "Áp dụng từ (giờ Việt Nam)",
+  effective_to: "Áp dụng đến (giờ Việt Nam)",
   scope: "Phạm vi",
   value_type: "Loại ưu đãi (percent/amount)",
   value: "Giá trị",
@@ -52,6 +52,9 @@ export const fieldLabels: Record<string, string> = {
   published_date: "Ngày ban hành",
   rights: "Quyền sử dụng",
   access: "Quyền xem (public/private)",
+  alt: "Mô tả thay thế (alt)",
+  caption: "Chú thích",
+  focal: "Điểm lấy nét ảnh",
   role_scope: "Vai trò",
   phone: "Điện thoại",
   hotline: "Hotline",
@@ -127,6 +130,9 @@ export const contentFields: Record<ContentType, string[]> = {
     "published_date",
     "rights",
     "access",
+    "alt",
+    "caption",
+    "focal",
     ...source,
   ],
   organization: [
@@ -161,3 +167,9 @@ export const jsonFields = new Set([
   "locations",
   "service_urls",
 ]);
+
+export function getEditableFieldValue(key: string, values: Record<string, string>): string {
+  // The document access select has a public default before React receives a
+  // change event. Persist that default instead of serializing an empty value.
+  return key === "access" ? values[key] || "public" : (values[key] ?? "");
+}

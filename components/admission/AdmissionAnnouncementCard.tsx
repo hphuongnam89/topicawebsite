@@ -25,7 +25,7 @@ export function AdmissionAnnouncementCard({
     <Link
       href={href}
       className={cn(
-        "group flex flex-col rounded-lg border border-line-200 bg-paper p-5",
+        "group flex h-full flex-col rounded-lg border border-line-200 bg-paper p-5",
         "transition-all duration-200 hover:-translate-y-[1px] hover:border-brand-200 hover:shadow-sm",
         className
       )}

@@ -43,7 +43,8 @@ Nút trên nền navy dùng nền trắng/chữ navy hoặc accent có tương p
 - Logo đối tác phải có nguồn, phạm vi quan hệ và tên chính xác. Thiếu thông tin thì chưa xuất bản khối đó; không dùng “Đối tác 6” làm bằng chứng uy tín.
 - Hero desktop có thể dùng crop 16:9, mobile crop 4:3 hoặc 3:4 theo chủ thể; lưu focal point thay vì để mặt bị cắt. Tỷ lệ minh họa không bắt buộc cho mọi asset.
 - Kích thước ảnh được giữ trước tải; ảnh đầu trang tối ưu LCP theo guide Next hiện tại; ảnh dưới fold tải phù hợp. Không autoplay video có âm thanh hoặc slider chứa thông tin tuyển sinh thiết yếu.
-- Motion 150–250ms cho phản hồi UI; nội dung đọc không phụ thuộc animation. Reduced motion tắt hiệu ứng không cần thiết. Không thêm parallax/3D để làm “bắt mắt”.
+- Trang chủ có một nhịp chuyển động riêng cho hero: ảnh mở từ trái sang phải, tiêu đề được hé theo nhịp, rồi mô tả và CTA xuất hiện để dẫn mắt từ hình ảnh sang hành động. Dùng easing `cubic-bezier(0.16, 1, 0.3, 1)` và kết thúc trong khoảng 1,5 giây; hover ảnh/CTA chỉ là phản hồi nhỏ, không lặp vô hạn.
+- Motion 150–250ms cho phản hồi UI; nội dung đọc không phụ thuộc animation. Với `prefers-reduced-motion: reduce`, hero hiện ngay ở trạng thái hoàn chỉnh và mọi chuyển động không thiết yếu được rút gọn/tắt. Không thêm parallax/3D để làm “bắt mắt”.
 
 ## 2. Khung chung và tương tác
 

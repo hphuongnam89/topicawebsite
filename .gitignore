@@ -18,6 +18,8 @@
 /.next-qa-*/
 /.tsconfig-qa-*.json
 /public/qa-uploads/
+/public/uploads/
+/public/private_uploads/
 /playwright-report/
 /test-results/
 /out/
@@ -56,6 +58,10 @@ next-env.d.ts
 
 # temp / scratch files & local tools
 .hallmark/
+.impeccable/
+.next-verify/
+docs/evidence/
+docs/agent-execution/evidence/
 *.docx
 *.xlsx
 *.pptx
@@ -63,3 +69,10 @@ color_extractor*.py
 
 # scratch directory
 scratch/
+
+# local bundles
+*.zip
+
+# local Railway demo staging payload (contains a sanitized SQLite seed)
+.railway-deploy/
+railway-seed/

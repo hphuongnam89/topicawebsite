@@ -45,14 +45,14 @@ export function EmptyState({
         </p>
       )}
       {(actionHref || secondaryActionHref) && (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-6 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
           {actionHref && actionLabel && (
-            <ButtonLink href={actionHref} variant="primary" size="default">
+            <ButtonLink href={actionHref} variant="primary" size="default" className="w-full justify-center">
               {actionLabel}
             </ButtonLink>
           )}
           {secondaryActionHref && secondaryActionLabel && (
-            <ButtonLink href={secondaryActionHref} variant="outline" size="default">
+            <ButtonLink href={secondaryActionHref} variant="outline" size="default" className="w-full justify-center">
               {secondaryActionLabel}
             </ButtonLink>
           )}

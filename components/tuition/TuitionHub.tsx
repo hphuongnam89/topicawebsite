@@ -2,8 +2,16 @@ import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AdmissionBanner } from "@/components/cta/AdmissionBanner";
-import { DocumentCard } from "@/components/ui/DocumentCard";
-import { Check, ShieldCheck, CreditCard, Award, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import {
+  Check,
+  ShieldCheck,
+  CreditCard,
+  Award,
+  ArrowRight,
+  Sparkles,
+  UsersRound,
+} from "lucide-react";
 import Link from "next/link";
 import type { PublicDocumentDto } from "@/lib/services/cms-models";
 import {
@@ -17,6 +25,17 @@ import {
 
 function formatVND(amount: number): string {
   return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(amount);
+}
+
+function formatDocumentDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
 }
 
 export function TuitionHub({
@@ -164,8 +183,8 @@ export function TuitionHub({
           </div>
 
           {/* Lệ phí nhập học và các cam kết */}
-          <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
-            <div className="rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
+          <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2">
+            <div className="flex h-full flex-col rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
               <h3 className="text-h4 mb-4 flex items-center gap-2 font-display font-bold text-ink-950">
                 <CreditCard className="h-5 w-5 text-navy-800" />
                 Các khoản phí khi nhập học
@@ -195,7 +214,7 @@ export function TuitionHub({
               </ul>
             </div>
 
-            <div className="rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
+            <div className="flex h-full flex-col rounded-xl border border-line-200 bg-canvas p-6 shadow-sm lg:p-8">
               <h3 className="text-h4 mb-4 flex items-center gap-2 font-display font-bold text-ink-950">
                 <ShieldCheck className="h-5 w-5 text-navy-800" />
                 Cam kết minh bạch tài chính
@@ -218,50 +237,127 @@ export function TuitionHub({
       {/* 2. Chính sách Học bổng */}
       <Section variant="default">
         <Container>
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-navy-200 bg-navy-50 px-3 py-1 text-xs font-semibold tracking-wider text-navy-900 uppercase">
-              Đồng hành cùng học viên
+          <div className="relative isolate overflow-hidden rounded-[2rem] bg-[#f3f6fa] px-5 py-12 sm:px-8 sm:py-16 lg:px-14 lg:py-20">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-32 right-[-5rem] -z-10 h-96 w-96 rounded-full bg-[#dce8f3] blur-3xl"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-40 left-[-6rem] -z-10 h-96 w-96 rounded-full bg-[#f4e8d3] blur-3xl"
+            />
+            <div className="mx-auto mb-10 max-w-3xl text-center sm:mb-14">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-navy-200 bg-white/80 px-4 py-2 text-xs font-bold tracking-[0.14em] text-navy-900 uppercase shadow-sm">
+                <Sparkles aria-hidden="true" className="h-4 w-4 text-[#b78744]" />
+                Cơ hội học tập 2026
+              </div>
+              <SectionHeading align="center">Chính sách học bổng</SectionHeading>
+              <p className="mx-auto mt-4 max-w-2xl text-body-lg leading-relaxed text-ink-600">
+                Chọn ưu đãi phù hợp với thời điểm nộp hồ sơ và kế hoạch học tập của bạn.
+              </p>
+              <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-white/75 px-4 py-2 text-sm font-semibold text-navy-900 shadow-sm">
+                <UsersRound aria-hidden="true" className="h-4 w-4" />4 chương trình đồng hành
+              </div>
             </div>
-            <SectionHeading align="center">Chính sách Học bổng năm 2026</SectionHeading>
-            <p className="mt-3 text-body-lg text-ink-600">
-              Quỹ học bổng khuyến học Topica và Trường Đại học Phú Xuân đồng hành tiếp bước tri
-              thức, tạo điều kiện thuận lợi nhất cho học viên phát triển toàn diện.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
-            {scholarships.map((scholarship) => (
-              <div
-                key={scholarship.id}
-                className={`relative flex h-full flex-col overflow-hidden rounded-xl border bg-paper p-6 lg:p-8 ${
-                  scholarship.highlight
-                    ? "border-gold-500 shadow-md ring-1 ring-gold-500/20"
-                    : "border-line-200"
-                }`}
-              >
-                {scholarship.tag && (
-                  <div
-                    className={`absolute top-0 right-0 rounded-bl-lg px-3 py-1 text-[10px] font-bold tracking-wider uppercase ${
-                      scholarship.highlight
-                        ? "bg-gold-500 text-navy-950"
-                        : "bg-ink-100 text-ink-700"
+            <div className="mx-auto grid max-w-6xl grid-cols-1 items-stretch gap-5 sm:grid-cols-2 sm:gap-6 lg:gap-7">
+              {scholarships.map((scholarship) => {
+                const isSpecial = scholarship.id === "religious";
+                const isFuture = scholarship.id === "future";
+                const isTalent = scholarship.id === "talent";
+                return (
+                  <article
+                    key={scholarship.id}
+                    className={`group relative flex min-h-[310px] flex-col overflow-hidden rounded-2xl border p-6 shadow-[0_12px_36px_-24px_rgba(0,38,77,0.38)] transition duration-300 ease-out focus-within:ring-2 focus-within:ring-[#b78744] hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(0,38,77,0.42)] sm:p-8 ${
+                      isSpecial
+                        ? "border-[#365679] bg-[#00264d] text-white"
+                        : "border-white/90 bg-white/90 text-ink-950 backdrop-blur-sm"
                     }`}
                   >
-                    {scholarship.tag}
-                  </div>
-                )}
-                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-navy-50">
-                  <span className="text-lg font-bold text-navy-900">{scholarship.percentage}</span>
-                </div>
-                <h3 className="text-h4 mb-2 font-bold text-ink-950">{scholarship.title}</h3>
-                <p className="mb-4 text-body-sm leading-relaxed text-ink-700">
-                  {scholarship.description}
-                </p>
-                <div className="mt-auto border-t border-line-200 pt-4 text-xs text-ink-600">
-                  <strong className="text-ink-800">Điều kiện:</strong> {scholarship.criteria}
-                </div>
-              </div>
-            ))}
+                    <div
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute -top-12 -right-10 h-40 w-40 rounded-full blur-2xl transition duration-500 group-hover:scale-125 ${isSpecial ? "bg-[#b78744]/25" : "bg-[#dce8f3]/70"}`}
+                    />
+                    <div className="relative flex items-start justify-between gap-4">
+                      <span
+                        className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${isSpecial ? "bg-white/10 text-[#f4d99e] ring-1 ring-white/15" : "bg-[#f3f6fa] text-navy-900"}`}
+                      >
+                        {isSpecial ? (
+                          <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+                        ) : (
+                          <Award aria-hidden="true" className="h-3.5 w-3.5 text-[#b78744]" />
+                        )}
+                        {scholarship.tag || "Học bổng Topica"}
+                      </span>
+                      <span
+                        className={`font-display text-5xl leading-none font-bold tracking-tight sm:text-6xl ${isSpecial ? "text-[#f4d99e]" : "text-navy-900"}`}
+                      >
+                        {scholarship.percentage}
+                      </span>
+                    </div>
+                    <div className="relative mt-7">
+                      <h3
+                        className={`font-display text-2xl font-bold tracking-tight sm:text-[1.7rem] ${isSpecial ? "text-white" : "text-navy-950"}`}
+                      >
+                        {scholarship.title}
+                      </h3>
+                      <p
+                        className={`mt-3 max-w-xl text-base leading-relaxed ${isSpecial ? "text-white/80" : "text-ink-700"}`}
+                      >
+                        {scholarship.description}
+                      </p>
+                    </div>
+                    <div
+                      className={`relative mt-auto pt-6 ${isSpecial ? "text-white/75" : "text-ink-600"}`}
+                    >
+                      <div
+                        className={`mb-4 h-px w-full ${isSpecial ? "bg-white/15" : "bg-[#e8e2d8]"}`}
+                      />
+                      <div className="flex items-start gap-3 text-sm leading-relaxed">
+                        <Check
+                          aria-hidden="true"
+                          className={`mt-0.5 h-4 w-4 shrink-0 ${isSpecial ? "text-[#f4d99e]" : "text-emerald-700"}`}
+                        />
+                        <p>
+                          <span
+                            className={`font-bold ${isSpecial ? "text-white" : "text-ink-900"}`}
+                          >
+                            {isFuture
+                              ? "Điều kiện nhận ưu đãi"
+                              : isSpecial
+                                ? "Thông tin chi tiết"
+                                : isTalent
+                                  ? "Số lượng & thứ tự"
+                                  : "Thứ tự xét"}
+                            :
+                          </span>{" "}
+                          {scholarship.criteria}
+                        </p>
+                      </div>
+                      {isSpecial && (
+                        <Link
+                          href="/lien-he/"
+                          className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#f4d99e] px-5 py-2.5 text-sm font-bold text-[#00264d] transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        >
+                          Liên hệ tư vấn{" "}
+                          <ArrowRight
+                            aria-hidden="true"
+                            className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                          />
+                        </Link>
+                      )}
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-[#b78744] transition-transform duration-300 group-hover:scale-x-100"
+                    />
+                  </article>
+                );
+              })}
+            </div>
+            <p className="mx-auto mt-7 max-w-6xl text-center text-xs leading-relaxed text-ink-600 sm:text-sm">
+              Chi tiết áp dụng và số suất còn lại được xác nhận khi tư vấn hồ sơ.
+            </p>
           </div>
         </Container>
       </Section>
@@ -269,22 +365,48 @@ export function TuitionHub({
       {/* 3. Tài liệu tham khảo và Biểu mẫu */}
       <Section variant="paper">
         <Container>
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-6xl">
             <SectionHeading align="center">Tài liệu và Biểu mẫu chính thức</SectionHeading>
             <p className="mt-2 mb-8 text-center text-body-sm text-ink-600">
               Đối chiếu nguồn công bố và tài liệu áp dụng cho hồ sơ của bạn.
             </p>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {documents.map((document) => (
-                <DocumentCard
+                <figure
                   key={document.id}
-                  title={document.title}
-                  type={document.type}
-                  date={document.publishedDate}
-                  viewUrl={document.viewUrl}
-                  downloadUrl={document.fileUrl}
-                  fileSize={`${new Intl.NumberFormat("vi-VN").format(document.byteSize)} byte`}
-                />
+                  className="overflow-hidden rounded-xl border border-line-200 bg-white shadow-sm"
+                >
+                  <figcaption className="border-b border-line-200 px-4 py-3 sm:px-5">
+                    <h3 className="font-display text-base font-bold text-ink-950 sm:text-lg">
+                      {document.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-ink-600 sm:text-sm">
+                      {document.type === "license" ? "Biểu mẫu chính thức" : document.type} · Ban hành ngày {formatDocumentDate(document.publishedDate)}
+                    </p>
+                  </figcaption>
+                  <div className="bg-paper p-2 sm:p-4">
+                    {document.mimeType.startsWith("image/") ? (
+                      <Image
+                        src={document.fileUrl}
+                        alt={document.title}
+                        width={1254}
+                        height={1254}
+                        sizes="(max-width: 768px) 100vw, 384px"
+                        className="mx-auto h-[18rem] w-full max-w-96 object-contain sm:h-[22rem]"
+                      />
+                    ) : document.mimeType === "application/pdf" ? (
+                      <iframe
+                        src={`${document.fileUrl}#toolbar=0&navpanes=0`}
+                        title={document.title}
+                        className="h-[75vh] min-h-[36rem] w-full rounded-lg border-0 bg-white"
+                      />
+                    ) : (
+                      <p className="p-4 text-sm text-ink-600">
+                        Không thể hiển thị trực tiếp định dạng tài liệu này trên trình duyệt.
+                      </p>
+                    )}
+                  </div>
+                </figure>
               ))}
               {!documents.length && (
                 <p className="text-ink-700">
@@ -294,14 +416,6 @@ export function TuitionHub({
                   </Link>
                 </p>
               )}
-              <a
-                className="inline-block font-semibold text-navy-800 underline"
-                href="https://topicauni.edu.vn/hoc-phi/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Xem nguồn học phí và ưu đãi trên website Topica (mở tab mới)
-              </a>
             </div>
           </div>
         </Container>

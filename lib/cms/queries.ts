@@ -3,11 +3,14 @@ import 'server-only';
 import {
   getCategories as getDbCategories,
   getCategoryById,
+  getArticles as getLegacyArticles,
+  getArticleBySlug as getLegacyArticleBySlug,
 } from '@/lib/db';
 import type { ArticleRecord, PageRecord } from '@/lib/db/types';
 import { readPublicRows } from '@/lib/services/publication';
 import type { CmsService, Article, CmsPage, Category, PaginatedArticles } from './types';
 import { sanitizeWordPressHtml, cleanWordPressEntities, wordpressText } from './html';
+import { isPublicPageTemporarilyHidden } from './public-visibility';
 
 function normalizeArticleTitle(title: string): string {
   const clean = cleanWordPressEntities(title);
@@ -82,12 +85,16 @@ function mapDbPageToCmsPage(row: any): CmsPage {
 }
 
 function publicArticles() {
-  return readPublicRows<ArticleRecord>('article').filter(row => row.status === 'published')
+  const legacy = getLegacyArticles({ status: 'published', limit: 10000, offset: 0 }).items;
+  const rows = [...legacy, ...readPublicRows<ArticleRecord>('article')]
+    .filter(row => row.status === 'published');
+  return [...new Map(rows.map(row => [row.slug, row])).values()]
     .sort((a,b) => b.published_at.localeCompare(a.published_at));
 }
 
 export const cms: CmsService = {
   async getPageBySlug(slug: string) {
+    if (isPublicPageTemporarilyHidden(slug)) return null;
     const dbPage = readPublicRows<PageRecord>('page').find(row => row.slug === slug && row.status === 'published');
     if (dbPage && dbPage.status === 'published') return mapDbPageToCmsPage(dbPage);
     return null;
@@ -126,7 +133,8 @@ export const cms: CmsService = {
   },
 
   async getArticleBySlug(slug: string) {
-    const dbArticle = publicArticles().find(row => row.slug === slug);
+    const dbArticle = publicArticles().find(row => row.slug === slug)
+      ?? getLegacyArticleBySlug(slug);
     if (dbArticle && dbArticle.status === 'published') {
       return mapDbArticleToArticle(dbArticle);
     }

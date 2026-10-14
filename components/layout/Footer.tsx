@@ -7,53 +7,14 @@ import {
   contactChannels as defaultChannels,
   type Campus,
 } from "@/data/campuses";
+import { primaryNav } from "@/data/navigation";
 import type { ContactChannels } from "@/lib/services/public-site";
 
-const footerGroups = [
-  {
-    title: "Về Topica",
-    links: [
-      { label: "Tổng quan", href: "/gioi-thieu/" },
-      { label: "Tập đoàn EQuest", href: "/gioi-thieu/tap-doan-giao-duc-equest/" },
-      { label: "Lịch sử hình thành", href: "/gioi-thieu/lich-su-hinh-thanh/" },
-      { label: "Tầm nhìn, Sứ mạng", href: "/gioi-thieu/tam-nhin-su-mang/" },
-      { label: "Giá trị cốt lõi", href: "/gioi-thieu/gia-tri-cot-loi-triet-ly-giao-duc/" },
-      { label: "Cơ cấu tổ chức", href: "/gioi-thieu/co-cau-to-chuc/" },
-    ],
-  },
-  {
-    title: "Ngành học",
-    links: [
-      { label: "Quản trị kinh doanh", href: "/quan-tri-kinh-doanh-marketing/" },
-      { label: "Quản trị du lịch và lữ hành", href: "/quan-tri-dich-vu-du-lich-va-lu-hanh/" },
-      { label: "Công nghệ thông tin - Đồ hoạ số", href: "/cong-nghe-thong-tin/" },
-      { label: "Ngôn ngữ Anh", href: "/ngon-ngu-anh/" },
-      { label: "Ngôn ngữ Trung Quốc", href: "/ngon-ngu-trung-quoc/" },
-    ],
-  },
-  {
-    title: "Tuyển sinh & Học phí",
-    links: [
-      { label: "Học phí & Học bổng 2026", href: "/tuyen-sinh/hoc-phi-hoc-bong/" },
-      { label: "Thông tin tuyển sinh", href: "/thong-tin-tuyen-sinh-nam-2026/" },
-      { label: "Đề án tuyển sinh", href: "/tuyen-sinh/de-an-tuyen-sinh/" },
-      { label: "Quy chế tuyển sinh", href: "/tuyen-sinh/quy-che-tuyen-sinh/" },
-      { label: "Câu hỏi thường gặp (FAQ)", href: "/nhung-cau-hoi-thuong-gap/" },
-      { label: "Đăng ký xét tuyển", href: "https://www.tuyensinh.topicauni.edu.vn/" },
-    ],
-  },
-  {
-    title: "Chất lượng & Hệ thống",
-    links: [
-      { label: "Cổng học tập Elearning", href: "/he-thong/" },
-      { label: "Thư viện điện tử (E-LIB)", href: "https://elib.pxu.edu.vn/" },
-      { label: "Trải nghiệm học tập", href: "/trai-nghiem-hoc-tap/" },
-      { label: "Chất lượng & Công khai", href: "/chat-luong-cong-khai/" },
-      { label: "Mẫu văn bằng tốt nghiệp", href: "/gioi-thieu/cong-khai-van-bang-chung-chi/" },
-      { label: "Chính sách bảo mật", href: "/chinh-sach-bao-mat/" },
-      { label: "Điều khoản sử dụng", href: "/dieu-khoan-su-dung/" },
-    ],
-  },
+const utilityFooterLinks = [
+  { label: "Cổng học tập Elearning", href: "/he-thong/" },
+  { label: "Thư viện điện tử (E-LIB)", href: "https://elib.pxu.edu.vn/" },
+  { label: "Chính sách bảo mật", href: "/chinh-sach-bao-mat/" },
+  { label: "Điều khoản sử dụng", href: "/dieu-khoan-su-dung/" },
 ] as const;
 
 const socialLinks = [
@@ -83,24 +44,23 @@ export function Footer({
       {/* Main footer */}
       <div className="bg-paper text-ink-800">
         <Container className="py-12 sm:py-16">
-          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-            {/* Footer link groups */}
-            {footerGroups.map((group) => (
-              <div key={group.title}>
+          <div className="grid min-w-0 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7">
+            {primaryNav.map((group) => (
+              <div key={group.id} className="min-w-0">
                 <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
-                  {group.title}
+                  {group.label}
                 </h2>
                 <ul className="space-y-2.5">
-                  {group.links.map((link) => (
-                    <li key={link.label}>
+                  {group.columns.flatMap((column) => column.items).map((item) => (
+                    <li key={item.href ?? item.label}>
                       <Link
-                        href={link.href}
-                        className="text-body-sm whitespace-nowrap text-ink-600 transition-colors duration-[var(--duration-base)] hover:text-gold-700"
-                        {...(link.href.startsWith("http")
+                        href={item.href ?? group.href}
+                        className="text-body-sm break-words text-ink-600 transition-colors duration-[var(--duration-base)] hover:text-gold-700"
+                        {...(item.href?.startsWith("http")
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
                       >
-                        {link.label}
+                        {item.label}
                       </Link>
                     </li>
                   ))}
@@ -108,14 +68,34 @@ export function Footer({
               </div>
             ))}
 
-            {/* Contact section */}
-            <div className="lg:col-span-2">
+            <div className="min-w-0">
+              <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
+                Tiện ích & Chính sách
+              </h2>
+              <ul className="space-y-2.5">
+                {utilityFooterLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-body-sm break-words text-ink-600 transition-colors duration-[var(--duration-base)] hover:text-gold-700"
+                      {...(link.href.startsWith("http")
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="min-w-0 border-t border-line-200 pt-8 sm:col-span-2 md:col-span-3 xl:col-span-7">
               <h2 className="mb-4 font-sans text-body-sm font-bold tracking-wide text-navy-900 uppercase">
                 Liên hệ
               </h2>
-              <ul className="space-y-4">
+              <ul className="grid gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4">
                 {campuses.map((campus) => (
-                  <li key={campus.city} className="flex gap-2.5">
+                  <li key={`${campus.city}-${campus.address}`} className="flex gap-2.5">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" />
                     <p className="text-body-sm text-ink-600">
                       <span className="font-medium text-ink-950">{campus.city}: </span>
@@ -179,13 +159,13 @@ export function Footer({
       <div className="border-t border-navy-800 bg-navy-900 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] text-white lg:pb-0">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-center sm:flex-row sm:text-left">
           {/* Logo */}
-          <div className="flex h-12 w-[180px] items-center justify-center rounded-lg bg-gold-500 p-2">
+          <div className="flex h-16 w-44 items-center justify-center">
             <Image
-              src="/topica-logo.png"
+              src="/topica-logo-transparent.png"
               alt="Topica"
-              width={256}
-              height={86}
-              className="max-h-8 w-auto object-contain"
+              width={768}
+              height={358}
+              className="max-h-16 w-full object-contain"
             />
           </div>
 
@@ -201,7 +181,7 @@ export function Footer({
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors duration-[var(--duration-base)] hover:border-gold-500 hover:bg-gold-500 hover:text-navy-900"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gold-500/40 text-gold-400 transition-colors duration-[var(--duration-base)] hover:border-gold-400 hover:bg-gold-400 hover:text-navy-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400"
               >
                 <SocialIcon type={social.icon} />
               </a>

@@ -22,18 +22,14 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
       value: "Trường Đại học Phú Xuân",
     },
     {
-      label: "Học phí",
-      value: "600.000 đ / tín chỉ",
-    },
-    {
       label: "Ngôn ngữ",
       value: fact("Ngôn ngữ")?.status === "verified" ? fact("Ngôn ngữ")?.value : null,
     },
   ].filter((item) => item.value);
   return (
-    <header className="border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-canvas)]">
+    <header className="program-hero border-b border-[var(--color-academic-rule)] bg-[var(--color-academic-canvas)]">
       <Container className="grid min-h-[38rem] min-w-0 gap-0 px-0 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
-        <div className="min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
+        <div className="program-hero-copy min-w-0 px-[var(--academic-gutter)] py-12 sm:py-16 lg:pt-12 lg:pb-16">
           <nav aria-label="Đường dẫn" className="mb-7 text-sm text-[var(--color-academic-muted)]">
             <ol className="flex min-w-0 flex-wrap gap-x-2 gap-y-1">
               <li>
@@ -61,7 +57,7 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             {program.heroLabel}
           </p>
           <h1
-            className={`max-w-full font-[family-name:var(--font-academic-display)] font-semibold tracking-[-0.03em] break-words text-[var(--color-academic-ink)] sm:max-w-[16ch] ${
+            className={`max-w-full font-display font-semibold tracking-[-0.03em] break-words text-[var(--color-academic-ink)] sm:max-w-[16ch] ${
               program.officialName.length >= 35
                 ? "text-[clamp(1.875rem,3.5vw+0.5rem,2.75rem)] leading-[1.18]"
                 : "text-[clamp(2rem,4vw+0.5rem,3rem)] leading-[1.15]"
@@ -76,12 +72,12 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
             {program.summary}
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
             <ButtonLink
               href="https://www.tuyensinh.topicauni.edu.vn/"
               size="lg"
               rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-              className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
+              className="w-full justify-center bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
             >
               Đăng ký xét tuyển
             </ButtonLink>
@@ -90,7 +86,7 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               size="lg"
               variant="secondary"
               rightIcon={<ArrowDown className="h-4 w-4" aria-hidden="true" />}
-              className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+              className="w-full justify-center border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
               Xem chương trình
             </ButtonLink>
@@ -99,14 +95,14 @@ export function ProgramHero({ program }: { program: ProgramDetail }) {
               size="lg"
               variant="secondary"
               leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
-              className="border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+              className="w-full justify-center border-[var(--color-academic-rule-strong)] bg-transparent text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)] sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
             >
               Tra cứu học phí
             </ButtonLink>
           </div>
         </div>
 
-        <div className="relative min-w-0 border-t border-[var(--color-academic-rule)] bg-[var(--color-academic-paper)] px-[var(--academic-gutter)] py-12 lg:border-t-0 lg:border-l lg:pt-12 lg:pb-16">
+        <div className="program-hero-panel relative min-w-0 border-t border-[var(--color-academic-rule)] bg-[var(--color-academic-paper)] px-[var(--academic-gutter)] py-12 lg:border-t-0 lg:border-l lg:pt-12 lg:pb-16">
           <div
             aria-hidden="true"
             className="absolute inset-x-0 top-0 h-1 bg-[var(--color-academic-accent)] lg:inset-y-0 lg:left-0 lg:h-auto lg:w-1"

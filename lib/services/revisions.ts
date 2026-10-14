@@ -50,7 +50,13 @@ function transaction<T>(action: () => T): T {
     throw error;
   }
 }
-function audit(id: string, action: string, revision: ContentRevisionRecord, reason: string) {
+function audit(
+  id: string,
+  action: string,
+  revision: ContentRevisionRecord,
+  reason: string,
+  changedFields: string[],
+) {
   const user = actor(id);
   getDb()
     .prepare(
@@ -65,7 +71,7 @@ function audit(id: string, action: string, revision: ContentRevisionRecord, reas
       revision.entity_id,
       revision.id,
       new Date().toISOString(),
-      JSON.stringify(["workflow_state", "payload"]),
+      JSON.stringify([...new Set(changedFields)]),
       reason,
     );
 }
@@ -81,6 +87,13 @@ export function getRevisions(type: string, id: string): ContentRevisionRecord[] 
       "SELECT * FROM content_revisions WHERE entity_type=? AND entity_id=? ORDER BY version DESC",
     )
     .all(type, id) as unknown as ContentRevisionRecord[];
+}
+
+export function getReviewQueueCount(): number {
+  const row = getDb()
+    .prepare("SELECT COUNT(*) AS count FROM content_revisions WHERE workflow_state = ?")
+    .get("in_review") as { count: number } | undefined;
+  return Number(row?.count ?? 0);
 }
 export function getPublishedRevision(
   type: string,
@@ -150,7 +163,10 @@ export function createDraftRevision(input: CreateDraftRevisionInput): ContentRev
         now,
       );
     const revision = getRevisionById(Number(result.lastInsertRowid))!;
-    audit(input.actorId, "create", revision, "Tạo bản nháp mới; bản public giữ nguyên");
+    audit(input.actorId, "create", revision, "Tạo bản nháp mới; bản public giữ nguyên", [
+      "title",
+      ...Object.keys(value),
+    ]);
     return revision;
   });
 }
@@ -292,7 +308,20 @@ export function transitionRevision(
         id,
       );
     const result = getRevisionById(id)!;
-    audit(actorId, action, result, options.reason ?? action);
+    const changedFields =
+      action === "publish"
+        ? [
+            "workflow_state",
+            "published_at",
+            ...(options.expireAt !== undefined ? ["expired_at"] : []),
+            ...(options.highlightUntil !== undefined ? ["highlight_until"] : []),
+          ]
+        : action === "approve" || action === "reject"
+          ? ["workflow_state", "approved_by", "reviewer_notes"]
+          : action === "archive"
+            ? ["workflow_state"]
+            : ["workflow_state"];
+    audit(actorId, action, result, options.reason ?? action, changedFields);
     return result;
   });
 }

@@ -33,6 +33,7 @@ describe("Task R12: Danh mục và 5 Trang Ngành Đào tạo (Template T02 & T0
         name: /Chi tiết & Khung học/i,
       });
       expect(detailLinks).toHaveLength(5);
+      expect(screen.queryByText("Đang tuyển sinh")).not.toBeInTheDocument();
     });
   });
 
@@ -48,6 +49,15 @@ describe("Task R12: Danh mục và 5 Trang Ngành Đào tạo (Template T02 & T0
 
         // Tiêu đề chính
         expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(program.officialName);
+        const factsAwaitingConfirmation = program.facts.filter(
+          (fact) => fact.status === "need_confirmation",
+        );
+        factsAwaitingConfirmation.forEach((fact) => {
+          expect(screen.queryByText(fact.label, { exact: true })).not.toBeInTheDocument();
+          expect(screen.queryByText(fact.value, { exact: true })).not.toBeInTheDocument();
+        });
+        expect(screen.queryByText(/\.docx/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Sẽ cập nhật sau khi chốt/i)).not.toBeInTheDocument();
 
         // Khối lượng tín chỉ 126
         const credits = screen.getAllByText(/126 tín chỉ/i);

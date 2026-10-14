@@ -27,14 +27,14 @@ export function FloatingActions({
   return (
     <div
       data-floating-actions
-      className="fixed bottom-6 right-6 z-40 hidden flex-col items-center gap-3 transition-[bottom] duration-200 lg:flex"
+      className="fixed right-6 bottom-6 z-40 hidden flex-col items-center gap-3 transition-[bottom] duration-200 xl:flex"
     >
       {/* Mail */}
       <a
         href={contactChannels.admissionsEmail.href}
         aria-label={`Gửi email tư vấn tuyển sinh (${contactChannels.admissionsEmail.value})`}
         title={`Email tuyển sinh: ${contactChannels.admissionsEmail.value}`}
-        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-line-200 bg-white text-navy-800 shadow-card transition-all hover:border-navy-400 hover:shadow-card-hover active:translate-y-px"
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-gold-300 bg-white text-gold-700 shadow-card transition-all hover:border-gold-500 hover:bg-gold-50 hover:shadow-card-hover active:translate-y-px"
       >
         <Mail className="relative z-10 h-5 w-5" />
       </a>
@@ -46,7 +46,7 @@ export function FloatingActions({
         rel="noopener noreferrer"
         aria-label="Facebook Messenger"
         title="Nhắn tin qua Facebook Messenger"
-        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-line-200 bg-white text-navy-800 shadow-card transition-all hover:border-navy-400 hover:shadow-card-hover active:translate-y-px"
+        className="group relative flex h-12 w-12 items-center justify-center rounded-full border border-gold-300 bg-white text-gold-700 shadow-card transition-all hover:border-gold-500 hover:bg-gold-50 hover:shadow-card-hover active:translate-y-px"
       >
         <svg
           className="relative z-10 h-5 w-5 fill-current"

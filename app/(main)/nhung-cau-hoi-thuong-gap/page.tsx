@@ -74,7 +74,7 @@ export default async function FAQPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-canvas pb-24">
+    <div className="min-h-screen bg-canvas pb-24">
       <PageHeader
         title={page.title || "Câu hỏi thường gặp"}
         subtitle={page.excerpt || "Tổng hợp các giải đáp chi tiết về quy trình tuyển sinh, học phí, học bổng và chương trình đào tạo tại Topica."}
@@ -95,6 +95,6 @@ export default async function FAQPage() {
           />
         </div>
       </Container>
-    </main>
+    </div>
   );
 }

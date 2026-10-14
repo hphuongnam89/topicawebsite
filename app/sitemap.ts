@@ -5,6 +5,7 @@ import { cms } from "@/lib/cms";
 import { readPublicRows } from "@/lib/services/publication";
 import type { ArticleRecord, PageRecord } from "@/lib/db/types";
 import { connection } from "next/server";
+import { isPublicPageTemporarilyHidden } from "@/lib/cms/public-visibility";
 
 const BLOCKED_SLUGS = new Set(["cart", "checkout", "my-account", "shop", "classic-shop"]);
 
@@ -49,7 +50,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const rawPages = readPublicRows<PageRecord>("page");
     const publishedPages = rawPages.filter(
-      (p) => p.status === "published" && !BLOCKED_SLUGS.has(p.slug.toLowerCase()),
+      (p) =>
+        p.status === "published" &&
+        !BLOCKED_SLUGS.has(p.slug.toLowerCase()) &&
+        !isPublicPageTemporarilyHidden(p.slug),
     );
     cmsPages = publishedPages.map((page) => ({
       url: `${baseUrl}/${page.slug}`,

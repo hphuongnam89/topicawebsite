@@ -27,8 +27,7 @@ export function StudyRoadmap({ program }: { program: ProgramDetail }) {
             </h2>
           </div>
           <p className="max-w-xl leading-7 text-[var(--color-academic-muted)] md:justify-self-end">
-            Tổng tín chỉ và nội dung tiêu biểu của từng học kỳ được đối chiếu từ{" "}
-            {program.source.label}.
+            Xem các học phần tiêu biểu và số tín chỉ được trình bày theo từng học kỳ bên dưới.
           </p>
         </div>
 

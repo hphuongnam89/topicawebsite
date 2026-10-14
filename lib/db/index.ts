@@ -514,8 +514,11 @@ export function getLeadByIdempotencyKey(key: string, ttlSeconds = 86400): LeadRe
   if (!key) return null;
   const db = getDb();
   const row = db
-    .prepare("SELECT * FROM leads WHERE idempotency_key = ? AND created_at >= ? ORDER BY id DESC LIMIT 1")
-    .get(key, new Date(Date.now() - ttlSeconds * 1000).toISOString()) as unknown as LeadRecord | undefined;
+    .prepare(
+      "SELECT * FROM leads WHERE idempotency_key = ? AND created_at >= ? ORDER BY id DESC LIMIT 1",
+    )
+    .get(key, new Date(Date.now() - ttlSeconds * 1000).toISOString()) as unknown as
+    LeadRecord | undefined;
   return row ?? null;
 }
 
@@ -663,7 +666,8 @@ export function getAnalyticsStats(days: number = 7): {
 } {
   const db = getDb();
   const d = new Date();
-  d.setDate(d.getDate() - days);
+  const safeDays = Math.min(90, Math.max(1, Math.trunc(days) || 7));
+  d.setUTCDate(d.getUTCDate() - safeDays + 1);
   const cutoffDate = d.toISOString().split("T")[0];
 
   const totalViews = db

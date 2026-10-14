@@ -263,13 +263,13 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               Kiểm tra điều kiện nhập học, xem dự toán học phí chính xác hoặc nộp hồ sơ xét tuyển trực tuyến ngay hôm nay.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[30rem]">
             <ButtonLink
               href="https://www.tuyensinh.topicauni.edu.vn/"
               size="lg"
               external
               rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-              className="bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
+              className="w-full justify-center bg-[var(--color-academic-accent-strong)] text-[var(--color-academic-on-accent)] hover:bg-[var(--color-academic-ink)]"
             >
               Đăng ký xét tuyển
             </ButtonLink>
@@ -278,7 +278,7 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               size="lg"
               variant="secondary"
               leftIcon={<CreditCard className="h-4 w-4" aria-hidden="true" />}
-              className="bg-[var(--color-academic-elevated)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
+              className="w-full justify-center bg-[var(--color-academic-elevated)] text-[var(--color-academic-ink)] hover:bg-[var(--color-academic-paper)]"
             >
               Xem biểu phí & học bổng
             </ButtonLink>
@@ -287,7 +287,7 @@ export function ProgramPageView({ program }: { program: ProgramDetail }) {
               size="lg"
               variant="secondary"
               leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
-              className="bg-transparent border border-white/20 text-white hover:bg-white/10"
+              className="w-full justify-center border border-white/20 bg-transparent text-white hover:bg-white/10 sm:col-span-2 sm:mx-auto sm:w-[calc((100%-0.75rem)/2)]"
             >
               Nhận tư vấn
             </ButtonLink>
